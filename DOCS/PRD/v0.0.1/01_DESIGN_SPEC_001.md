@@ -129,7 +129,7 @@ enum Token {
 ### 4.1 Parsing Algorithm
 
 **Input:** Path to `.hc` file
-**Output:** `Program` (AST forest)
+**Output:** `Program` (single-rooted AST)
 
 ```
 parse(filePath):
@@ -151,7 +151,7 @@ parse(filePath):
 
     // Build tree from tokens
     depthStack ← []
-    roots ← []
+    root ← null
 
     for each token:
         if node:
@@ -163,13 +163,16 @@ parse(filePath):
                 depthStack.pop()
 
             if depthStack.empty:
-                roots.append(node)
+                // Trying to create root node
+                validate(root == null) else error(MultipleRoots, exit 2)
+                root ← node
             else:
                 depthStack.top.children.append(node)
 
             depthStack.push(node)
 
-    return Program(roots)
+    validate(root != null) else error(NoRootNode, exit 2)
+    return Program(root)
 ```
 
 **Error Conditions:**
@@ -177,6 +180,8 @@ parse(filePath):
 - Indentation not divisible by 4 → **Syntax Error (exit 2)**
 - Missing closing quote → **Syntax Error (exit 2)**
 - Literal spans multiple lines → **Syntax Error (exit 2)**
+- Multiple root nodes (depth 0) → **Syntax Error (exit 2)**
+- No root node found → **Syntax Error (exit 2)**
 
 ---
 
@@ -579,10 +584,10 @@ root/
 ### main.hc
 ```hypercode
 # Main Document
-"intro.md"
-
-"Chapters"
-    "chapters/ch1.hc"
+"Main Document"
+    "intro.md"
+    "Chapters"
+        "chapters/ch1.hc"
 ```
 
 ### chapters/ch1.hc
@@ -601,8 +606,8 @@ $ hyperprompt root/main.hc --root root --output main.compiled.md --stats
 Program(
   Node(literal="Main Document", depth=0)
     Node(literal="intro.md", depth=1)
-  Node(literal="Chapters", depth=0)
-    Node(literal="chapters/ch1.hc", depth=1)
+    Node(literal="Chapters", depth=1)
+      Node(literal="chapters/ch1.hc", depth=2)
 )
 ```
 
@@ -619,11 +624,11 @@ Program(
 ## intro.md heading
 ...
 
-# Chapters
+## Chapters
 
-## Chapter 1
+### Chapter 1
 
-### content.md heading
+#### content.md heading
 ...
 ```
 
