@@ -267,21 +267,72 @@ struct DepthWithinLimitSpec: Specification {
 
 ### 4.4 Content Specifications
 
-#### 4.4.1 SingleLineContentSpec
+#### 4.4.1 Atomic Line Break Specifications
 
-Verifies that literal content does not span multiple lines.
+To properly detect all types of line breaks (LF, CR, CRLF), we define atomic specifications:
+
+```swift
+struct ContainsLFSpec: Specification {
+    typealias Candidate = String  // Literal content
+
+    func isSatisfied(by candidate: String) -> Bool {
+        candidate.contains("\n")  // Unix/Linux/macOS (LF)
+    }
+}
+
+struct ContainsCRSpec: Specification {
+    typealias Candidate = String  // Literal content
+
+    func isSatisfied(by candidate: String) -> Bool {
+        candidate.contains("\r")  // Old Mac/Windows CR component
+    }
+}
+```
+
+**Business Rule**: Literal content must not contain any line break characters.
+
+#### 4.4.2 SingleLineContentSpec (Composite with OR)
+
+Verifies that literal content does not span multiple lines by checking for any type of line break.
 
 ```swift
 struct SingleLineContentSpec: Specification {
     typealias Candidate = String  // Literal content
 
+    private let spec: AnySpecification<String>
+
+    init() {
+        // OR composition: has LF OR has CR
+        let hasAnyLineBreak = ContainsLFSpec().or(ContainsCRSpec())
+
+        // NOT: no line breaks allowed
+        self.spec = AnySpecification(!hasAnyLineBreak)
+    }
+
     func isSatisfied(by candidate: String) -> Bool {
-        !candidate.contains("\n")
+        spec.isSatisfied(by: candidate)
     }
 }
 ```
 
-#### 4.4.2 ValidQuotesSpec
+**Alternative (Swift-idiomatic):**
+
+```swift
+struct SingleLineContentSpec: Specification {
+    typealias Candidate = String
+
+    func isSatisfied(by candidate: String) -> Bool {
+        !candidate.contains(where: { $0.isNewline })
+    }
+}
+```
+
+**Context Note**: The PRD (§4.1) specifies that the parser normalizes all line endings to LF during `readLines()`. However, this composite approach provides defense-in-depth:
+- Handles cases where content comes from non-normalized sources
+- Explicitly documents the business rule
+- Protects against future refactoring that might bypass normalization
+
+#### 4.4.3 ValidQuotesSpec
 
 Verifies that node line has matching opening and closing quotes.
 
@@ -441,6 +492,152 @@ struct ValidReferencePathSpec: Specification {
 ```
 
 **Usage**: Pre-validation before file system access in Resolver module.
+
+### 5.3 OR Composition and Complex Logic
+
+SpecificationCore supports full boolean algebra through composition operators.
+
+#### 5.3.1 OR Composition Basics
+
+```swift
+// Alternative extension checking: .md OR .hc
+struct MarkdownExtensionSpec: Specification {
+    typealias Candidate = String
+    func isSatisfied(by candidate: String) -> Bool {
+        candidate.hasSuffix(".md")
+    }
+}
+
+struct HypercodeExtensionSpec: Specification {
+    typealias Candidate = String
+    func isSatisfied(by candidate: String) -> Bool {
+        candidate.hasSuffix(".hc")
+    }
+}
+
+// OR composition
+let allowedExtension = MarkdownExtensionSpec().or(HypercodeExtensionSpec())
+```
+
+#### 5.3.2 Complex Boolean Expressions
+
+SpecificationCore composition operators follow boolean algebra laws:
+
+```swift
+// De Morgan's Law: NOT (A OR B) = (NOT A) AND (NOT B)
+let hasLF = ContainsLFSpec()
+let hasCR = ContainsCRSpec()
+
+// These are equivalent:
+let noLineBreaks1 = !(hasLF.or(hasCR))
+let noLineBreaks2 = (!hasLF).and(!hasCR)
+
+// Distributive Law: A AND (B OR C) = (A AND B) OR (A AND C)
+let validIndent = IndentMultipleOf4Spec()
+let shallowDepth = PredicateSpec<RawLine> { $0.text.prefix { $0 == " " }.count < 20 }
+let deepDepth = PredicateSpec<RawLine> { $0.text.prefix { $0 == " " }.count >= 20 }
+
+// Accept valid indent with either shallow or deep depth
+let acceptableNode = validIndent.and(shallowDepth.or(deepDepth))
+```
+
+#### 5.3.3 Multi-Alternative Specifications
+
+For multiple alternatives, chain OR operations:
+
+```swift
+// Accept multiple comment styles (future extension example)
+struct HashCommentSpec: Specification {
+    typealias Candidate = RawLine
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        candidate.text.trimmingCharacters(in: .whitespaces).hasPrefix("#")
+    }
+}
+
+struct SlashCommentSpec: Specification {
+    typealias Candidate = RawLine
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        candidate.text.trimmingCharacters(in: .whitespaces).hasPrefix("//")
+    }
+}
+
+struct BlockCommentSpec: Specification {
+    typealias Candidate = RawLine
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        candidate.text.trimmingCharacters(in: .whitespaces).hasPrefix("/*")
+    }
+}
+
+// Chain multiple OR operations
+let anyCommentStyle = HashCommentSpec()
+    .or(SlashCommentSpec())
+    .or(BlockCommentSpec())
+```
+
+#### 5.3.4 Conditional Specifications
+
+Build specifications with conditional logic using AND/OR:
+
+```swift
+// "Valid node if indented correctly OR it's a root node (depth 0)"
+struct FlexibleNodeSpec: Specification {
+    typealias Candidate = RawLine
+
+    private let spec: AnySpecification<RawLine>
+
+    init() {
+        let properIndent = IndentMultipleOf4Spec()
+        let isRoot = PredicateSpec<RawLine> { line in
+            line.text.prefix { $0 == " " }.count == 0
+        }
+
+        // Accept if: (proper indent AND not root) OR (is root)
+        // Simplified: accept if proper indent OR is root
+        self.spec = AnySpecification(properIndent.or(isRoot))
+    }
+
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        spec.isSatisfied(by: candidate)
+    }
+}
+```
+
+#### 5.3.5 Practical Example: Lenient vs Strict Mode
+
+Use OR composition to implement mode-dependent validation:
+
+```swift
+struct LenientPathSpec: Specification {
+    typealias Candidate = String
+
+    private let spec: AnySpecification<String>
+
+    init(strict: Bool, rootPath: String) {
+        if strict {
+            // Strict: must pass all validations
+            let composed = NoTraversalSpec()
+                .and(IsAllowedExtensionSpec())
+                .and(WithinRootSpec(rootPath: rootPath))
+            self.spec = AnySpecification(composed)
+        } else {
+            // Lenient: allow more variations
+            // Must not traverse, but extension can be anything
+            let composed = NoTraversalSpec()
+                .and(WithinRootSpec(rootPath: rootPath))
+            self.spec = AnySpecification(composed)
+        }
+    }
+
+    func isSatisfied(by candidate: String) -> Bool {
+        spec.isSatisfied(by: candidate)
+    }
+}
+```
+
+**Key Insight**: OR composition enables expressing alternative validation paths, making specifications flexible enough to handle:
+- Multiple valid formats (extensions, comment styles)
+- Conditional rules (strict vs lenient modes)
+- Defense-in-depth (checking multiple error conditions)
 
 -----
 
@@ -878,6 +1075,72 @@ final class ValidNodeLineSpecTests: XCTestCase {
 }
 ```
 
+**OR Composition Tests:**
+
+```swift
+final class SingleLineContentSpecTests: XCTestCase {
+    let spec = SingleLineContentSpec()
+
+    func testAcceptsSingleLineContent() {
+        XCTAssertTrue(spec.isSatisfied(by: "valid single line"))
+    }
+
+    func testRejectsLF() {
+        XCTAssertFalse(spec.isSatisfied(by: "line1\nline2"))
+    }
+
+    func testRejectsCR() {
+        XCTAssertFalse(spec.isSatisfied(by: "line1\rline2"))
+    }
+
+    func testRejectsCRLF() {
+        XCTAssertFalse(spec.isSatisfied(by: "line1\r\nline2"))
+    }
+
+    func testRejectsEmbeddedLF() {
+        XCTAssertFalse(spec.isSatisfied(by: "before\nafter"))
+    }
+}
+
+final class ORCompositionTests: XCTestCase {
+    func testORLogicWithMultipleAlternatives() {
+        let hasLF = ContainsLFSpec()
+        let hasCR = ContainsCRSpec()
+        let hasAny = hasLF.or(hasCR)
+
+        // Test OR truth table
+        XCTAssertFalse(hasAny.isSatisfied(by: "no breaks"))  // false OR false = false
+        XCTAssertTrue(hasAny.isSatisfied(by: "has\nLF"))     // true OR false = true
+        XCTAssertTrue(hasAny.isSatisfied(by: "has\rCR"))     // false OR true = true
+        XCTAssertTrue(hasAny.isSatisfied(by: "both\r\n"))    // true OR true = true
+    }
+
+    func testDeMorgansLaw() {
+        let hasLF = ContainsLFSpec()
+        let hasCR = ContainsCRSpec()
+
+        // NOT (A OR B) should equal (NOT A) AND (NOT B)
+        let notAorB = !(hasLF.or(hasCR))
+        let notA_and_notB = (!hasLF).and(!hasCR)
+
+        let testCases = [
+            "no breaks",
+            "has\nLF",
+            "has\rCR",
+            "both\r\n"
+        ]
+
+        for testCase in testCases {
+            XCTAssertEqual(
+                notAorB.isSatisfied(by: testCase),
+                notA_and_notB.isSatisfied(by: testCase),
+                "De Morgan's Law failed for: \(testCase)"
+            )
+        }
+    }
+}
+```
+
 ### 8.3 Decision Specification Tests
 
 Test `FirstMatchSpec` priority and coverage:
@@ -1005,7 +1268,9 @@ func testDepthLimit() {
 
 ### 9.3 Composition and Reusability
 
-Build complex validations from simple primitives:
+Build complex validations from simple primitives using AND/OR/NOT operators:
+
+**AND Composition (all must pass):**
 
 ```swift
 // Compose multiple rules with clear semantics
@@ -1019,6 +1284,43 @@ let strictNodeValidator = NoTabsIndentSpec()
 let lenientNodeValidator = IndentMultipleOf4Spec()
     .and(ValidQuotesSpec())
     .and(IsNodeLineSpec())
+```
+
+**OR Composition (at least one must pass):**
+
+```swift
+// Accept multiple valid extensions
+let markdownExt = PredicateSpec<String> { $0.hasSuffix(".md") }
+let hypercodeExt = PredicateSpec<String> { $0.hasSuffix(".hc") }
+let allowedExtensions = markdownExt.or(hypercodeExt)
+
+// Accept multiple comment styles (future feature)
+let hashComment = PredicateSpec<RawLine> { $0.text.trimmed().hasPrefix("#") }
+let slashComment = PredicateSpec<RawLine> { $0.text.trimmed().hasPrefix("//") }
+let anyComment = hashComment.or(slashComment)
+```
+
+**NOT Composition (must not match):**
+
+```swift
+// Reject any line break type
+let hasLF = ContainsLFSpec()
+let hasCR = ContainsCRSpec()
+let hasAnyBreak = hasLF.or(hasCR)
+let singleLineOnly = !hasAnyBreak
+```
+
+**Complex Boolean Expressions:**
+
+```swift
+// (valid indent AND proper quotes) OR is root node
+let validIndent = IndentMultipleOf4Spec()
+let properQuotes = ValidQuotesSpec()
+let isRoot = PredicateSpec<RawLine> {
+    $0.text.prefix { $0 == " " }.count == 0
+}
+
+let acceptableNode = (validIndent.and(properQuotes)).or(isRoot)
 ```
 
 ### 9.4 Extensibility
@@ -1627,7 +1929,9 @@ benchmark(name: "Lexer (specification)") {
 | `IsCommentLineSpec` | Line is a comment (starts with #) | N/A |
 | `IsNodeLineSpec` | Line is a valid node (quoted literal) | N/A |
 | `ValidQuotesSpec` | Quotes are balanced and closed | 2 |
-| `SingleLineContentSpec` | Literal does not span multiple lines | 2 |
+| `ContainsLFSpec` | String contains LF (`\n`) | N/A |
+| `ContainsCRSpec` | String contains CR (`\r`) | N/A |
+| `SingleLineContentSpec` | Literal does not span multiple lines (composite with OR) | 2 |
 
 ### Indentation Specifications
 | Specification | Validates | Exit Code |
@@ -1650,8 +1954,9 @@ benchmark(name: "Lexer (specification)") {
 ### Composite Specifications
 | Specification | Combines | Purpose |
 |---|---|---|
-| `ValidNodeLineSpec` | All line + indent + depth specs | Complete node validation |
-| `ValidReferencePathSpec` | All path safety specs | Complete path validation |
+| `ValidNodeLineSpec` | All line + indent + depth specs (AND) | Complete node validation |
+| `ValidReferencePathSpec` | All path safety specs (AND) | Complete path validation |
+| `SingleLineContentSpec` | `ContainsLFSpec` OR `ContainsCRSpec` (then NOT) | Multi-platform line break detection |
 
 ### Decision Specifications
 | Specification | Returns | Purpose |
@@ -1668,7 +1973,7 @@ benchmark(name: "Lexer (specification)") {
 | `NoTabsIndentSpec` | Syntax Error | 2 | `\t"literal"` |
 | `IndentMultipleOf4Spec` | Syntax Error | 2 | `  "misaligned"` |
 | `ValidQuotesSpec` | Syntax Error | 2 | `"unclosed` |
-| `SingleLineContentSpec` | Syntax Error | 2 | `"line1\nline2"` |
+| `SingleLineContentSpec` | Syntax Error | 2 | `"line1\nline2"` or `"line1\rline2"` or `"line1\r\nline2"` |
 | `DepthWithinLimitSpec` | Resolution Error | 3 | 44 spaces (depth 11) |
 | `NoTraversalSpec` | Resolution Error | 3 | `"../etc/passwd"` |
 | `IsAllowedExtensionSpec` | Resolution Error | 3 | `"file.txt"` |
