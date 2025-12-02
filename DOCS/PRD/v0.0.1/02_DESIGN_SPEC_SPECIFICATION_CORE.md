@@ -502,7 +502,7 @@ struct WithinRootSpec: Specification {
 
 The following specifications contain composite conditions that could be refactored into atomic specifications with composition. These are documented here for future refactoring or as design alternatives.
 
-#### 4.6.1 IsNodeLineSpec (Multi-condition)
+#### 4.6.1 IsNodeLineSpec (Multi-condition AND)
 
 **Current Implementation:**
 
@@ -525,52 +525,64 @@ struct IsNodeLineSpec: Specification {
 }
 ```
 
-**Composite Conditions:**
-1. `trimmedLeft.first == "\""`  (starts with quote)
-2. `trimmedLeft.last == "\""`   (ends with quote)
-3. `!content.contains("\n")`    (single-line)
+**Composite Conditions (3 AND checks):**
+1. Starts with `"` after left trim
+2. Ends with `"` after left trim
+3. Content between quotes contains no line breaks
 
-**Potential Atomic Refactoring:**
+**Atomic Refactoring with Improved Naming:**
 
 ```swift
-struct StartsWithQuoteSpec: Specification {
+/// Verifies that line content (after trimming leading spaces) starts with double quote
+struct StartsWithDoubleQuoteSpec: Specification {
     typealias Candidate = RawLine
+
     func isSatisfied(by candidate: RawLine) -> Bool {
         let trimmedLeft = candidate.text.drop(while: { $0 == " " })
         return trimmedLeft.first == "\""
     }
 }
 
-struct EndsWithQuoteSpec: Specification {
+/// Verifies that line content (after trimming leading spaces) ends with double quote
+struct EndsWithDoubleQuoteSpec: Specification {
     typealias Candidate = RawLine
+
     func isSatisfied(by candidate: RawLine) -> Bool {
         let trimmedLeft = candidate.text.drop(while: { $0 == " " })
         return trimmedLeft.last == "\""
     }
 }
 
-struct QuotedContentSingleLineSpec: Specification {
+/// Verifies that content extracted from between quotes contains no line breaks
+struct ContentWithinQuotesIsSingleLineSpec: Specification {
     typealias Candidate = RawLine
+
     func isSatisfied(by candidate: RawLine) -> Bool {
         let trimmedLeft = candidate.text.drop(while: { $0 == " " })
+
+        // Only validate if properly quoted
         guard trimmedLeft.first == "\"", trimmedLeft.last == "\"" else {
-            return true  // Not quoted, not our concern
+            return true  // Not quoted → not our concern
         }
+
+        // Extract content between quotes
         let content = trimmedLeft.dropFirst().dropLast()
-        return !content.contains("\n")
+
+        // Check for any line break type
+        return !content.contains("\n") && !content.contains("\r")
     }
 }
 
-// Composition
+// Composition using AND
 struct IsNodeLineSpec: Specification {
     typealias Candidate = RawLine
     private let spec: AnySpecification<RawLine>
 
     init() {
         self.spec = AnySpecification(
-            StartsWithQuoteSpec()
-                .and(EndsWithQuoteSpec())
-                .and(QuotedContentSingleLineSpec())
+            StartsWithDoubleQuoteSpec()
+                .and(EndsWithDoubleQuoteSpec())
+                .and(ContentWithinQuotesIsSingleLineSpec())
         )
     }
 
@@ -580,13 +592,23 @@ struct IsNodeLineSpec: Specification {
 }
 ```
 
-**Trade-off Analysis:**
-- **Pro**: More testable (each condition tested independently)
-- **Pro**: More composable (can reuse StartsWithQuoteSpec elsewhere)
-- **Con**: More verbose (3 specs vs 1)
-- **Con**: Duplicate logic (trimmedLeft computed multiple times)
+**Naming Rationale:**
+- `StartsWithDoubleQuoteSpec` → Explicit about `"` vs `'` or `` ` ``
+- `EndsWithDoubleQuoteSpec` → Matches starting spec naming
+- `ContentWithinQuotesIsSingleLineSpec` → Clearly separates structural check (quotes) from content check (single-line)
 
-**Recommendation**: Keep current implementation for performance. Use atomic approach if quote validation becomes more complex (e.g., supporting single quotes, backticks).
+**Trade-off Analysis:**
+- ✅ **Pro**: Each atomic spec testable independently
+- ✅ **Pro**: Reusable (e.g., `StartsWithDoubleQuoteSpec` for other quote validation)
+- ✅ **Pro**: Clear separation of concerns (structure vs content)
+- ❌ **Con**: More verbose (3 specs + composition vs 1 inline)
+- ❌ **Con**: Performance cost (trimmedLeft computed 3 times)
+- ❌ **Con**: Increased maintenance surface (3 files vs 1)
+
+**Recommendation**:
+- **Default**: Keep current monolithic implementation for performance
+- **Refactor when**: Supporting multiple quote styles (`'`, `` ` ``, `"""`) or complex escaping rules
+- **Middle ground**: Extract quote detection to reusable specs, keep content check inline
 
 #### 4.6.2 NoTabsIndentSpec (Implicit OR in prefix)
 
@@ -640,43 +662,50 @@ struct NoTabsIndentSpec: Specification {
 
 **Recommendation**: Keep current implementation. The closure is idiomatic Swift and clear.
 
-#### 4.6.3 Path Reference Detection (Example Usage)
+#### 4.6.3 Path Reference Detection (Heuristic OR)
 
 **Current Pattern (§11.4):**
 
 ```swift
 if literal.contains("/") || literal.contains(".") {
-    // Validate as path
+    // Looks like a file path → validate as reference
 }
 ```
 
-**Composite Condition:**
-- `literal.contains("/") || literal.contains(".")`
+**Composite Condition (heuristic OR):**
+- Contains `/` (path separator) OR
+- Contains `.` (file extension indicator)
 
-**Potential Atomic Refactoring:**
+**Atomic Refactoring with Clear Intent:**
 
 ```swift
-struct ContainsSlashSpec: Specification {
+/// Verifies that string contains forward slash (path separator)
+struct ContainsPathSeparatorSpec: Specification {
     typealias Candidate = String
+
     func isSatisfied(by candidate: String) -> Bool {
         candidate.contains("/")
     }
 }
 
-struct ContainsDotSpec: Specification {
+/// Verifies that string contains dot (likely file extension)
+struct ContainsExtensionDotSpec: Specification {
     typealias Candidate = String
+
     func isSatisfied(by candidate: String) -> Bool {
         candidate.contains(".")
     }
 }
 
-struct LooksLikePathSpec: Specification {
+/// Heuristic to detect if literal looks like a file reference
+struct LooksLikeFileReferenceSpec: Specification {
     typealias Candidate = String
     private let spec: AnySpecification<String>
 
     init() {
+        // OR: has path separator OR has extension indicator
         self.spec = AnySpecification(
-            ContainsSlashSpec().or(ContainsDotSpec())
+            ContainsPathSeparatorSpec().or(ContainsExtensionDotSpec())
         )
     }
 
@@ -685,38 +714,81 @@ struct LooksLikePathSpec: Specification {
     }
 }
 
-// Usage
-if LooksLikePathSpec().isSatisfied(by: literal) {
-    // Validate as path
+// Usage with semantic clarity
+if LooksLikeFileReferenceSpec().isSatisfied(by: literal) {
+    // Validate as file reference
+}
+```
+
+**Naming Rationale:**
+- `ContainsPathSeparatorSpec` → More semantic than `ContainsSlashSpec` (clarifies intent)
+- `ContainsExtensionDotSpec` → Explains WHY we check for dot (extension detection)
+- `LooksLikeFileReferenceSpec` → Describes purpose (heuristic) + domain concept (file reference)
+
+**Extensibility Example:**
+
+```swift
+// Future: more sophisticated path detection
+struct LooksLikeFileReferenceSpec: Specification {
+    private let spec: AnySpecification<String>
+
+    init() {
+        let hasPathSep = ContainsPathSeparatorSpec()
+        let hasExtension = ContainsExtensionDotSpec()
+        let hasProtocol = StartsWithProtocolSpec()  // http://, file://
+        let isAbsolute = StartsWithSlashSpec()      // /absolute/path
+
+        // OR chain: any of these indicators
+        self.spec = AnySpecification(
+            hasPathSep
+                .or(hasExtension)
+                .or(hasProtocol)
+                .or(isAbsolute)
+        )
+    }
 }
 ```
 
 **Trade-off Analysis:**
-- **Pro**: More descriptive name (`LooksLikePathSpec` vs inline condition)
-- **Pro**: Reusable across codebase
-- **Con**: May be overkill for simple heuristic
+- ✅ **Pro**: Self-documenting (name explains heuristic purpose)
+- ✅ **Pro**: Centralized heuristic logic (easy to refine)
+- ✅ **Pro**: Reusable across modules
+- ❌ **Con**: Overkill for current simple heuristic
+- ⚠️ **Neutral**: Easy to extend when detection becomes complex
 
-**Recommendation**: Use atomic approach if path detection becomes more sophisticated (e.g., checking for URL schemes, absolute paths).
+**Recommendation**:
+- **Now**: Keep inline OR for simplicity (`literal.contains("/") || literal.contains(".")`)
+- **Refactor when**: Adding URL schemes, absolute/relative path distinction, or Windows path support (`\`)
 
-#### 4.6.4 IsBlankLineSpec or IsCommentLineSpec (Example Usage)
+#### 4.6.4 IsBlankLineSpec OR IsCommentLineSpec (Semantic Grouping)
 
 **Current Pattern (§11.1):**
 
 ```swift
+// Imperative OR check
 if IsBlankLineSpec().isSatisfied(by: rawLine) ||
    IsCommentLineSpec().isSatisfied(by: rawLine) {
-    continue
+    continue  // Skip non-semantic lines
 }
 ```
 
-**Better Pattern with OR Composition:**
+**Problems with Current Approach:**
+- ❌ Verbose: repeated `.isSatisfied(by: rawLine)` calls
+- ❌ Intent unclear: WHY are we checking both?
+- ❌ Not reusable: logic duplicated across codebase
+- ❌ Hard to extend: adding new skippable types requires finding all OR checks
+
+**Improved Pattern with Semantic OR Composition:**
 
 ```swift
+/// Specification for lines that should be skipped during AST construction
+/// (blank lines and comments do not contribute semantic value)
 struct IsSkippableLineSpec: Specification {
     typealias Candidate = RawLine
     private let spec: AnySpecification<RawLine>
 
     init() {
+        // OR: blank OR comment
         self.spec = AnySpecification(
             IsBlankLineSpec().or(IsCommentLineSpec())
         )
@@ -727,35 +799,136 @@ struct IsSkippableLineSpec: Specification {
     }
 }
 
-// Usage
+// Usage with clear intent
 if IsSkippableLineSpec().isSatisfied(by: rawLine) {
-    continue
+    continue  // Skip non-semantic line
 }
 ```
 
-**Benefit**: Single semantic concept ("skippable line") instead of OR condition.
+**Naming Rationale:**
+- `IsSkippableLineSpec` → Domain concept: "line that should be skipped"
+- Replaces technical condition (blank OR comment) with business intent (skippable)
+- Self-documenting: reader immediately understands purpose
 
-#### 4.6.5 Summary Table
+**Benefits:**
+- ✅ **Semantic clarity**: Single concept instead of technical OR
+- ✅ **DRY principle**: Centralized definition of "skippable"
+- ✅ **Extensibility**: Easy to add new skippable types
+- ✅ **Testability**: Test semantic concept, not implementation details
 
-| Specification | Composite Condition | Atomic Refactoring Recommended? | Reason |
-|---|---|---|---|
-| `IsNodeLineSpec` | AND of 3 conditions | 🟡 Optional | Performance vs testability trade-off |
-| `NoTabsIndentSpec` | OR in closure | ❌ No | Current impl is idiomatic and clear |
-| Path detection | OR of 2 contains | 🟢 Yes, if complex | Good for sophisticated path heuristics |
-| Skip blank/comment | OR of 2 specs | 🟢 Yes | Creates semantic concept |
-| `IsAllowedExtensionSpec` | OR of 2 suffixes | ✅ Done | Extensibility benefit (adding new extensions) |
-| `SingleLineContentSpec` | OR of 2 line breaks | ✅ Done | Cross-platform robustness |
+**Extensibility Example:**
 
-**Design Principle**: Refactor to atomic specs when:
-1. **Extensibility**: Easy to add new alternatives (extensions, formats)
-2. **Reusability**: Atomic specs used in multiple places
-3. **Testability**: Complex conditions need isolated testing
-4. **Semantics**: Composition creates clearer domain concept
+```swift
+// Future: more types of skippable lines
+struct IsSkippableLineSpec: Specification {
+    private let spec: AnySpecification<RawLine>
 
-Keep composite when:
-1. **Performance**: Avoiding redundant computation
-2. **Simplicity**: Atomic decomposition adds more complexity than value
-3. **Idioms**: Using language idioms (closures, built-ins) appropriately
+    init() {
+        let blank = IsBlankLineSpec()
+        let comment = IsCommentLineSpec()
+        let directive = IsDirectiveLineSpec()      // Future: #pragma, #include
+        let annotation = IsAnnotationLineSpec()    // Future: @deprecated
+
+        // OR chain: any non-semantic line type
+        self.spec = AnySpecification(
+            blank
+                .or(comment)
+                .or(directive)
+                .or(annotation)
+        )
+    }
+}
+```
+
+**Alternative: Negative Specification**
+
+```swift
+/// Lines that contribute to AST (inverse of skippable)
+struct IsSemanticLineSpec: Specification {
+    typealias Candidate = RawLine
+    private let spec: AnySpecification<RawLine>
+
+    init() {
+        // NOT skippable = semantic
+        self.spec = AnySpecification(!IsSkippableLineSpec())
+    }
+
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        spec.isSatisfied(by: candidate)
+    }
+}
+
+// Usage
+if IsSemanticLineSpec().isSatisfied(by: rawLine) {
+    // Process line for AST
+}
+```
+
+**Trade-off Analysis:**
+- ✅ **Pro**: Creates clear domain vocabulary
+- ✅ **Pro**: Reduces cognitive load (1 concept vs 2 conditions)
+- ✅ **Pro**: Single point of definition for "skippable"
+- ⚠️ **Neutral**: Slight overhead vs inline OR (negligible)
+
+**Recommendation**: ✅ **Strongly recommended**
+- High value: transforms technical condition into domain concept
+- Low cost: simple wrapper, no performance impact
+- Future-proof: easy to extend with new line types
+
+#### 4.6.5 Summary Table with Improved Naming
+
+| Specification | Current Condition | Atomic Names | Recommendation | Primary Benefit |
+|---|---|---|---|---|
+| `IsAllowedExtensionSpec` | `.md` OR `.hc` | `HasMarkdownExtensionSpec` OR `HasHypercodeExtensionSpec` | ✅ **Done** | Extensibility: trivial to add `.txt`, `.json` |
+| `SingleLineContentSpec` | `\n` OR `\r` | `ContainsLFSpec` OR `ContainsCRSpec` | ✅ **Done** | Cross-platform: LF/CR/CRLF handling |
+| `IsSkippableLineSpec` | blank OR comment | `IsBlankLineSpec` OR `IsCommentLineSpec` | 🟢 **Strongly Recommended** | Semantics: domain concept over technical condition |
+| `IsNodeLineSpec` | 3× AND (quotes + content) | `StartsWithDoubleQuoteSpec` AND `EndsWithDoubleQuoteSpec` AND `ContentWithinQuotesIsSingleLineSpec` | 🟡 **Optional** | Testability vs Performance trade-off |
+| Path heuristic | `/` OR `.` | `ContainsPathSeparatorSpec` OR `ContainsExtensionDotSpec` → `LooksLikeFileReferenceSpec` | 🟢 **Yes, when complex** | Extensibility: URL schemes, absolute paths, Windows `\` |
+| `NoTabsIndentSpec` | space OR tab (closure) | `IsSpaceOrTabCharSpec` | ❌ **No** | Keep idiomatic: Swift closures are clear |
+
+**Decision Matrix:**
+
+```
+                         ┌─────────────────────────────────────┐
+                         │  Should I Refactor to Atomic Specs? │
+                         └──────────────┬──────────────────────┘
+                                        │
+                    ┌───────────────────┴───────────────────┐
+                    │                                       │
+            ┌───────▼────────┐                      ┌──────▼──────┐
+            │  Yes, refactor │                      │ No, keep as │
+            │   to atomic    │                      │  composite  │
+            └───────┬────────┘                      └──────┬──────┘
+                    │                                      │
+        ┌───────────┴───────────┐              ┌──────────┴──────────┐
+        │ • Adding alternatives │              │ • Simple condition  │
+        │   (extensions, types) │              │ • Idiomatic code    │
+        │ • Used in 3+ places   │              │ • Performance cost  │
+        │ • Complex logic       │              │ • No reuse planned  │
+        │ • Domain concept      │              │                     │
+        └───────────────────────┘              └─────────────────────┘
+```
+
+**Design Principles:**
+
+**✅ Refactor to atomic when:**
+1. **Extensibility**: Easy to add alternatives (file types, comment styles, protocols)
+2. **Reusability**: Condition used in 3+ locations across codebase
+3. **Testability**: Complex logic benefits from isolated unit tests
+4. **Semantics**: Composition creates clearer domain vocabulary
+5. **Documentation**: Atomic specs serve as living business rules
+
+**❌ Keep composite when:**
+1. **Performance**: Avoiding redundant computation (e.g., `trimmedLeft` 3×)
+2. **Simplicity**: Atomic version more complex than inline (diminishing returns)
+3. **Idioms**: Using language features appropriately (closures, built-ins)
+4. **Maintenance**: Single-use condition unlikely to change
+5. **Readability**: Inline condition more obvious than abstraction
+
+**🟡 Context-dependent:**
+- Simple now, but **may grow complex** → prepare for refactoring
+- High performance path → **benchmark before** adding abstraction
+- Team preference → **consistency matters** more than perfect choice
 
 -----
 
