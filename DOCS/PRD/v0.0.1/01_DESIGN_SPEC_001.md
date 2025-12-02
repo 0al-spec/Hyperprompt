@@ -175,6 +175,12 @@ parse(filePath):
     return Program(root)
 ```
 
+**Line Ending Handling:**
+- Parser internally uses LF for all line-based operations
+- When reading source files, normalize CRLF/CR to LF immediately in `readLines()`
+- Line numbering and error reporting use normalized line count
+- No impact on syntax (lexer is line-ending agnostic after normalization)
+
 **Error Conditions:**
 - Tabs in indentation → **Syntax Error (exit 2)**
 - Indentation not divisible by 4 → **Syntax Error (exit 2)**
@@ -254,10 +260,13 @@ resolve(node, root, strict, stack, fileCache):
 
 ```
 emit(node, parentDepth, output):
-    // Determine heading
-    headingLevel ← node.depth + 1
+    // Calculate effective depth: parent's embedding depth + node's depth
+    effectiveDepth ← parentDepth + node.depth
 
-    if node.depth >= 6:
+    // Determine heading with effective depth
+    headingLevel ← effectiveDepth + 1
+
+    if effectiveDepth >= 6:
         title ← "**" + node.literal + "**"
     else:
         hashes ← repeat("#", headingLevel)
@@ -269,19 +278,19 @@ emit(node, parentDepth, output):
     // Emit content based on resolution
     if node.resolution == ResolutionKind.markdownFile:
         content ← node.resolution.content
-        adjusted ← adjustHeadings(content, node.depth + 1)
+        adjusted ← adjustHeadings(content, effectiveDepth + 1)
         output.append(adjusted)
 
     else if node.resolution == ResolutionKind.hypercodeFile:
         childAST ← node.resolution.ast
         for child in childAST.children:
-            emit(child, node.depth, output)
+            emit(child, effectiveDepth, output)  // Pass effective depth to children
 
     // Emit children
     for i, child in node.children:
         if i > 0:
             output.append("\n")  // Blank line between siblings
-        emit(child, node.depth, output)
+        emit(child, effectiveDepth, output)  // Pass effective depth to children
 ```
 
 **Heading Adjustment:**
@@ -319,6 +328,13 @@ adjustHeadings(content, offset):
 **Separator Insertion:**
 - One blank line between consecutive sibling nodes.
 - Two blank lines before H1/H2 headings (except at document start).
+
+**Determinism and Normalization:**
+- Line ending normalization happens during `loadFile()` (parser §4.1)
+- All embedded markdown content is normalized to LF before heading adjustment
+- Final output ensured to have exactly one trailing LF
+- No platform-specific line ending handling
+- All content uses Unix-style LF line endings regardless of source or platform
 
 ---
 
@@ -361,6 +377,12 @@ writeManifest(outputPath):
     json ← jsonEncode(manifest)
     writeFile(outputPath, json)
 ```
+
+**JSON Output Format:**
+- Manifest JSON keys are alphabetically sorted for stable, deterministic output
+- All timestamps are ISO 8601 format
+- Manifest file ends with exactly one LF
+- No pretty-printing customization (single-line or compact format for stability)
 
 -----
 
