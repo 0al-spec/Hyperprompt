@@ -378,13 +378,59 @@ struct ValidQuotesSpec: Specification {
 
 ### 4.5 Path Validation Specifications
 
-#### 4.5.1 IsAllowedExtensionSpec
+#### 4.5.1 Atomic Extension Specifications
 
-Verifies that file extension is `.md` or `.hc`.
+To support multiple allowed extensions in a composable way, define atomic specifications:
+
+```swift
+struct HasMarkdownExtensionSpec: Specification {
+    typealias Candidate = String  // File path
+
+    func isSatisfied(by candidate: String) -> Bool {
+        candidate.hasSuffix(".md")
+    }
+}
+
+struct HasHypercodeExtensionSpec: Specification {
+    typealias Candidate = String  // File path
+
+    func isSatisfied(by candidate: String) -> Bool {
+        candidate.hasSuffix(".hc")
+    }
+}
+```
+
+**Business Rule**: Only specific file extensions are allowed for embedding.
+
+#### 4.5.2 IsAllowedExtensionSpec (Composite with OR)
+
+Verifies that file extension is `.md` or `.hc` using OR composition.
 
 ```swift
 struct IsAllowedExtensionSpec: Specification {
     typealias Candidate = String  // File path
+
+    private let spec: AnySpecification<String>
+
+    init() {
+        // OR composition: .md OR .hc
+        let markdownExt = HasMarkdownExtensionSpec()
+        let hypercodeExt = HasHypercodeExtensionSpec()
+
+        self.spec = AnySpecification(markdownExt.or(hypercodeExt))
+    }
+
+    func isSatisfied(by candidate: String) -> Bool {
+        spec.isSatisfied(by: candidate)
+    }
+}
+```
+
+**Alternative (direct implementation for simplicity):**
+
+```swift
+struct IsAllowedExtensionSpec: Specification {
+    typealias Candidate = String
 
     func isSatisfied(by candidate: String) -> Bool {
         candidate.hasSuffix(".md") || candidate.hasSuffix(".hc")
@@ -392,10 +438,27 @@ struct IsAllowedExtensionSpec: Specification {
 }
 ```
 
+**Extensibility Note**: The atomic approach makes adding new extensions trivial:
+
+```swift
+// Future: support .txt files
+struct HasTextExtensionSpec: Specification {
+    typealias Candidate = String
+    func isSatisfied(by candidate: String) -> Bool {
+        candidate.hasSuffix(".txt")
+    }
+}
+
+// Extended version
+let allowedExtensions = HasMarkdownExtensionSpec()
+    .or(HasHypercodeExtensionSpec())
+    .or(HasTextExtensionSpec())
+```
+
 **Business Rule**: Only Markdown and Hypercode files can be referenced.
 **Error**: Exit code 3 (Resolution Error) for other extensions.
 
-#### 4.5.2 NoTraversalSpec
+#### 4.5.3 NoTraversalSpec
 
 Verifies that path does not contain `..` components attempting to escape root.
 
@@ -412,7 +475,7 @@ struct NoTraversalSpec: Specification {
 **Business Rule**: Path traversal attempts are security violations.
 **Error**: Exit code 3 (Resolution Error).
 
-#### 4.5.3 WithinRootSpec
+#### 4.5.4 WithinRootSpec
 
 Verifies that resolved absolute path is within or below the root directory.
 
@@ -434,6 +497,265 @@ struct WithinRootSpec: Specification {
 
 **Business Rule**: All references must resolve within the compilation root.
 **Error**: Exit code 3 (Resolution Error).
+
+### 4.6 Additional Composite Specification Candidates
+
+The following specifications contain composite conditions that could be refactored into atomic specifications with composition. These are documented here for future refactoring or as design alternatives.
+
+#### 4.6.1 IsNodeLineSpec (Multi-condition)
+
+**Current Implementation:**
+
+```swift
+struct IsNodeLineSpec: Specification {
+    typealias Candidate = RawLine
+
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        let trimmedLeft = candidate.text.drop(while: { $0 == " " })
+
+        // Must start and end with double quote
+        guard trimmedLeft.first == "\"", trimmedLeft.last == "\"" else {
+            return false
+        }
+
+        // Literal content must not contain newline (single-line constraint)
+        let content = trimmedLeft.dropFirst().dropLast()
+        return !content.contains("\n")
+    }
+}
+```
+
+**Composite Conditions:**
+1. `trimmedLeft.first == "\""`  (starts with quote)
+2. `trimmedLeft.last == "\""`   (ends with quote)
+3. `!content.contains("\n")`    (single-line)
+
+**Potential Atomic Refactoring:**
+
+```swift
+struct StartsWithQuoteSpec: Specification {
+    typealias Candidate = RawLine
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        let trimmedLeft = candidate.text.drop(while: { $0 == " " })
+        return trimmedLeft.first == "\""
+    }
+}
+
+struct EndsWithQuoteSpec: Specification {
+    typealias Candidate = RawLine
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        let trimmedLeft = candidate.text.drop(while: { $0 == " " })
+        return trimmedLeft.last == "\""
+    }
+}
+
+struct QuotedContentSingleLineSpec: Specification {
+    typealias Candidate = RawLine
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        let trimmedLeft = candidate.text.drop(while: { $0 == " " })
+        guard trimmedLeft.first == "\"", trimmedLeft.last == "\"" else {
+            return true  // Not quoted, not our concern
+        }
+        let content = trimmedLeft.dropFirst().dropLast()
+        return !content.contains("\n")
+    }
+}
+
+// Composition
+struct IsNodeLineSpec: Specification {
+    typealias Candidate = RawLine
+    private let spec: AnySpecification<RawLine>
+
+    init() {
+        self.spec = AnySpecification(
+            StartsWithQuoteSpec()
+                .and(EndsWithQuoteSpec())
+                .and(QuotedContentSingleLineSpec())
+        )
+    }
+
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        spec.isSatisfied(by: candidate)
+    }
+}
+```
+
+**Trade-off Analysis:**
+- **Pro**: More testable (each condition tested independently)
+- **Pro**: More composable (can reuse StartsWithQuoteSpec elsewhere)
+- **Con**: More verbose (3 specs vs 1)
+- **Con**: Duplicate logic (trimmedLeft computed multiple times)
+
+**Recommendation**: Keep current implementation for performance. Use atomic approach if quote validation becomes more complex (e.g., supporting single quotes, backticks).
+
+#### 4.6.2 NoTabsIndentSpec (Implicit OR in prefix)
+
+**Current Implementation:**
+
+```swift
+struct NoTabsIndentSpec: Specification {
+    typealias Candidate = RawLine
+
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        let indent = candidate.text.prefix { $0 == " " || $0 == "\t" }
+        return !indent.contains("\t")
+    }
+}
+```
+
+**Composite Condition:**
+- `$0 == " " || $0 == "\t"` in closure
+
+**Potential Refactoring:**
+
+```swift
+struct IsWhitespaceCharSpec: Specification {
+    typealias Candidate = Character
+    func isSatisfied(by candidate: Character) -> Bool {
+        candidate == " " || candidate == "\t"
+    }
+}
+
+struct ContainsTabSpec: Specification {
+    typealias Candidate = String
+    func isSatisfied(by candidate: String) -> Bool {
+        candidate.contains("\t")
+    }
+}
+
+struct NoTabsIndentSpec: Specification {
+    typealias Candidate = RawLine
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        let whitespaceSpec = IsWhitespaceCharSpec()
+        let indent = candidate.text.prefix { whitespaceSpec.isSatisfied(by: $0) }
+        return !ContainsTabSpec().isSatisfied(by: String(indent))
+    }
+}
+```
+
+**Trade-off Analysis:**
+- **Pro**: Explicit whitespace definition
+- **Con**: Overly complex for simple task
+- **Con**: Performance overhead
+
+**Recommendation**: Keep current implementation. The closure is idiomatic Swift and clear.
+
+#### 4.6.3 Path Reference Detection (Example Usage)
+
+**Current Pattern (§11.4):**
+
+```swift
+if literal.contains("/") || literal.contains(".") {
+    // Validate as path
+}
+```
+
+**Composite Condition:**
+- `literal.contains("/") || literal.contains(".")`
+
+**Potential Atomic Refactoring:**
+
+```swift
+struct ContainsSlashSpec: Specification {
+    typealias Candidate = String
+    func isSatisfied(by candidate: String) -> Bool {
+        candidate.contains("/")
+    }
+}
+
+struct ContainsDotSpec: Specification {
+    typealias Candidate = String
+    func isSatisfied(by candidate: String) -> Bool {
+        candidate.contains(".")
+    }
+}
+
+struct LooksLikePathSpec: Specification {
+    typealias Candidate = String
+    private let spec: AnySpecification<String>
+
+    init() {
+        self.spec = AnySpecification(
+            ContainsSlashSpec().or(ContainsDotSpec())
+        )
+    }
+
+    func isSatisfied(by candidate: String) -> Bool {
+        spec.isSatisfied(by: candidate)
+    }
+}
+
+// Usage
+if LooksLikePathSpec().isSatisfied(by: literal) {
+    // Validate as path
+}
+```
+
+**Trade-off Analysis:**
+- **Pro**: More descriptive name (`LooksLikePathSpec` vs inline condition)
+- **Pro**: Reusable across codebase
+- **Con**: May be overkill for simple heuristic
+
+**Recommendation**: Use atomic approach if path detection becomes more sophisticated (e.g., checking for URL schemes, absolute paths).
+
+#### 4.6.4 IsBlankLineSpec or IsCommentLineSpec (Example Usage)
+
+**Current Pattern (§11.1):**
+
+```swift
+if IsBlankLineSpec().isSatisfied(by: rawLine) ||
+   IsCommentLineSpec().isSatisfied(by: rawLine) {
+    continue
+}
+```
+
+**Better Pattern with OR Composition:**
+
+```swift
+struct IsSkippableLineSpec: Specification {
+    typealias Candidate = RawLine
+    private let spec: AnySpecification<RawLine>
+
+    init() {
+        self.spec = AnySpecification(
+            IsBlankLineSpec().or(IsCommentLineSpec())
+        )
+    }
+
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        spec.isSatisfied(by: candidate)
+    }
+}
+
+// Usage
+if IsSkippableLineSpec().isSatisfied(by: rawLine) {
+    continue
+}
+```
+
+**Benefit**: Single semantic concept ("skippable line") instead of OR condition.
+
+#### 4.6.5 Summary Table
+
+| Specification | Composite Condition | Atomic Refactoring Recommended? | Reason |
+|---|---|---|---|
+| `IsNodeLineSpec` | AND of 3 conditions | 🟡 Optional | Performance vs testability trade-off |
+| `NoTabsIndentSpec` | OR in closure | ❌ No | Current impl is idiomatic and clear |
+| Path detection | OR of 2 contains | 🟢 Yes, if complex | Good for sophisticated path heuristics |
+| Skip blank/comment | OR of 2 specs | 🟢 Yes | Creates semantic concept |
+| `IsAllowedExtensionSpec` | OR of 2 suffixes | ✅ Done | Extensibility benefit (adding new extensions) |
+| `SingleLineContentSpec` | OR of 2 line breaks | ✅ Done | Cross-platform robustness |
+
+**Design Principle**: Refactor to atomic specs when:
+1. **Extensibility**: Easy to add new alternatives (extensions, formats)
+2. **Reusability**: Atomic specs used in multiple places
+3. **Testability**: Complex conditions need isolated testing
+4. **Semantics**: Composition creates clearer domain concept
+
+Keep composite when:
+1. **Performance**: Avoiding redundant computation
+2. **Simplicity**: Atomic decomposition adds more complexity than value
+3. **Idioms**: Using language idioms (closures, built-ins) appropriately
 
 -----
 
@@ -1947,7 +2269,9 @@ benchmark(name: "Lexer (specification)") {
 ### Path Specifications
 | Specification | Validates | Exit Code |
 |---|---|---|
-| `IsAllowedExtensionSpec` | Extension is .md or .hc | 3 |
+| `HasMarkdownExtensionSpec` | Extension is .md | N/A |
+| `HasHypercodeExtensionSpec` | Extension is .hc | N/A |
+| `IsAllowedExtensionSpec` | Extension is .md or .hc (composite with OR) | 3 |
 | `NoTraversalSpec` | No `..` in path | 3 |
 | `WithinRootSpec` | Path resolves within root | 3 |
 
@@ -1957,6 +2281,7 @@ benchmark(name: "Lexer (specification)") {
 | `ValidNodeLineSpec` | All line + indent + depth specs (AND) | Complete node validation |
 | `ValidReferencePathSpec` | All path safety specs (AND) | Complete path validation |
 | `SingleLineContentSpec` | `ContainsLFSpec` OR `ContainsCRSpec` (then NOT) | Multi-platform line break detection |
+| `IsAllowedExtensionSpec` | `HasMarkdownExtensionSpec` OR `HasHypercodeExtensionSpec` | Extensible file type validation |
 
 ### Decision Specifications
 | Specification | Returns | Purpose |
