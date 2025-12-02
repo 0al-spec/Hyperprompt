@@ -1,99 +1,99 @@
-# SELECT — Выбор следующей задачи для выполнения
+# SELECT — Next Task Selection
 
-## Цель
+## Goal
 
-Автоматический выбор следующей оптимальной задачи из плана работ (`DOCS/Workplan.md`) на основе приоритетов, зависимостей и текущего прогресса.
+Automatically select the next optimal task from the workplan (`DOCS/Workplan.md`) based on priorities, dependencies, and current progress.
 
-## Входные данные
+## Input Data
 
-- **Workplan:** `/home/user/Hyperprompt/DOCS/Workplan.md` — основной план работ с иерархией фаз и задач
-- **Current Task:** `/home/user/Hyperprompt/DOCS/INPROGRESS/next.md` — текущая задача в процессе выполнения
+- **Workplan:** `/home/user/Hyperprompt/DOCS/Workplan.md` — main work plan with hierarchy of phases and tasks
+- **Current Task:** `/home/user/Hyperprompt/DOCS/INPROGRESS/next.md` — current task in progress
 
-## Алгоритм выбора
+## Selection Algorithm
 
-### Шаг 1: Определить статус текущей задачи
+### Step 1: Determine Current Task Status
 
-1. Прочитать `DOCS/INPROGRESS/next.md`
-2. Определить ID текущей задачи (например, `A1`, `A2`, `B1`, и т.д.)
-3. Проверить в `DOCS/Workplan.md`, помечена ли задача как выполненная `[x]`
+1. Read `DOCS/INPROGRESS/next.md`
+2. Extract current task ID (e.g., `A1`, `A2`, `B1`, etc.)
+3. Check in `DOCS/Workplan.md` if the task is marked as completed `[x]`
 
-**Если задача не выполнена:** Остановить выполнение команды и сообщить, что текущая задача еще в процессе.
+**If task is not completed:** Stop command execution and report that the current task is still in progress.
 
-**Если задача выполнена:** Продолжить к шагу 2.
+**If task is completed:** Continue to Step 2.
 
-### Шаг 2: Найти кандидатов для следующей задачи
+### Step 2: Find Candidates for Next Task
 
-Сканировать `DOCS/Workplan.md` и отобрать задачи, которые удовлетворяют **всем** условиям:
+Scan `DOCS/Workplan.md` and select tasks that satisfy **all** conditions:
 
-#### Условие 0: Задача не выполнена
+#### Condition 0: Task Not Completed
 ```markdown
-- [ ] ❌ НЕ выполнена (чекбокс пустой)
-- [x] ✅ Выполнена (исключить)
+- [ ] ❌ NOT completed (empty checkbox)
+- [x] ✅ Completed (exclude)
 ```
 
-#### Условие 1: Зависимости удовлетворены
+#### Condition 1: Dependencies Satisfied
 
-Для каждой задачи проверить поле **Dependencies:**
-- Если `Dependencies: None` → ✅ готова к выполнению
-- Если `Dependencies: A1` → проверить, что задача A1 помечена `[x]` в Workplan
-- Если `Dependencies: A1, A2` → проверить, что **все** зависимости выполнены
+For each task, check the **Dependencies:** field
+- If `Dependencies: None` → ✅ ready for execution
+- If `Dependencies: A1` → verify that task A1 is marked `[x]` in Workplan
+- If `Dependencies: A1, A2` → verify that **all** dependencies are completed
 
-#### Условие 2: Приоритет
+#### Condition 2: Priority
 
-Задачи имеют три уровня приоритета:
-- **[P0] Critical** — критически важные, блокируют весь проект
-- **[P1] High** — важные для core функциональности
-- **[P2] Medium** — желательные, могут быть отложены
+Tasks have three priority levels:
+- **[P0] Critical** — critically important, blocks entire project
+- **[P1] High** — important for core functionality
+- **[P2] Medium** — nice-to-have, can be deferred
 
-**Правило:** Среди кандидатов выбирать задачу с **наивысшим приоритетом** (P0 > P1 > P2).
+**Rule:** Among candidates, select the task with **highest priority** (P0 > P1 > P2).
 
-#### Условие 3: Критический путь
+#### Condition 3: Critical Path
 
-Если несколько задач имеют одинаковый приоритет, предпочитать задачи на **критическом пути**:
+If multiple tasks have the same priority, prefer tasks on the **critical path**:
 ```
 A1 → A2 → A4 → B4 → C2 → D2 → E1 → Release
 ```
 
-Задачи на критическом пути имеют пометку в комментариях или описаны в секции `## 📊 Critical Path Analysis`.
+Tasks on the critical path are marked in comments or described in the `## 📊 Critical Path Analysis` section.
 
-#### Условие 4: Последовательность в плане
+#### Condition 4: Sequential Order in Plan
 
-Если остались равноценные кандидаты, выбрать задачу, которая **ближе всего** к последней выполненной в линейном порядке Workplan.
+If equivalent candidates remain, select the task that is **closest** to the last completed task in linear Workplan order.
 
-### Шаг 3: Сформировать next.md
+### Step 3: Generate next.md
 
-После выбора задачи создать файл `/home/user/Hyperprompt/DOCS/INPROGRESS/next.md` с минимальной информацией:
+After selecting a task, create file `/home/user/Hyperprompt/DOCS/INPROGRESS/next.md` with minimal information:
 
 ```markdown
 # {TASK_ID} — {TASK_NAME}
 ```
 
-**Пример:**
+**Example:**
 ```markdown
 # A2 — Core Types Implementation
 ```
 
-### Шаг 4: Обновить Workplan.md
+### Step 4: Update Workplan.md
 
-Пометить выбранную задачу как **в процессе выполнения**:
+Mark the selected task as **in progress**:
 
-**Было:**
+**Before:**
 ```markdown
 ### A2: Core Types Implementation **[P0]**
 **Dependencies:** A1
 ```
 
-**Стало:**
+**After:**
 ```markdown
 ### A2: Core Types Implementation **[P0]** **INPROGRESS**
 **Dependencies:** A1 ✅
 ```
 
-## Выходные данные
+## Output Data
 
-1. **Обновленный файл:** `/home/user/Hyperprompt/DOCS/INPROGRESS/next.md`
-2. **Обновленный Workplan:** Задача помечена маркером `**INPROGRESS**`
-3. **Отчет в консоль:**
+1. **Updated file:** `/home/user/Hyperprompt/DOCS/INPROGRESS/next.md`
+2. **Updated Workplan:** Task marked with `**INPROGRESS**` marker
+3. **Console report:**
    ```
    ✅ Selected next task: A2 — Core Types Implementation [P0]
    📍 Phase: 1 — Foundation & Core Types
@@ -102,41 +102,41 @@ A1 → A2 → A4 → B4 → C2 → D2 → E1 → Release
    📄 Details: /home/user/Hyperprompt/DOCS/INPROGRESS/next.md
    ```
 
-## Исключения и граничные случаи
+## Exceptions and Edge Cases
 
-### Случай 1: Нет доступных задач
-Если все задачи либо выполнены, либо заблокированы зависимостями:
+### Case 1: No Available Tasks
+If all tasks are either completed or blocked by dependencies:
 ```
 ⚠️  No available tasks found.
    Reason: All tasks are either completed or blocked by dependencies.
    Action: Review Workplan.md for potential circular dependencies.
 ```
 
-### Случай 2: Несколько задач с P0
-Если найдено несколько задач с приоритетом [P0], выбрать первую на **критическом пути**.
+### Case 2: Multiple P0 Tasks
+If multiple tasks with priority [P0] are found, select the first one on the **critical path**.
 
-### Случай 3: Параллельные треки
-Workplan содержит два независимых трека (A: Core Compiler, B: Specifications). Если задачи из разных треков имеют одинаковый приоритет, предпочесть **Track A** (критический путь).
+### Case 3: Parallel Tracks
+Workplan contains two independent tracks (A: Core Compiler, B: Specifications). If tasks from different tracks have the same priority, prefer **Track A** (critical path).
 
-### Случай 4: Текущая задача не завершена
-Если в `next.md` есть задача, но она не помечена `[x]` в Workplan:
+### Case 4: Current Task Not Completed
+If a task exists in `next.md` but is not marked `[x]` in Workplan:
 ```
 ⚠️  Current task A1 is still in progress.
    Action: Complete current task before selecting next.
    Use: COMPLETE command to mark task as done.
 ```
 
-## Контрольные вопросы
+## Checklist
 
-Перед выполнением команды убедитесь:
+Before executing the command, ensure:
 
-- [ ] Текущая задача в `next.md` действительно завершена?
-- [ ] Workplan актуален и содержит все зависимости?
-- [ ] Критический путь учтен при выборе?
-- [ ] Если есть параллельные треки, выбран правильный трек?
+- [ ] Current task in `next.md` is actually completed?
+- [ ] Workplan is up to date and contains all dependencies?
+- [ ] Critical path is considered in selection?
+- [ ] If parallel tracks exist, correct track is selected?
 
 ---
 
-**Версия:** 1.0.0
-**Дата:** 2025-12-02
-**Статус:** Active
+**Version:** 1.0.0
+**Date:** 2025-12-02
+**Status:** Active

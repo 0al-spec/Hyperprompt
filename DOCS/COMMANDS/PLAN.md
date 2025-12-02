@@ -1,71 +1,71 @@
-# PLAN — Создание детального плана выполнения задачи
+# PLAN — Detailed Task Execution Plan Creation
 
-## Цель
+## Goal
 
-Преобразовать краткую задачу из `next.md` в полноценный PRD (Product Requirements Document) с детальным планом выполнения, применяя правила из `DOCS/RULES/01_PRD_PROMPT.md`.
+Transform a brief task from `next.md` into a comprehensive PRD (Product Requirements Document) with a detailed execution plan, applying rules from `DOCS/RULES/01_PRD_PROMPT.md`.
 
-## Входные данные
+## Input Data
 
-- **Current Task:** `/home/user/Hyperprompt/DOCS/INPROGRESS/next.md` — текущая задача (ID и название)
-- **PRD Rules:** `/home/user/Hyperprompt/DOCS/RULES/01_PRD_PROMPT.md` — правила создания PRD
-- **Workplan:** `/home/user/Hyperprompt/DOCS/Workplan.md` — контекст задачи из общего плана
+- **Current Task:** `/home/user/Hyperprompt/DOCS/INPROGRESS/next.md` — current task (ID and name)
+- **PRD Rules:** `/home/user/Hyperprompt/DOCS/RULES/01_PRD_PROMPT.md` — PRD creation rules
+- **Workplan:** `/home/user/Hyperprompt/DOCS/Workplan.md` — task context from overall plan
 
-## Алгоритм создания плана
+## Plan Creation Algorithm
 
-### Шаг 1: Извлечь информацию о задаче
+### Step 1: Extract Task Information
 
-1. Прочитать `DOCS/INPROGRESS/next.md`
-2. Извлечь ID задачи (например, `A1`, `A2`, `B1`)
-3. Извлечь название задачи (например, `Project Initialization`, `Core Types Implementation`)
+1. Read `DOCS/INPROGRESS/next.md`
+2. Extract task ID (e.g., `A1`, `A2`, `B1`)
+3. Extract task name (e.g., `Project Initialization`, `Core Types Implementation`)
 
-### Шаг 2: Собрать контекст из Workplan
+### Step 2: Gather Context from Workplan
 
-1. Найти задачу в `DOCS/Workplan.md` по ID
-2. Извлечь полную информацию:
-   - Приоритет (`[P0]`, `[P1]`, `[P2]`)
-   - Фазу и трек
-   - Оценку времени
-   - Зависимости
-   - Описание задачи
-   - Список подзадач (если есть)
-   - Критерии приемки (если есть)
+1. Find task in `DOCS/Workplan.md` by ID
+2. Extract full information:
+   - Priority (`[P0]`, `[P1]`, `[P2]`)
+   - Phase and track
+   - Time estimate
+   - Dependencies
+   - Task description
+   - Subtask list (if any)
+   - Acceptance criteria (if any)
 
-### Шаг 3: Применить правила PRD
+### Step 3: Apply PRD Rules
 
-Прочитать `DOCS/RULES/01_PRD_PROMPT.md` и применить все правила для создания детального плана:
+Read `DOCS/RULES/01_PRD_PROMPT.md` and apply all rules for creating a detailed plan:
 
-1. **Определить scope и intent**
-   - Переформулировать цель задачи в точных терминах
-   - Определить deliverables и критерии успеха
-   - Отметить ограничения, предположения, зависимости
+1. **Define scope and intent**
+   - Restate task objective in precise terms
+   - Define deliverables and success criteria
+   - Note constraints, assumptions, dependencies
 
-2. **Декомпозировать в иерархический TODO план**
-   - Разбить на атомарные, проверяемые подзадачи
-   - Для каждой подзадачи определить: вход, процесс, выход
-   - Группировать по логическим категориям
-   - Явно указать зависимости и возможности параллелизации
+2. **Decompose into hierarchical TODO plan**
+   - Break down into atomic, verifiable subtasks
+   - For each subtask define: input, process, output
+   - Group by logical categories
+   - Explicitly state dependencies and parallelization opportunities
 
-3. **Обогатить метаданными**
-   - Приоритет (High / Medium / Low)
-   - Оценка усилий (время или сложность)
-   - Требуемые инструменты, фреймворки, API, датасеты
-   - Критерии приемки и методы верификации
+3. **Enrich with metadata**
+   - Priority (High / Medium / Low)
+   - Effort estimate (time or complexity)
+   - Required tools, frameworks, APIs, datasets
+   - Acceptance criteria and verification methods
 
-4. **Создать PRD секции**
-   - Описание фичи и обоснование
-   - Функциональные требования
-   - Нефункциональные требования (производительность, масштабируемость, безопасность)
-   - User interaction flows (если применимо)
-   - Edge cases и сценарии отказа
+4. **Create PRD sections**
+   - Feature description and rationale
+   - Functional requirements
+   - Non-functional requirements (performance, scalability, security)
+   - User interaction flows (if applicable)
+   - Edge cases and failure scenarios
 
-5. **Применить правила качества**
-   - Избегать неопределенных формулировок
-   - Каждый шаг должен быть выполнимым без внешней интерпретации
-   - Поддерживать консистентность терминологии
+5. **Apply quality rules**
+   - Avoid vague language
+   - Each step must be actionable without external interpretation
+   - Maintain terminology consistency
 
-### Шаг 4: Сформировать PRD файл
+### Step 4: Generate PRD File
 
-Создать файл `/home/user/Hyperprompt/DOCS/INPROGRESS/{TASK_ID}.md` со следующей структурой:
+Create file `/home/user/Hyperprompt/DOCS/INPROGRESS/{TASK_ID}.md` with the following structure:
 
 ```markdown
 # {TASK_ID}: {TASK_NAME}
@@ -239,9 +239,9 @@ Task is considered complete when:
 **Status:** Ready for Execution
 ```
 
-### Шаг 5: Обновить next.md (опционально)
+### Step 5: Update next.md (Optional)
 
-Можно добавить ссылку на созданный PRD файл в `next.md`:
+Optionally add a reference to the created PRD file in `next.md`:
 
 ```markdown
 # {TASK_ID} — {TASK_NAME}
@@ -249,10 +249,10 @@ Task is considered complete when:
 **PRD:** `/home/user/Hyperprompt/DOCS/INPROGRESS/{TASK_ID}.md`
 ```
 
-## Выходные данные
+## Output Data
 
-1. **PRD файл:** `/home/user/Hyperprompt/DOCS/INPROGRESS/{TASK_ID}.md`
-2. **Отчет в консоль:**
+1. **PRD file:** `/home/user/Hyperprompt/DOCS/INPROGRESS/{TASK_ID}.md`
+2. **Console report:**
    ```
    ✅ PRD created for task: A2 — Core Types Implementation
    📄 Location: /home/user/Hyperprompt/DOCS/INPROGRESS/A2.md
@@ -265,21 +265,21 @@ Task is considered complete when:
    🚀 Status: Ready for execution
    ```
 
-## Исключения и граничные случаи
+## Exceptions and Edge Cases
 
-### Случай 1: next.md пуст или отсутствует
+### Case 1: next.md Empty or Missing
 ```
 ⚠️  No current task found in next.md
    Action: Run SELECT command first to choose a task
 ```
 
-### Случай 2: Задача не найдена в Workplan
+### Case 2: Task Not Found in Workplan
 ```
 ⚠️  Task {TASK_ID} not found in Workplan.md
    Action: Verify task ID is correct and exists in Workplan
 ```
 
-### Случай 3: PRD файл уже существует
+### Case 3: PRD File Already Exists
 ```
 ⚠️  PRD file already exists: DOCS/INPROGRESS/{TASK_ID}.md
    Options:
@@ -288,53 +288,53 @@ Task is considered complete when:
    - Use different filename
 ```
 
-### Случай 4: Недостаточно контекста в Workplan
+### Case 4: Insufficient Context in Workplan
 ```
 ⚠️  Insufficient context in Workplan for task {TASK_ID}
    Action: PRD created with basic structure, manual enrichment needed
    Note: Review and expand sections marked with [TODO]
 ```
 
-## Контрольные вопросы
+## Checklist
 
-Перед выполнением команды убедитесь:
+Before executing the command, ensure:
 
-- [ ] Задача выбрана через SELECT и находится в `next.md`?
-- [ ] У вас есть достаточно контекста о задаче из Workplan?
-- [ ] Правила PRD в `01_PRD_PROMPT.md` актуальны?
-- [ ] Готовы ли вы к детальному планированию задачи?
+- [ ] Task selected via SELECT and present in `next.md`?
+- [ ] Sufficient context about task from Workplan?
+- [ ] PRD rules in `01_PRD_PROMPT.md` are up to date?
+- [ ] Ready for detailed task planning?
 
 ---
 
-## Интеграция с рабочим процессом
+## Workflow Integration
 
-### Типичный workflow:
+### Typical workflow:
 
-1. **SELECT** → Выбрать следующую задачу из Workplan
-2. **PLAN** → Создать детальный PRD для задачи
-3. **EXECUTE** → Выполнить задачи из PRD
-4. **VERIFY** → Проверить Definition of Done
-5. **COMPLETE** → Пометить задачу как выполненную
+1. **SELECT** → Choose next task from Workplan
+2. **PLAN** → Create detailed PRD for task
+3. **EXECUTE** → Execute tasks from PRD
+4. **VERIFY** → Check Definition of Done
+5. **COMPLETE** → Mark task as completed
 
-### Пример использования:
+### Usage example:
 
 ```bash
-# 1. Выбрать задачу
+# 1. Select task
 $ SELECT
 ✅ Selected: A2 — Core Types Implementation
 
-# 2. Создать детальный план
+# 2. Create detailed plan
 $ PLAN
 ✅ PRD created: DOCS/INPROGRESS/A2.md
 📊 23 atomic tasks identified
 
-# 3. Начать выполнение
+# 3. Start execution
 $ cat DOCS/INPROGRESS/A2.md
 # Read the detailed plan and start executing...
 ```
 
 ---
 
-**Версия:** 1.0.0
-**Дата:** 2025-12-02
-**Статус:** Active
+**Version:** 1.0.0
+**Date:** 2025-12-02
+**Status:** Active
