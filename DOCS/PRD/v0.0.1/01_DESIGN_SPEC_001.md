@@ -11,6 +11,29 @@
 
 This document defines **how** Hyperprompt Compiler v0.1 will be implemented. While the PRD (00_PRD_001.md) states **what** must happen, the Design Spec establishes the architecture, algorithms, data structures, and operational semantics necessary for a correct implementation.
 
+### 1.1 Related Design Documents
+
+**Specification Pattern Integration**: This design spec is complemented by [02_DESIGN_SPEC_SPECIFICATION_CORE.md](./02_DESIGN_SPEC_SPECIFICATION_CORE.md), which defines the integration of the SpecificationCore library for implementing validation and classification logic.
+
+**Key approach**: Rather than implementing grammar validation as scattered imperative checks throughout the compiler, we use the Specification Pattern to create an executable representation of the Hypercode EBNF grammar. This is achieved through the **HypercodeGrammar** module—a separate Swift package depending on SpecificationCore that contains all grammar rules as composable specification objects.
+
+**Organization**: Specifications are organized by linguistic levels:
+- **Lexical** (terminal symbols): character-level checks for whitespace, line breaks, quotes
+- **Syntactic** (non-terminal symbols): line and node structure validation
+- **Semantic** (business rules): security policies, depth limits, path validation
+
+**Core concepts**:
+- **Atomic specifications**: Single-purpose validators (e.g., `ContainsLFSpec`, `HasMarkdownExtensionSpec`)
+- **Composition**: Complex rules built using `.and()`, `.or()`, and `!` operators
+- **Decision specifications**: `FirstMatchSpec` implements EBNF alternations (e.g., `line = blank | comment | node`)
+- **Semantic naming**: Specifications use domain-focused names that explain intent (e.g., `ContainsPathSeparatorSpec` rather than `ContainsSlashSpec`)
+
+**Benefits**:
+- **Single source of truth**: Grammar lives in one module, not scattered across compiler code
+- **Testability**: Each specification can be unit-tested independently
+- **Extensibility**: Adding new language features (e.g., annotations) requires only grammar changes
+- **Versioning**: Grammar module can evolve independently of compiler implementation
+
 -----
 
 ## 2. High‑Level Architecture
