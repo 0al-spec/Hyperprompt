@@ -66,34 +66,258 @@ SpecificationCore enhances the compiler's validation capabilities without replac
 └─────────────────────────────────────────────────────────┘
 ```
 
-### 2.2 Module Boundary
+### 2.2 Module Boundary: Grammar as Executable Specifications
 
-A new **Core.Validation** submodule will be introduced:
+**Key Insight**: Specifications form an **executable representation** of the Hypercode EBNF grammar. Instead of scattering validation logic across the compiler, we centralize grammar rules in a dedicated module that depends on SpecificationCore.
+
+#### 2.2.1 Module Structure
 
 ```
-Module_Core/
-├── SourceLocation.swift
-├── Diagnostic.swift
-├── CompilerError.swift
-├── FileSystem.swift
-└── Validation/
-    ├── Specifications/
-    │   ├── LineSpecs.swift         # IsBlankLineSpec, IsCommentLineSpec, etc.
-    │   ├── IndentationSpecs.swift  # NoTabsIndentSpec, IndentMultipleOf4Spec
-    │   ├── DepthSpecs.swift        # DepthWithinLimitSpec
-    │   ├── PathSpecs.swift         # IsAllowedExtensionSpec, NoTraversalSpec
-    │   └── ContentSpecs.swift      # SingleLineContentSpec, ValidQuotesSpec
-    ├── Decisions/
-    │   ├── LineKindDecision.swift  # FirstMatchSpec for line classification
-    │   └── PathTypeDecision.swift  # DecisionSpec for path resolution
-    └── DomainTypes.swift           # RawLine, LineKind, ParsedLine
+Sources/
+├── SpecificationCore/           # External dependency (GitHub)
+│   ├── Specification.swift
+│   ├── CompositionOperators.swift
+│   ├── DecisionSpec.swift
+│   └── ...
+│
+├── HypercodeGrammar/            # NEW: Executable grammar specifications
+│   ├── Package.swift            # depends on: SpecificationCore
+│   │
+│   ├── Lexical/                 # Lexical structure (EBNF: char, space, newline)
+│   │   ├── Whitespace/
+│   │   │   ├── IsBlankLineSpec.swift
+│   │   │   ├── NoTabsIndentSpec.swift
+│   │   │   └── IndentMultipleOf4Spec.swift
+│   │   │
+│   │   ├── LineBreaks/
+│   │   │   ├── ContainsLFSpec.swift
+│   │   │   ├── ContainsCRSpec.swift
+│   │   │   └── SingleLineContentSpec.swift  # Composite
+│   │   │
+│   │   └── Quotes/
+│   │       ├── StartsWithDoubleQuoteSpec.swift
+│   │       ├── EndsWithDoubleQuoteSpec.swift
+│   │       ├── ContentWithinQuotesIsSingleLineSpec.swift
+│   │       └── ValidQuotesSpec.swift         # Composite
+│   │
+│   ├── Syntactic/               # Syntactic structure (EBNF: line, node, program)
+│   │   ├── Lines/
+│   │   │   ├── IsCommentLineSpec.swift
+│   │   │   ├── IsNodeLineSpec.swift
+│   │   │   ├── IsSkippableLineSpec.swift     # Semantic grouping
+│   │   │   └── IsSemanticLineSpec.swift      # Inverse of skippable
+│   │   │
+│   │   ├── Nodes/
+│   │   │   ├── ValidNodeLineSpec.swift       # Composite: full node validation
+│   │   │   └── DepthWithinLimitSpec.swift
+│   │   │
+│   │   └── References/
+│   │       ├── HasMarkdownExtensionSpec.swift
+│   │       ├── HasHypercodeExtensionSpec.swift
+│   │       ├── IsAllowedExtensionSpec.swift  # Composite
+│   │       ├── ContainsPathSeparatorSpec.swift
+│   │       ├── ContainsExtensionDotSpec.swift
+│   │       └── LooksLikeFileReferenceSpec.swift  # Heuristic
+│   │
+│   ├── Semantic/                # Semantic validation (paths, security, depth)
+│   │   ├── Security/
+│   │   │   ├── NoTraversalSpec.swift
+│   │   │   └── WithinRootSpec.swift
+│   │   │
+│   │   └── Paths/
+│   │       └── ValidReferencePathSpec.swift  # Composite: all path safety
+│   │
+│   ├── Decisions/               # Classification using FirstMatchSpec
+│   │   ├── LineKindDecision.swift
+│   │   └── PathTypeDecision.swift
+│   │
+│   └── DomainTypes.swift        # RawLine, LineKind, ParsedLine, PathKind
+│
+├── Module_Core/                 # Compiler core (NO grammar logic here)
+│   ├── SourceLocation.swift
+│   ├── Diagnostic.swift
+│   ├── CompilerError.swift
+│   └── FileSystem.swift
+│
+├── Module_Parser/               # Uses HypercodeGrammar
+│   ├── Lexer.swift              # imports HypercodeGrammar
+│   ├── Parser.swift             # imports HypercodeGrammar
+│   └── AST.swift
+│
+└── Module_Resolver/             # Uses HypercodeGrammar
+    ├── ReferenceResolver.swift  # imports HypercodeGrammar
+    ├── DependencyTracker.swift
+    └── FileLoader.swift
+```
+
+#### 2.2.2 Dependency Graph
+
+```
+SpecificationCore (external)
+        ↓
+HypercodeGrammar (executable EBNF)
+        ↓
+    ┌───┴───┐
+    ↓       ↓
+Module_Parser   Module_Resolver
+    ↓               ↓
+    └───────┬───────┘
+            ↓
+      Module_Emitter
+```
+
+**Benefits of Separate Grammar Module:**
+
+1. **Single Source of Truth**: Grammar rules live in one place, not scattered across parser/lexer
+2. **Testability**: Test grammar rules independently of compiler pipeline
+3. **Documentation**: Specifications ARE the grammar (executable + self-documenting)
+4. **Versioning**: Grammar can evolve independently (HypercodeGrammar v2 for language changes)
+5. **Reusability**: Other tools (linters, formatters) can use same grammar specs
+6. **Type Safety**: Grammar violations caught at compile time, not runtime
+
+#### 2.2.3 Package.swift for HypercodeGrammar
+
+```swift
+// swift-tools-version: 5.9
+import PackageDescription
+
+let package = Package(
+    name: "HypercodeGrammar",
+    platforms: [
+        .macOS(.v12),
+        .linux
+    ],
+    products: [
+        .library(
+            name: "HypercodeGrammar",
+            targets: ["HypercodeGrammar"]
+        ),
+    ],
+    dependencies: [
+        .package(
+            url: "https://github.com/SoundBlaster/SpecificationCore",
+            from: "1.0.0"
+        )
+    ],
+    targets: [
+        .target(
+            name: "HypercodeGrammar",
+            dependencies: ["SpecificationCore"]
+        ),
+        .testTarget(
+            name: "HypercodeGrammarTests",
+            dependencies: ["HypercodeGrammar"]
+        ),
+    ]
+)
 ```
 
 -----
 
-## 3. Domain Types
+## 3. Grammar-to-Specification Mapping
 
-### 3.1 Lexer Domain Types
+### 3.1 EBNF Grammar (from PRD §5.2)
+
+```ebnf
+program     = { line }, node, { line } ;
+line        = blank | comment | node ;
+blank       = { space }, newline ;
+comment     = [ indent ], "#", { char }, newline ;
+node        = [ indent ], '"', content, '"', newline ;
+indent      = { "    " } ;
+content     = { char } ;
+char        = any-char - newline ;
+space       = U+0020 ;
+newline     = U+000A | U+000D, U+000A ;
+any-char    = ? any Unicode scalar value ? ;
+```
+
+### 3.2 EBNF → Specification Mapping Table
+
+| EBNF Production | Specification | Type | Location |
+|---|---|---|---|
+| **Lexical Level** |
+| `space = U+0020` | `IsBlankLineSpec` | Atomic | `Lexical/Whitespace/` |
+| `indent = { "    " }` | `IndentMultipleOf4Spec` | Atomic | `Lexical/Whitespace/` |
+| `indent` (no tabs) | `NoTabsIndentSpec` | Atomic | `Lexical/Whitespace/` |
+| `newline = \n \| \r\n` | `ContainsLFSpec` OR `ContainsCRSpec` | Atomic | `Lexical/LineBreaks/` |
+| `char - newline` | `SingleLineContentSpec` | Composite (OR+NOT) | `Lexical/LineBreaks/` |
+| `'"'` (opening) | `StartsWithDoubleQuoteSpec` | Atomic | `Lexical/Quotes/` |
+| `'"'` (closing) | `EndsWithDoubleQuoteSpec` | Atomic | `Lexical/Quotes/` |
+| `'"' content '"'` | `ValidQuotesSpec` | Composite (AND) | `Lexical/Quotes/` |
+| **Syntactic Level** |
+| `blank` | `IsBlankLineSpec` | Atomic | `Syntactic/Lines/` |
+| `comment` | `IsCommentLineSpec` | Atomic | `Syntactic/Lines/` |
+| `node` (structure) | `IsNodeLineSpec` | Atomic | `Syntactic/Lines/` |
+| `node` (full validation) | `ValidNodeLineSpec` | Composite (AND) | `Syntactic/Nodes/` |
+| `line = blank \| comment \| node` | `LineKindDecision` | Decision (FirstMatch) | `Decisions/` |
+| skippable lines | `IsSkippableLineSpec` | Semantic (OR) | `Syntactic/Lines/` |
+| semantic lines | `IsSemanticLineSpec` | Semantic (NOT) | `Syntactic/Lines/` |
+| **Semantic Level** |
+| depth ≤ 10 | `DepthWithinLimitSpec` | Semantic | `Syntactic/Nodes/` |
+| `.md` extension | `HasMarkdownExtensionSpec` | Atomic | `Syntactic/References/` |
+| `.hc` extension | `HasHypercodeExtensionSpec` | Atomic | `Syntactic/References/` |
+| allowed extensions | `IsAllowedExtensionSpec` | Composite (OR) | `Syntactic/References/` |
+| no `..` in path | `NoTraversalSpec` | Security | `Semantic/Security/` |
+| within root | `WithinRootSpec` | Security | `Semantic/Security/` |
+| safe reference | `ValidReferencePathSpec` | Composite (AND) | `Semantic/Paths/` |
+| path heuristic | `LooksLikeFileReferenceSpec` | Heuristic (OR) | `Syntactic/References/` |
+
+### 3.3 Mapping Rationale
+
+**Lexical specifications** validate character-level structure:
+- Whitespace, line breaks, quotes
+- Direct mapping to EBNF terminals
+
+**Syntactic specifications** validate line and node structure:
+- Line types (blank, comment, node)
+- Node composition rules
+- Maps to EBNF non-terminals
+
+**Semantic specifications** enforce business rules not in EBNF:
+- Depth limits (not expressible in EBNF)
+- Security constraints (path traversal)
+- Domain-specific validations
+
+**Decision specifications** implement EBNF alternation (|):
+- `line = blank | comment | node` → `LineKindDecision`
+- Uses `FirstMatchSpec` for priority-based selection
+
+### 3.4 Grammar Evolution Example
+
+When adding new syntax (e.g., annotations), update only HypercodeGrammar:
+
+```swift
+// EBNF addition: line = blank | comment | annotation | node
+// New spec in Syntactic/Lines/
+struct IsAnnotationLineSpec: Specification {
+    typealias Candidate = RawLine
+    func isSatisfied(by candidate: RawLine) -> Bool {
+        let trimmed = candidate.text.trimmingCharacters(in: .whitespaces)
+        return trimmed.hasPrefix("@")
+    }
+}
+
+// Update decision (maintains priority)
+struct LineKindDecision: DecisionSpec {
+    init() {
+        decision = FirstMatchSpec(decisions: [
+            (IsBlankLineSpec(), .blank),
+            (IsCommentLineSpec(), .comment),
+            (IsAnnotationLineSpec(), .annotation),  // New
+            (ValidNodeLineSpec(), .node)
+        ])
+    }
+}
+```
+
+**No changes needed** in Parser, Lexer, or Resolver — grammar change is isolated.
+
+-----
+
+## 4. Domain Types
+
+### 4.1 Lexer Domain Types
 
 Before integrating specifications, we introduce lightweight domain types for the lexer stage:
 
@@ -122,7 +346,7 @@ struct ParsedLine {
 }
 ```
 
-### 3.2 Resolver Domain Types
+### 4.2 Resolver Domain Types
 
 ```swift
 /// Classification result for path validation
