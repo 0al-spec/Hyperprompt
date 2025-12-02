@@ -9,6 +9,10 @@ Transform a brief task from `next.md` into a comprehensive PRD (Product Requirem
 - **Current Task:** `/home/user/Hyperprompt/DOCS/INPROGRESS/next.md` — current task (ID and name)
 - **PRD Rules:** `/home/user/Hyperprompt/DOCS/RULES/01_PRD_PROMPT.md` — PRD creation rules
 - **Workplan:** `/home/user/Hyperprompt/DOCS/Workplan.md` — task context from overall plan
+- **Project PRD:** `/home/user/Hyperprompt/DOCS/PRD/v0.0.1/00_PRD_001.md` — project requirements document
+- **Design Specs:**
+  - `/home/user/Hyperprompt/DOCS/PRD/v0.0.1/01_DESIGN_SPEC_001.md` — core design specification
+  - `/home/user/Hyperprompt/DOCS/PRD/v0.0.1/02_DESIGN_SPEC_SPECIFICATION_CORE.md` — SpecificationCore integration spec
 
 ## Plan Creation Algorithm
 
@@ -229,6 +233,10 @@ Task is considered complete when:
 
 - **Workplan:** `/home/user/Hyperprompt/DOCS/Workplan.md` (Phase {N}, Section {TASK_ID})
 - **PRD Authoring Rules:** `/home/user/Hyperprompt/DOCS/RULES/01_PRD_PROMPT.md`
+- **Project PRD:** `/home/user/Hyperprompt/DOCS/PRD/v0.0.1/00_PRD_001.md`
+- **Design Specs:**
+  - Core Design: `/home/user/Hyperprompt/DOCS/PRD/v0.0.1/01_DESIGN_SPEC_001.md`
+  - SpecificationCore Integration: `/home/user/Hyperprompt/DOCS/PRD/v0.0.1/02_DESIGN_SPEC_SPECIFICATION_CORE.md`
 - **Related Tasks:** {List of related task IDs}
 - **Critical Path:** {Position on critical path, if applicable}
 
@@ -303,35 +311,6 @@ Before executing the command, ensure:
 - [ ] Sufficient context about task from Workplan?
 - [ ] PRD rules in `01_PRD_PROMPT.md` are up to date?
 - [ ] Ready for detailed task planning?
-
----
-
-## Workflow Integration
-
-### Typical workflow:
-
-1. **SELECT** → Choose next task from Workplan
-2. **PLAN** → Create detailed PRD for task
-3. **EXECUTE** → Execute tasks from PRD
-4. **VERIFY** → Check Definition of Done
-5. **COMPLETE** → Mark task as completed
-
-### Usage example:
-
-```bash
-# 1. Select task
-$ SELECT
-✅ Selected: A2 — Core Types Implementation
-
-# 2. Create detailed plan
-$ PLAN
-✅ PRD created: DOCS/INPROGRESS/A2.md
-📊 23 atomic tasks identified
-
-# 3. Start execution
-$ cat DOCS/INPROGRESS/A2.md
-# Read the detailed plan and start executing...
-```
 
 ---
 
