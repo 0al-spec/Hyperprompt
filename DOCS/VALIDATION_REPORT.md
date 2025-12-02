@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-Found **7 critical issues** that must be resolved before implementation, plus multiple edge cases and ambiguities.
+Found **6 critical issues** that must be resolved before implementation (note: issue #6 was a false alarm and removed), plus multiple edge cases and ambiguities.
 
 ---
 
@@ -121,23 +121,21 @@ The depth of nodes from recursive .hc compilation is NOT specified.
 
 ---
 
-### 6. Literal Extraction Ambiguity
-**Severity:** CRITICAL
+### 6. Literal Extraction — FALSE ALARM (RESOLVED)
+**Severity:** ~~CRITICAL~~ RESOLVED
 **Location:** PRD §3.1.1, §5.3
-**Problem:**
-- PRD: "extract the content **between the first and last double quotation mark**"
+**Problem (Original):**
+- Validation report incorrectly claimed "first and last quote" rule would extract `File with "` from `"File with "quotes" inside.md"`
 
-But what if literal contains escaped quotes? Oh wait... section 5.3 was deleted (escape sequences removed).
+**Correction:**
+The extraction rule **works correctly**. "Between the first and last double quotation mark" means:
+- First quote: position 0
+- Last quote: position at end of line
+- Extracted content: `File with "quotes" inside.md` ✓
 
-Current grammar allows any character except newline inside quotes. But what about:
-- `"File with "quotes" inside.md"` → Should this be `File with "quotes" inside.md`? Or error?
-- Currently, the "first and last quote" rule would extract: `File with "`
+Interior quotation marks ARE allowed and handled correctly.
 
-This creates ambiguity: are interior quotes allowed or not?
-
-**Current State:** After escape sequences removal, interior quotes are syntactically allowed but semantically undefined.
-
-**Action:** Specify: "Interior quotation marks are not allowed. Quotes must be balanced."
+**Resolution:** Remove this from critical issues list. Interior quotes work as specified.
 
 ---
 
