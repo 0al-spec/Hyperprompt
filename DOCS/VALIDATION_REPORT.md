@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-Found **6 critical issues** that must be resolved before implementation (note: issue #6 was a false alarm and removed), plus multiple edge cases and ambiguities.
+Initial scan found **7 reported critical issues**, but 2 are false alarms (issues #4 and #6), leaving **5 genuine critical issues** that must be resolved before implementation, plus multiple edge cases and ambiguities.
 
 ---
 
@@ -69,22 +69,35 @@ This is a direct contradiction: are non-.md/.hc files allowed or forbidden?
 
 ---
 
-### 4. Path Resolution Root Ambiguity
-**Severity:** CRITICAL
+### 4. Path Resolution Root Ambiguity — FALSE ALARM (RESOLVED)
+**Severity:** ~~CRITICAL~~ RESOLVED
 **Location:** PRD §3.1.3, Design Spec §4.2
-**Problem:**
-- PRD §3.1.3: "file exists at the path formed by joining the compilation root directory with the literal content"
-- This is clear: relative to root
+**Problem (Original):**
+- Validation report claimed ambiguity: paths resolve from root OR from containing file's directory?
 
-BUT what about nested .hc files? If `a.hc` in subdirectory `sub/` references a file `file.md`:
-- Does it resolve from root? (root + "file.md")
-- Or from containing file's directory? (root + "sub/file.md")
+**Correction:**
+The spec is **already clear** and consistent:
 
-This is NOT specified and will cause implementation disputes.
+**Design Spec §4.2** explicitly shows:
+```swift
+path ← canonicalize(joinPath(root, literal))
+```
 
-**Current Assumption in Design Spec:** Uses single root parameter for all resolutions, suggesting all paths are relative to root, not to the containing file.
+All file references resolve **relative to the single compilation root directory**, NOT to the containing file's directory.
 
-**Action:** Explicitly specify: "All file references resolve relative to the compilation root directory, NOT the containing file's directory."
+**Example (correctly handled):**
+```
+Root: /project/
+File: /project/prompt.hc
+References:
+  - "main_goals.md"        → /project/main_goals.md
+  - "current_task/index.md" → /project/current_task/index.md
+  - "tests/index.md"       → /project/tests/index.md
+```
+
+This is the correct, simplest design: single root for all resolution.
+
+**Resolution:** Remove from critical issues. Spec is already clear and correct.
 
 ---
 
