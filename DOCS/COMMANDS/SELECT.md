@@ -14,7 +14,7 @@
    - Highest priority (P0 > P1 > P2)
    - On critical path (if tie)
    - Sequential order (if tie)
-2. **Add to** `next.md`: `# {TASK_ID} — {TASK_NAME}`
+2. **Add to** `next.md`: `# Next Task: {TASK_ID} — {TASK_NAME}`
 3. **Update Workplan** with `**INPROGRESS**` marker and dependency checkmarks
 
 ## Output
