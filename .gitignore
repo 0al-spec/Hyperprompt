@@ -1,0 +1,23 @@
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Xcode
+xcuserdata/
+*.xcodeproj
+*.xcworkspace
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# IDEs
+.vscode/
+.idea/
+
+# Swift
+*.swiftmodule
+*.swiftdoc
+*.swiftsourceinfo
