@@ -17,8 +17,8 @@
 
 ## 2. Functional Requirements
 1. **Triggers**
-   - On pull requests targeting default branch.
-   - On pushes to default branch.
+   - On pull requests targeting default branch **only when source code or GitHub Actions files change** (e.g., include `src/**/*`, `*.py`, `.github/workflows/**`).
+   - On pushes to default branch with the same path filters (source code and GitHub Actions changes only).
    - Manual dispatch for release verification.
 2. **Job Stages (Linux)**
    - **Prepare:** checkout, set up languages/toolchains (detected from repo or configurable), enable caching.
