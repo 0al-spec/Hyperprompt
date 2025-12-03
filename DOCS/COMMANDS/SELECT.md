@@ -22,7 +22,6 @@
 - Updated `DOCS/Workplan.md` with progress markers
 
 ## Exceptions
-- Current task not completed → Exit with verbose error
 - No available tasks → Exit with verbose error
 - Multiple P0 tasks → Select first on critical path
 - Parallel tracks tie → Prefer Track A
