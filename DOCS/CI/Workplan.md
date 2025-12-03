@@ -6,7 +6,7 @@ Implement GitHub Actions CI for the Hyperprompt repository targeting Linux runne
 ## 2. Task Breakdown
 | ID | Task | Priority | Effort | Dependencies | Owner | Acceptance Criteria |
 | --- | --- | --- | --- | --- | --- | --- |
-| CI-01 | Audit repository to identify primary language, package manager, and existing scripts (`test`, `lint`) | High | 0.5h | None | Dev | Inventory documented; missing scripts noted | 
+| CI-01 | Audit repository to identify primary language, package manager, and existing scripts (`test`, `lint`) | High | 0.5h | None | Dev **INPROGRESS** | Inventory documented; missing scripts noted | 
 | CI-02 | Define workflow triggers (PR to default branch with path filters for source code/GitHub Actions files, push to default with same filters, manual dispatch) | High | 0.5h | CI-01 | Dev | `.github/workflows/ci.yml` contains required triggers and path filters |
 | CI-03 | Configure Linux job environment (runner, checkout, toolchain setup, caching) | High | 1h | CI-02 | Dev | Job installs toolchain versions; cache keys parameterized; workflow lint passes | 
 | CI-04 | Add static analysis step conditioned on available scripts (e.g., `npm run lint`, `ruff check`, `flake8`, `pylint`, or `black --check`) | Medium | 1h | CI-03 | Dev | Step skips with message if script missing; fails on non-zero exit |
