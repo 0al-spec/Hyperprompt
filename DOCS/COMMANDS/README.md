@@ -154,40 +154,38 @@ $ claude "Выполни команду EXECUTE"
 
 **What it does:**
 
-**Phase 1: Preparation**
-- Reads PRD for current task
-- Parses task breakdown
-- Checks dependencies
-- Shows execution plan
+**IMPORTANT:** EXECUTE is a **thin workflow wrapper**, NOT an AI agent that writes code automatically. Developer/Claude does the actual work following the PRD.
 
-**Phase 2: Execution (Interactive)**
-For each phase in PRD:
-  - Display phase goal
-  - For each subtask:
-    - Execute actions (create files, run commands)
-    - Verify acceptance criteria
-    - Mark in checklist ✓
-    - Ask: Continue? (y/n/skip/abort)
-  - Commit phase completion
+**Phase 1: Pre-Flight Checks**
+- Verifies git is clean
+- Checks dependencies satisfied
+- Loads PRD for current task
+- Displays execution plan
 
-**Phase 3: Verification**
-- Run all acceptance tests
-- Verify quality checklist
-- Generate completion report
+**Phase 2: Work Period**
+```
+[DEVELOPER/CLAUDE DOES THE ACTUAL WORK]
+```
+- PRD contains all instructions
+- Templates available in PRD §8
+- Acceptance criteria in PRD §3.3
+- Developer follows PRD step-by-step
+
+**Phase 3: Post-Flight Validation**
+- Runs acceptance tests (swift build, swift test, etc.)
+- Verifies quality checklist
+- Generates completion report
 
 **Phase 4: Finalization**
-- Mark task complete in next.md
-- Update Workplan with [x]
-- Create final commit
-- Push to remote
-- Suggest: "Run SELECT for next task"
+- Marks task complete in next.md
+- Updates Workplan with [x]
+- Creates commit with deliverables
+- Pushes to remote
+- Suggests: "Run SELECT for next task"
 
-**Smart Actions:**
-- Parses PRD templates → executes them
-- Creates directories: `mkdir -p Sources/{Core,Parser,...}`
-- Writes files from templates: `Package.swift`, `main.swift`
-- Runs commands: `swift build`, `swift test`
-- Validates results against acceptance criteria
+**Philosophy:**
+All implementation info already exists in PRD/specs.
+EXECUTE only automates workflow boilerplate (checks, validation, commits).
 
 **Example output:**
 ```
@@ -195,19 +193,33 @@ For each phase in PRD:
 ║  EXECUTE: A1 — Project Initialization                      ║
 ╚════════════════════════════════════════════════════════════╝
 
-PHASE 1: Directory Structure Creation
+✓ Pre-Flight Checks:
+  [✓] Git working tree clean
+  [✓] PRD exists
+  [✓] Dependencies satisfied
 
-Subtask 1.1: Create Sources Directory Structure
-🔧 Action: mkdir -p Sources/{Core,Parser,Resolver,Emitter,CLI,Statistics}
-✅ Created: Sources/Core/
-✅ Created: Sources/Parser/
-...
-✓ Verification: All 6 directories exist
-✓ Updated checklist: [1/13 = 8%]
+📝 Plan Overview:
+  Phase 1: Directory Structure (2 subtasks, 30 min)
+  Phase 2: Package Configuration (8 subtasks, 1 hour)
+  Phase 3: Verification (3 subtasks, 30 min)
 
-Continue to next subtask? [y/n]: y
+PRD contains all implementation instructions.
+Press [Enter] to continue...
 
-... (continues through all subtasks)
+─────────────────────────────────────────────────────────────
+
+[YOU WORK ON THE TASK FOLLOWING PRD]
+
+... (time passes, you create files, write code) ...
+
+─────────────────────────────────────────────────────────────
+
+Running validation...
+
+✓ Acceptance Tests:
+  [✓] swift build — PASS
+  [✓] swift test — PASS
+  [✓] Directory structure — PASS
 
 ✅ TASK COMPLETED: A1 — Project Initialization
 📊 Subtasks: 13/13 (100%)
@@ -571,6 +583,7 @@ Options:
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 1.1.0 | 2025-12-03 | Claude | Simplified EXECUTE to thin wrapper philosophy |
 | 1.0.0 | 2025-12-03 | Claude | Initial workflow documentation |
 
 ---
