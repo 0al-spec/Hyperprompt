@@ -13,14 +13,14 @@
 1. **Extract task** from `next.md` (ID, name)
 2. **Gather context** from `Workplan.md` (priority, phase, dependencies, description)
 3. **Apply rules** from `01_PRD_PROMPT.md`
-4. **Generate** `DOCS/INPROGRESS/{TASK_ID}.md` following `01_PRD_PROMPT.md` structure
+4. **Generate** `DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md` following `01_PRD_PROMPT.md` structure
 
 ## Output
-- PRD file at `DOCS/INPROGRESS/{TASK_ID}.md`
+- PRD file at `DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md`
 
 ## Exceptions
-- No task in `next.md` → Run SELECT first
-- Task not in Workplan → Verify ID
+- No task in `next.md` → Exit with verbose error
+- Task not in Workplan → Exit with verbose error
 - PRD exists → Use --overwrite or --append
 - Insufficient context → Manual enrichment needed
 
