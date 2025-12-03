@@ -8,7 +8,7 @@ Move completed task PRDs from `DOCS/INPROGRESS/` to `DOCS/TASKS_ARCHIVE/` to kee
 
 ## Philosophy
 
-- Keep `INPROGRESS/` lean (only active work)
+- Keep `INPROGRESS/` clean (only active work)
 - Preserve completed PRDs for reference
 - Maintain project history
 - Enable workspace cleanup
@@ -19,7 +19,7 @@ Move completed task PRDs from `DOCS/INPROGRESS/` to `DOCS/TASKS_ARCHIVE/` to kee
 
 - `DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md` — completed PRD files
 - `DOCS/Workplan.md` — verify tasks marked `[x]` complete
-- `DOCS/INPROGRESS/next.md` — ensure not archiving active task
+- `DOCS/INPROGRESS/next.md` — remove completed tasks (counterbalance to SELECT)
 
 ---
 
@@ -35,8 +35,13 @@ for prd_file in DOCS/INPROGRESS/*.md; do
 
   # Check if marked complete in Workplan
   if grep -q "^\- \[x\].*${TASK_ID}" DOCS/Workplan.md; then
-    # Check if not current active task
-    if ! grep -q "^# Next Task: ${TASK_ID}" DOCS/INPROGRESS/next.md; then
+    # Check if currently active (being worked on) in next.md
+    if grep -q "^# Next Task: ${TASK_ID}" DOCS/INPROGRESS/next.md && \
+       ! grep -q "Status.*✅.*Completed" DOCS/INPROGRESS/next.md; then
+      # Skip: task is currently being worked on
+      continue
+    else
+      # Task is completed and safe to archive
       candidates+=("$prd_file")
     fi
   fi
@@ -44,8 +49,8 @@ done
 ```
 
 **Safety checks:**
-- ✅ Task marked `[x]` in Workplan
-- ✅ Task NOT in `next.md` (not active)
+- ✅ Task marked `[x]` in Workplan (source of truth)
+- ✅ Task NOT currently active in `next.md` (not being worked on)
 - ✅ PRD file exists in INPROGRESS/
 
 ---
@@ -60,6 +65,13 @@ TASK_ID="A1"
 TASK_NAME="Project_Initialization"
 COMPLETION_DATE=$(grep "Completed on" "$prd_file" || date +%Y-%m-%d)
 
+# Remove task from next.md (counterbalance to SELECT)
+# This cleans up completed task references
+if grep -q "^# Next Task: ${TASK_ID}" DOCS/INPROGRESS/next.md; then
+  # Remove the entire task section from next.md
+  sed -i "/^# Next Task: ${TASK_ID}/,/^# Next Task:/d" DOCS/INPROGRESS/next.md
+fi
+
 # Create archive structure
 mkdir -p DOCS/TASKS_ARCHIVE/
 
@@ -67,7 +79,7 @@ mkdir -p DOCS/TASKS_ARCHIVE/
 mv "DOCS/INPROGRESS/${TASK_ID}_${TASK_NAME}.md" \
    "DOCS/TASKS_ARCHIVE/${TASK_ID}_${TASK_NAME}.md"
 
-# Optional: Add archive metadata to file
+# Add archive metadata to file
 echo "\n---\n**Archived:** ${COMPLETION_DATE}" >> \
   "DOCS/TASKS_ARCHIVE/${TASK_ID}_${TASK_NAME}.md"
 ```
@@ -136,7 +148,7 @@ $ claude "Archive A1 — Project Initialization"
 
 **Process:**
 - Verifies task is complete in Workplan
-- Verifies task is not in next.md
+- Removes task from next.md if present
 - Archives only specified task
 - Updates INDEX.md
 - Commits
@@ -199,11 +211,13 @@ Safety checks:
 ─────────────────────────────────────────────────────────────
 
 Archiving A1 — Project Initialization...
+  ✓ Removed from next.md (counterbalance to SELECT)
   ✓ Moved: INPROGRESS/A1_Project_Initialization.md
        → TASKS_ARCHIVE/A1_Project_Initialization.md
   ✓ Added archive metadata (completion date)
 
 Archiving A2 — Core Types Implementation...
+  ✓ Removed from next.md (counterbalance to SELECT)
   ✓ Moved: INPROGRESS/A2_Core_Types.md
        → TASKS_ARCHIVE/A2_Core_Types.md
   ✓ Added archive metadata (completion date)
@@ -285,9 +299,11 @@ Before archiving, verify:
    grep "^\- \[x\].*${TASK_ID}" DOCS/Workplan.md
    ```
 
-2. **Task is not active:**
+2. **Task is not currently being worked on:**
    ```bash
-   ! grep "^# Next Task: ${TASK_ID}" DOCS/INPROGRESS/next.md
+   # Skip if task is in next.md AND not marked completed
+   ! (grep -q "^# Next Task: ${TASK_ID}" DOCS/INPROGRESS/next.md && \
+      ! grep -q "Status.*✅.*Completed" DOCS/INPROGRESS/next.md)
    ```
 
 3. **PRD file exists:**
@@ -421,7 +437,7 @@ Complete the task first, then archive.
    - Quick reference to past work
 
 4. **Maintenance**
-   - Periodic cleanup keeps workspace lean
+   - Periodic cleanup keeps workspace clean
    - Archive grows naturally with project
    - Git history intact
 
