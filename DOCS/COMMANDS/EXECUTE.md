@@ -1,131 +1,322 @@
 # EXECUTE — Execute Current Task
 
-**Version:** 1.0.0
+**Version:** 2.0.0
 
 ## Purpose
 
-Execute the current task from `next.md` by following the implementation plan in the corresponding PRD. This command performs actual implementation work: creates files, writes code, runs commands, and verifies results.
+Provide a **thin workflow wrapper** around task execution. This command:
+1. Performs pre-flight checks (git clean, dependencies satisfied)
+2. Displays the implementation plan from PRD
+3. **[DEVELOPER/CLAUDE DOES THE ACTUAL WORK]**
+4. Validates results against acceptance criteria
+5. Updates progress markers and commits
+
+**Important:** EXECUTE is NOT an AI agent that implements code automatically. It's a structured checklist runner that automates the workflow **around** implementation.
+
+## Philosophy
+
+All implementation instructions already exist in:
+- **PRD** — step-by-step plan, templates, acceptance criteria
+- **Design Specs** — architecture, algorithms, data structures
+- **Workplan** — context, dependencies, estimates
+
+EXECUTE simply:
+- Checks prerequisites
+- Shows the plan
+- Lets you work
+- Validates results
+- Commits and updates documentation
+
+---
 
 ## Input
+
 - `DOCS/INPROGRESS/next.md` — current task (extract TASK_ID)
 - `DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md` — PRD with implementation plan
 - `DOCS/Workplan.md` — project context
-- `DOCS/PRD/v0.0.1/` — design specifications (for reference)
+
+---
 
 ## Algorithm
 
-### Phase 1: Preparation
-1. **Read next.md** → Extract TASK_ID and TASK_NAME
-2. **Read PRD** → Load `DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md`
-3. **Parse task breakdown** → Extract phases, subtasks, acceptance criteria
-4. **Check dependencies** → Verify all upstream tasks completed (from Workplan)
-5. **Confirm execution** → Show plan summary, ask user to proceed
+### Phase 1: Pre-Flight Checks
 
-### Phase 2: Execution (Interactive)
-For each phase in PRD:
-  1. **Show phase header** → Display phase name, goal, estimated time
-  2. **For each subtask in phase:**
-     - Display subtask description, input, process, output
-     - **Execute actions:**
-       - Create files/directories
-       - Write code using templates from PRD
-       - Run shell commands
-       - Verify results against acceptance criteria
-     - **Checkpoint:**
-       - Show what was done
-       - Mark subtask in next.md checklist as [x]
-       - Ask: "Continue to next subtask? (y/n/skip/abort)"
-  3. **Phase completion:**
-     - Run phase verification commands
-     - Commit changes: `"Complete {PHASE_NAME} for {TASK_ID}"`
-     - Update PROGRESS
+**Purpose:** Ensure environment is ready for work
 
-### Phase 3: Verification
-1. **Run all acceptance tests** from PRD §3.3
-2. **Verify quality checklist** from PRD §7.4
-3. **Run final validation** commands
+1. **Verify Git state:**
+   ```bash
+   git status --porcelain
+   # Must be empty (no uncommitted changes)
+   ```
+
+2. **Load task context:**
+   ```bash
+   TASK_ID=$(head -1 DOCS/INPROGRESS/next.md | sed 's/# Next Task: \(.*\) —.*/\1/')
+   PRD="DOCS/INPROGRESS/${TASK_ID}_*.md"
+   ```
+
+3. **Check dependencies:**
+   - Read `Dependencies:` line from next.md
+   - Verify all upstream tasks marked `[x]` in Workplan
+   - **Exit if dependencies not satisfied**
+
+4. **Verify PRD exists:**
+   - Check `DOCS/INPROGRESS/{TASK_ID}_*.md` exists
+   - **Exit if not found:** "Run PLAN command first"
+
+5. **Display plan summary:**
+   ```
+   ╔════════════════════════════════════════════════════════════╗
+   ║  EXECUTE: {TASK_ID} — {TASK_NAME}                         ║
+   ╚════════════════════════════════════════════════════════════╝
+
+   📋 Task: {TASK_ID} — {TASK_NAME}
+   📄 PRD: DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md
+   ⏱️  Estimated: {TIME}
+   🔗 Dependencies: {LIST or "None"}
+
+   📝 Plan Overview:
+   - Phase 1: {NAME} ({SUBTASK_COUNT} subtasks)
+   - Phase 2: {NAME} ({SUBTASK_COUNT} subtasks)
+   - Phase 3: {NAME} ({SUBTASK_COUNT} subtasks)
+
+   ✅ Acceptance Criteria: {COUNT} items
+   ✅ Quality Checklist: {COUNT} items
+   ```
+
+6. **Prompt user:**
+   ```
+   Ready to execute {TASK_ID}?
+   - PRD contains all implementation instructions
+   - Templates available in PRD §8
+   - Acceptance criteria in PRD §3.3
+   - Quality checklist in PRD §7.4
+
+   [Enter] to continue, [Ctrl+C] to abort
+   ```
+
+---
+
+### Phase 2: Work Period
+
+**[THIS IS WHERE DEVELOPER/CLAUDE WORKS]**
+
+The PRD contains everything needed:
+- **Implementation templates** (e.g., Package.swift, main.swift)
+- **Step-by-step instructions** per subtask
+- **Acceptance criteria** to validate each step
+- **Verification commands** (e.g., swift build, swift test)
+
+**Developer works by:**
+1. Reading PRD §2 "Hierarchical Task Breakdown"
+2. Following instructions for each subtask
+3. Using templates from PRD §8 "Implementation Template"
+4. Testing against acceptance criteria from PRD §3.3
+
+**Optional: Interactive Progress Tracking**
+
+If `--interactive` mode:
+- Periodically prompt: "Mark completed subtasks? [y/n]"
+- Show checklist from next.md
+- User marks `[ ]` → `[x]` for completed items
+- Update progress percentage
+- Continue work
+
+**Note:** This is optional. Developer can manually update next.md checklist anytime.
+
+---
+
+### Phase 3: Post-Flight Validation
+
+**Purpose:** Verify implementation meets requirements
+
+1. **Extract verification commands from PRD §3.3:**
+   - Parse "Acceptance Criteria per Task" section
+   - Find validation commands (swift build, swift test, ls, etc.)
+
+2. **Run each verification command:**
+   ```bash
+   # Example for A1:
+   swift package resolve
+   swift build
+   swift test
+   ls -la Sources/  # Check directories exist
+   cat Package.swift | grep "swift-crypto"  # Check dependency
+   ```
+
+3. **Collect results:**
+   ```
+   Acceptance Criteria Validation:
+   [✓] swift package resolve — PASS (3 dependencies resolved)
+   [✓] swift build — PASS (0 errors, 0 warnings)
+   [✓] swift test — PASS (0 tests, 0 failures)
+   [✓] 6 source directories exist — PASS
+   [✓] Package.swift contains dependencies — PASS
+
+   Quality Checklist from PRD §7.4:
+   [✓] All 6 source module directories exist
+   [✓] All 7 test module directories exist
+   [✓] Package.swift contains all 3 dependencies
+   [✓] Package.swift defines all 6 module targets
+   [✓] CLI defined as executableTarget
+   [~] No compiler warnings (manual check)
+
+   Overall: 11/12 items verified (92%)
+   ```
+
 4. **Generate completion report:**
-   - All subtasks completed: X/Y
-   - All acceptance criteria met: ✓/✗
-   - Build status: pass/fail
-   - Test status: pass/fail
+   ```
+   ╔════════════════════════════════════════════════════════════╗
+   ║  VALIDATION REPORT: {TASK_ID}                              ║
+   ╚════════════════════════════════════════════════════════════╝
+
+   Subtasks completed: 13/13 (100%)
+   Acceptance criteria: 5/5 passed (100%)
+   Quality checklist: 11/12 verified (92%)
+   Build: PASS ✓
+   Tests: PASS ✓
+
+   Status: READY TO COMMIT
+   ```
+
+5. **If validation fails:**
+   ```
+   ✗ VALIDATION FAILED
+
+   Failed checks:
+   - swift build → 3 errors
+   - Quality item #7: Module boundaries not defined
+
+   Fix issues and re-run: claude "EXECUTE: validate only"
+   ```
+
+---
 
 ### Phase 4: Finalization
-1. **Mark task complete in next.md** → Add completion timestamp
-2. **Update Workplan.md** → Mark task as [x] completed
-3. **Create final commit:**
+
+**Purpose:** Update documentation and commit
+
+1. **Update next.md:**
+   - Mark task complete: add `**Status:** ✅ Completed on {DATE}`
+   - Mark all checklist items `[x]`
+   - Add completion timestamp
+
+2. **Update Workplan.md:**
+   - Find task by ID (e.g., `### A1:`)
+   - Mark as completed: `- [x]` instead of `- [ ]`
+   - Remove `**Status:** INPROGRESS`
+
+3. **Auto-detect deliverables:**
+   ```bash
+   # Files created/modified since task start
+   git diff --name-status HEAD
+   ```
+
+4. **Create commit:**
    ```
    Complete {TASK_ID} — {TASK_NAME}
 
    Deliverables:
-   - [List of files created]
-   - [List of features implemented]
+   - Created Sources/{Core,Parser,Resolver,Emitter,CLI,Statistics}/
+   - Created Tests/{CoreTests,ParserTests,...,IntegrationTests}/
+   - Added Package.swift with 3 dependencies
+   - Added Sources/CLI/main.swift entry point
 
    Verification:
-   - All acceptance criteria met
+   - Acceptance criteria: 5/5 passed
    - Build: PASS
-   - Tests: PASS
+   - Tests: PASS (0 tests)
+   - Quality checklist: 11/12 verified
+
+   Closes task A1 from Workplan Phase 1.
    ```
-4. **Push to remote**
-5. **Suggest next action:** "Run SELECT to choose next task"
+
+5. **Push to remote:**
+   ```bash
+   git push -u origin {branch-name}
+   ```
+
+6. **Suggest next action:**
+   ```
+   ✅ Task {TASK_ID} completed successfully!
+
+   🎯 Next steps:
+   1. Run SELECT to choose next task
+      $ claude "Выполни команду SELECT"
+
+   2. Or create a PR if phase complete
+      $ gh pr create --title "Complete Phase 1: Foundation"
+   ```
+
+---
 
 ## Execution Modes
 
-### Mode 1: Fully Automatic (default)
-Execute all subtasks without interaction (dangerous for complex tasks).
+### Mode 1: Full (default)
+
+Pre-flight → Work → Post-flight → Finalize
 
 ```bash
-$ claude "Execute task automatically"
-```
-
-### Mode 2: Interactive (recommended)
-Pause after each subtask for user confirmation.
-
-```bash
-$ claude "Execute task interactively"
-# or just:
 $ claude "Выполни команду EXECUTE"
 ```
 
-### Mode 3: Phase-by-Phase
-Execute one phase, stop, wait for user to continue.
+**Use case:** Standard workflow for any task
+
+---
+
+### Mode 2: Show Plan Only
+
+Only pre-flight checks and plan display
 
 ```bash
-$ claude "Execute Phase 1 of current task"
+$ claude "EXECUTE: show plan"
+$ claude "Show execution plan for current task"
 ```
 
-### Mode 4: Dry Run
-Show what would be executed without making changes.
+**Use case:** Preview task before starting work
+
+**Output:** Plan summary, no git checks
+
+---
+
+### Mode 3: Validate Only
+
+Skip pre-flight, only run validation and finalization
 
 ```bash
-$ claude "Dry run EXECUTE command"
+$ claude "EXECUTE: validate and commit"
+$ claude "Validate current task and commit"
 ```
 
-## Smart Actions
+**Use case:** After manual implementation, validate and commit
 
-The EXECUTE command understands common patterns from PRD and can automatically:
+**Flow:**
+- Assumes work already done
+- Runs acceptance tests
+- Creates commit if validation passes
 
-### File Operations
-- **Create directories:** Parse "Create `Sources/Core/`" → `mkdir -p Sources/Core`
-- **Write files:** Use templates from PRD §8 "Implementation Template"
-- **Copy files:** Handle file references
+---
 
-### Code Generation
-- **Package.swift:** Use template from PRD, fill in actual values
-- **main.swift:** Use CLI entry point template
-- **Test stubs:** Create empty test files with boilerplate
+### Mode 4: With Progress Tracking
 
-### Command Execution
-- **Build commands:** `swift build`, `swift test`
-- **Dependency resolution:** `swift package resolve`
-- **Verification:** Check exit codes, parse output
+Full mode + periodic progress prompts
 
-### Validation
-- **File existence:** Verify created files exist
-- **Syntax checking:** Run language-specific linters
-- **Test execution:** Run test suite, parse results
+```bash
+$ claude "EXECUTE with progress tracking"
+```
 
-## Example: Executing A1
+**Use case:** Long tasks (>2 hours), want checkpoints
+
+**Flow:**
+- Shows plan
+- Developer works
+- Every N minutes: "Update progress? [y/n]"
+- Runs validation
+- Commits
+
+---
+
+## Example Output
 
 ```
 $ claude "Выполни команду EXECUTE"
@@ -137,148 +328,179 @@ $ claude "Выполни команду EXECUTE"
 📋 Task: A1 — Project Initialization
 📄 PRD: DOCS/INPROGRESS/A1_Project_Initialization.md
 ⏱️  Estimated: 2 hours
-✅ Dependencies: None (entry point)
+🔗 Dependencies: None (entry point)
 
 ─────────────────────────────────────────────────────────────
 
-PHASE 1: Directory Structure Creation
-Goal: Create all required directories for sources and tests
-Estimated: 30 minutes
+✓ Pre-Flight Checks:
+  [✓] Git working tree clean
+  [✓] PRD exists
+  [✓] Dependencies satisfied (none required)
+  [✓] Task not already complete
 
-Subtask 1.1: Create Sources Directory Structure
-├─ Input: Empty project directory
-├─ Process: Create 6 module directories
-└─ Output: Complete Sources/ tree
+📝 Plan Overview:
+  Phase 1: Directory Structure (2 subtasks, 30 min)
+  Phase 2: Package Configuration (8 subtasks, 1 hour)
+  Phase 3: Verification (3 subtasks, 30 min)
 
-🔧 Action: mkdir -p Sources/{Core,Parser,Resolver,Emitter,CLI,Statistics}
-✅ Created: Sources/Core/
-✅ Created: Sources/Parser/
-✅ Created: Sources/Resolver/
-✅ Created: Sources/Emitter/
-✅ Created: Sources/CLI/
-✅ Created: Sources/Statistics/
-✓ Verification: All 6 directories exist
+  Total: 13 subtasks across 3 phases
 
-✓ Subtask 1.1 completed
-✓ Updated checklist: next.md [1/13 = 8%]
-
-Continue to next subtask? [y/n/skip/abort]: y
-
-Subtask 1.2: Create Tests Directory Structure
-├─ Input: Empty project directory
-├─ Process: Create 7 test directories
-└─ Output: Complete Tests/ tree
-
-🔧 Action: mkdir -p Tests/{CoreTests,ParserTests,ResolverTests,EmitterTests,CLITests,StatisticsTests,IntegrationTests}
-✅ Created: Tests/CoreTests/
-✅ Created: Tests/ParserTests/
-... (etc)
-
-✓ Phase 1 completed (2/13 subtasks = 15%)
-✓ Committed: "Complete Phase 1: Directory Structure for A1"
+📋 Key Acceptance Criteria:
+  • swift build completes without errors
+  • All 6 module directories created
+  • All 3 dependencies resolved
+  • Empty test suite runs successfully
 
 ─────────────────────────────────────────────────────────────
 
-PHASE 2: Package Configuration
-Goal: Configure Package.swift with dependencies and targets
-Estimated: 1 hour
+Ready to execute A1 — Project Initialization?
 
-Subtask 2.1: Add Dependencies Section
-...
+The PRD contains:
+• Implementation templates (Package.swift in §8.1)
+• Step-by-step instructions (§2 Task Breakdown)
+• Acceptance criteria (§3.3 per subtask)
+• Quality checklist (§7.4 validation)
 
-🔧 Action: Create Package.swift from template
-✅ Writing Package.swift...
-✅ Added swift-argument-parser dependency
-✅ Added swift-crypto dependency
-✅ Added SpecificationCore dependency
-
-✓ Verification: swift package dump-package
-✓ Output: Valid JSON (dependencies declared)
-
-Continue? [y/n/skip/abort]: y
-
-... (continue through all subtasks)
+Press [Enter] to continue, [Ctrl+C] to abort: ▊
 
 ─────────────────────────────────────────────────────────────
 
-PHASE 3: Verification
-Goal: Verify build system and test framework
+[YOU WORK ON THE TASK FOLLOWING PRD]
 
-Subtask 3.1: Resolve Dependencies
-🔧 Action: swift package resolve
-⏳ Resolving dependencies... (may take 1-2 minutes)
-✅ Resolved: swift-argument-parser 1.5.0
-✅ Resolved: swift-crypto 3.8.0
-✅ Resolved: SpecificationCore 1.0.2
-✓ Created: Package.resolved
-
-Subtask 3.2: Build Package
-🔧 Action: swift build
-⏳ Building Hyperprompt...
-✅ Build succeeded (0 errors, 0 warnings)
-
-Subtask 3.3: Run Test Suite
-🔧 Action: swift test
-✅ Test suite passed (0 tests)
+... (time passes) ...
 
 ─────────────────────────────────────────────────────────────
 
-✅ TASK COMPLETED: A1 — Project Initialization
+Running validation...
 
-📊 Execution Summary:
-   • Subtasks completed: 13/13 (100%)
-   • Phases completed: 3/3
-   • Time elapsed: 47 minutes
-   • Acceptance criteria met: 6/6 ✓
-   • Build status: PASS ✓
-   • Test status: PASS ✓
+✓ Acceptance Tests:
+  [✓] swift package resolve — PASS (3 dependencies)
+  [✓] swift build — PASS (0 errors)
+  [✓] swift test — PASS (0 tests)
+  [✓] Directory structure — PASS (13 dirs exist)
+  [✓] Package.swift dependencies — PASS (all present)
 
-📁 Deliverables:
-   • Created 6 source module directories
-   • Created 7 test directories
-   • Configured Package.swift with 3 dependencies
-   • Created CLI entry point (main.swift)
-   • Verified build system functional
+✓ Quality Checklist (PRD §7.4):
+  [✓] All 6 source module directories exist
+  [✓] All 7 test module directories exist
+  [✓] Package.swift contains all 3 dependencies
+  [✓] Package.swift defines all 6 module targets
+  [✓] CLI as executableTarget
+  [✓] All test targets defined
+  [✓] No compiler warnings
 
-✓ Committed: "Complete A1 — Project Initialization"
-✓ Updated: next.md (marked complete)
-✓ Updated: Workplan.md (marked [x] A1)
-✓ Pushed to remote
+╔════════════════════════════════════════════════════════════╗
+║  VALIDATION REPORT                                         ║
+╚════════════════════════════════════════════════════════════╝
+
+Subtasks: 13/13 completed (100%)
+Acceptance: 5/5 passed (100%)
+Quality: 7/7 verified (100%)
+
+Build: PASS ✓
+Tests: PASS ✓
+
+Status: ✅ READY TO COMMIT
 
 ─────────────────────────────────────────────────────────────
 
-🎯 Next Action: Run SELECT to choose next task (A2)
+Finalizing...
+
+✓ Updated next.md (marked complete)
+✓ Updated Workplan.md (marked [x] A1)
+✓ Created commit: "Complete A1 — Project Initialization"
+✓ Pushed to remote: claude/execute-plan-command-015km...
+
+─────────────────────────────────────────────────────────────
+
+✅ Task A1 completed successfully!
+
+🎯 Next steps:
    $ claude "Выполни команду SELECT"
+
+   (Will choose A2: Core Types Implementation)
 ```
+
+---
 
 ## Error Handling
 
-### Build Failures
-If `swift build` fails:
-1. Show full error output
-2. Offer to retry after user fixes
-3. Offer to continue with next phase (if non-critical)
-4. Offer to abort execution
+### Pre-Flight Failures
 
-### Missing Dependencies
-If upstream task not completed:
-1. Show dependency chain
-2. Suggest completing prerequisites first
-3. Abort execution with clear error
+**Git not clean:**
+```
+✗ Pre-flight check failed: Git working tree not clean
 
-### Acceptance Criteria Not Met
-If validation fails:
-1. Show which criteria failed
-2. Show expected vs actual
-3. Offer to retry subtask
-4. Offer to skip (mark as known issue)
+Uncommitted changes:
+  M DOCS/Workplan.md
+  ?? new_file.swift
 
-### User Abort
-If user aborts mid-execution:
-1. Commit work done so far: "Partial: {TASK_ID} — {PHASE_NAME} incomplete"
-2. Mark subtasks completed up to abort point
-3. Update PROGRESS
-4. Leave task in next.md (not complete)
+Fix: Commit or stash changes, then retry
+```
+
+**Dependencies not met:**
+```
+✗ Pre-flight check failed: Dependencies not satisfied
+
+Task A2 requires:
+  [x] A1 — Project Initialization ✓
+  [ ] A3 — Domain Types ✗
+
+Fix: Complete A3 first or update Workplan dependencies
+```
+
+**No PRD:**
+```
+✗ Pre-flight check failed: PRD not found
+
+Expected: DOCS/INPROGRESS/A1_Project_Initialization.md
+
+Fix: Run PLAN command first
+     $ claude "Выполни команду PLAN"
+```
+
+---
+
+### Validation Failures
+
+**Build errors:**
+```
+✗ Validation failed: swift build
+
+Build errors:
+  Sources/Core/File.swift:10: error: use of unresolved identifier 'foo'
+  Sources/Parser/Lexer.swift:24: error: missing return
+
+Fix issues and re-run validation:
+  $ claude "EXECUTE: validate only"
+```
+
+**Acceptance criteria not met:**
+```
+✗ Validation failed: 3/5 acceptance criteria not met
+
+Failed:
+  [✗] All 6 directories exist
+      → Only 4 directories found
+  [✗] Package.swift contains dependencies
+      → swift-crypto not declared
+  [✗] Empty test suite runs
+      → swift test failed with errors
+
+Fix issues and retry
+```
+
+---
+
+## Safety Features
+
+1. **Idempotent:** Can run multiple times safely
+2. **Non-destructive:** Only creates commit if validation passes
+3. **Atomic commits:** Single commit per task completion
+4. **Rollback support:** Can revert commit if issues found
+5. **Checkpoint resume:** Can abort and resume later (work preserved)
+
+---
 
 ## Integration with Workflow
 
@@ -287,86 +509,80 @@ SELECT → next.md created
   ↓
 PLAN → PRD created
   ↓
-EXECUTE → Task implemented (auto-updates PROGRESS)
+EXECUTE (pre-flight) → Shows plan
   ↓
-Task complete → Run SELECT for next task
+[DEVELOPER WORKS] → Follows PRD
+  ↓
+EXECUTE (post-flight) → Validates
+  ↓
+Task complete → Run SELECT
 ```
+
+---
 
 ## Command Variants
 
 ```bash
-# Standard execution (interactive)
+# Standard execution
 claude "Выполни команду EXECUTE"
 claude "Execute current task"
 
-# Specific phase
-claude "Execute Phase 1"
-claude "Execute Phase 2: Package Configuration"
+# Show plan only (no validation)
+claude "EXECUTE: show plan"
+claude "Show execution plan"
 
-# Dry run (no changes)
-claude "Dry run execute"
-claude "Show execution plan for A1"
+# Validate and commit only (skip pre-flight)
+claude "EXECUTE: validate only"
+claude "Validate and commit current task"
 
-# Automatic (no interaction)
-claude "Execute automatically"  # DANGEROUS
-
-# Resume from checkpoint
-claude "Resume execution of A1"
+# With progress tracking
+claude "EXECUTE with progress tracking"
 ```
 
-## Safety Features
+---
 
-1. **Pre-flight checks:**
-   - Git working tree must be clean (no uncommitted changes)
-   - All dependencies verified
-   - User confirmation before destructive actions
+## What EXECUTE Does NOT Do
 
-2. **Atomic phases:**
-   - Each phase commits independently
-   - Can resume from last successful phase
-   - Rollback possible if needed
+- ❌ Does NOT write code automatically
+- ❌ Does NOT "understand" requirements and implement
+- ❌ Does NOT generate files from descriptions
+- ❌ Does NOT debug or fix errors
 
-3. **Validation gates:**
-   - Must pass acceptance criteria to proceed
-   - Build must succeed before marking complete
-   - Tests must pass (if applicable)
+**Developer (or Claude in separate requests) implements the task.**
 
-4. **User control:**
-   - Can skip subtasks (mark as TODO)
-   - Can abort at any checkpoint
-   - Can retry failed steps
+EXECUTE only provides:
+- ✅ Structured checklist
+- ✅ Pre/post validation
+- ✅ Automatic commit/push
+- ✅ Progress tracking
 
-## Output Files
-
-After EXECUTE completes:
-- ✅ All files from PRD templates created
-- ✅ next.md updated with [x] marks
-- ✅ Workplan.md updated with task [x]
-- ✅ Git commits for each phase
-- ✅ Everything pushed to remote
+---
 
 ## Exceptions
 
-- **No next.md** → Exit: "No current task. Run SELECT first."
-- **No PRD found** → Exit: "No PRD for {TASK_ID}. Run PLAN first."
-- **Task already complete** → Ask: "Task marked complete. Re-run? (y/n)"
-- **Dependencies not met** → Exit: "Prerequisites not completed: [list]"
-- **Git not clean** → Exit: "Uncommitted changes. Commit or stash first."
+- **No next.md** → "No current task. Run SELECT first."
+- **No PRD** → "No PRD for {TASK_ID}. Run PLAN first."
+- **Task complete** → "Task already marked complete. Run SELECT for next."
+- **Dependencies unsatisfied** → "Prerequisites not met: [list]. Complete them first."
+- **Git not clean** → "Uncommitted changes. Commit or stash first."
+- **Validation fails** → "Fix issues and retry with 'EXECUTE: validate only'"
+
+---
 
 ## Notes
 
-- EXECUTE is the **main implementation command**
-- Combines automation with human oversight
-- Updates PROGRESS automatically (no need to run separately)
-- Creates atomic commits for traceability
-- Can be paused/resumed at any phase boundary
-- Smart enough to parse PRD templates and execute them
+- EXECUTE is a **thin wrapper**, not an AI agent
+- All implementation logic is in PRD, not in this command
+- Developer follows PRD manually (or uses Claude in separate prompts)
+- EXECUTE automates only the workflow boilerplate
+- Can be run multiple times (idempotent)
+- Always safe to abort (Ctrl+C)
 
-## Future Enhancements
+---
 
-- **AI code generation:** Generate implementations from PRD descriptions
-- **Test generation:** Auto-create test cases from acceptance criteria
-- **Parallel execution:** Run independent subtasks concurrently
-- **Rollback:** Undo phases if validation fails
-- **Time tracking:** Measure actual vs estimated time
-- **Learning:** Improve time estimates based on history
+## Revision History
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 2.0.0 | 2025-12-03 | Claude | Simplified to thin wrapper (removed auto-implementation) |
+| 1.0.0 | 2025-12-03 | Claude | Initial version (too complex, deprecated) |
