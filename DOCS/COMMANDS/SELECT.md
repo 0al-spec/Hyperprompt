@@ -8,15 +8,14 @@
 
 ## Algorithm
 
-1. **Verify current task** in `next.md` is marked `[x]` in Workplan → Exit if not completed
-2. **Find candidates** satisfying all:
+1. **Find candidates** satisfying all:
    - Not completed `[ ]`
    - All dependencies satisfied
    - Highest priority (P0 > P1 > P2)
    - On critical path (if tie)
    - Sequential order (if tie)
-3. **Generate** `next.md` with `# {TASK_ID} — {TASK_NAME}`
-4. **Update Workplan** with `**INPROGRESS**` marker and dependency checkmarks
+2. **Generate** `next.md` with `# {TASK_ID} — {TASK_NAME}`
+3. **Update Workplan** with `**INPROGRESS**` marker and dependency checkmarks
 
 ## Output
 - Updated `DOCS/INPROGRESS/next.md`
