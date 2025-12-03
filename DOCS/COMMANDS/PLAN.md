@@ -1,5 +1,7 @@
 # PLAN — Generate PRD from Task
 
+**Version:** 1.0.0
+
 ## Input
 - `DOCS/INPROGRESS/next.md` — current task
 - `DOCS/RULES/01_PRD_PROMPT.md` — PRD rules
@@ -23,6 +25,3 @@
 - Task not in Workplan → Exit with verbose error
 - PRD exists → Use --overwrite or --append
 - Insufficient context → Manual enrichment needed
-
----
-**Version:** 1.0.0
