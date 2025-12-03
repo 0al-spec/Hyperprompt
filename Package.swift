@@ -4,8 +4,7 @@ import PackageDescription
 let package = Package(
     name: "Hyperprompt",
     platforms: [
-        .macOS(.v12),
-        .linux
+        .macOS(.v12)
     ],
     products: [
         .executable(
