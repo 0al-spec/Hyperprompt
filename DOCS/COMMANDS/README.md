@@ -1,350 +1,129 @@
 # Hyperprompt Workflow Commands
 
-**Version:** 1.0.0
-**Date:** December 3, 2025
+**Version:** 2.0.0
 
 ## Overview
 
-This directory contains workflow commands for managing the Hyperprompt Compiler v0.1 development process. These commands implement a three-level task hierarchy with automated execution and progress tracking.
+Four commands implement a documentation-driven development workflow with three-level task hierarchy.
 
-## Available Commands
+| Command | Purpose | Details |
+|---------|---------|---------|
+| **SELECT** | Choose next task from Workplan | [SELECT.md](./SELECT.md) |
+| **PLAN** | Generate implementation-ready PRD | [PLAN.md](./PLAN.md) |
+| **EXECUTE** | Workflow wrapper (pre/post checks) | [EXECUTE.md](./EXECUTE.md) |
+| **PROGRESS** | Update task checklist (optional) | [PROGRESS.md](./PROGRESS.md) |
 
-| Command | Purpose | Input | Output |
-|---------|---------|-------|--------|
-| **SELECT** | Choose next task from Workplan | `Workplan.md` | `next.md` updated |
-| **PLAN** | Generate PRD for current task | `next.md` | `{TASK_ID}_{TASK_NAME}.md` |
-| **EXECUTE** | Implement current task | PRD + templates | Code, commits, updates |
-| **PROGRESS** | Update task checklist | `next.md` | Checklist marked, % calculated |
+---
 
-## Complete Workflow
+## Workflow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    HYPERPROMPT WORKFLOW                      │
-└─────────────────────────────────────────────────────────────┘
-
-    [Start Project]
-          ↓
-    ┌─────────┐
-    │ SELECT  │ ← Choose highest priority task from Workplan
-    └────┬────┘   - Checks dependencies satisfied
-         │        - Updates next.md with task details
-         │        - Marks task as INPROGRESS in Workplan
-         ↓
-    next.md created
-         │
-         ↓
-    ┌─────────┐
-    │  PLAN   │ ← Generate detailed PRD
-    └────┬────┘   - Reads next.md, Workplan, project specs
-         │        - Creates atomic subtask breakdown
-         │        - Defines acceptance criteria
-         ↓
-    PRD created: DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md
-         │
-         ↓
-    ┌─────────┐
-    │ EXECUTE │ ← Implement the task (MAIN COMMAND)
-    └────┬────┘   - Creates files from templates
-         │        - Runs build/test commands
-         │        - Validates acceptance criteria
-         │        - Auto-updates PROGRESS
-         │        - Commits per phase
-         │
-         ├─────→ [Interactive Mode]
-         │       ├─ Show subtask
-         │       ├─ Execute actions
-         │       ├─ Verify results
-         │       └─ Ask: Continue? (y/n/skip/abort)
-         │
-         ├─────→ [Automatic commits]
-         │       ├─ Phase 1 complete → commit
-         │       ├─ Phase 2 complete → commit
-         │       └─ Task complete → final commit
-         │
-         ↓
-    Task completed
-         │
-         ├─────→ next.md marked complete ✓
-         ├─────→ Workplan.md task marked [x]
-         ├─────→ All changes pushed to remote
-         │
-         ↓
-    ┌─────────┐
-    │ SELECT  │ ← Choose next task (repeat cycle)
-    └─────────┘
-
-    [Loop continues until all tasks complete]
+┌─────────┐
+│ SELECT  │  Choose highest priority task
+└────┬────┘  Updates: next.md, Workplan.md
+     ↓
+┌─────────┐
+│  PLAN   │  Generate detailed PRD
+└────┬────┘  Creates: DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md
+     ↓
+┌─────────┐
+│ EXECUTE │  Pre-flight → [YOU WORK] → Post-flight
+└────┬────┘  Validates, commits, pushes
+     ↓
+  [REPEAT]
 ```
 
-## Detailed Flow
+**Philosophy:** All implementation instructions exist in PRD/specs. Commands automate only workflow boilerplate.
 
-### 1. SELECT Command
+---
 
-**When to use:** At the start of a new task, or after completing the previous one.
+## Quick Start
 
 ```bash
+# 1. Choose task
+$ claude "Выполни команду SELECT"
+
+# 2. Generate PRD
+$ claude "Выполни команду PLAN"
+
+# 3. Execute (shows plan, you work, validates)
+$ claude "Выполни команду EXECUTE"
+
+# 4. Repeat
 $ claude "Выполни команду SELECT"
 ```
-
-**What it does:**
-- Scans `Workplan.md` for available tasks
-- Filters by: not completed, dependencies satisfied, highest priority
-- Prefers critical path tasks when tied
-- Updates `next.md` with selected task
-- Marks task as **INPROGRESS** in Workplan
-
-**Output:**
-```markdown
-# Next Task: A1 — Project Initialization
-
-**Priority:** [P0] Critical
-**Phase:** 1 — Foundation & Core Types
-**Dependencies:** None (entry point)
-
-## Description
-Establish the foundational project structure...
-
-## Tasks Checklist
-- [ ] Create Swift package structure
-- [ ] Configure Package.swift
-...
-```
-
----
-
-### 2. PLAN Command
-
-**When to use:** Immediately after SELECT, before starting implementation.
-
-```bash
-$ claude "Выполни команду PLAN"
-```
-
-**What it does:**
-- Reads current task from `next.md`
-- Gathers context from Workplan and project specs
-- Applies PRD authoring rules (`01_PRD_PROMPT.md`)
-- Generates comprehensive implementation-ready PRD
-
-**Output:**
-```
-DOCS/INPROGRESS/A1_Project_Initialization.md
-```
-
-Contains:
-- Scope and intent
-- Hierarchical task breakdown (atomic subtasks)
-- Metadata (priority, effort, tools)
-- Acceptance criteria per subtask
-- Functional/non-functional requirements
-- Edge cases and error handling
-- Implementation templates
-- Quality enforcement checklist
-
----
-
-### 3. EXECUTE Command (CORE)
-
-**When to use:** After PLAN is generated, to implement the task.
-
-```bash
-$ claude "Выполни команду EXECUTE"
-```
-
-**What it does:**
-
-**IMPORTANT:** EXECUTE is a **thin workflow wrapper**, NOT an AI agent that writes code automatically. Developer/Claude does the actual work following the PRD.
-
-**Phase 1: Pre-Flight Checks**
-- Verifies git is clean
-- Checks dependencies satisfied
-- Loads PRD for current task
-- Displays execution plan
-
-**Phase 2: Work Period**
-```
-[DEVELOPER/CLAUDE DOES THE ACTUAL WORK]
-```
-- PRD contains all instructions
-- Templates available in PRD §8
-- Acceptance criteria in PRD §3.3
-- Developer follows PRD step-by-step
-
-**Phase 3: Post-Flight Validation**
-- Runs acceptance tests (swift build, swift test, etc.)
-- Verifies quality checklist
-- Generates completion report
-
-**Phase 4: Finalization**
-- Marks task complete in next.md
-- Updates Workplan with [x]
-- Creates commit with deliverables
-- Pushes to remote
-- Suggests: "Run SELECT for next task"
-
-**Philosophy:**
-All implementation info already exists in PRD/specs.
-EXECUTE only automates workflow boilerplate (checks, validation, commits).
-
-**Example output:**
-```
-╔════════════════════════════════════════════════════════════╗
-║  EXECUTE: A1 — Project Initialization                      ║
-╚════════════════════════════════════════════════════════════╝
-
-✓ Pre-Flight Checks:
-  [✓] Git working tree clean
-  [✓] PRD exists
-  [✓] Dependencies satisfied
-
-📝 Plan Overview:
-  Phase 1: Directory Structure (2 subtasks, 30 min)
-  Phase 2: Package Configuration (8 subtasks, 1 hour)
-  Phase 3: Verification (3 subtasks, 30 min)
-
-PRD contains all implementation instructions.
-Press [Enter] to continue...
-
-─────────────────────────────────────────────────────────────
-
-[YOU WORK ON THE TASK FOLLOWING PRD]
-
-... (time passes, you create files, write code) ...
-
-─────────────────────────────────────────────────────────────
-
-Running validation...
-
-✓ Acceptance Tests:
-  [✓] swift build — PASS
-  [✓] swift test — PASS
-  [✓] Directory structure — PASS
-
-✅ TASK COMPLETED: A1 — Project Initialization
-📊 Subtasks: 13/13 (100%)
-✓ Committed and pushed
-
-🎯 Next: Run SELECT to choose A2
-```
-
----
-
-### 4. PROGRESS Command (Optional)
-
-**When to use:** If you manually work on subtasks and want to update checklist.
-
-```bash
-$ claude "Выполни команду PROGRESS"
-```
-
-**What it does:**
-- Reviews checklist in `next.md`
-- Interactively asks about each uncompleted item
-- Auto-detects completed work (files, tests)
-- Updates `[ ]` → `[x]`
-- Calculates progress percentage
-- Commits progress snapshot
-
-**Note:** EXECUTE calls PROGRESS automatically, so you rarely need this separately.
 
 ---
 
 ## Three-Level Task Hierarchy
 
-### Level 1: Strategic (Workplan.md)
+| Level | File | Granularity | Purpose |
+|-------|------|-------------|---------|
+| **Strategic** | Workplan.md | 3-5 items | High-level phases, dependencies |
+| **Tactical** | next.md | 10-20 items | Daily checklist |
+| **Operational** | PRD | Atomic steps | Executable specification |
 
-High-level phases and tasks:
-```markdown
-### A1: Project Initialization **[P0]** — 2 hours
-- [ ] Create Swift package structure
-- [ ] Configure dependencies
-- [ ] Verify build system
-```
-**Granularity:** 3-5 items per task
-**Purpose:** Strategic planning, dependency tracking
-
-### Level 2: Tactical (next.md)
-
-Detailed checklist for daily work:
-```markdown
-## Tasks Checklist
-
-- [x] Create Sources/Core/ directory
-- [x] Create Sources/Parser/ directory
-- [ ] Create Sources/Resolver/ directory
-- [ ] Configure Package.swift dependencies
-- [ ] Run swift build
-...
-```
-**Granularity:** 10-20 items per task
-**Purpose:** Daily progress tracking
-
-### Level 3: Operational (PRD)
-
-Atomic subtasks with specifications:
-```markdown
-### Task 1.1: Create Sources Directory Structure
-- **Input:** Empty project directory
-- **Process:** mkdir -p Sources/{Core,Parser,Resolver,Emitter,CLI,Statistics}
-- **Output:** Directory tree created
-- **Acceptance:** All 6 directories exist with correct permissions
-```
-**Granularity:** One action per subtask
-**Purpose:** Execution-ready specification
+**Example:**
+- Workplan: `A1: Project Initialization [P0] — 2 hours`
+- next.md: `- [ ] Create Sources/Core/ directory` (20 items)
+- PRD: `Task 1.1: mkdir -p Sources/Core` (with acceptance criteria)
 
 ---
 
-## Execution Modes
+## Command Details
 
-### Interactive Mode (Default, Recommended)
+### SELECT
+Chooses next task based on:
+- Dependencies satisfied
+- Highest priority (P0 > P1 > P2)
+- Critical path preference
 
-Pauses after each subtask for confirmation:
-```bash
-$ claude "Выполни команду EXECUTE"
-```
+**Output:** Updates `next.md` and `Workplan.md`
 
-**Best for:**
-- Complex tasks
-- First-time task execution
-- Learning the workflow
+👉 **[Full details in SELECT.md](./SELECT.md)**
 
-### Phase-by-Phase Mode
+---
 
-Execute one phase at a time:
-```bash
-$ claude "Execute Phase 1"
-$ claude "Execute Phase 2"
-```
+### PLAN
+Generates implementation-ready PRD from:
+- Task in `next.md`
+- Context from `Workplan.md`
+- Rules from `01_PRD_PROMPT.md`
+- Project specs
 
-**Best for:**
-- Large tasks (>4 hours)
-- When interruptions expected
-- Code review between phases
+**Output:** `DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md`
 
-### Automatic Mode (USE WITH CAUTION)
+👉 **[Full details in PLAN.md](./PLAN.md)**
 
-Executes everything without interaction:
-```bash
-$ claude "Execute automatically"
-```
+---
 
-**Best for:**
-- Well-tested tasks
-- Repeated executions
-- CI/CD automation
+### EXECUTE ⭐
 
-### Dry Run Mode
+**Thin workflow wrapper** (NOT an AI agent):
 
-Shows execution plan without changes:
-```bash
-$ claude "Dry run execute"
-```
+1. **Pre-flight:** Check git, dependencies, show plan
+2. **Work period:** `[DEVELOPER FOLLOWS PRD]`
+3. **Post-flight:** Validate, commit, push
+4. **Finalize:** Update docs, suggest next task
 
-**Best for:**
-- Understanding task scope
-- Debugging workflow
-- Planning time estimates
+**Important:** PRD contains all implementation instructions. EXECUTE only automates checks and commits.
+
+**Modes:**
+- Full (default) — complete workflow
+- Show plan — preview only
+- Validate only — post-implementation
+- Progress tracking — periodic checkpoints
+
+👉 **[Full details in EXECUTE.md](./EXECUTE.md)**
+
+---
+
+### PROGRESS
+Optional command to update task checklist during work.
+
+**Auto-called by EXECUTE**, so usually not needed separately.
+
+👉 **[Full details in PROGRESS.md](./PROGRESS.md)**
 
 ---
 
@@ -353,24 +132,21 @@ $ claude "Dry run execute"
 ```
 DOCS/
 ├── COMMANDS/              # This directory
-│   ├── README.md          # This file
-│   ├── SELECT.md          # Task selection
-│   ├── PLAN.md            # PRD generation
-│   ├── EXECUTE.md         # Task execution
-│   └── PROGRESS.md        # Progress tracking
+│   ├── README.md          # This file (overview)
+│   ├── SELECT.md          # Full SELECT spec
+│   ├── PLAN.md            # Full PLAN spec
+│   ├── EXECUTE.md         # Full EXECUTE spec
+│   └── PROGRESS.md        # Full PROGRESS spec
 │
 ├── INPROGRESS/            # Active work
-│   ├── next.md            # Current task (1 file only)
-│   ├── A1_Project_Initialization.md   # PRD for A1
-│   ├── A2_Core_Types.md               # PRD for A2 (when selected)
-│   └── ...
+│   ├── next.md            # Current task
+│   └── {TASK_ID}_{NAME}.md  # PRDs
 │
 ├── Workplan.md            # Master task list
-│
 ├── RULES/
-│   └── 01_PRD_PROMPT.md   # PRD authoring rules
+│   └── 01_PRD_PROMPT.md   # PRD generation rules
 │
-└── PRD/v0.0.1/            # Project specifications
+└── PRD/v0.0.1/            # Project specs
     ├── 00_PRD_001.md
     ├── 01_DESIGN_SPEC_001.md
     └── 02_DESIGN_SPEC_SPECIFICATION_CORE.md
@@ -378,204 +154,70 @@ DOCS/
 
 ---
 
-## Quick Start Guide
+## Common Workflows
 
-### Starting a New Task
-
+### Starting New Task
 ```bash
-# 1. Choose task
-$ claude "Выполни команду SELECT"
-# → Creates next.md with A1
-
-# 2. Generate PRD
-$ claude "Выполни команду PLAN"
-# → Creates A1_Project_Initialization.md
-
-# 3. Execute task (interactive)
-$ claude "Выполни команду EXECUTE"
-# → Implements A1, commits, pushes
-
-# 4. Repeat for next task
-$ claude "Выполни команду SELECT"
-# → Chooses A2, cycle continues
+SELECT → PLAN → EXECUTE
 ```
 
-### Checking Progress
-
-```bash
-# View current task
-$ cat DOCS/INPROGRESS/next.md
-
-# View PRD
-$ cat DOCS/INPROGRESS/A1_Project_Initialization.md
-
-# Check overall progress
-$ grep -E "^\- \[.\]" DOCS/Workplan.md | wc -l  # Total tasks
-$ grep -E "^\- \[x\]" DOCS/Workplan.md | wc -l  # Completed
-```
-
-### Resuming After Interruption
-
+### Resuming After Break
 ```bash
 # Check current task
 $ cat DOCS/INPROGRESS/next.md
 
-# Resume execution
-$ claude "Resume execution of A1"
-# or just:
+# Continue with EXECUTE
 $ claude "Выполни команду EXECUTE"
 ```
 
----
+### Checking Progress
+```bash
+# View checklist
+$ cat DOCS/INPROGRESS/next.md
 
-## Safety Features
+# View PRD details
+$ cat DOCS/INPROGRESS/A1_Project_Initialization.md
 
-### Pre-flight Checks
-
-Before EXECUTE runs:
-- ✅ Git working tree is clean (no uncommitted changes)
-- ✅ All dependencies verified
-- ✅ PRD exists for current task
-- ✅ User confirms execution plan
-
-### Atomic Commits
-
-Each phase commits independently:
+# Overall Workplan status
+$ grep "^\- \[.\]" DOCS/Workplan.md | head -20
 ```
-Complete Phase 1: Directory Structure for A1
-Complete Phase 2: Package Configuration for A1
-Complete A1 — Project Initialization
-```
-
-### Rollback Support
-
-If something fails:
-- Changes committed per phase → can revert to last good state
-- Can skip failed subtasks (mark as TODO)
-- Can abort without losing work
-
-### Validation Gates
-
-Must pass to proceed:
-- Acceptance criteria met
-- Build succeeds (if applicable)
-- Tests pass (if applicable)
-
----
-
-## Error Handling
-
-### Dependency Not Met
-
-```
-ERROR: Cannot execute A2 — dependencies not satisfied
-Missing: A1 (Project Initialization)
-
-Suggestion: Complete A1 first or update Workplan
-```
-
-### Build Failure
-
-```
-ERROR: swift build failed with 3 errors
-
-1. Sources/Core/File.swift:10:5
-   error: use of unresolved identifier 'foo'
-
-Options:
-  [r] Retry after fixing
-  [s] Skip this subtask (mark as TODO)
-  [a] Abort execution
-```
-
-### Acceptance Criteria Not Met
-
-```
-WARNING: Acceptance criteria not met for Subtask 2.3
-
-Expected: Package.swift contains "swift-crypto"
-Actual: Dependency not found
-
-Options:
-  [r] Retry this subtask
-  [s] Skip (mark as known issue)
-  [a] Abort execution
-```
-
----
-
-## Best Practices
-
-### ✅ Do's
-
-- Run SELECT at the start of each work session
-- Generate PRD immediately after SELECT
-- Use interactive mode for unfamiliar tasks
-- Commit atomically per phase (EXECUTE does this)
-- Review PRD before executing
-- Verify acceptance criteria carefully
-
-### ❌ Don'ts
-
-- Don't skip PLAN (PRD is essential for EXECUTE)
-- Don't use automatic mode for complex tasks
-- Don't manually edit Workplan task order (breaks dependencies)
-- Don't commit partial work outside EXECUTE (breaks atomicity)
-- Don't skip acceptance criteria validation
 
 ---
 
 ## Troubleshooting
 
-### "No PRD found for task A1"
+| Problem | Solution |
+|---------|----------|
+| "No PRD found" | Run `PLAN` command first |
+| "Dependencies not satisfied" | Complete prerequisite tasks first |
+| "Git not clean" | Commit or stash changes |
+| "Task already complete" | Run `SELECT` for next task |
 
-**Solution:** Run `claude "Выполни команду PLAN"` first
-
-### "Task already marked complete"
-
-**Solution:** Run `claude "Выполни команду SELECT"` to choose next task
-
-### "Dependencies not satisfied"
-
-**Solution:** Complete prerequisite tasks first (check Workplan)
-
-### "Git working tree not clean"
-
-**Solution:** Commit or stash changes, then retry
-
-### EXECUTE stuck in middle of task
-
-**Solution:**
-- Abort (type 'a' at next checkpoint)
-- Resume later with same command
-- Work committed per phase → no data loss
+For detailed error handling, see individual command files.
 
 ---
 
-## Command Summary
+## Key Principles
 
-| Command | Usage | When |
-|---------|-------|------|
-| SELECT | `claude "Выполни команду SELECT"` | Start new task |
-| PLAN | `claude "Выполни команду PLAN"` | After SELECT |
-| EXECUTE | `claude "Выполни команду EXECUTE"` | After PLAN |
-| PROGRESS | `claude "Выполни команду PROGRESS"` | Manual progress update (optional) |
+1. **Single Source of Truth**
+   - Implementation details → PRD
+   - Task list → Workplan
+   - Commands → automation only
 
-**Typical cycle time:**
-- SELECT: 1 minute
-- PLAN: 2-3 minutes
-- EXECUTE: Task-dependent (A1 = 47 min, A2 = 4 hours)
-- Total: ~2 hours for A1
+2. **Documentation-Driven**
+   - Write specs first
+   - Implement following specs
+   - Validate against acceptance criteria
 
----
+3. **Thin Wrappers**
+   - Commands don't implement logic
+   - Commands structure the process
+   - Developer follows documentation
 
-## Future Enhancements
-
-- **VERIFY** — Validate completed task against PRD
-- **REVIEW** — Request code review before marking complete
-- **ESTIMATE** — Improve time estimates using historical data
-- **PARALLEL** — Execute independent tasks concurrently
-- **ROLLBACK** — Undo phases if validation fails
+4. **Three-Level Hierarchy**
+   - Workplan = strategy
+   - next.md = tactics
+   - PRD = operations
 
 ---
 
@@ -583,13 +225,17 @@ Options:
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.1.0 | 2025-12-03 | Claude | Simplified EXECUTE to thin wrapper philosophy |
-| 1.0.0 | 2025-12-03 | Claude | Initial workflow documentation |
+| 2.0.0 | 2025-12-03 | Claude | Simplified to overview (removed duplication) |
+| 1.1.0 | 2025-12-03 | Claude | EXECUTE thin wrapper philosophy |
+| 1.0.0 | 2025-12-03 | Claude | Initial comprehensive version (deprecated) |
 
 ---
 
-**Questions?** Check individual command files:
-- `SELECT.md` — Task selection algorithm
-- `PLAN.md` — PRD generation rules
-- `EXECUTE.md` — Execution details and modes
-- `PROGRESS.md` — Progress tracking mechanics
+## Learn More
+
+- **SELECT.md** — Task selection algorithm, priority rules, dependency checking
+- **PLAN.md** — PRD generation process, input files, output structure
+- **EXECUTE.md** — Workflow phases, execution modes, validation details
+- **PROGRESS.md** — Progress tracking mechanics, auto-detection, manual updates
+
+Each command file contains complete specifications, examples, and error handling.
