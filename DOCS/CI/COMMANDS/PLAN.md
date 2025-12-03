@@ -12,7 +12,7 @@
 ## Algorithm
 
 1. **Extract task** from `next.md` (ID, name)
-2. **Gather context** from `CI/Workplan.md` (priority, phase, dependencies, description, acceptance criteria)
+2. **Gather context** from `DOCS/CI/Workplan.md` (priority, phase, dependencies, description, acceptance criteria)
 3. **Apply CI-specific rules:**
    - Focus on GitHub Actions workflow implementation
    - Include Linux runner-specific configuration

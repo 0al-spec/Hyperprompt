@@ -21,7 +21,7 @@ Five commands implement a documentation-driven development workflow for GitHub A
 ```
 ┌─────────┐
 │ SELECT  │  Choose highest priority CI task
-└────┬────┘  Updates: CI/INPROGRESS/next.md, CI/Workplan.md
+└────┬────┘  Updates: DOCS/CI/INPROGRESS/next.md, DOCS/CI/Workplan.md
      ↓
 ┌─────────┐
 │  PLAN   │  Generate detailed PRD for CI task
@@ -66,7 +66,7 @@ $ claude "Выполни команду SELECT для CI"
 
 | Level | File | Granularity | Purpose |
 |-------|------|-------------|---------|
-| **Strategic** | CI/Workplan.md | 10 items (CI-01 to CI-10) | High-level phases, dependencies |
+| **Strategic** | DOCS/CI/Workplan.md | 10 items (CI-01 to CI-10) | High-level phases, dependencies |
 | **Tactical** | next.md | 5-15 items | Daily checklist for current CI task |
 | **Operational** | PRD | Atomic steps | Executable specification with YAML snippets |
 
@@ -109,7 +109,7 @@ Chooses next CI task based on:
 - Highest priority (High > Medium)
 - Phase order preference
 
-**Output:** Updates `CI/INPROGRESS/next.md` and `CI/Workplan.md`
+**Output:** Updates `DOCS/CI/INPROGRESS/next.md` and `DOCS/CI/Workplan.md`
 
 👉 **[Full details in SELECT.md](./SELECT.md)**
 
@@ -117,9 +117,9 @@ Chooses next CI task based on:
 
 ### PLAN
 Generates implementation-ready PRD from:
-- Task in `CI/INPROGRESS/next.md`
-- Context from `CI/Workplan.md`
-- CI/PRD.md for overall strategy
+- Task in `DOCS/CI/INPROGRESS/next.md`
+- Context from `DOCS/CI/Workplan.md`
+- DOCS/CI/PRD.md for overall strategy
 - Repository audit results (from CI-01)
 
 **Output:** `DOCS/CI/INPROGRESS/{TASK_ID}_{TASK_NAME}.md` with GitHub Actions YAML snippets
@@ -170,7 +170,7 @@ Optional command to update CI task checklist during work.
 ---
 
 ### ARCHIVE
-Moves completed CI task PRDs from `CI/INPROGRESS/` to `CI/TASKS_ARCHIVE/`.
+Moves completed CI task PRDs from `DOCS/CI/INPROGRESS/` to `DOCS/CI/TASKS_ARCHIVE/`.
 
 **When to use:**
 - After completing multiple CI tasks (batch cleanup)
@@ -178,7 +178,7 @@ Moves completed CI task PRDs from `CI/INPROGRESS/` to `CI/TASKS_ARCHIVE/`.
 - After CI is fully implemented
 
 **What it does:**
-- Scans for completed tasks (marked `[x]` in CI/Workplan)
+- Scans for completed tasks (marked `[x]` in DOCS/CI/Workplan.md)
 - Moves PRDs to `DOCS/CI/TASKS_ARCHIVE/`
 - Generates `INDEX.md` organized by phase
 - Commits and pushes
@@ -271,7 +271,7 @@ $ act push  # simulate push event
 | Problem | Solution |
 |---------|----------|
 | "No PRD found" | Run `PLAN` command first for CI |
-| "Dependencies not satisfied" | Complete prerequisite CI tasks first (check CI/Workplan) |
+| "Dependencies not satisfied" | Complete prerequisite CI tasks first (check DOCS/CI/Workplan.md) |
 | "Git not clean" | Commit or stash changes |
 | "YAML syntax error" | Fix `.github/workflows/ci.yml` indentation/structure |
 | "Task already complete" | Run `SELECT` for next CI task |
@@ -285,7 +285,7 @@ For detailed error handling, see individual command files.
 
 1. **Single Source of Truth**
    - Implementation details → CI PRD
-   - Task list → CI/Workplan
+   - Task list → DOCS/CI/Workplan.md
    - Commands → automation only
 
 2. **Documentation-Driven**
@@ -314,7 +314,7 @@ For detailed error handling, see individual command files.
 
 ## CI Task Dependencies
 
-Based on `CI/Workplan.md` §4 "Scheduling & Parallelization":
+Based on `DOCS/CI/Workplan.md` §4 "Scheduling & Parallelization":
 
 ```
 CI-01 (Audit) — Must run first

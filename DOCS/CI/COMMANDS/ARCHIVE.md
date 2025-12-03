@@ -4,11 +4,11 @@
 
 ## Purpose
 
-Move completed CI PRDs from `CI/INPROGRESS/` to `CI/TASKS_ARCHIVE/` and remove from `next.md`. Counterbalance to SELECT.
+Move completed CI PRDs from `DOCS/CI/INPROGRESS/` to `DOCS/CI/TASKS_ARCHIVE/` and remove from `next.md`. Counterbalance to SELECT.
 
 ## Philosophy
 
-- Keep `CI/INPROGRESS/` clean (only active work)
+- Keep `DOCS/CI/INPROGRESS/` clean (only active work)
 - Preserve completed CI PRDs for reference
 - Remove completed tasks from next.md (opposite of SELECT)
 - Run periodically — not required after every task
@@ -27,8 +27,8 @@ Move completed CI PRDs from `CI/INPROGRESS/` to `CI/TASKS_ARCHIVE/` and remove f
 
 ### 1. Find Completed CI Tasks
 
-- Scan `CI/INPROGRESS/*.md` for PRD files
-- Check `CI/Workplan.md`: task marked `[x]`
+- Scan `DOCS/CI/INPROGRESS/*.md` for PRD files
+- Check `DOCS/CI/Workplan.md`: task marked `[x]`
 - Skip if task currently active in `next.md` (not marked completed)
 - Add to candidates
 
@@ -186,7 +186,7 @@ SELECT → PLAN → EXECUTE → CI task complete
 **When to run:**
 - After completing multiple CI tasks (batch cleanup)
 - Before moving to next phase
-- When CI/INPROGRESS/ becomes cluttered
+- When DOCS/CI/INPROGRESS/ becomes cluttered
 - After CI is fully implemented and tested
 
 ---
@@ -195,9 +195,9 @@ SELECT → PLAN → EXECUTE → CI task complete
 
 - Optional command — run periodically to keep CI workspace clean
 - Counterbalance to SELECT (adds to next.md ↔ removes from next.md)
-- Source of truth: CI/Workplan.md `[x]` markers
+- Source of truth: DOCS/CI/Workplan.md `[x]` markers
 - Non-destructive: uses `mv`, creates git commit
-- Recovery: `git revert` or `mv` file back from CI/TASKS_ARCHIVE/
+- Recovery: `git revert` or `mv` file back from DOCS/CI/TASKS_ARCHIVE/
 - All 10 CI tasks will eventually be archived when CI setup is complete
 
 ---

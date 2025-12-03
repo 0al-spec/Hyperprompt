@@ -18,7 +18,7 @@ Provide a **thin workflow wrapper** around CI task execution. This command:
 All implementation instructions already exist in:
 - **PRD** — step-by-step plan, GitHub Actions snippets, acceptance criteria
 - **CI Workplan** — context, dependencies, estimates
-- **CI/PRD.md** — overall CI strategy and requirements
+- **DOCS/CI/PRD.md** — overall CI strategy and requirements
 
 EXECUTE simply:
 - Checks prerequisites
@@ -57,7 +57,7 @@ EXECUTE simply:
 
 3. **Check dependencies:**
    - Read `Dependencies:` line from next.md
-   - Verify all upstream tasks marked `[x]` in CI/Workplan
+   - Verify all upstream tasks marked `[x]` in DOCS/CI/Workplan.md
    - **Exit if dependencies not satisfied**
 
 4. **Verify PRD exists:**
@@ -203,7 +203,7 @@ If `--interactive` mode:
    - Mark all checklist items `[x]`
    - Add completion timestamp
 
-2. **Update CI/Workplan.md:**
+2. **Update DOCS/CI/Workplan.md:**
    - Find task by ID (e.g., `CI-01`)
    - Mark as completed: `- [x]` instead of `- [ ]`
    - Remove `**INPROGRESS**` marker
