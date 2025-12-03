@@ -4,7 +4,7 @@
 
 ## Overview
 
-Four commands implement a documentation-driven development workflow with three-level task hierarchy.
+Five commands implement a documentation-driven development workflow with three-level task hierarchy.
 
 | Command | Purpose | Details |
 |---------|---------|---------|
@@ -12,6 +12,7 @@ Four commands implement a documentation-driven development workflow with three-l
 | **PLAN** | Generate implementation-ready PRD | [PLAN.md](./PLAN.md) |
 | **EXECUTE** | Workflow wrapper (pre/post checks) | [EXECUTE.md](./EXECUTE.md) |
 | **PROGRESS** | Update task checklist (optional) | [PROGRESS.md](./PROGRESS.md) |
+| **ARCHIVE** | Move completed PRDs to archive | [ARCHIVE.md](./ARCHIVE.md) |
 
 ---
 
@@ -30,7 +31,13 @@ Four commands implement a documentation-driven development workflow with three-l
 │ EXECUTE │  Pre-flight → [YOU WORK] → Post-flight
 └────┬────┘  Validates, commits, pushes
      ↓
-  [REPEAT]
+  [REPEAT] ←──────────┐
+     │                │
+     │  (periodically)│
+     ↓                │
+┌─────────┐           │
+│ ARCHIVE │  Clean workspace, move completed PRDs
+└─────────┘  To: DOCS/TASKS_ARCHIVE/
 ```
 
 **Philosophy:** All implementation instructions exist in PRD/specs. Commands automate only workflow boilerplate.
@@ -127,6 +134,26 @@ Optional command to update task checklist during work.
 
 ---
 
+### ARCHIVE
+Moves completed task PRDs from `INPROGRESS/` to `TASKS_ARCHIVE/`.
+
+**When to use:**
+- After completing multiple tasks (batch cleanup)
+- Before starting new phase
+- When INPROGRESS/ becomes cluttered
+
+**What it does:**
+- Scans for completed tasks (marked `[x]` in Workplan)
+- Moves PRDs to `DOCS/TASKS_ARCHIVE/`
+- Generates `INDEX.md` organized by phase
+- Commits and pushes
+
+**Not required** — run periodically to keep workspace clean.
+
+👉 **[Full details in ARCHIVE.md](./ARCHIVE.md)**
+
+---
+
 ## File Structure
 
 ```
@@ -136,11 +163,16 @@ DOCS/
 │   ├── SELECT.md          # Full SELECT spec
 │   ├── PLAN.md            # Full PLAN spec
 │   ├── EXECUTE.md         # Full EXECUTE spec
-│   └── PROGRESS.md        # Full PROGRESS spec
+│   ├── PROGRESS.md        # Full PROGRESS spec
+│   └── ARCHIVE.md         # Full ARCHIVE spec
 │
 ├── INPROGRESS/            # Active work
 │   ├── next.md            # Current task
-│   └── {TASK_ID}_{NAME}.md  # PRDs
+│   └── {TASK_ID}_{NAME}.md  # Active task PRDs
+│
+├── TASKS_ARCHIVE/         # Completed tasks
+│   ├── INDEX.md           # Organized by phase
+│   └── {TASK_ID}_{NAME}.md  # Archived PRDs
 │
 ├── Workplan.md            # Master task list
 ├── RULES/
@@ -237,5 +269,6 @@ For detailed error handling, see individual command files.
 - **PLAN.md** — PRD generation process, input files, output structure
 - **EXECUTE.md** — Workflow phases, execution modes, validation details
 - **PROGRESS.md** — Progress tracking mechanics, auto-detection, manual updates
+- **ARCHIVE.md** — Archiving process, safety checks, INDEX generation
 
 Each command file contains complete specifications, examples, and error handling.
