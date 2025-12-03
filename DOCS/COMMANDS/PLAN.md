@@ -36,216 +36,28 @@ Transform a brief task from `next.md` into a comprehensive PRD (Product Requirem
 
 ### Step 3: Apply PRD Rules
 
-Read `DOCS/RULES/01_PRD_PROMPT.md` and apply all rules for creating a detailed plan:
+Read `DOCS/RULES/01_PRD_PROMPT.md` and apply all authoring rules to transform the task into an implementation-ready PRD:
 
-1. **Define scope and intent**
-   - Restate task objective in precise terms
-   - Define deliverables and success criteria
-   - Note constraints, assumptions, dependencies
-
-2. **Decompose into hierarchical TODO plan**
-   - Break down into atomic, verifiable subtasks
-   - For each subtask define: input, process, output
-   - Group by logical categories
-   - Explicitly state dependencies and parallelization opportunities
-
-3. **Enrich with metadata**
-   - Priority (High / Medium / Low)
-   - Effort estimate (time or complexity)
-   - Required tools, frameworks, APIs, datasets
-   - Acceptance criteria and verification methods
-
-4. **Create PRD sections**
-   - Feature description and rationale
-   - Functional requirements
-   - Non-functional requirements (performance, scalability, security)
-   - User interaction flows (if applicable)
-   - Edge cases and failure scenarios
-
-5. **Apply quality rules**
-   - Avoid vague language
-   - Each step must be actionable without external interpretation
-   - Maintain terminology consistency
+- Follow the 6-step process defined in PRD authoring rules
+- Ensure output is self-contained, unambiguous, and machine-readable
+- Structure the plan for direct execution by LLM agents without human clarification
 
 ### Step 4: Generate PRD File
 
-Create file `/home/user/Hyperprompt/DOCS/INPROGRESS/{TASK_ID}.md` with the following structure:
+Create file `/home/user/Hyperprompt/DOCS/INPROGRESS/{TASK_ID}.md` following the structure defined in `01_PRD_PROMPT.md`:
 
-```markdown
-# {TASK_ID}: {TASK_NAME}
+**Required sections:**
+1. Scope & Intent (objective, deliverables, success criteria, constraints, assumptions)
+2. Hierarchical TODO Plan (atomic tasks with input/process/output/acceptance/effort)
+3. Execution Metadata (table with priorities, effort, tools, verification)
+4. Requirements (functional and non-functional)
+5. Interaction Flows (if applicable)
+6. Edge Cases & Failure Scenarios
+7. Verification Plan (unit tests, integration tests, manual verification)
+8. Definition of Done (completion checklist)
+9. References (Workplan, PRD rules, Project PRD, Design Specs, related tasks)
 
-**Priority:** {PRIORITY}
-**Phase:** {PHASE_NUMBER} — {PHASE_NAME}
-**Track:** {TRACK_ID} (Track Name)
-**Estimated Time:** {HOURS} hours
-**Dependencies:** {DEPENDENCIES_LIST}
-**Status:** Planning Complete
-
----
-
-## 1. Scope & Intent
-
-### Objective
-{Precise, unambiguous restatement of the task objective}
-
-### Deliverables
-- {Deliverable 1}
-- {Deliverable 2}
-
-### Success Criteria
-- {Criterion 1}
-- {Criterion 2}
-
-### Constraints
-- {Constraint 1}
-- {Constraint 2}
-
-### Assumptions
-- {Assumption 1}
-
-### External Dependencies
-- {Dependency 1}
-
----
-
-## 2. Hierarchical TODO Plan
-
-### Phase 2.1: {Phase Name}
-**Priority:** High | Medium | Low
-**Estimated:** {hours}h
-**Dependencies:** None | {task_ids}
-
-- [ ] **Task 2.1.1:** {Task description}
-  - **Input:** {What is needed to start}
-  - **Process:** {What to do}
-  - **Output:** {Expected result}
-  - **Acceptance:** {How to verify}
-  - **Effort:** {time estimate}
-
-- [ ] **Task 2.1.2:** {Task description}
-  - **Input:** {What is needed to start}
-  - **Process:** {What to do}
-  - **Output:** {Expected result}
-  - **Acceptance:** {How to verify}
-  - **Effort:** {time estimate}
-
-### Phase 2.2: {Phase Name}
-{...}
-
-**Parallelization Opportunities:**
-- Tasks 2.1.1 and 2.1.2 can run in parallel
-- Phase 2.2 can start after Task 2.1.1 completes
-
----
-
-## 3. Execution Metadata
-
-| Task ID | Priority | Effort | Tools/Frameworks | Verification Method |
-|---------|----------|--------|------------------|---------------------|
-| 2.1.1   | High     | 2h     | Swift, XCTest    | Unit tests pass     |
-| 2.1.2   | Medium   | 1h     | Git              | Files committed     |
-
----
-
-## 4. Requirements
-
-### 4.1 Functional Requirements
-
-**FR1:** {Requirement description}
-- **Details:** {Implementation details}
-- **Acceptance:** {How to verify}
-
-**FR2:** {Requirement description}
-- **Details:** {Implementation details}
-- **Acceptance:** {How to verify}
-
-### 4.2 Non-Functional Requirements
-
-**NFR1 — Performance:**
-- {Performance requirement}
-
-**NFR2 — Scalability:**
-- {Scalability requirement}
-
-**NFR3 — Security:**
-- {Security requirement}
-
-**NFR4 — Compatibility:**
-- {Compatibility requirement}
-
----
-
-## 5. Interaction Flows
-
-### Flow 5.1: {Flow name}
-```
-1. {Step 1}
-2. {Step 2}
-3. {Step 3}
-```
-
----
-
-## 6. Edge Cases & Failure Scenarios
-
-### Case 6.1: {Edge case name}
-**Scenario:** {Description}
-**Expected Behavior:** {How to handle}
-**Mitigation:** {Prevention strategy}
-
-### Case 6.2: {Failure scenario}
-**Scenario:** {Description}
-**Expected Behavior:** {How to handle}
-**Recovery:** {Recovery strategy}
-
----
-
-## 7. Verification Plan
-
-### 7.1 Unit Tests
-- [ ] {Test description}
-- [ ] {Test description}
-
-### 7.2 Integration Tests
-- [ ] {Test description}
-- [ ] {Test description}
-
-### 7.3 Manual Verification
-- [ ] {Verification step}
-- [ ] {Verification step}
-
----
-
-## 8. Definition of Done
-
-Task is considered complete when:
-- [ ] All TODO items checked off
-- [ ] All functional requirements met
-- [ ] All non-functional requirements satisfied
-- [ ] All tests passing
-- [ ] Code reviewed (if applicable)
-- [ ] Documentation updated
-- [ ] No known blockers remain
-
----
-
-## 9. References
-
-- **Workplan:** `/home/user/Hyperprompt/DOCS/Workplan.md` (Phase {N}, Section {TASK_ID})
-- **PRD Authoring Rules:** `/home/user/Hyperprompt/DOCS/RULES/01_PRD_PROMPT.md`
-- **Project PRD:** `/home/user/Hyperprompt/DOCS/PRD/v0.0.1/00_PRD_001.md`
-- **Design Specs:**
-  - Core Design: `/home/user/Hyperprompt/DOCS/PRD/v0.0.1/01_DESIGN_SPEC_001.md`
-  - SpecificationCore Integration: `/home/user/Hyperprompt/DOCS/PRD/v0.0.1/02_DESIGN_SPEC_SPECIFICATION_CORE.md`
-- **Related Tasks:** {List of related task IDs}
-- **Critical Path:** {Position on critical path, if applicable}
-
----
-
-**Document Version:** 1.0
-**Created:** {date}
-**Status:** Ready for Execution
-```
+**Output format:** Machine- and human-readable Markdown with tables, lists, and headings
 
 ### Step 5: Update next.md (Optional)
 
