@@ -1,99 +1,125 @@
-# Next Task: CI-01 — Repository Audit
+# Next Task: CI-02 — Define Workflow Triggers
 
 **Priority:** High
-**Phase:** Discovery
+**Phase:** Workflow Skeleton
 **Effort:** 0.5 hours
-**Dependencies:** None (entry point)
-**Blocks:** CI-02, CI-03, CI-04, CI-05, CI-06, CI-07 (all subsequent tasks)
-**Status:** ✅ Completed on 2025-12-03
+**Dependencies:** CI-01 (Repository Audit) ✅ Completed
+**Blocks:** CI-03 (Linux job environment), CI-04 (static analysis), CI-05 (test step), CI-06 (retry wrappers)
+**Status:** 🔄 In Progress
 
 ---
 
 ## Description
 
-Audit the Hyperprompt repository to identify:
-- Primary programming language (Swift)
-- Package manager (Swift Package Manager)
-- Existing build/test/lint scripts
-- Current project structure and toolchain requirements
+Define and implement GitHub Actions workflow triggers for the Hyperprompt CI pipeline. This task creates the `.github/workflows/ci.yml` file with:
+- Pull request triggers to default branch
+- Push triggers to default branch
+- Manual workflow dispatch capability
+- Path filters for source code and GitHub Actions files
 
-This is the discovery phase that informs all subsequent CI configuration decisions.
+This is the foundation that enables all subsequent CI configuration tasks.
 
 ---
 
 ## Tasks Checklist
 
-- [x] Identify primary programming language
-  - [x] Check Package.swift for Swift project
-  - [x] Verify Swift version requirements
-  - [x] Document platform requirements (macOS, Linux)
+- [ ] Create `.github/workflows/` directory structure
+  - [ ] Create `.github/workflows/ci.yml` file
+  - [ ] Set workflow name and description
 
-- [x] Identify package manager and toolchain
-  - [x] Confirm Swift Package Manager (SPM)
-  - [x] Document Swift version (5.9+)
-  - [x] Note dependency management approach
+- [ ] Configure pull request triggers
+  - [ ] Add `pull_request` trigger for default branch
+  - [ ] Add path filters for `Sources/**/*.swift`
+  - [ ] Add path filters for `Tests/**/*.swift`
+  - [ ] Add path filters for `Package.swift` and `Package.resolved`
+  - [ ] Add path filters for `.github/workflows/**`
 
-- [x] Audit existing scripts
-  - [x] Check for build script (swift build)
-  - [x] Check for test script (swift test)
-  - [x] Check for lint script (swiftlint, swift-format)
-  - [x] Check for format script
-  - [x] Document missing scripts
+- [ ] Configure push triggers
+  - [ ] Add `push` trigger for default branch
+  - [ ] Apply same path filters as PR triggers
+  - [ ] Ensure consistency between push and PR filters
 
-- [x] Inventory project structure
-  - [x] Document Sources/ modules
-  - [x] Document Tests/ structure
-  - [x] Note Package.swift configuration
-  - [x] Identify build artifacts (.build/)
+- [ ] Add manual dispatch capability
+  - [ ] Add `workflow_dispatch` trigger
+  - [ ] Document usage in workflow comments
 
-- [x] Document findings
-  - [x] Create CI audit report
-  - [x] Note available commands
-  - [x] List missing tooling (if any)
-  - [x] Recommend CI toolchain setup
+- [ ] Validate trigger configuration
+  - [ ] Verify YAML syntax is valid
+  - [ ] Confirm path filters match repository structure
+  - [ ] Document trigger behavior
 
 ---
 
 ## Acceptance Criteria
 
-✅ Primary language identified and documented (Swift)
-✅ Package manager confirmed (Swift Package Manager)
-✅ Build command documented (swift build)
-✅ Test command documented (swift test)
-✅ Lint command status documented (present/missing)
-✅ Project structure inventoried
-✅ Missing scripts noted with recommendations
-✅ Findings documented in CI audit report
+- [ ] `.github/workflows/ci.yml` exists and contains all required triggers
+- [ ] Pull request trigger configured for default branch with path filters
+- [ ] Push trigger configured for default branch with same path filters
+- [ ] Manual dispatch (`workflow_dispatch`) enabled
+- [ ] Path filters include:
+  - `Sources/**/*.swift`
+  - `Tests/**/*.swift`
+  - `Package.swift`
+  - `Package.resolved`
+  - `.github/workflows/**`
+- [ ] YAML syntax validates successfully
+- [ ] Workflow triggers documented in comments
 
 ---
 
 ## Output
 
-**Expected Deliverable:** `DOCS/CI/audit-report.md`
+**Expected Deliverable:** `.github/workflows/ci.yml` (initial version with triggers only)
 
-Report should include:
-- Language: Swift 5.9+
-- Package Manager: Swift Package Manager (SPM)
-- Build command: `swift build`
-- Test command: `swift test`
-- Lint command: (TBD - check for swiftlint)
-- Project structure summary
-- Toolchain requirements for CI
-- Recommendations for GitHub Actions setup
+Workflow should include:
+```yaml
+name: CI
+
+on:
+  pull_request:
+    branches: [main]  # or master, depending on default branch
+    paths:
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
+      - 'Package.swift'
+      - 'Package.resolved'
+      - '.github/workflows/**'
+
+  push:
+    branches: [main]
+    paths:
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
+      - 'Package.swift'
+      - 'Package.resolved'
+      - '.github/workflows/**'
+
+  workflow_dispatch:
+
+jobs:
+  # Placeholder for CI-03
+```
 
 ---
 
 ## Next Task After Completion
 
-**CI-02: Define Workflow Triggers [High Priority]**
-- Dependencies: CI-01 (this task)
+**CI-03: Configure Linux Job Environment [High Priority]**
+- Dependencies: CI-02 (this task)
+- Estimated: 1 hour
+- Will configure runner, checkout, toolchain setup, and caching
+
+**Alternative (can run in parallel after CI-02):**
+**CI-07: Set Permissions Block [High Priority]**
+- Dependencies: CI-02
 - Estimated: 0.5 hours
-- Will define GitHub Actions workflow triggers and path filters
+- Will configure workflow permissions and secrets handling
 
 ---
 
 ## References
 
-- **CI Workplan:** `/home/user/Hyperprompt/DOCS/CI/Workplan.md` (Task CI-01)
+- **CI Workplan:** `/home/user/Hyperprompt/DOCS/CI/Workplan.md` (Task CI-02)
 - **CI PRD:** `/home/user/Hyperprompt/DOCS/CI/PRD.md`
-- **Main Project:** `/home/user/Hyperprompt/Package.swift`
+- **Audit Report:** `/home/user/Hyperprompt/DOCS/CI/audit-report.md`
+- **GitHub Actions Docs:** https://docs.github.com/en/actions/using-workflows/triggering-a-workflow
