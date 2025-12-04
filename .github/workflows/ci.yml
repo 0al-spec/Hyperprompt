@@ -27,7 +27,59 @@ on:
 
 jobs:
   build:
+    # Linux-only CI job (macOS/Windows deferred to future tasks)
+    # Uses Swift 6.0.3 (compatible with Package.swift minimum 5.9)
+    # Caches dependencies based on Package.resolved hash
     runs-on: ubuntu-latest
+
     steps:
-      - name: Placeholder
-        run: echo "Job configuration will be added in CI-03"
+      # Clone repository with full git history
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Install Swift 6.0.3 toolchain
+      # Version pinned per CI-01 audit findings
+      - name: Install Swift 6.0.3
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: '6.0.3'
+
+      # Verify Swift installation
+      - name: Verify Swift version
+        run: |
+          swift --version
+          swift --version | grep -q "6.0.3"
+
+      # Cache .build and .swiftpm for 60-80% speedup on subsequent runs
+      # Cache key includes Package.resolved hash for deterministic invalidation
+      - name: Cache Swift dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build
+            .swiftpm
+          key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      # Resolve Swift Package Manager dependencies
+      - name: Resolve dependencies
+        run: |
+          echo "Resolving Swift dependencies..."
+          swift package resolve
+          echo "Dependencies resolved successfully"
+
+      # Display cache statistics for debugging
+      - name: Cache statistics
+        if: always()
+        run: |
+          echo "Build directory size:"
+          du -sh .build 2>/dev/null || echo "No .build directory yet"
+          echo "SwiftPM cache size:"
+          du -sh .swiftpm 2>/dev/null || echo "No .swiftpm directory yet"
+
+      # Placeholder for CI-05: Build and test steps will be added here
+      - name: Next steps
+        run: echo "CI-03 complete. CI-05 will add build and test steps."
