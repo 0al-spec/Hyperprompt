@@ -1,39 +1,43 @@
 # FIND-CANDIDATE-TASKS Command
-# Version: 1.0.0
+# Version: 2.0.0
 # Purpose: Filter and identify candidate tasks from Workplan
 
 "FIND-CANDIDATE-TASKS — Task Filtering Algorithm"
-    "Version: 1.0.0"
+    "Version: 2.0.0"
+
+    "Concepts"
+        → DOCS/HYPERCODE/PRIMITIVES/workplan-file.md
+        → DOCS/HYPERCODE/PRIMITIVES/task-status.md
+        → DOCS/HYPERCODE/PRIMITIVES/task-priority.md
+        → DOCS/HYPERCODE/PRIMITIVES/task-dependencies.md
 
     "Input"
         "DOCS/Workplan.md"
-            "Project tasks with priorities and dependencies"
 
     "Algorithm"
-        "Filter by status"
-            "Task checkbox must be [ ] not [x]"
-            "Skip completed tasks"
+        "Step 1: Filter by status"
+            "Read all tasks from Workplan"
+            "Keep only tasks with [ ] checkbox"
+            "Skip completed [x] tasks"
 
-        "Check dependencies"
-            "Read Dependencies field from task"
-            "Verify each dependency marked [x] in Workplan"
-            "Skip tasks with incomplete dependencies"
+        "Step 2: Check dependencies"
+            "For each candidate task"
+                "Read Dependencies field"
+                "Verify each dependency has [x] status"
+                "Skip if any dependency incomplete"
 
-        "Apply priority ordering"
-            "P0 tasks — highest priority"
-            "P1 tasks — medium priority"
-            "P2 tasks — lowest priority"
+        "Step 3: Sort by priority"
+            "Group by priority level (P0, P1, P2)"
+            "P0 first, then P1, then P2"
 
-        "Break ties"
-            "Prefer critical path tasks"
-            "Use sequential order if still tied"
-            "Default to Track A in parallel tracks"
+        "Step 4: Break ties"
+            "Within same priority level"
+                "Prefer critical path tasks"
+                "Use sequential order if needed"
+                "Default to Track A for parallel tracks"
 
     "Output"
-        "List of eligible tasks sorted by priority"
-        "Selected task: first task in sorted list"
+        "Selected task: first eligible task from sorted list"
 
     "Error Cases"
-        "No available tasks"
-            "Return error message"
-            "Suggest reviewing Workplan for blockers"
+        "No available tasks → error with blocker suggestion"
