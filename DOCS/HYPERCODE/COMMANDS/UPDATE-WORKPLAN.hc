@@ -1,35 +1,21 @@
 # UPDATE-WORKPLAN Command
-# Version: 2.0.0
+# Version: 3.0.0
 # Purpose: Mark selected task as in progress in Workplan
 
 "UPDATE-WORKPLAN — Progress Tracking Update"
-    "Version: 2.0.0"
+    "Version: 3.0.0"
 
     "Concepts"
         "DOCS/HYPERCODE/PRIMITIVES/workplan-file.md"
         "DOCS/HYPERCODE/PRIMITIVES/task-status.md"
 
-    "Input"
-        "Selected task ID"
-        "DOCS/Workplan.md"
+    "Input: Selected task ID + DOCS/Workplan.md"
 
     "Algorithm"
-        "Step 1: Find task"
-            "Locate task row by ID in Workplan.md"
-            "Parse task row format"
+        "Find task row by ID in Workplan.md"
+        "Add **INPROGRESS** marker, preserve formatting"
+        "Write updated Workplan.md"
 
-        "Step 2: Mark as in progress"
-            "Add **INPROGRESS** marker to task row"
-            "Preserve existing formatting"
-            "Keep priority and metadata intact"
+    "Output: DOCS/Workplan.md with INPROGRESS marker"
 
-        "Step 3: Save changes"
-            "Write updated Workplan.md"
-            "Maintain file structure"
-
-    "Output"
-        "DOCS/Workplan.md with INPROGRESS marker"
-
-    "Error Cases"
-        "Task not found → error with task ID"
-        "Workplan missing → error requesting creation"
+    "Error: Task not found OR Workplan missing"
