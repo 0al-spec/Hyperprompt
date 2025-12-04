@@ -710,3 +710,6 @@ These enhancements are **not required** for task completion but may help with wo
 ---
 
 **END OF PRD**
+
+---
+**Archived:** 2025-12-04
