@@ -206,13 +206,19 @@ If `--interactive` mode:
    - Mark as completed: `- [x]` instead of `- [ ]`
    - Remove `**Status:** INPROGRESS`
 
-3. **Auto-detect deliverables:**
+3. **Save task summary (if applicable):**
+   - **IMPORTANT:** Task summaries must be saved in `DOCS/INPROGRESS/` folder
+   - File naming: `{TASK_ID}-summary.md` (e.g., `A1-summary.md`, `A2-summary.md`)
+   - Include: task metrics, key findings, deliverables, acceptance criteria verification, next steps
+   - This is a comprehensive report for the task, complementing the checklist in the PRD
+
+4. **Auto-detect deliverables:**
    ```bash
    # Files created/modified since task start
    git diff --name-status HEAD
    ```
 
-4. **Create commit:**
+5. **Create commit:**
    ```
    Complete {TASK_ID} — {TASK_NAME}
 
@@ -231,12 +237,12 @@ If `--interactive` mode:
    Closes task A1 from Workplan Phase 1.
    ```
 
-5. **Push to remote:**
+6. **Push to remote:**
    ```bash
    git push -u origin {branch-name}
    ```
 
-6. **Suggest next action:**
+7. **Suggest next action:**
    ```
    ✅ Task {TASK_ID} completed successfully!
 

@@ -208,13 +208,19 @@ If `--interactive` mode:
    - Mark as completed: `- [x]` instead of `- [ ]`
    - Remove `**INPROGRESS**` marker
 
-3. **Auto-detect deliverables:**
+3. **Save task summary (if applicable):**
+   - **IMPORTANT:** Task summaries must be saved in `DOCS/CI/INPROGRESS/` folder
+   - File naming: `{TASK_ID}-summary.md` (e.g., `CI-01-summary.md`, `CI-02-summary.md`)
+   - Include: task metrics, key findings, deliverables, acceptance criteria verification, next steps
+   - This is a comprehensive report for the task, complementing the checklist in the PRD
+
+4. **Auto-detect deliverables:**
    ```bash
    # Files created/modified since task start
    git diff --name-status HEAD
    ```
 
-4. **Create commit:**
+5. **Create commit:**
    ```
    Complete {TASK_ID} — {TASK_NAME}
 
@@ -229,12 +235,12 @@ If `--interactive` mode:
    Closes task {TASK_ID} from CI Workplan Phase {N}.
    ```
 
-5. **Push to remote:**
+6. **Push to remote:**
    ```bash
    git push -u origin {branch-name}
    ```
 
-6. **Suggest next action:**
+7. **Suggest next action:**
    ```
    ✅ Task {TASK_ID} completed successfully!
 

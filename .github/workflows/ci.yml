@@ -1,0 +1,33 @@
+name: CI
+
+# CI workflow for Hyperprompt Swift compiler
+# Triggers on PR, push to main, and manual dispatch
+# Runs on Linux (ubuntu-latest) with Swift 6.0.3
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
+      - 'Package.swift'
+      - 'Package.resolved'
+      - '.github/workflows/**'
+
+  push:
+    branches: [main]
+    paths:
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
+      - 'Package.swift'
+      - 'Package.resolved'
+      - '.github/workflows/**'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder
+        run: echo "Job configuration will be added in CI-03"
