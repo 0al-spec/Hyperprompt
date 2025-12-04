@@ -535,3 +535,6 @@ which swift-format
 ---
 
 **END OF PRD**
+
+---
+**Archived:** 2025-12-04
