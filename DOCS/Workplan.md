@@ -158,7 +158,7 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### A2: Core Types Implementation **[P0]**
+### A2: Core Types Implementation **[P0]** **INPROGRESS**
 **Dependencies:** A1
 **Estimated:** 4 hours
 
