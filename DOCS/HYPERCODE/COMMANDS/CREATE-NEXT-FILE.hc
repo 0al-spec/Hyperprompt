@@ -6,7 +6,7 @@
     "Version: 2.0.0"
 
     "Concepts"
-        → DOCS/HYPERCODE/PRIMITIVES/next-file.md
+        "DOCS/HYPERCODE/PRIMITIVES/next-file.md"
 
     "Input"
         "Selected task from FIND-CANDIDATE-TASKS"

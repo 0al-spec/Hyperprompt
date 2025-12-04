@@ -6,8 +6,8 @@
     "Version: 2.0.0"
 
     "Concepts"
-        → DOCS/HYPERCODE/PRIMITIVES/workplan-file.md
-        → DOCS/HYPERCODE/PRIMITIVES/task-status.md
+        "DOCS/HYPERCODE/PRIMITIVES/workplan-file.md"
+        "DOCS/HYPERCODE/PRIMITIVES/task-status.md"
 
     "Input"
         "Selected task ID"

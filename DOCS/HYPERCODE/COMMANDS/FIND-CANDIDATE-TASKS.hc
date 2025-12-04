@@ -6,10 +6,10 @@
     "Version: 2.0.0"
 
     "Concepts"
-        → DOCS/HYPERCODE/PRIMITIVES/workplan-file.md
-        → DOCS/HYPERCODE/PRIMITIVES/task-status.md
-        → DOCS/HYPERCODE/PRIMITIVES/task-priority.md
-        → DOCS/HYPERCODE/PRIMITIVES/task-dependencies.md
+        "DOCS/HYPERCODE/PRIMITIVES/workplan-file.md"
+        "DOCS/HYPERCODE/PRIMITIVES/task-status.md"
+        "DOCS/HYPERCODE/PRIMITIVES/task-priority.md"
+        "DOCS/HYPERCODE/PRIMITIVES/task-dependencies.md"
 
     "Input"
         "DOCS/Workplan.md"

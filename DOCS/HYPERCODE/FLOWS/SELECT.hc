@@ -16,17 +16,17 @@
 
     "Execution Flow"
         "Step 1: Find Next Task"
-            → DOCS/HYPERCODE/COMMANDS/FIND-CANDIDATE-TASKS.hc
+            "DOCS/HYPERCODE/COMMANDS/FIND-CANDIDATE-TASKS.hc"
                 "Filters tasks by status, dependencies, priority"
                 "Returns highest priority eligible task"
 
         "Step 2: Create Task File"
-            → DOCS/HYPERCODE/COMMANDS/CREATE-NEXT-FILE.hc
+            "DOCS/HYPERCODE/COMMANDS/CREATE-NEXT-FILE.hc"
                 "Generates minimal next.md with metadata"
                 "Prompts user to run PLAN command"
 
         "Step 3: Update Progress"
-            → DOCS/HYPERCODE/COMMANDS/UPDATE-WORKPLAN.hc
+            "DOCS/HYPERCODE/COMMANDS/UPDATE-WORKPLAN.hc"
                 "Marks selected task as INPROGRESS"
                 "Saves updated Workplan"
 
