@@ -1,3 +1,16 @@
-# Next CI Task
+# Next Task: CI-03 — Configure Linux job environment
 
-This file is intentionally empty. Use the SELECT command to populate it with your next CI task.
+**Priority:** High
+**Phase:** Workflow Skeleton
+**Effort:** 1 hour
+**Dependencies:** CI-02 (completed)
+**Status:** Selected
+
+## Description
+
+Configure Linux job environment including runner selection, repository checkout, toolchain setup based on discovered language (from CI-01), and caching strategy with parameterized cache keys. Ensure workflow passes lint validation.
+
+## Next Step
+
+Run PLAN command to generate detailed PRD:
+$ claude "Выполни команду PLAN для CI"
