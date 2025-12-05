@@ -4,14 +4,14 @@
 /// enabling precise error messages and debugging information.
 ///
 /// - Note: Line numbers are 1-indexed, matching standard editor conventions.
-struct SourceLocation: Equatable, CustomStringConvertible, Sendable {
+public struct SourceLocation: Equatable, CustomStringConvertible, Sendable {
     /// Absolute or relative file path.
     /// Can be empty for synthetic locations (e.g., compiler-generated nodes).
-    let filePath: String
+    public let filePath: String
 
     /// Line number (1-indexed).
     /// Must be >= 1 as line numbers start at 1 in standard editors.
-    let line: Int
+    public let line: Int
 
     /// Initialize a source location with file path and line number.
     ///
@@ -20,7 +20,7 @@ struct SourceLocation: Equatable, CustomStringConvertible, Sendable {
     ///   - line: The line number (1-indexed). Must be >= 1.
     ///
     /// - Precondition: `line` must be >= 1
-    init(filePath: String, line: Int) {
+    public init(filePath: String, line: Int) {
         precondition(line >= 1, "Line number must be >= 1 (1-indexed)")
         self.filePath = filePath
         self.line = line
@@ -32,7 +32,7 @@ struct SourceLocation: Equatable, CustomStringConvertible, Sendable {
     /// - `/path/to/file.hc:42`
     /// - `test.hc:1`
     /// - `:15` (empty file path)
-    var description: String {
+    public var description: String {
         "\(filePath):\(line)"
     }
 }

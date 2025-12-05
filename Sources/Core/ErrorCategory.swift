@@ -9,7 +9,7 @@
 /// - Syntax → Exit code 2 (invalid Hypercode syntax)
 /// - Resolution → Exit code 3 (circular dependency, missing reference)
 /// - Internal → Exit code 4 (unexpected condition, compiler bug)
-enum ErrorCategory: String, CaseIterable {
+public enum ErrorCategory: String, CaseIterable, Sendable {
     /// File system I/O errors (file not found, permission denied, disk full)
     case io = "IO"
 
@@ -29,7 +29,7 @@ enum ErrorCategory: String, CaseIterable {
     /// - 2 for Syntax errors
     /// - 3 for Resolution errors
     /// - 4 for Internal errors
-    var exitCode: Int32 {
+    public var exitCode: Int32 {
         switch self {
         case .io:
             return 1

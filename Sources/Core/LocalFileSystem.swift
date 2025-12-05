@@ -8,13 +8,16 @@ import Foundation
 ///
 /// Thread safety: FileManager.default is thread-safe. String reading operations
 /// are atomic per-file.
-struct LocalFileSystem: FileSystem {
+public struct LocalFileSystem: FileSystem {
+    /// Create a new LocalFileSystem instance.
+    public init() {}
+
     /// Read entire file content as UTF-8 string.
     ///
     /// - Parameter path: File path (absolute or relative to current directory)
     /// - Returns: File content as String
     /// - Throws: CompilerError with category `.io` for all file reading errors
-    func readFile(at path: String) throws -> String {
+    public func readFile(at path: String) throws -> String {
         do {
             return try String(contentsOfFile: path, encoding: .utf8)
         } catch {
@@ -26,7 +29,7 @@ struct LocalFileSystem: FileSystem {
     ///
     /// - Parameter path: File path (absolute or relative to current directory)
     /// - Returns: `true` if file exists, `false` otherwise
-    func fileExists(at path: String) -> Bool {
+    public func fileExists(at path: String) -> Bool {
         FileManager.default.fileExists(atPath: path)
     }
 
@@ -37,7 +40,7 @@ struct LocalFileSystem: FileSystem {
     /// - Parameter path: File path (may be relative, may contain symlinks)
     /// - Returns: Absolute canonical path
     /// - Throws: CompilerError with category `.io` if path cannot be resolved
-    func canonicalizePath(_ path: String) throws -> String {
+    public func canonicalizePath(_ path: String) throws -> String {
         let url = URL(fileURLWithPath: path)
         let standardized = url.standardized
         return standardized.path
@@ -46,7 +49,7 @@ struct LocalFileSystem: FileSystem {
     /// Get current working directory.
     ///
     /// - Returns: Absolute path to current directory
-    func currentDirectory() -> String {
+    public func currentDirectory() -> String {
         FileManager.default.currentDirectoryPath
     }
 
