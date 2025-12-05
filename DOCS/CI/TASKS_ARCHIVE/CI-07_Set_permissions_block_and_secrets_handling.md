@@ -160,3 +160,6 @@ git push origin <branch>
 - **CI-02:** Defined triggers and paths (dependency for CI-07).
 - **CI-03:** Environment setup completes before permissions are critical.
 - **CI-08:** Documentation of secrets handling will reference this task.
+
+---
+**Archived:** 2025-12-05
