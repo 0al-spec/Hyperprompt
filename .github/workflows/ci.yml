@@ -80,6 +80,40 @@ jobs:
           echo "SwiftPM cache size:"
           du -sh .swiftpm 2>/dev/null || echo "No .swiftpm directory yet"
 
-      # Placeholder for CI-05: Build and test steps will be added here
-      - name: Next steps
-        run: echo "CI-03 complete. CI-05 will add build and test steps."
+      # Build the Swift package
+      - name: Build
+        run: |
+          echo "Building Swift package..."
+          swift build --build-tests
+          echo "Build completed successfully"
+
+      # Run tests with parallel execution
+      - name: Run tests
+        run: |
+          echo "Running Swift tests..."
+          swift test --parallel
+          echo "Tests completed successfully"
+
+      # Upload test results and build artifacts on failure
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ github.run_id }}
+          path: |
+            .build/debug/*.xctest
+            .build/**/*.swiftmodule
+            .build/debug.yaml
+          retention-days: 7
+          if-no-files-found: warn
+
+      # Display build summary
+      - name: Build summary
+        if: always()
+        run: |
+          echo "================================"
+          echo "Build and Test Summary"
+          echo "================================"
+          echo "Build artifacts:"
+          ls -lh .build/debug/ 2>/dev/null || echo "No build artifacts"
+          echo "================================"
