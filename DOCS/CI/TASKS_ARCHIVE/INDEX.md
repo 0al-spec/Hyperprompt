@@ -5,3 +5,4 @@
 
 ## Phase 2: Workflow Skeleton
 - [CI-02 — Define Workflow Triggers](./CI-02_Define_Workflow_Triggers.md) ✓ 2025-12-04
+- [CI-03 — Configure Linux Job Environment](./CI-03_Configure_Linux_job_environment.md) ✓ 2025-12-04
