@@ -201,7 +201,7 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 14 hours
 **Track:** A (Core Compiler)
 
-### Lexer Implementation **[P0]**
+### Lexer Implementation **[P0]** **INPROGRESS**
 **Dependencies:** A2
 **Estimated:** 6 hours
 
