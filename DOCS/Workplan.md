@@ -158,19 +158,20 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### A2: Core Types Implementation **[P0]** **INPROGRESS**
+### A2: Core Types Implementation **[P0]**
 **Dependencies:** A1
 **Estimated:** 4 hours
+**Status:** ✅ Completed on 2025-12-05
 
-- [ ] **[P0, depends: A1]** Define `SourceLocation` struct (file path + line number)
-- [ ] **[P0, depends: A1]** Define `CompilerError` protocol with diagnostic information
-- [ ] **[P0, depends: A1]** Implement error categories enum (IO, Syntax, Resolution, Internal)
-- [ ] **[P0, depends: A1]** Implement `FileSystem` protocol for abstracting file operations
-- [ ] **[P0, depends: A1]** Create `LocalFileSystem` production implementation
-- [ ] **[P1, depends: A1]** Create `MockFileSystem` for testing
-- [ ] **[P1, depends: A1]** Write unit tests for all error cases with diagnostics
+- [x] **[P0, depends: A1]** Define `SourceLocation` struct (file path + line number)
+- [x] **[P0, depends: A1]** Define `CompilerError` protocol with diagnostic information
+- [x] **[P0, depends: A1]** Implement error categories enum (IO, Syntax, Resolution, Internal)
+- [x] **[P0, depends: A1]** Implement `FileSystem` protocol for abstracting file operations
+- [x] **[P0, depends: A1]** Create `LocalFileSystem` production implementation
+- [x] **[P1, depends: A1]** Create `MockFileSystem` for testing
+- [x] **[P1, depends: A1]** Write unit tests for all error cases with diagnostics
 
-**Acceptance Criteria:** All core types have >90% test coverage, error cases produce appropriate diagnostics
+**Acceptance Criteria:** All core types have >90% test coverage, error cases produce appropriate diagnostics ✅
 
 **Blocks:** A3, A4, B1, C1, C2, D1, D2 (core types used everywhere)
 
