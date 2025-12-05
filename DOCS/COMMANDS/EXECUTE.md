@@ -18,7 +18,8 @@ Provide a **thin workflow wrapper** around task execution. This command:
 > Every EXECUTE cycle MUST run `swift build` and `swift test` before committing!
 > - Do NOT commit code that doesn't compile
 > - Do NOT commit code with failing tests
-> - If Swift is not available in the environment, note this explicitly in the commit message and task summary
+> - If Swift is not available, install it first: **[Swift Installation Guide](../RULES/02_Swift_Installation.md)**
+> - If Swift cannot be installed in the environment, note this explicitly in the commit message and task summary
 
 ## Philosophy
 
