@@ -25,6 +25,12 @@ on:
 
   workflow_dispatch:
 
+# Least-privilege permissions for GitHub Actions
+# Restricts token scope to minimize potential blast radius if workflow is compromised
+# Reference: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
+permissions:
+  contents: read
+
 jobs:
   build:
     # Linux-only CI job (macOS/Windows deferred to future tasks)
@@ -33,6 +39,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Validate secrets configuration (fail fast on missing required secrets)
+      # Currently: No required secrets for baseline CI
+      # Optional: CI_TOKEN (placeholder for future stages like artifact publishing)
+      # Uncomment and update this block if secrets become required
+      - name: Validate secrets
+        run: |
+          echo "Checking required secrets..."
+          # No required secrets at this stage
+          echo "✓ Secrets validation passed"
+
       # Clone repository with full git history
       - name: Checkout code
         uses: actions/checkout@v4
