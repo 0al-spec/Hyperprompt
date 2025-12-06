@@ -1,4 +1,4 @@
-# Next Task: B2  Dependency Tracker
+# Next Task: B2 — Dependency Tracker
 
 **Priority:** P1
 **Phase:** Phase 4: Reference Resolution
@@ -10,9 +10,13 @@
 
 Implement file reference resolution with circular dependency detection. This task creates a visitation stack mechanism to detect both direct and transitive circular dependencies, producing clear error messages that show the full cycle path. Critical for recursive compilation (B4).
 
+## Implementation PRD
+
+Detailed implementation plan available in: `DOCS/INPROGRESS/B2_Dependency_Tracker.md`
+
 ## Next Step
 
-Run PLAN command to generate detailed PRD:
+Begin implementation using the PRD:
 ```
-claude "K?>;=8 :><0=4C PLAN"
+claude "Выполни задачу B2 согласно PRD"
 ```
