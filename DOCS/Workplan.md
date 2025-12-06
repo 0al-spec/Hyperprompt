@@ -358,7 +358,7 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### B2: Dependency Tracker **[P1]**
+### B2: Dependency Tracker **[P1]** **INPROGRESS**
 **Dependencies:** A4
 **Estimated:** 4 hours
 
