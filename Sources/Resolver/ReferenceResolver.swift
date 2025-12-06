@@ -286,6 +286,8 @@ public struct ReferenceResolver {
             }
         }
 
+        var pushedToTracker = false
+
         // Perform cycle detection before attempting recursive compilation.
         if var tracker = dependencyTracker {
             do {
@@ -294,6 +296,7 @@ public struct ReferenceResolver {
                     return .failure(ResolutionError(message: error.message, location: error.location))
                 }
                 dependencyTracker = tracker
+                pushedToTracker = true
             } catch let compilerError as CompilerError {
                 return .failure(ResolutionError(message: compilerError.message, location: compilerError.location))
             } catch {
@@ -301,17 +304,64 @@ public struct ReferenceResolver {
             }
         }
 
-        let result = ResolutionKind.hypercodeFile(path: path, ast: node)
+        let compilationResult = compileHypercode(at: fullPath)
 
-        if var tracker = dependencyTracker {
+        if var tracker = dependencyTracker, pushedToTracker {
             tracker.pop()
             dependencyTracker = tracker
         }
 
-        return .success(result)
+        switch compilationResult {
+        case .success(let ast):
+            return .success(.hypercodeFile(path: path, ast: ast))
+        case .failure(let error):
+            return .failure(error)
+        }
     }
 
     // MARK: - Integration Hooks for B2, B3, B4
+
+    /// Recursively compile a Hypercode file into a resolved AST.
+    ///
+    /// - Parameter fullPath: Absolute path to the `.hc` file.
+    /// - Returns: Root node of the compiled AST or a resolution error.
+    private mutating func compileHypercode(at fullPath: String) -> Result<Node, ResolutionError> {
+        do {
+            // Parse the Hypercode file into an AST.
+            let lexer = Lexer(fileSystem: fileSystem)
+            let tokens = try lexer.tokenize(fullPath)
+            let parser = Parser()
+
+            let program: Program
+            switch parser.parse(tokens: tokens) {
+            case .success(let parsedProgram):
+                program = Program(root: parsedProgram.root, sourceFile: fullPath)
+            case .failure(let error):
+                return .failure(ResolutionError(message: error.message, location: error.location))
+            }
+
+            // Resolve references within the nested AST using the same resolver settings.
+            var childResolver = ReferenceResolver(
+                fileSystem: fileSystem,
+                rootPath: rootPath,
+                mode: mode,
+                dependencyTracker: dependencyTracker
+            )
+
+            switch childResolver.resolveTree(root: program.root) {
+            case .success:
+                dependencyTracker = childResolver.dependencyTracker
+                return .success(program.root)
+            case .failure(let error):
+                dependencyTracker = childResolver.dependencyTracker
+                return .failure(error)
+            }
+        } catch let compilerError as CompilerError {
+            return .failure(ResolutionError(message: compilerError.message, location: compilerError.location))
+        } catch {
+            return .failure(ResolutionError(message: "Unknown error during Hypercode compilation at \(fullPath)", location: nil))
+        }
+    }
 
     // MARK: - Deprecated visitation helpers
 
