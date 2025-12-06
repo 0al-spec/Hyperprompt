@@ -507,3 +507,7 @@ Use test files from `DOCS/TEST_CORPUS/` including:
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-12-06 | Hyperprompt Team | Initial PRD generation via PLAN command |
+
+---
+
+**Archived:** 2025-12-06
