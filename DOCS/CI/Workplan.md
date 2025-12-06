@@ -13,7 +13,7 @@ Implement GitHub Actions CI for the Hyperprompt repository targeting Linux runne
 | CI-05 | Add test step with artifact upload (reports, coverage if available) | High | 1h | CI-03 | Dev **COMPLETE** | Tests run via repo script; artifacts uploaded on success/failure | 
 | CI-06 | Implement retry wrappers for network-prone steps (dependency install) | Medium | 0.5h | CI-03 | Dev | Retries configured (max 2) with clear logging | 
 | CI-07 | Set permissions block and secrets handling (least privilege; fail fast on missing secrets) | High | 0.5h | CI-02 | Dev **COMPLETE** | Permissions minimized; no implicit write scopes | 
-| CI-08 | Document CI usage, variables, and extension guidance in `DOCS/CI/README.md` or existing doc | High | 0.5h | CI-02–CI-07 | Dev **INPROGRESS** | Documentation explains workflow structure and customization | 
+| CI-08 | Document CI usage, variables, and extension guidance in `DOCS/CI/README.md` or existing doc | High | 0.5h | CI-02–CI-07 | Dev **COMPLETE** | Documentation explains workflow structure and customization | 
 | CI-09 | Validate workflow locally with `act` (if available) or GitHub syntax check | Medium | 0.5h | CI-02–CI-07 | QA | Validation output archived; issues resolved | 
 | CI-10 | Enable required status checks on default branch (naming aligned with workflow job) | High | 0.5h | CI-05 | Maintainer | Branch protection updated; documented | 
 
