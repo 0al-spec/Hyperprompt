@@ -81,3 +81,6 @@
 - Updated resolver/parser code enabling recursive compilation of `.hc` files with AST merging and diagnostics propagation.
 - Test suite fixtures demonstrating ≥3-level nesting and error paths.
 - Documentation update (if needed) describing recursion behavior and limitations.
+
+---
+**Archived:** 2025-12-06
