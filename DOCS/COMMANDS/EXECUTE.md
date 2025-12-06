@@ -35,6 +35,9 @@ EXECUTE simply:
 - Validates results
 - Commits and updates documentation
 
+**Important:** Follow the [XP-Inspired TDD Workflow (Outside-In)](../RULES/03_XP_TDD_Workflow.md) when implementing tasks.
+This ensures test-driven development, incremental delivery, and continuous main-branch readiness.
+
 ---
 
 ## Input
