@@ -587,3 +587,7 @@ func test_parser_invalid_multiple_roots() {
 ---
 
 **END OF PRD**
+
+---
+
+**Archived:** 2025-12-06
