@@ -319,12 +319,9 @@ final class LexerTests: XCTestCase {
     }
 
     func testDocumentWithBlankLines() throws {
-        let content = """
-        "Root"
-
-            "Child"
-
-        """
+        // Note: Swift multiline string literals don't include trailing blank line
+        // unless explicitly added. This test uses \n to be explicit.
+        let content = "\"Root\"\n\n    \"Child\"\n\n"
         let tokens = try tokenize(content)
         XCTAssertEqual(tokens.count, 4)
 
@@ -361,13 +358,11 @@ final class LexerTests: XCTestCase {
     }
 
     func testTokenIsSemantic() throws {
-        let content = """
-        "Node"
-        # Comment
-
-        """
+        // Explicit newlines to ensure blank line is included
+        let content = "\"Node\"\n# Comment\n\n"
         let tokens = try tokenize(content)
 
+        XCTAssertEqual(tokens.count, 3)
         XCTAssertTrue(tokens[0].isSemantic)   // node
         XCTAssertFalse(tokens[1].isSemantic)  // comment
         XCTAssertFalse(tokens[2].isSemantic)  // blank
