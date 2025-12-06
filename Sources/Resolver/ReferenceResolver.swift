@@ -227,6 +227,31 @@ public struct ReferenceResolver {
         return rootPath + "/" + relativePath
     }
 
+    /// Validate that a path is contained within the configured root directory.
+    ///
+    /// - Parameters:
+    ///   - fullPath: Absolute path to validate
+    ///   - location: Source location for error reporting
+    /// - Returns: Success when the path is within root or a resolution error otherwise.
+    private func validateWithinRoot(fullPath: String, location: SourceLocation) -> Result<Void, ResolutionError> {
+        do {
+            let canonicalRoot = try fileSystem.canonicalizePath(rootPath)
+            let canonicalTarget = try fileSystem.canonicalizePath(fullPath)
+
+            let isInsideRoot = canonicalTarget == canonicalRoot || canonicalTarget.hasPrefix(canonicalRoot + "/")
+
+            if isInsideRoot {
+                return .success(())
+            }
+
+            return .failure(.outsideRoot(path: canonicalTarget, root: canonicalRoot, location: location))
+        } catch let compilerError as CompilerError {
+            return .failure(ResolutionError(message: compilerError.message, location: compilerError.location ?? location))
+        } catch {
+            return .failure(ResolutionError(message: "Failed to canonicalize path: \(fullPath)", location: location))
+        }
+    }
+
     // MARK: - Resolution Paths
 
     /// Resolve a Markdown file reference.
@@ -237,6 +262,13 @@ public struct ReferenceResolver {
     /// - Returns: Result with `.markdownFile` or error
     private func resolveMarkdown(_ path: String, node: Node) -> Result<ResolutionKind, ResolutionError> {
         let fullPath = constructFullPath(path)
+
+        switch validateWithinRoot(fullPath: fullPath, location: node.location) {
+        case .success:
+            break
+        case .failure(let error):
+            return .failure(error)
+        }
 
         if fileSystem.fileExists(at: fullPath) {
             // File exists - load content
@@ -277,6 +309,13 @@ public struct ReferenceResolver {
     private mutating func resolveHypercode(_ path: String, node: Node) -> Result<ResolutionKind, ResolutionError> {
         let fullPath = constructFullPath(path)
 
+        switch validateWithinRoot(fullPath: fullPath, location: node.location) {
+        case .success:
+            break
+        case .failure(let error):
+            return .failure(error)
+        }
+
         guard fileSystem.fileExists(at: fullPath) else {
             switch mode {
             case .strict:
@@ -315,7 +354,7 @@ public struct ReferenceResolver {
         case .success(let ast):
             return .success(.hypercodeFile(path: path, ast: ast))
         case .failure(let error):
-            return .failure(error)
+            return .failure(contextualize(error: error, for: fullPath))
         }
     }
 
@@ -361,6 +400,28 @@ public struct ReferenceResolver {
         } catch {
             return .failure(ResolutionError(message: "Unknown error during Hypercode compilation at \(fullPath)", location: nil))
         }
+    }
+
+    /// Attach resolution stack context to a nested error.
+    ///
+    /// - Parameters:
+    ///   - error: The original resolution error.
+    ///   - fullPath: The nested file path that failed to compile.
+    /// - Returns: A new ResolutionError with path chain appended for diagnostics.
+    private func contextualize(error: ResolutionError, for fullPath: String) -> ResolutionError {
+        var contextLines: [String] = [error.message]
+
+        var pathChain: [String] = []
+        if let tracker = dependencyTracker {
+            pathChain.append(contentsOf: tracker.stack)
+        }
+        pathChain.append(fullPath)
+
+        if !pathChain.isEmpty {
+            contextLines.append("Resolution path: " + pathChain.joined(separator: " → "))
+        }
+
+        return ResolutionError(message: contextLines.joined(separator: "\n"), location: error.location)
     }
 
     // MARK: - Deprecated visitation helpers
