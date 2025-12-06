@@ -375,7 +375,7 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### B3: File Loader & Caching **[P0]**
+### B3: File Loader & Caching **[P0]** **INPROGRESS**
 **Dependencies:** A2
 **Estimated:** 4 hours
 
