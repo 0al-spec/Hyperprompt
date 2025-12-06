@@ -403,12 +403,14 @@ Non-blocking: Can develop in parallel with Track A
 
 - [ ] **[P0, depends: A4, B1]** Implement recursive parser invocation for `.hc` files
 - [ ] **[P0, depends: A4, B1]** Merge child ASTs into parent tree at correct depth
-- [ ] **[P0, depends: A4, B1]** Propagate errors from nested compilations
+- [x] **[P0, depends: A4, B1]** Propagate errors from nested compilations
 - [ ] **[P0, depends: A4, B1]** Maintain source location tracking across files
 - [ ] **[P1, depends: B2]** Update visitation stack correctly during recursion
 - [ ] **[P1, depends: A4, B1, B3]** Write tests for nested `.hc` files (3+ levels deep)
 
 **Acceptance Criteria:** Nested `.hc` files correctly compiled and embedded, errors propagate with correct locations
+
+**Progress Note (2025-12-06):** Added root containment enforcement and nested error context in the resolver; error propagation checklist item completed, remaining recursion behaviors still in progress.
 
 **Blocks:** C2 (emitter needs fully resolved AST)
 
