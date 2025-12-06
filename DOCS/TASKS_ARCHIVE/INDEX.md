@@ -8,3 +8,4 @@
 ## Phase 2: Lexer & Parser
 
 - [Lexer Implementation](./Lexer_Implementation.md) ✓ 2025-12-06
+- [A4 — Parser & AST Construction](./A4_Parser_And_AST_Construction.md) ✓ 2025-12-06
