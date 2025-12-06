@@ -336,22 +336,23 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 12 hours
 **Track:** A (Core Compiler)
 
-### B1: Reference Resolver **[P0]** **INPROGRESS**
+### B1: Reference Resolver **[P0]**
 **Dependencies:** A4 (needs AST)
 **Estimated:** 6 hours
+**Status:** ✅ Completed on 2025-12-06
 
-- [ ] **[P0, depends: A4]** Implement file existence checking against root directory
-- [ ] **[P0, depends: A4]** Classify literals as file references or inline text
-- [ ] **[P0, depends: A4]** Handle `.md` extension (load content, no recursion)
-- [ ] **[P0, depends: A4]** Handle `.hc` extension (recursive compilation)
-- [ ] **[P0, depends: A4]** Reject all other extensions (hard error, exit 3)
-- [ ] **[P0, depends: A4]** Implement strict mode (missing file → error)
-- [ ] **[P1, depends: A4]** Implement lenient mode (missing file → inline text)
+- [x] **[P0, depends: A4]** Implement file existence checking against root directory
+- [x] **[P0, depends: A4]** Classify literals as file references or inline text
+- [x] **[P0, depends: A4]** Handle `.md` extension (load content, no recursion)
+- [x] **[P0, depends: A4]** Handle `.hc` extension (recursive compilation)
+- [x] **[P0, depends: A4]** Reject all other extensions (hard error, exit 3)
+- [x] **[P0, depends: A4]** Implement strict mode (missing file → error)
+- [x] **[P1, depends: A4]** Implement lenient mode (missing file → inline text)
 - [ ] **[P1, depends: Spec-3]** Integrate `ValidReferencePathSpec` for pre-validation
 - [ ] **[P1, depends: Spec-3]** Integrate `PathTypeDecision` for classification
-- [ ] **[P1, depends: A4]** Write resolver tests for all reference types
+- [x] **[P1, depends: A4]** Write resolver tests for all reference types
 
-**Acceptance Criteria:** Resolver correctly classifies all reference types, strict/lenient modes work as specified
+**Acceptance Criteria:** ✅ Resolver correctly classifies all reference types, strict/lenient modes work as specified
 
 **Blocks:** B4 (recursive compilation needs resolver)
 
