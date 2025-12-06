@@ -181,6 +181,7 @@ Non-blocking: Can develop in parallel with Track A
 **Dependencies:** A1, A2
 **Estimated:** 3 hours
 **Track:** B (Specifications) — can start in parallel with A4
+**Status:** **INPROGRESS**
 
 - [ ] **[P1, depends: A1]** Create `HypercodeGrammar` module with SpecificationCore dependency
 - [ ] **[P1, depends: A2]** Define `RawLine` struct (text, lineNumber, filePath)
