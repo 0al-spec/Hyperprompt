@@ -399,6 +399,7 @@ Non-blocking: Can develop in parallel with Track A
 ### B4: Recursive Compilation **[P0]**
 **Dependencies:** A4, B1, B2, B3
 **Estimated:** 8 hours
+**Status:** **INPROGRESS** (selected via SELECT)
 
 - [ ] **[P0, depends: A4, B1]** Implement recursive parser invocation for `.hc` files
 - [ ] **[P0, depends: A4, B1]** Merge child ASTs into parent tree at correct depth
