@@ -419,3 +419,6 @@ func resolveReference(path: String, stack: [String]) -> Result {
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-12-06 | Claude Code | Initial PRD for B2 Dependency Tracker |
+
+---
+**Archived:** 2025-12-06
