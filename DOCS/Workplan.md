@@ -336,7 +336,7 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 12 hours
 **Track:** A (Core Compiler)
 
-### B1: Reference Resolver **[P0]**
+### B1: Reference Resolver **[P0]** **INPROGRESS**
 **Dependencies:** A4 (needs AST)
 **Estimated:** 6 hours
 
