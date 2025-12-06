@@ -699,7 +699,30 @@ final class ReferenceResolverTests: XCTestCase {
             XCTAssertEqual(error.location?.filePath, "/project/chapters/broken.hc")
             XCTAssertEqual(error.location?.line, 2)
             XCTAssertTrue(error.message.contains("Unclosed quotation mark"))
+            XCTAssertTrue(
+                error.message.contains("Resolution path: /project/main.hc → /project/chapters/broken.hc"),
+                "Expected resolution path context in nested error"
+            )
             XCTAssertEqual(resolver.dependencyTracker?.stack, ["/project/main.hc"])
+        }
+    }
+
+    // MARK: - H. Root Containment
+
+    func testAbsolutePathOutsideRootIsRejected() {
+        mockFS.addFile(at: "/outside/escaped.hc", content: "\"Escape\"")
+        var resolver = makeResolver(mode: .strict)
+
+        let node = makeNode("/outside/escaped.hc", line: 4)
+        let result = resolver.resolve(node: node)
+
+        switch result {
+        case .success:
+            XCTFail("Expected rejection for path outside root")
+        case .failure(let error):
+            XCTAssertTrue(error.message.contains("outside the compilation root"))
+            XCTAssertTrue(error.message.contains("/outside/escaped.hc"))
+            XCTAssertEqual(error.location?.line, 4)
         }
     }
 

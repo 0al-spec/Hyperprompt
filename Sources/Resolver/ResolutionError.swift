@@ -63,4 +63,20 @@ public struct ResolutionError: CompilerError, Equatable {
             location: location
         )
     }
+
+    /// Create error for references that escape the configured root.
+    ///
+    /// - Parameters:
+    ///   - path: The offending path
+    ///   - root: The allowed root directory
+    ///   - location: Source location of the reference
+    /// - Returns: ResolutionError describing the root containment violation
+    public static func outsideRoot(path: String, root: String, location: SourceLocation) -> ResolutionError {
+        ResolutionError(
+            message: "Referenced path is outside the compilation root.\n" +
+                     "Path: \(path)\n" +
+                     "Root: \(root)",
+            location: location
+        )
+    }
 }
