@@ -13,4 +13,5 @@
 ## Phase 4: Reference Resolution
 
 - [B1 — Reference Resolver](./B1_Reference_Resolver.md) ✓ 2025-12-06
+- [B2 — Dependency Tracker](./B2_Dependency_Tracker.md) ✓ 2025-12-06
 - [B3 — File Loader & Caching](./B3_File_Loader_Caching.md) ✓ 2025-12-06
