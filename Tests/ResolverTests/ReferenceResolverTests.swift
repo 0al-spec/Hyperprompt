@@ -40,15 +40,23 @@ final class ReferenceResolverTests: XCTestCase {
         )
     }
 
-    private func makeResolver(mode: ResolutionMode = .strict) -> ReferenceResolver {
-        ReferenceResolver(fileSystem: mockFS, rootPath: rootPath, mode: mode)
+    private func makeResolver(
+        mode: ResolutionMode = .strict,
+        tracker: DependencyTracker? = nil
+    ) -> ReferenceResolver {
+        ReferenceResolver(
+            fileSystem: mockFS,
+            rootPath: rootPath,
+            mode: mode,
+            dependencyTracker: tracker
+        )
     }
 
     // MARK: - A. Basic Classification Tests (Inline vs. File)
 
     func testInlineTextWithoutSlashesOrDots() {
         // Inline text without slashes or dots → inlineText
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("Hello World")
 
         let result = resolver.resolve(node: node)
@@ -62,7 +70,7 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testInlineTextWithSpacesOnly() {
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("   Some text with spaces   ")
 
         let result = resolver.resolve(node: node)
@@ -78,7 +86,7 @@ final class ReferenceResolverTests: XCTestCase {
     func testTextWithSentenceEndingDotTreatedAsPotentialPath() {
         // "Version 1.0" contains a dot, so it's treated as potential path
         // In strict mode, missing file → error
-        let resolver = makeResolver(mode: .strict)
+        var resolver = makeResolver(mode: .strict)
         let node = makeNode("Version 1.0")
 
         let result = resolver.resolve(node: node)
@@ -95,7 +103,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testTextWithSentenceEndingDotLenientMode() {
         // In lenient mode, forbidden extension still causes error
-        let resolver = makeResolver(mode: .lenient)
+        var resolver = makeResolver(mode: .lenient)
         let node = makeNode("Version 1.0")
 
         let result = resolver.resolve(node: node)
@@ -111,7 +119,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testPathWithSlashNoExtension() {
         // "docs/readme" has slash but no extension → inlineText
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("docs/readme")
 
         let result = resolver.resolve(node: node)
@@ -128,7 +136,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testMarkdownFileExistsStrictMode() {
         mockFS.addFile(at: "/project/README.md", content: "# Readme\n\nContent here.")
-        let resolver = makeResolver(mode: .strict)
+        var resolver = makeResolver(mode: .strict)
         let node = makeNode("README.md")
 
         let result = resolver.resolve(node: node)
@@ -148,7 +156,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testMarkdownFileExistsLenientMode() {
         mockFS.addFile(at: "/project/docs/guide.md", content: "# Guide")
-        let resolver = makeResolver(mode: .lenient)
+        var resolver = makeResolver(mode: .lenient)
         let node = makeNode("docs/guide.md")
 
         let result = resolver.resolve(node: node)
@@ -167,7 +175,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testMarkdownFileMissingStrictMode() {
         // No file added
-        let resolver = makeResolver(mode: .strict)
+        var resolver = makeResolver(mode: .strict)
         let node = makeNode("missing.md", line: 5)
 
         let result = resolver.resolve(node: node)
@@ -183,7 +191,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testMarkdownFileMissingLenientMode() {
         // No file added
-        let resolver = makeResolver(mode: .lenient)
+        var resolver = makeResolver(mode: .lenient)
         let node = makeNode("missing.md")
 
         let result = resolver.resolve(node: node)
@@ -198,7 +206,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testMarkdownFileWithSpacesInPath() {
         mockFS.addFile(at: "/project/my docs/my file.md", content: "Content")
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("my docs/my file.md")
 
         let result = resolver.resolve(node: node)
@@ -219,7 +227,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testHypercodeFileExistsStrictMode() {
         mockFS.addFile(at: "/project/nested.hc", content: "\"Nested content\"")
-        let resolver = makeResolver(mode: .strict)
+        var resolver = makeResolver(mode: .strict)
         let node = makeNode("nested.hc")
 
         let result = resolver.resolve(node: node)
@@ -238,7 +246,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testHypercodeFileExistsLenientMode() {
         mockFS.addFile(at: "/project/templates/form.hc", content: "\"Form\"")
-        let resolver = makeResolver(mode: .lenient)
+        var resolver = makeResolver(mode: .lenient)
         let node = makeNode("templates/form.hc")
 
         let result = resolver.resolve(node: node)
@@ -256,7 +264,7 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testHypercodeFileMissingStrictMode() {
-        let resolver = makeResolver(mode: .strict)
+        var resolver = makeResolver(mode: .strict)
         let node = makeNode("missing.hc", line: 10)
 
         let result = resolver.resolve(node: node)
@@ -271,7 +279,7 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testHypercodeFileMissingLenientMode() {
-        let resolver = makeResolver(mode: .lenient)
+        var resolver = makeResolver(mode: .lenient)
         let node = makeNode("missing.hc")
 
         let result = resolver.resolve(node: node)
@@ -286,7 +294,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testNestedHypercodeFilePath() {
         mockFS.addFile(at: "/project/subdir/deep/file.hc", content: "\"Deep\"")
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("subdir/deep/file.hc")
 
         let result = resolver.resolve(node: node)
@@ -303,10 +311,27 @@ final class ReferenceResolverTests: XCTestCase {
         }
     }
 
+    func testHypercodeCycleDetectedWithTracker() {
+        mockFS.addFile(at: "/project/main.hc", content: "\"A\"")
+        let tracker = DependencyTracker(fileSystem: mockFS, initialStack: ["/project/main.hc"])
+        var resolver = makeResolver(tracker: tracker)
+        let node = makeNode("main.hc", line: 3)
+
+        let result = resolver.resolve(node: node)
+
+        switch result {
+        case .success:
+            XCTFail("Expected circular dependency error")
+        case .failure(let error):
+            XCTAssertTrue(error.message.contains("Circular dependency"))
+            XCTAssertTrue(error.message.contains("Cycle path"))
+        }
+    }
+
     // MARK: - D. Forbidden Extensions Tests
 
     func testForbiddenExtensionJson() {
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("config.json", line: 3)
 
         let result = resolver.resolve(node: node)
@@ -322,7 +347,7 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testForbiddenExtensionTxt() {
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("notes.txt")
 
         let result = resolver.resolve(node: node)
@@ -336,7 +361,7 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testForbiddenExtensionJs() {
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("script.js")
 
         let result = resolver.resolve(node: node)
@@ -350,7 +375,7 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testForbiddenExtensionPy() {
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("utils/helper.py")
 
         let result = resolver.resolve(node: node)
@@ -365,7 +390,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testNoExtensionLooksLikeFile() {
         // "README" without extension → inlineText (no extension)
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("README")
 
         let result = resolver.resolve(node: node)
@@ -380,7 +405,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testCaseInsensitiveExtensionMd() {
         mockFS.addFile(at: "/project/FILE.MD", content: "Upper case")
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("FILE.MD")
 
         let result = resolver.resolve(node: node)
@@ -399,7 +424,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testCaseInsensitiveExtensionHc() {
         mockFS.addFile(at: "/project/FILE.HC", content: "\"Upper\"")
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("FILE.HC")
 
         let result = resolver.resolve(node: node)
@@ -419,7 +444,7 @@ final class ReferenceResolverTests: XCTestCase {
     // MARK: - E. Path Traversal Tests
 
     func testPathTraversalFromRoot() {
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("../../../etc/passwd", line: 7)
 
         let result = resolver.resolve(node: node)
@@ -434,7 +459,7 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testPathTraversalInMiddle() {
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("subdir/../../../escape.md")
 
         let result = resolver.resolve(node: node)
@@ -448,7 +473,7 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testPathTraversalAtEnd() {
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("subdir/..")
 
         let result = resolver.resolve(node: node)
@@ -462,7 +487,7 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testPathTraversalJustDotDot() {
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("..")
 
         let result = resolver.resolve(node: node)
@@ -480,7 +505,7 @@ final class ReferenceResolverTests: XCTestCase {
         mockFS.addFile(at: "/project/./file.md", content: "Content")
         // Actually, need to handle ./ normalization
         // For now, ./ won't trigger traversal detection
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("./file.md")
 
         let result = resolver.resolve(node: node)
@@ -500,7 +525,7 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testFileWithoutSlashNotFlaggedAsTraversal() {
         // "file.md" without / is not flagged as traversal
-        let resolver = makeResolver()
+        var resolver = makeResolver()
         let node = makeNode("file.md")
 
         let result = resolver.resolve(node: node)
@@ -516,7 +541,7 @@ final class ReferenceResolverTests: XCTestCase {
     // MARK: - F. Source Location Preservation Tests
 
     func testErrorIncludesCorrectLineNumber() {
-        let resolver = makeResolver(mode: .strict)
+        var resolver = makeResolver(mode: .strict)
         let node = makeNode("missing.md", line: 42)
 
         let result = resolver.resolve(node: node)
@@ -531,7 +556,7 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testErrorIncludesFilePath() {
-        let resolver = makeResolver(mode: .strict)
+        var resolver = makeResolver(mode: .strict)
         let node = Node(
             literal: "missing.md",
             depth: 0,
@@ -550,7 +575,7 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testDiagnosticInfoIsReadable() {
-        let resolver = makeResolver(mode: .strict)
+        var resolver = makeResolver(mode: .strict)
         let node = makeNode("missing.md", line: 5)
 
         let result = resolver.resolve(node: node)
@@ -567,33 +592,32 @@ final class ReferenceResolverTests: XCTestCase {
 
     // MARK: - G. Integration Hooks Tests (for B2, B3, B4)
 
-    func testVisitedPathsTracking() {
-        var resolver = makeResolver()
+    func testDependencyTrackerPushesAndPopsDuringHypercodeResolution() {
+        mockFS.addFile(at: "/project/child.hc", content: "\"Child\"")
+        let tracker = DependencyTracker(fileSystem: mockFS, initialStack: ["/project/root.hc"])
+        var resolver = makeResolver(tracker: tracker)
 
-        // Initially empty
-        XCTAssertTrue(resolver.visitedPaths.isEmpty)
+        let node = makeNode("child.hc")
+        let result = resolver.resolve(node: node)
 
-        // Mark a path as visited
-        let cycle1 = resolver.markVisited("file1.hc")
-        XCTAssertFalse(cycle1) // First visit, no cycle
-
-        // Check it's in visited
-        XCTAssertTrue(resolver.visitedPaths.contains("/project/file1.hc"))
-
-        // Mark same path again
-        let cycle2 = resolver.markVisited("file1.hc")
-        XCTAssertTrue(cycle2) // Second visit, cycle detected
+        switch result {
+        case .success(let kind):
+            if case .hypercodeFile = kind {
+                XCTAssertEqual(resolver.dependencyTracker?.stack, ["/project/root.hc"])
+            } else {
+                XCTFail("Expected hypercodeFile")
+            }
+        case .failure(let error):
+            XCTFail("Unexpected failure: \(error.message)")
+        }
     }
 
     func testClearVisited() {
-        var resolver = makeResolver()
-
-        _ = resolver.markVisited("file1.hc")
-        _ = resolver.markVisited("file2.hc")
-        XCTAssertEqual(resolver.visitedPaths.count, 2)
+        let tracker = DependencyTracker(fileSystem: mockFS, initialStack: ["/project/root.hc"])
+        var resolver = makeResolver(tracker: tracker)
 
         resolver.clearVisited()
-        XCTAssertTrue(resolver.visitedPaths.isEmpty)
+        XCTAssertNil(resolver.dependencyTracker)
     }
 
     func testResolveTreeSetsResolutionKind() {

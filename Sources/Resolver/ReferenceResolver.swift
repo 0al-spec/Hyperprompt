@@ -32,9 +32,8 @@ public struct ReferenceResolver {
     /// Resolution mode (strict or lenient).
     public let mode: ResolutionMode
 
-    /// Set of file paths visited during resolution (for circular dependency tracking).
-    /// Integration hook for B2: DependencyTracker.
-    public private(set) var visitedPaths: Set<String> = []
+    /// Dependency tracker for circular dependency detection.
+    public var dependencyTracker: DependencyTracker?
 
     /// Initialize a new reference resolver.
     ///
@@ -42,10 +41,16 @@ public struct ReferenceResolver {
     ///   - fileSystem: File system abstraction for file operations
     ///   - rootPath: Root directory for resolving relative file paths
     ///   - mode: Resolution mode (strict or lenient)
-    public init(fileSystem: FileSystem, rootPath: String, mode: ResolutionMode) {
+    public init(
+        fileSystem: FileSystem,
+        rootPath: String,
+        mode: ResolutionMode,
+        dependencyTracker: DependencyTracker? = nil
+    ) {
         self.fileSystem = fileSystem
         self.rootPath = rootPath
         self.mode = mode
+        self.dependencyTracker = dependencyTracker
     }
 
     // MARK: - Main Resolution API
@@ -64,7 +69,7 @@ public struct ReferenceResolver {
     /// 3. Check for path traversal (`..`) → error
     /// 4. Extract extension and route by type
     /// 5. Validate file existence per mode
-    public func resolve(node: Node) -> Result<ResolutionKind, ResolutionError> {
+    public mutating func resolve(node: Node) -> Result<ResolutionKind, ResolutionError> {
         let literal = node.literal.trimmingCharacters(in: .whitespaces)
 
         // Check if looks like a file path
@@ -269,16 +274,10 @@ public struct ReferenceResolver {
     ///   - path: The file path
     ///   - node: The source node for error location
     /// - Returns: Result with `.hypercodeFile` or error
-    private func resolveHypercode(_ path: String, node: Node) -> Result<ResolutionKind, ResolutionError> {
+    private mutating func resolveHypercode(_ path: String, node: Node) -> Result<ResolutionKind, ResolutionError> {
         let fullPath = constructFullPath(path)
 
-        if fileSystem.fileExists(at: fullPath) {
-            // File exists - placeholder AST for B4: Recursive Compilation integration
-            // The actual recursive compilation will be done in B4
-            // For now, return a placeholder indicating the file should be compiled
-            return .success(.hypercodeFile(path: path, ast: node))
-        } else {
-            // File doesn't exist
+        guard fileSystem.fileExists(at: fullPath) else {
             switch mode {
             case .strict:
                 return .failure(.fileNotFound(path: path, location: node.location))
@@ -286,30 +285,40 @@ public struct ReferenceResolver {
                 return .success(.inlineText)
             }
         }
+
+        // Perform cycle detection before attempting recursive compilation.
+        if var tracker = dependencyTracker {
+            do {
+                if let error = try tracker.checkAndPush(path: fullPath, location: node.location) {
+                    dependencyTracker = tracker
+                    return .failure(ResolutionError(message: error.message, location: error.location))
+                }
+                dependencyTracker = tracker
+            } catch let compilerError as CompilerError {
+                return .failure(ResolutionError(message: compilerError.message, location: compilerError.location))
+            } catch {
+                return .failure(ResolutionError(message: "Unknown error during cycle detection for \(path)", location: node.location))
+            }
+        }
+
+        let result = ResolutionKind.hypercodeFile(path: path, ast: node)
+
+        if var tracker = dependencyTracker {
+            tracker.pop()
+            dependencyTracker = tracker
+        }
+
+        return .success(result)
     }
 
     // MARK: - Integration Hooks for B2, B3, B4
 
-    /// Mark a path as visited (for circular dependency tracking).
-    ///
-    /// Call this method before recursively processing a `.hc` file.
-    /// Integration hook for B2: DependencyTracker.
-    ///
-    /// - Parameter path: The file path being visited
-    /// - Returns: `true` if path was already visited (cycle detected)
-    public mutating func markVisited(_ path: String) -> Bool {
-        let normalized = constructFullPath(path)
-        if visitedPaths.contains(normalized) {
-            return true // Cycle detected
-        }
-        visitedPaths.insert(normalized)
-        return false
-    }
+    // MARK: - Deprecated visitation helpers
 
     /// Clear visited paths (for new resolution context).
     ///
-    /// Call this method when starting resolution of a new root file.
+    /// Maintained for backward compatibility with earlier workflows.
     public mutating func clearVisited() {
-        visitedPaths.removeAll()
+        dependencyTracker = nil
     }
 }
