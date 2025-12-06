@@ -4,12 +4,12 @@
 **Phase:** Phase 4 — Reference Resolution
 **Effort:** 8 hours
 **Dependencies:** A4, B1, B2, B3
-**Status:** Selected
+**Status:** ✅ Completed on 2025-12-06
 
 ## Description
 Implement recursive compilation for `.hc` files by invoking the parser recursively, merging child ASTs, and propagating source locations and errors.
 
-## Next Step
+## Completion
 
-Run PLAN command to generate detailed PRD:
-$ claude "Выполни команду PLAN"
+- Finished via EXECUTE checklist on 2025-12-06
+- All subtasks marked complete in PRD progress tracker
