@@ -223,7 +223,7 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### A4: Parser & AST Construction **[P0]**
+### A4: Parser & AST Construction **[P0] [INPROGRESS]**
 **Dependencies:** Lexer Implementation, A2
 **Estimated:** 8 hours
 
