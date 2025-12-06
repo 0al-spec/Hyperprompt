@@ -32,11 +32,11 @@ final class ReferenceResolverTests: XCTestCase {
 
     // MARK: - Helper Methods
 
-    private func makeNode(_ literal: String, line: Int = 1) -> Node {
+    private func makeNode(_ literal: String, line: Int = 1, depth: Int = 0, filePath: String = "test.hc") -> Node {
         Node(
             literal: literal,
-            depth: 0,
-            location: SourceLocation(filePath: "test.hc", line: line)
+            depth: depth,
+            location: SourceLocation(filePath: filePath, line: line)
         )
     }
 
@@ -609,6 +609,97 @@ final class ReferenceResolverTests: XCTestCase {
             }
         case .failure(let error):
             XCTFail("Unexpected failure: \(error.message)")
+        }
+    }
+
+    func testRecursiveCompilationEmbedsResolvedAst() {
+        mockFS.addFile(
+            at: "/project/chapters/intro.hc",
+            content: "\"Intro\"\n    \"chapters/sections/details.hc\"\n    \"chapters/intro.md\""
+        )
+        mockFS.addFile(
+            at: "/project/chapters/sections/details.hc",
+            content: "\"Details\"\n    \"chapters/sections/details.md\""
+        )
+        mockFS.addFile(at: "/project/chapters/intro.md", content: "Intro content")
+        mockFS.addFile(at: "/project/chapters/sections/details.md", content: "Details content")
+
+        var resolver = makeResolver()
+
+        let root = makeNode("Root", filePath: "/project/main.hc")
+        let child = makeNode("chapters/intro.hc", line: 2, depth: 1, filePath: "/project/main.hc")
+        root.addChild(child)
+
+        let result = resolver.resolveTree(root: root)
+
+        switch result {
+        case .success:
+            XCTAssertEqual(root.resolution, .inlineText)
+            guard let resolution = child.resolution else {
+                return XCTFail("Expected resolution on hypercode child")
+            }
+
+            if case .hypercodeFile(let path, let ast) = resolution {
+                XCTAssertEqual(path, "chapters/intro.hc")
+                XCTAssertEqual(ast.literal, "Intro")
+
+                guard let nestedReference = ast.children.first(where: { $0.literal == "chapters/sections/details.hc" }) else {
+                    return XCTFail("Expected nested hypercode reference")
+                }
+
+                if case .hypercodeFile(let nestedPath, let nestedAst) = nestedReference.resolution {
+                    XCTAssertEqual(nestedPath, "chapters/sections/details.hc")
+                    XCTAssertEqual(nestedAst.literal, "Details")
+                    XCTAssertEqual(nestedAst.children.count, 1)
+                    XCTAssertEqual(
+                        nestedAst.children.first?.resolution,
+                        .markdownFile(path: "chapters/sections/details.md", content: "Details content")
+                    )
+                } else {
+                    XCTFail("Nested reference should be hypercodeFile")
+                }
+
+                guard let introMarkdown = ast.children.first(where: { $0.literal == "chapters/intro.md" })?.resolution else {
+                    return XCTFail("Expected intro markdown resolution")
+                }
+
+                if case .markdownFile(let markdownPath, let content) = introMarkdown {
+                    XCTAssertEqual(markdownPath, "chapters/intro.md")
+                    XCTAssertEqual(content, "Intro content")
+                } else {
+                    XCTFail("Intro markdown should resolve to markdownFile")
+                }
+            } else {
+                XCTFail("Expected hypercodeFile resolution on child")
+            }
+        case .failure(let error):
+            XCTFail("Unexpected failure: \(error.message)")
+        }
+    }
+
+    func testRecursiveCompilationPropagatesNestedErrors() {
+        mockFS.addFile(
+            at: "/project/chapters/broken.hc",
+            content: "\"Valid\"\n    \"unterminated"
+        )
+
+        let tracker = DependencyTracker(fileSystem: mockFS, initialStack: ["/project/main.hc"])
+        var resolver = makeResolver(tracker: tracker)
+
+        let root = makeNode("Root", filePath: "/project/main.hc")
+        let child = makeNode("chapters/broken.hc", line: 2, depth: 1, filePath: "/project/main.hc")
+        root.addChild(child)
+
+        let result = resolver.resolveTree(root: root)
+
+        switch result {
+        case .success:
+            XCTFail("Expected failure for nested syntax error")
+        case .failure(let error):
+            XCTAssertEqual(error.location?.filePath, "/project/chapters/broken.hc")
+            XCTAssertEqual(error.location?.line, 2)
+            XCTAssertTrue(error.message.contains("Unclosed quotation mark"))
+            XCTAssertEqual(resolver.dependencyTracker?.stack, ["/project/main.hc"])
         }
     }
 
