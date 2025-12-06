@@ -9,3 +9,7 @@
 
 - [Lexer Implementation](./Lexer_Implementation.md) ✓ 2025-12-06
 - [A4 — Parser & AST Construction](./A4_Parser_And_AST_Construction.md) ✓ 2025-12-06
+
+## Phase 4: Reference Resolution
+
+- [B1 — Reference Resolver](./B1_Reference_Resolver.md) ✓ 2025-12-06
