@@ -260,69 +260,69 @@ c.hc: "b.hc"  // Cycle here, not at root
 **Effort:** 30 min | **Priority:** High | **Acceptance:** Type compiles, basic structure in place
 
 - [ ] Create `DependencyTracker.swift` file in Resolver module
-- [ ] Define `struct DependencyTracker` with visitation stack parameter
-- [ ] Implement `isInCycle(path:)` → `Bool` method (simple stack membership check)
-- [ ] Add initializer accepting optional stack for testing
+- [x] Define `struct DependencyTracker` with visitation stack parameter
+- [x] Implement `isInCycle(path:)` → `Bool` method (simple stack membership check)
+- [x] Add initializer accepting optional stack for testing
 
 #### A2: Implement Cycle Path Extraction
 **Effort:** 30 min | **Priority:** High | **Acceptance:** Correct path extraction from stack
 
-- [ ] Implement `getCyclePath(stack:offendingPath:)` → `[String]` method
-- [ ] Extract cycle portion of stack starting from offending path
-- [ ] Append offending path to complete the cycle representation
-- [ ] Test with simple 2-file and 3-file cycles
+- [x] Implement `getCyclePath(stack:offendingPath:)` → `[String]` method
+- [x] Extract cycle portion of stack starting from offending path
+- [x] Append offending path to complete the cycle representation
+- [x] Test with simple 2-file and 3-file cycles
 
 #### A3: Define Error Type
 **Effort:** 30 min | **Priority:** High | **Acceptance:** Error type conforms to CompilerError
 
-- [ ] Create `CircularDependencyError` struct conforming to `CompilerError`
-- [ ] Implement `message` property formatting cycle path
-- [ ] Implement `location` property (from resolver context)
-- [ ] Implement `exitCode` property = 3 (Resolution Error)
+- [x] Create `CircularDependencyError` struct conforming to `CompilerError`
+- [x] Implement `message` property formatting cycle path
+- [x] Implement `location` property (from resolver context)
+- [x] Implement `exitCode` property = 3 (Resolution Error)
 
 #### A4: Integration with Resolver
 **Effort:** 30 min | **Priority:** High | **Acceptance:** Resolver calls DependencyTracker correctly
 
-- [ ] Modify `ReferenceResolver.resolve()` to check cycles before `.hc` resolution
-- [ ] Pass absolute canonical path to cycle check
-- [ ] Return `CircularDependencyError` on detection
-- [ ] Maintain stack correctly across recursive calls
+- [x] Modify `ReferenceResolver.resolve()` to check cycles before `.hc` resolution
+- [x] Pass absolute canonical path to cycle check
+- [x] Return `CircularDependencyError` on detection
+- [x] Maintain stack correctly across recursive calls
 
 ### Phase B: Testing & Refinement (2 hours)
 
 #### B1: Unit Tests — Direct Cycles
 **Effort:** 45 min | **Priority:** High | **Acceptance:** All 4 test cases pass
 
-- [ ] Test case: A → A (self-reference)
-- [ ] Test case: A → B → A (2-file cycle)
-- [ ] Test case: A → B → C → A (3-file cycle)
-- [ ] Test case: Deep cycle (10+ files)
-- [ ] Verify error message includes full cycle path
-- [ ] Verify exit code = 3
+- [x] Test case: A → A (self-reference)
+- [x] Test case: A → B → A (2-file cycle)
+- [x] Test case: A → B → C → A (3-file cycle)
+- [x] Test case: Deep cycle (10+ files)
+- [x] Verify error message includes full cycle path
+- [x] Verify exit code = 3
 
 #### B2: Unit Tests — Acyclic Graphs
 **Effort:** 30 min | **Priority:** High | **Acceptance:** No false positives
 
-- [ ] Test case: Linear chain (A → B → C, no cycle)
-- [ ] Test case: DAG with multiple paths (A → {B, C} → D)
-- [ ] Test case: File referenced from multiple parents
-- [ ] Verify DependencyTracker returns `false` for all acyclic references
+- [x] Test case: Linear chain (A → B → C, no cycle)
+- [x] Test case: DAG with multiple paths (A → {B, C} → D)
+- [x] Test case: File referenced from multiple parents
+- [x] Verify DependencyTracker returns `false` for all acyclic references
 
 #### B3: Error Reporting Tests
 **Effort:** 30 min | **Priority:** High | **Acceptance:** Error messages are clear and parseable
 
-- [ ] Test error message format matches spec
-- [ ] Test error includes source location (file:line)
-- [ ] Test error includes full cycle path
-- [ ] Test error is machine-parseable (no colorization, clear structure)
+- [x] Test error message format matches spec
+- [x] Test error includes source location (file:line)
+- [x] Test error includes full cycle path
+- [x] Test error is machine-parseable (no colorization, clear structure)
 
 #### B4: Code Coverage & Documentation
 **Effort:** 15 min | **Priority:** Medium | **Acceptance:** >90% coverage, inline comments
 
-- [ ] Measure code coverage for DependencyTracker
-- [ ] Add inline comments explaining stack mechanics
-- [ ] Document assumptions (e.g., paths are canonicalized)
-- [ ] Document integration contract with ReferenceResolver
+- [x] Measure code coverage for DependencyTracker
+- [x] Add inline comments explaining stack mechanics
+- [x] Document assumptions (e.g., paths are canonicalized)
+- [x] Document integration contract with ReferenceResolver
 
 ---
 
