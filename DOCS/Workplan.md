@@ -375,20 +375,21 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### B3: File Loader & Caching **[P0]** **INPROGRESS**
+### B3: File Loader & Caching **[P0]**
 **Dependencies:** A2
 **Estimated:** 4 hours
+**Status:** ✅ Completed on 2025-12-06
 
-- [ ] **[P0, depends: A2]** Implement file content reading with UTF-8 encoding
-- [ ] **[P0, depends: A2]** Implement line ending normalization (CRLF/CR → LF)
-- [ ] **[P1, depends: A2]** Cache loaded content to avoid redundant reads
-- [ ] **[P0, depends: A2]** Compute SHA256 hashes during loading (using swift-crypto)
-- [ ] **[P0, depends: A2]** Collect file metadata for manifest generation
-- [ ] **[P0, depends: A2]** Implement `ManifestEntry` struct (path, sha256, size, type)
-- [ ] **[P0, depends: A2]** Implement `ManifestBuilder` for collecting entries
-- [ ] **[P1, depends: A2]** Write tests for hash computation accuracy
+- [x] **[P0, depends: A2]** Implement file content reading with UTF-8 encoding
+- [x] **[P0, depends: A2]** Implement line ending normalization (CRLF/CR → LF)
+- [x] **[P1, depends: A2]** Cache loaded content to avoid redundant reads
+- [x] **[P0, depends: A2]** Compute SHA256 hashes during loading (using swift-crypto)
+- [x] **[P0, depends: A2]** Collect file metadata for manifest generation
+- [x] **[P0, depends: A2]** Implement `ManifestEntry` struct (path, sha256, size, type)
+- [x] **[P0, depends: A2]** Implement `ManifestBuilder` for collecting entries
+- [x] **[P1, depends: A2]** Write tests for hash computation accuracy
 
-**Acceptance Criteria:** File content correctly loaded and cached, SHA256 hashes accurate, metadata collected
+**Acceptance Criteria:** ✅ File content correctly loaded and cached, SHA256 hashes accurate, metadata collected
 
 **Blocks:** B4 (recursive compilation needs file loading), C3 (manifest needs entries)
 
