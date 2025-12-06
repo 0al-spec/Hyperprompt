@@ -223,23 +223,24 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### A4: Parser & AST Construction **[P0] [INPROGRESS]**
+### A4: Parser & AST Construction **[P0]**
 **Dependencies:** Lexer Implementation, A2
 **Estimated:** 8 hours
+**Status:** ✅ Completed on 2025-12-06
 
-- [ ] **[P0, depends: A2]** Implement `Node` struct (literal, depth, location, children, resolution)
-- [ ] **[P0, depends: A2]** Implement `Program` struct (root node container)
-- [ ] **[P0, depends: A2]** Implement `Token` enum (blank, comment, node)
-- [ ] **[P0, depends: Lexer]** Build tree structure from token stream based on indentation
-- [ ] **[P0, depends: Lexer]** Compute depth from indentation (spaces / 4)
-- [ ] **[P0, depends: Lexer]** Establish parent-child relationships via depth stack
-- [ ] **[P0, depends: Lexer]** Enforce single root node constraint (depth 0)
-- [ ] **[P0, depends: Lexer]** Report syntax errors with source locations
-- [ ] **[P1, depends: Lexer]** Handle blank lines structurally (preserve but don't add to AST)
-- [ ] **[P1, depends: Lexer]** Skip comment tokens during AST construction
-- [ ] **[P1, depends: Lexer]** Write parser tests for all valid/invalid structures
+- [x] **[P0, depends: A2]** Implement `Node` struct (literal, depth, location, children, resolution)
+- [x] **[P0, depends: A2]** Implement `Program` struct (root node container)
+- [x] **[P0, depends: A2]** Implement `Token` enum (blank, comment, node)
+- [x] **[P0, depends: Lexer]** Build tree structure from token stream based on indentation
+- [x] **[P0, depends: Lexer]** Compute depth from indentation (spaces / 4)
+- [x] **[P0, depends: Lexer]** Establish parent-child relationships via depth stack
+- [x] **[P0, depends: Lexer]** Enforce single root node constraint (depth 0)
+- [x] **[P0, depends: Lexer]** Report syntax errors with source locations
+- [x] **[P1, depends: Lexer]** Handle blank lines structurally (preserve but don't add to AST)
+- [x] **[P1, depends: Lexer]** Skip comment tokens during AST construction
+- [x] **[P1, depends: Lexer]** Write parser tests for all valid/invalid structures
 
-**Acceptance Criteria:** Parser produces correct AST for all valid inputs, reports meaningful errors for invalid inputs
+**Acceptance Criteria:** ✅ Parser produces correct AST for all valid inputs, reports meaningful errors for invalid inputs
 
 **Blocks:** B4 (recursive compilation needs parser), C2 (emitter needs AST)
 
