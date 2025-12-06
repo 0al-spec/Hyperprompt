@@ -201,22 +201,23 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 14 hours
 **Track:** A (Core Compiler)
 
-### Lexer Implementation **[P0]** **INPROGRESS**
+### Lexer Implementation **[P0]**
 **Dependencies:** A2
 **Estimated:** 6 hours
+**Status:** ✅ Completed on 2025-12-05
 
-- [ ] **[P0, depends: A2]** Implement line-by-line tokenization
-- [ ] **[P0, depends: A2]** Implement `readLines()` with CRLF/CR → LF normalization
-- [ ] **[P0, depends: A2]** Recognize blank lines
-- [ ] **[P0, depends: A2]** Recognize comment lines (# prefix with optional indent)
-- [ ] **[P0, depends: A2]** Recognize node lines (quoted literals)
-- [ ] **[P0, depends: A2]** Extract indentation level (groups of 4 spaces)
-- [ ] **[P0, depends: A2]** Extract literal content (content between quotes)
-- [ ] **[P0, depends: A2]** Enforce single-line content constraint
-- [ ] **[P0, depends: A2]** Reject tabs in indentation (syntax error)
-- [ ] **[P1, depends: A2]** Write lexer tests for 20+ sample files
+- [x] **[P0, depends: A2]** Implement line-by-line tokenization
+- [x] **[P0, depends: A2]** Implement `readLines()` with CRLF/CR → LF normalization
+- [x] **[P0, depends: A2]** Recognize blank lines
+- [x] **[P0, depends: A2]** Recognize comment lines (# prefix with optional indent)
+- [x] **[P0, depends: A2]** Recognize node lines (quoted literals)
+- [x] **[P0, depends: A2]** Extract indentation level (groups of 4 spaces)
+- [x] **[P0, depends: A2]** Extract literal content (content between quotes)
+- [x] **[P0, depends: A2]** Enforce single-line content constraint
+- [x] **[P0, depends: A2]** Reject tabs in indentation (syntax error)
+- [x] **[P1, depends: A2]** Write lexer tests for 20+ sample files
 
-**Acceptance Criteria:** Lexer correctly tokenizes all valid test inputs, reports meaningful errors for invalid inputs
+**Acceptance Criteria:** ✅ Lexer correctly tokenizes all valid test inputs, reports meaningful errors for invalid inputs
 
 **Blocks:** A4 (parser needs tokens)
 

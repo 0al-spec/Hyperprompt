@@ -17,7 +17,7 @@
 /// Error [Syntax]: /path/to/file.hc:15
 /// Tab characters are not allowed in indentation. Use 4 spaces per level.
 /// ```
-protocol CompilerError: Error {
+public protocol CompilerError: Error {
     /// Error category (IO, Syntax, Resolution, Internal)
     var category: ErrorCategory { get }
 
@@ -46,7 +46,7 @@ extension CompilerError {
     /// ```
     /// Error [<Category>]: <message>
     /// ```
-    var diagnosticInfo: String {
+    public var diagnosticInfo: String {
         if let location = location {
             return "Error [\(category.rawValue)]: \(location)\n\(message)"
         } else {
@@ -57,7 +57,7 @@ extension CompilerError {
     /// Exit code corresponding to this error's category.
     ///
     /// Convenience property that delegates to the category's exit code.
-    var exitCode: Int32 {
+    public var exitCode: Int32 {
         category.exitCode
     }
 }

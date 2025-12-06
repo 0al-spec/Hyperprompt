@@ -13,6 +13,14 @@ Provide a **thin workflow wrapper** around task execution. This command:
 
 **Important:** EXECUTE is NOT an AI agent that implements code automatically. It's a structured checklist runner that automates the workflow **around** implementation.
 
+> **CRITICAL VALIDATION REQUIREMENT**
+>
+> Every EXECUTE cycle MUST run `swift build` and `swift test` before committing!
+> - Do NOT commit code that doesn't compile
+> - Do NOT commit code with failing tests
+> - If Swift is not available, install it first: **[Swift Installation Guide](../RULES/02_Swift_Installation.md)**
+> - If Swift cannot be installed in the environment, note this explicitly in the commit message and task summary
+
 ## Philosophy
 
 All implementation instructions already exist in:
@@ -130,21 +138,40 @@ If `--interactive` mode:
 
 **Purpose:** Verify implementation meets requirements
 
-1. **Extract verification commands from PRD §3.3:**
-   - Parse "Acceptance Criteria per Task" section
-   - Find validation commands (swift build, swift test, ls, etc.)
+**CRITICAL:** Every EXECUTE cycle MUST run `swift build` and `swift test` before committing!
 
-2. **Run each verification command:**
+1. **MANDATORY: Run build and test commands:**
+   ```bash
+   # REQUIRED - Must pass before commit
+   swift build 2>&1
+   swift test 2>&1
+   ```
+
+   **If `swift build` fails:**
+   - Fix all compilation errors before proceeding
+   - Do NOT commit code that doesn't compile
+   - Re-run build until it passes
+
+   **If `swift test` fails:**
+   - Fix all failing tests before proceeding
+   - Do NOT commit code with failing tests
+   - Re-run tests until all pass
+
+2. **Extract additional verification commands from PRD §3.3:**
+   - Parse "Acceptance Criteria per Task" section
+   - Find validation commands (ls, grep, etc.)
+
+3. **Run each verification command:**
    ```bash
    # Example for A1:
    swift package resolve
-   swift build
-   swift test
-   ls -la Sources/  # Check directories exist
+   swift build           # MANDATORY
+   swift test            # MANDATORY
+   ls -la Sources/       # Check directories exist
    cat Package.swift | grep "swift-crypto"  # Check dependency
    ```
 
-3. **Collect results:**
+4. **Collect results:**
    ```
    Acceptance Criteria Validation:
    [✓] swift package resolve — PASS (3 dependencies resolved)
@@ -164,7 +191,7 @@ If `--interactive` mode:
    Overall: 11/12 items verified (92%)
    ```
 
-4. **Generate completion report:**
+5. **Generate completion report:**
    ```
    ╔════════════════════════════════════════════════════════════╗
    ║  VALIDATION REPORT: {TASK_ID}                              ║
@@ -179,7 +206,7 @@ If `--interactive` mode:
    Status: READY TO COMMIT
    ```
 
-5. **If validation fails:**
+6. **If validation fails:**
    ```
    ✗ VALIDATION FAILED
 

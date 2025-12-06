@@ -7,7 +7,7 @@
 ///
 /// All file system errors thrown must conform to `CompilerError` with
 /// category `.io` for consistency in error handling.
-protocol FileSystem {
+public protocol FileSystem {
     /// Read entire file content as UTF-8 string.
     ///
     /// - Parameter path: File path (absolute or relative to current directory)
