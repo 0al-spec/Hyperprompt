@@ -21,3 +21,8 @@ xcuserdata/
 *.swiftmodule
 *.swiftdoc
 *.swiftsourceinfo
+
+# Temporary files
+swiftly
+swiftly-*.tar.gz
+LICENSE.txt
