@@ -172,11 +172,12 @@ final class ParserTests: XCTestCase {
         let result = parser.parse(tokens: tokens)
 
         XCTAssertTrue(result.isFailure)
-        guard case .multipleRoots(let locations) = try! result.mapError { $0 as ParserError }.error as? ParserError else {
+        if case .failure(let error) = result,
+           case .multipleRoots(let locations) = error {
+            XCTAssertEqual(locations.count, 2)
+        } else {
             XCTFail("Expected multipleRoots error")
-            return
         }
-        XCTAssertEqual(locations.count, 2)
     }
 
     func test_parser_invalid_no_root() {
@@ -188,9 +189,11 @@ final class ParserTests: XCTestCase {
         let result = parser.parse(tokens: tokens)
 
         XCTAssertTrue(result.isFailure)
-        guard case .invalidDepthJump = try! result.mapError { $0 as ParserError }.error as? ParserError else {
+        if case .failure(let error) = result,
+           case .invalidDepthJump = error {
+            // Expected
+        } else {
             XCTFail("Expected invalidDepthJump error")
-            return
         }
     }
 
@@ -204,12 +207,13 @@ final class ParserTests: XCTestCase {
         let result = parser.parse(tokens: tokens)
 
         XCTAssertTrue(result.isFailure)
-        guard case .invalidDepthJump(let from, let to, _) = try! result.mapError { $0 as ParserError }.error as? ParserError else {
+        if case .failure(let error) = result,
+           case .invalidDepthJump(let from, let to, _) = error {
+            XCTAssertEqual(from, 0)
+            XCTAssertEqual(to, 2)
+        } else {
             XCTFail("Expected invalidDepthJump error")
-            return
         }
-        XCTAssertEqual(from, 0)
-        XCTAssertEqual(to, 2)
     }
 
     func test_parser_invalid_depth_jump_1_to_3() {
@@ -223,12 +227,13 @@ final class ParserTests: XCTestCase {
         let result = parser.parse(tokens: tokens)
 
         XCTAssertTrue(result.isFailure)
-        guard case .invalidDepthJump(let from, let to, _) = try! result.mapError { $0 as ParserError }.error as? ParserError else {
+        if case .failure(let error) = result,
+           case .invalidDepthJump(let from, let to, _) = error {
+            XCTAssertEqual(from, 1)
+            XCTAssertEqual(to, 3)
+        } else {
             XCTFail("Expected invalidDepthJump error")
-            return
         }
-        XCTAssertEqual(from, 1)
-        XCTAssertEqual(to, 3)
     }
 
     func test_parser_invalid_depth_exceeded() {
@@ -242,11 +247,12 @@ final class ParserTests: XCTestCase {
         let result = parser.parse(tokens: tokens)
 
         XCTAssertTrue(result.isFailure)
-        guard case .depthExceeded(let depth, _) = try! result.mapError { $0 as ParserError }.error as? ParserError else {
+        if case .failure(let error) = result,
+           case .depthExceeded(let depth, _) = error {
+            XCTAssertEqual(depth, 11)
+        } else {
             XCTFail("Expected depthExceeded error")
-            return
         }
-        XCTAssertEqual(depth, 11)
     }
 
     // MARK: - Edge Cases
@@ -257,9 +263,11 @@ final class ParserTests: XCTestCase {
         let result = parser.parse(tokens: tokens)
 
         XCTAssertTrue(result.isFailure)
-        guard case .emptyTokenStream = try! result.mapError { $0 as ParserError }.error as? ParserError else {
+        if case .failure(let error) = result,
+           case .emptyTokenStream = error {
+            // Expected
+        } else {
             XCTFail("Expected emptyTokenStream error")
-            return
         }
     }
 
@@ -274,9 +282,11 @@ final class ParserTests: XCTestCase {
         let result = parser.parse(tokens: tokens)
 
         XCTAssertTrue(result.isFailure)
-        guard case .emptyTokenStream = try! result.mapError { $0 as ParserError }.error as? ParserError else {
+        if case .failure(let error) = result,
+           case .emptyTokenStream = error {
+            // Expected
+        } else {
             XCTFail("Expected emptyTokenStream error")
-            return
         }
     }
 

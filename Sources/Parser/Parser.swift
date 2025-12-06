@@ -46,9 +46,13 @@ public struct Parser {
         // Initialize depth stack with (depth, node) pairs
         var stack: [(depth: Int, node: Node)] = []
 
+        // Track all root nodes (depth 0) for validation
+        var rootNodes: [(location: SourceLocation, node: Node)] = []
+        var seenRootNode = false
+
         // Process each semantic token
         for token in semanticTokens {
-            guard case .node(let indent, let literal, let location) = token else {
+            guard case .node(_, let literal, let location) = token else {
                 // Should not happen (isSemantic filters to .node only), but be defensive
                 continue
             }
@@ -84,6 +88,18 @@ public struct Parser {
                 stack.removeLast()
             }
 
+            // Track root nodes for validation
+            if depth == 0 {
+                if seenRootNode {
+                    // We already have a root node, this is a second one
+                    rootNodes.append((location: location, node: newNode))
+                } else {
+                    // First root node
+                    seenRootNode = true
+                    rootNodes.append((location: location, node: newNode))
+                }
+            }
+
             // Append new node to parent's children
             if !stack.isEmpty {
                 stack.last!.node.addChild(newNode)
@@ -94,15 +110,11 @@ public struct Parser {
         }
 
         // Validate single root constraint
-        // At the end, stack contains all nodes from root to the last one
-        // Find the node at depth 0 (should be exactly one)
-        let rootNodes = stack.filter { $0.depth == 0 }
-
         guard rootNodes.count == 1 else {
             if rootNodes.isEmpty {
                 return .failure(.noRoot)
             } else {
-                let locations = rootNodes.map { $0.node.location }
+                let locations = rootNodes.map { $0.location }
                 return .failure(.multipleRoots(locations: locations))
             }
         }

@@ -9,7 +9,7 @@ import Core
 ///
 /// The parser constructs nodes during AST building, and later phases
 /// (resolution, emission) enrich nodes with semantic information.
-public final class Node: Equatable, Sendable {
+public final class Node: Equatable {
     /// The raw content between quotes (without the quotes).
     /// This is either inline text or a file reference (resolved later).
     public let literal: String
