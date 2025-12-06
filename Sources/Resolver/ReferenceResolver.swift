@@ -352,7 +352,10 @@ public struct ReferenceResolver {
 
         switch compilationResult {
         case .success(let ast):
-            return .success(.hypercodeFile(path: path, ast: ast))
+            let mergedAst = merge(childRoot: ast, into: node)
+            node.children = [mergedAst]
+
+            return .success(.hypercodeFile(path: path, ast: mergedAst))
         case .failure(let error):
             return .failure(contextualize(error: error, for: fullPath))
         }
@@ -422,6 +425,51 @@ public struct ReferenceResolver {
         }
 
         return ResolutionError(message: contextLines.joined(separator: "\n"), location: error.location)
+    }
+
+    /// Merge a child AST into the parent tree with depth adjustments.
+    ///
+    /// - Parameters:
+    ///   - childRoot: Root node of the child AST to merge.
+    ///   - parent: The node that referenced the child AST.
+    /// - Returns: A new root node whose subtree depths are offset relative to the parent.
+    private func merge(childRoot: Node, into parent: Node) -> Node {
+        clone(node: childRoot, depthOffset: parent.depth + 1)
+    }
+
+    /// Create a deep copy of a node applying a depth offset throughout the subtree.
+    ///
+    /// - Parameters:
+    ///   - node: Node to clone.
+    ///   - depthOffset: Depth adjustment applied to the node and all descendants.
+    /// - Returns: Cloned node with adjusted depths and preserved source locations.
+    private func clone(node: Node, depthOffset: Int) -> Node {
+        let clonedChildren = node.children.map { clone(node: $0, depthOffset: depthOffset) }
+
+        let clonedResolution: ResolutionKind?
+        if let resolution = node.resolution {
+            switch resolution {
+            case .inlineText:
+                clonedResolution = .inlineText
+            case .markdownFile(let path, let content):
+                clonedResolution = .markdownFile(path: path, content: content)
+            case .hypercodeFile(let path, let ast):
+                let adjustedAst = clone(node: ast, depthOffset: depthOffset)
+                clonedResolution = .hypercodeFile(path: path, ast: adjustedAst)
+            case .forbidden(let ext):
+                clonedResolution = .forbidden(extension: ext)
+            }
+        } else {
+            clonedResolution = nil
+        }
+
+        return Node(
+            literal: node.literal,
+            depth: node.depth + depthOffset,
+            location: node.location,
+            children: clonedChildren,
+            resolution: clonedResolution
+        )
     }
 
     // MARK: - Deprecated visitation helpers

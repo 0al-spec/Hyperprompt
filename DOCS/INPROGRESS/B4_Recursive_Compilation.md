@@ -52,13 +52,13 @@
 | 7 | Add tests for ≥3-level nested `.hc` files covering success and failure paths (invalid extension, missing file, parse error). | High | 1.5h | Test harness, sample fixtures | Test suite for recursion | A4, B1, B3 | Automated tests pass; assertions on AST depth and errors |
 
 ### Progress Tracker
-- [ ] Step 1 — Recursion hook for `.hc` references
-- [ ] Step 2 — Recursive parse/resolve invocation
-- [ ] Step 3 — Child AST merge into parent
-- [ ] Step 4 — Source location propagation across files
+- [x] Step 1 — Recursion hook for `.hc` references
+- [x] Step 2 — Recursive parse/resolve invocation
+- [x] Step 3 — Child AST merge into parent
+- [x] Step 4 — Source location propagation across files
 - [x] Step 5 — Nested error propagation with contextual path details
-- [ ] Step 6 — Visitation stack updates during recursion
-- [ ] Step 7 — ≥3-level nested `.hc` tests (success and failure)
+- [x] Step 6 — Visitation stack updates during recursion
+- [x] Step 7 — ≥3-level nested `.hc` tests (success and failure)
 
 ## 6. Acceptance Criteria
 - Nested `.hc` references compile recursively into a single resolved AST with correct parent-child relationships.

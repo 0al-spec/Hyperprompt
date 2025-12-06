@@ -677,6 +677,108 @@ final class ReferenceResolverTests: XCTestCase {
         }
     }
 
+    func testRecursiveCompilationMergesChildAstWithDepthOffsets() {
+        mockFS.addFile(
+            at: "/project/chapters/intro.hc",
+            content: "\"Intro\"\n    \"chapters/sections/details.hc\"\n    \"chapters/intro.md\""
+        )
+        mockFS.addFile(
+            at: "/project/chapters/sections/details.hc",
+            content: "\"Details\"\n    \"chapters/sections/details.md\"\n    \"chapters/sections/appendix.hc\""
+        )
+        mockFS.addFile(at: "/project/chapters/sections/appendix.hc", content: "\"Appendix\"")
+        mockFS.addFile(at: "/project/chapters/intro.md", content: "Intro content")
+        mockFS.addFile(at: "/project/chapters/sections/details.md", content: "Details content")
+
+        var resolver = makeResolver()
+
+        let root = makeNode("Root", filePath: "/project/main.hc")
+        let child = makeNode("chapters/intro.hc", line: 2, depth: 1, filePath: "/project/main.hc")
+        root.addChild(child)
+
+        let result = resolver.resolveTree(root: root)
+
+        switch result {
+        case .success:
+            guard let resolution = child.resolution else {
+                return XCTFail("Expected resolution on hypercode child")
+            }
+
+            XCTAssertEqual(child.children.count, 1, "Child AST should be merged into the tree")
+
+            if case .hypercodeFile(let path, let ast) = resolution {
+                XCTAssertEqual(path, "chapters/intro.hc")
+                XCTAssertEqual(ast.depth, 2)
+                XCTAssertEqual(ast.location.filePath, "/project/chapters/intro.hc")
+                XCTAssertEqual(ast.location.line, 1)
+
+                guard let nestedReference = ast.children.first(where: { $0.literal == "chapters/sections/details.hc" }) else {
+                    return XCTFail("Expected nested hypercode reference")
+                }
+
+                XCTAssertEqual(nestedReference.depth, 3)
+                XCTAssertEqual(nestedReference.children.count, 1)
+
+                if case .hypercodeFile(_, let nestedAst) = nestedReference.resolution {
+                    XCTAssertEqual(nestedAst.depth, 4)
+                    XCTAssertEqual(nestedAst.literal, "Details")
+                } else {
+                    XCTFail("Expected nested hypercode resolution")
+                }
+
+                guard let markdownNode = ast.children.first(where: { $0.literal == "chapters/intro.md" }) else {
+                    return XCTFail("Expected intro markdown to be merged")
+                }
+
+                XCTAssertEqual(markdownNode.depth, 3)
+                XCTAssertEqual(markdownNode.location.filePath, "/project/chapters/intro.hc")
+
+                if case .markdownFile(let markdownPath, let content) = markdownNode.resolution {
+                    XCTAssertEqual(markdownPath, "chapters/intro.md")
+                    XCTAssertEqual(content, "Intro content")
+                } else {
+                    XCTFail("Intro markdown should resolve to markdownFile")
+                }
+
+                guard let detailsRoot = nestedReference.children.first else {
+                    return XCTFail("Expected details AST to be merged")
+                }
+
+                XCTAssertEqual(detailsRoot.literal, "Details")
+                XCTAssertEqual(detailsRoot.depth, 4)
+                XCTAssertEqual(detailsRoot.location.filePath, "/project/chapters/sections/details.hc")
+
+                guard let detailsMarkdown = detailsRoot.children.first(where: { $0.literal == "chapters/sections/details.md" })?.resolution else {
+                    return XCTFail("Expected details markdown resolution")
+                }
+
+                if case .markdownFile(let markdownPath, let content) = detailsMarkdown {
+                    XCTAssertEqual(markdownPath, "chapters/sections/details.md")
+                    XCTAssertEqual(content, "Details content")
+                } else {
+                    XCTFail("Details markdown should resolve to markdownFile")
+                }
+
+                guard let appendixNode = detailsRoot.children.first(where: { $0.literal == "chapters/sections/appendix.hc" }) else {
+                    return XCTFail("Expected appendix hypercode to be merged")
+                }
+
+                XCTAssertEqual(appendixNode.depth, 5)
+
+                if case .hypercodeFile(let appendixPath, let appendixAst) = appendixNode.resolution {
+                    XCTAssertEqual(appendixPath, "chapters/sections/appendix.hc")
+                    XCTAssertEqual(appendixAst.literal, "Appendix")
+                } else {
+                    XCTFail("Expected appendix hypercode resolution")
+                }
+            } else {
+                XCTFail("Expected hypercodeFile resolution on child")
+            }
+        case .failure(let error):
+            XCTFail("Unexpected failure: \(error.message)")
+        }
+    }
+
     func testRecursiveCompilationPropagatesNestedErrors() {
         mockFS.addFile(
             at: "/project/chapters/broken.hc",
@@ -704,6 +806,37 @@ final class ReferenceResolverTests: XCTestCase {
                 "Expected resolution path context in nested error"
             )
             XCTAssertEqual(resolver.dependencyTracker?.stack, ["/project/main.hc"])
+        }
+    }
+
+    func testVisitationStackRestoredAfterNestedFailure() {
+        mockFS.addFile(
+            at: "/project/chapters/intro.hc",
+            content: "\"Intro\"\n    \"chapters/sections/invalid.txt\""
+        )
+
+        let tracker = DependencyTracker(fileSystem: mockFS, initialStack: ["/project/main.hc"])
+        var resolver = makeResolver(tracker: tracker)
+
+        let root = makeNode("Root", filePath: "/project/main.hc")
+        let child = makeNode("chapters/intro.hc", line: 2, depth: 1, filePath: "/project/main.hc")
+        root.addChild(child)
+
+        let result = resolver.resolveTree(root: root)
+
+        switch result {
+        case .success:
+            XCTFail("Expected failure for forbidden nested extension")
+        case .failure(let error):
+            XCTAssertEqual(error.location?.filePath, "/project/chapters/intro.hc")
+            XCTAssertEqual(error.location?.line, 2)
+            XCTAssertTrue(error.message.contains("Unsupported file extension"))
+            XCTAssertTrue(
+                error.message.contains("Resolution path: /project/main.hc → /project/chapters/intro.hc"),
+                "Expected resolution path context in nested error"
+            )
+            XCTAssertEqual(resolver.dependencyTracker?.stack, ["/project/main.hc"])
+            XCTAssertNil(child.resolution)
         }
     }
 
