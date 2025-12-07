@@ -175,7 +175,8 @@ public final class Lexer {
     ///   - location: Source location for error reporting
     /// - Returns: Tuple of (indent count, index where content starts)
     /// - Throws: `LexerError.tabInIndentation` or `LexerError.misalignedIndentation`
-    func extractIndentation(_ line: String, location: SourceLocation) throws -> (Int, String.Index) {
+    func extractIndentation(_ line: String, location: SourceLocation) throws -> (Int, String.Index)
+    {
         var indent = 0
         var index = line.startIndex
 
@@ -235,7 +236,7 @@ public final class Lexer {
         let literal = String(content[afterOpeningQuote..<closingQuoteIndex])
 
         // Check for multi-line content
-        if literal.contains("\n") || literal.contains("\r") {
+        if literal.contains(LineBreak.lineFeed) || literal.contains(LineBreak.carriageReturn) {
             throw LexerError.multilineLiteral(location: location)
         }
 

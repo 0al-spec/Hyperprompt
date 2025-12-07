@@ -1,3 +1,4 @@
+import Core
 import Foundation
 import SpecificationCore
 
@@ -8,7 +9,7 @@ public struct ContainsLFSpec: Specification {
     public init() {}
 
     public func isSatisfiedBy(_ candidate: String) -> Bool {
-        candidate.contains("\n")
+        candidate.contains(LineBreak.lineFeed)
     }
 }
 
@@ -19,7 +20,7 @@ public struct ContainsCRSpec: Specification {
     public init() {}
 
     public func isSatisfiedBy(_ candidate: String) -> Bool {
-        candidate.contains("\r")
+        candidate.contains(LineBreak.carriageReturn)
     }
 }
 
