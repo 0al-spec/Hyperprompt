@@ -10,6 +10,10 @@ let package = Package(
         .executable(
             name: "hyperprompt",
             targets: ["CLI"]
+        ),
+        .library(
+            name: "HypercodeGrammar",
+            targets: ["HypercodeGrammar"]
         )
     ],
     dependencies: [
@@ -106,6 +110,19 @@ let package = Package(
                 "Emitter",
                 "CLI"
             ]
+        ),
+
+        // Hypercode grammar specifications
+        .target(
+            name: "HypercodeGrammar",
+            dependencies: [
+                "Core",
+                "SpecificationCore"
+            ]
+        ),
+        .testTarget(
+            name: "HypercodeGrammarTests",
+            dependencies: ["HypercodeGrammar"]
         )
     ]
 )
