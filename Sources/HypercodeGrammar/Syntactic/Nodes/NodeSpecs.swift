@@ -13,7 +13,7 @@ public struct DepthWithinLimitSpec: Specification {
     }
 
     public func isSatisfiedBy(_ candidate: RawLine) -> Bool {
-        let depth = candidate.leadingSpaces / 4
+        let depth = candidate.leadingSpaces / Indentation.spacesPerLevel
         return depth <= maxDepth
     }
 }

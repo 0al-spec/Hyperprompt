@@ -42,10 +42,13 @@ public struct ParsedLine: Equatable, Codable, Sendable {
 
     public init(kind: LineKind, indentSpaces: Int, literal: String?, location: SourceLocation) {
         precondition(indentSpaces >= 0, "Indentation cannot be negative")
-        precondition(indentSpaces % 4 == 0, "Indentation must align to 4-space groups")
+        precondition(
+            indentSpaces % Indentation.spacesPerLevel == 0,
+            "Indentation must align to \(Indentation.spacesPerLevel)-space groups"
+        )
         self.kind = kind
         self.indentSpaces = indentSpaces
-        self.depth = indentSpaces / 4
+        self.depth = indentSpaces / Indentation.spacesPerLevel
         self.literal = literal
         self.location = location
     }
@@ -64,8 +67,11 @@ public struct ParsedLine: Equatable, Codable, Sendable {
         self.kind = try container.decode(LineKind.self, forKey: .kind)
         self.indentSpaces = try container.decode(Int.self, forKey: .indentSpaces)
         let decodedDepth = try container.decode(Int.self, forKey: .depth)
-        precondition(indentSpaces % 4 == 0, "Indentation must align to 4-space groups")
-        let computedDepth = indentSpaces / 4
+        precondition(
+            indentSpaces % Indentation.spacesPerLevel == 0,
+            "Indentation must align to \(Indentation.spacesPerLevel)-space groups"
+        )
+        let computedDepth = indentSpaces / Indentation.spacesPerLevel
         precondition(decodedDepth == computedDepth, "Decoded depth must match indentation")
         self.depth = computedDepth
         self.literal = try container.decodeIfPresent(String.self, forKey: .literal)

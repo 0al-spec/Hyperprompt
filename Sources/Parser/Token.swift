@@ -59,9 +59,9 @@ public enum Token: Equatable, Sendable {
         }
     }
 
-    /// The depth level (indent / 4).
+    /// The depth level (indent / indentation group size).
     public var depth: Int {
-        indent / 4
+        indent / Indentation.spacesPerLevel
     }
 
     /// Whether this token represents a semantic line (node).

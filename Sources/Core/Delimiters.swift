@@ -25,3 +25,8 @@ public enum PathSegment {
         charactersIn: String([forwardSlash, backslash])
     )
 }
+
+/// Indentation configuration shared across modules.
+public enum Indentation {
+    public static let spacesPerLevel = 4
+}

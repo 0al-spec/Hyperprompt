@@ -36,6 +36,6 @@ public struct IndentMultipleOf4Spec: Specification {
     public init() {}
 
     public func isSatisfiedBy(_ candidate: RawLine) -> Bool {
-        candidate.leadingSpaces % 4 == 0
+        candidate.leadingSpaces % Indentation.spacesPerLevel == 0
     }
 }

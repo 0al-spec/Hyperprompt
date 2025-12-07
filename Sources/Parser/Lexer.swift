@@ -194,7 +194,7 @@ public final class Lexer {
         }
 
         // Validate indent is multiple of 4
-        if indent % 4 != 0 {
+        if indent % Indentation.spacesPerLevel != 0 {
             throw LexerError.misalignedIndentation(location: location, actual: indent)
         }
 
