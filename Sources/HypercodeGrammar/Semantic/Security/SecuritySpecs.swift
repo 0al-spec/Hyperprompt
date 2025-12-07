@@ -26,6 +26,13 @@ public struct WithinRootSpec: Specification {
 
     public func isSatisfiedBy(_ candidate: String) -> Bool {
         let candidateURL = URL(fileURLWithPath: candidate, relativeTo: root).standardizedFileURL
-        return candidateURL.path.hasPrefix(root.path)
+        let rootComponents = root.pathComponents
+        let candidateComponents = candidateURL.pathComponents
+
+        guard candidateComponents.count >= rootComponents.count else {
+            return false
+        }
+
+        return candidateComponents.prefix(rootComponents.count).elementsEqual(rootComponents)
     }
 }

@@ -111,11 +111,13 @@ final class PathSpecsTests: XCTestCase {
         let root = "/workspace"
         let secure = "docs/readme.md"
         let traversal = "../secrets.md"
+        let sibling = "/workspace-logs/output.txt"
 
         XCTAssertTrue(NoTraversalSpec().isSatisfiedBy(secure))
         XCTAssertFalse(NoTraversalSpec().isSatisfiedBy(traversal))
         XCTAssertTrue(WithinRootSpec(rootPath: root).isSatisfiedBy(secure))
         XCTAssertFalse(WithinRootSpec(rootPath: root).isSatisfiedBy("/etc/passwd"))
+        XCTAssertFalse(WithinRootSpec(rootPath: root).isSatisfiedBy(sibling))
     }
 
     func testPathTypeDecisionClassifiesPaths() {
