@@ -28,11 +28,13 @@ public struct ContentWithinQuotesIsSingleLineSpec: Specification {
     public typealias T = RawLine
 
     private let boundariesSpec: AnySpecification<RawLine>
+    private let singleLineSpec: AnySpecification<String>
 
     public init() {
         self.boundariesSpec = AnySpecification(
             StartsWithDoubleQuoteSpec().and(EndsWithDoubleQuoteSpec())
         )
+        self.singleLineSpec = AnySpecification(SingleLineContentSpec())
     }
 
     public func isSatisfiedBy(_ candidate: RawLine) -> Bool {
@@ -41,8 +43,8 @@ public struct ContentWithinQuotesIsSingleLineSpec: Specification {
         }
 
         let trimmed = trimmedCandidate(candidate)
-        let content = trimmed.dropFirst().dropLast()
-        return !content.contains("\n") && !content.contains("\r")
+        let content = String(trimmed.dropFirst().dropLast())
+        return singleLineSpec.isSatisfiedBy(content)
     }
 }
 
