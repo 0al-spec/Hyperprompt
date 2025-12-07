@@ -1,3 +1,4 @@
+import Core
 import Foundation
 import SpecificationCore
 
@@ -8,7 +9,7 @@ public struct IsCommentLineSpec: Specification {
     public init() {}
 
     public func isSatisfiedBy(_ candidate: RawLine) -> Bool {
-        trimmed(candidate).first == "#"
+        trimmed(candidate).first == CommentDelimiter.hash
     }
 }
 
@@ -59,5 +60,5 @@ public struct IsSemanticLineSpec: Specification {
 }
 
 private func trimmed(_ candidate: RawLine) -> Substring {
-    candidate.text.drop(while: { $0 == " " })
+    candidate.text.drop(while: { $0 == Whitespace.space })
 }

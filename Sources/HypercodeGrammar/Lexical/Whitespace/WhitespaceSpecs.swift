@@ -1,3 +1,4 @@
+import Core
 import Foundation
 import SpecificationCore
 
@@ -8,7 +9,9 @@ public struct IsBlankLineSpec: Specification {
     public init() {}
 
     public func isSatisfiedBy(_ candidate: RawLine) -> Bool {
-        candidate.text.trimmingCharacters(in: .newlines).allSatisfy { $0 == " " }
+        candidate.text
+            .trimmingCharacters(in: .newlines)
+            .allSatisfy { $0 == Whitespace.space }
     }
 }
 
@@ -19,8 +22,10 @@ public struct NoTabsIndentSpec: Specification {
     public init() {}
 
     public func isSatisfiedBy(_ candidate: RawLine) -> Bool {
-        let indent = candidate.text.prefix { $0 == " " || $0 == "\t" }
-        return !indent.contains("\t")
+        let indent = candidate.text.prefix {
+            $0 == Whitespace.space || $0 == Whitespace.tab
+        }
+        return !indent.contains(Whitespace.tab)
     }
 }
 

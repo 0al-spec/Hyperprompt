@@ -107,7 +107,7 @@ public final class Lexer {
         var lines = content.components(separatedBy: "\n")
 
         // Remove trailing empty line if content ended with newline
-        if content.hasSuffix("\n") && lines.last == "" {
+        if content.hasSuffix(LineBreak.lineFeedString) && lines.last == "" {
             lines.removeLast()
         }
 
@@ -142,7 +142,7 @@ public final class Lexer {
         let content = String(line[contentStart...])
 
         // Check for comment
-        if content.hasPrefix("#") {
+        if content.hasPrefix(CommentDelimiter.hashString) {
             return .comment(indent: indent, location: location)
         }
 
@@ -163,7 +163,7 @@ public final class Lexer {
     /// - Parameter line: The line to check
     /// - Returns: `true` if line is blank
     func isBlankLine(_ line: String) -> Bool {
-        line.isEmpty || line.allSatisfy { $0 == " " }
+        line.isEmpty || line.allSatisfy { $0 == Whitespace.space }
     }
 
     // MARK: - Indentation Handling
@@ -183,10 +183,10 @@ public final class Lexer {
         while index < line.endIndex {
             let char = line[index]
 
-            if char == " " {
+            if char == Whitespace.space {
                 indent += 1
                 index = line.index(after: index)
-            } else if char == "\t" {
+            } else if char == Whitespace.tab {
                 throw LexerError.tabInIndentation(location: location)
             } else {
                 break
@@ -248,7 +248,7 @@ public final class Lexer {
         if afterClosingQuote < content.endIndex {
             let trailing = content[afterClosingQuote...]
             // Allow only whitespace after closing quote
-            if !trailing.allSatisfy({ $0 == " " }) {
+            if !trailing.allSatisfy({ $0 == Whitespace.space }) {
                 throw LexerError.trailingContent(location: location)
             }
         }

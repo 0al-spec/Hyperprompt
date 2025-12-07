@@ -21,7 +21,7 @@ public struct RawLine: Equatable, Codable, Sendable {
 
     /// Number of leading space characters used for indentation.
     public var leadingSpaces: Int {
-        text.prefix(while: { $0 == " " }).count
+        text.prefix(while: { $0 == Whitespace.space }).count
     }
 }
 

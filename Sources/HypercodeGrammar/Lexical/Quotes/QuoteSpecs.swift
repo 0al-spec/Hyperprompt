@@ -69,5 +69,5 @@ public struct ValidQuotesSpec: Specification {
 }
 
 private func trimmedCandidate(_ candidate: RawLine) -> Substring {
-    candidate.text.drop(while: { $0 == " " })
+    candidate.text.drop(while: { $0 == Whitespace.space })
 }

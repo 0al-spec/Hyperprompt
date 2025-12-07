@@ -1,3 +1,4 @@
+import Core
 import Foundation
 import SpecificationCore
 
@@ -8,9 +9,8 @@ public struct NoTraversalSpec: Specification {
     public init() {}
 
     public func isSatisfiedBy(_ candidate: String) -> Bool {
-        let separators = CharacterSet(charactersIn: "/\\")
-        let components = candidate.components(separatedBy: separators)
-        return !components.contains("..")
+        let components = candidate.components(separatedBy: PathSegment.separators)
+        return !components.contains(PathSegment.traversal)
     }
 }
 
