@@ -110,3 +110,6 @@ public enum ResolutionKind: Equatable, Sendable {
     /// Examples: .txt, .py, .json (only .md and .hc are allowed).
     case forbidden(extension: String)
 }
+
+// AST nodes stay on parser queues; mark unchecked to silence Sendable warnings.
+extension Node: @unchecked Sendable {}

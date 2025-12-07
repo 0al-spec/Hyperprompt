@@ -1,6 +1,7 @@
-import XCTest
-@testable import HypercodeGrammar
 import Core
+import XCTest
+
+@testable import HypercodeGrammar
 
 final class DomainTypesTests: XCTestCase {
     func testRawLineLocationBuildsFromFilePath() {
@@ -11,7 +12,8 @@ final class DomainTypesTests: XCTestCase {
 
     func testParsedLineCalculatesDepth() {
         let location = SourceLocation(filePath: "file.hc", line: 1)
-        let parsed = ParsedLine(kind: .node(literal: "n"), indentSpaces: 8, literal: "n", location: location)
+        let parsed = ParsedLine(
+            kind: .node(literal: "n"), indentSpaces: 8, literal: "n", location: location)
         XCTAssertEqual(parsed.depth, 2)
         XCTAssertFalse(parsed.isSkippable)
     }
@@ -19,7 +21,8 @@ final class DomainTypesTests: XCTestCase {
     func testParsedLineSkippableForCommentAndBlank() {
         let location = SourceLocation(filePath: "file.hc", line: 1)
         let blank = ParsedLine(kind: .blank, indentSpaces: 0, literal: nil, location: location)
-        let comment = ParsedLine(kind: .comment(prefix: "#"), indentSpaces: 0, literal: nil, location: location)
+        let comment = ParsedLine(
+            kind: .comment(prefix: "#"), indentSpaces: 0, literal: nil, location: location)
         XCTAssertTrue(blank.isSkippable)
         XCTAssertTrue(comment.isSkippable)
     }
@@ -76,7 +79,8 @@ final class SyntacticSpecsTests: XCTestCase {
         XCTAssertTrue(NoTabsIndentSpec().isSatisfiedBy(node))
         XCTAssertTrue(DepthWithinLimitSpec(maxDepth: 10).isSatisfiedBy(node))
 
-        let deepNode = RawLine(text: String(repeating: " ", count: 48) + "\"too deep\"", lineNumber: 1, filePath: "f")
+        let deepNode = RawLine(
+            text: String(repeating: " ", count: 48) + "\"too deep\"", lineNumber: 1, filePath: "f")
         XCTAssertFalse(DepthWithinLimitSpec(maxDepth: 10).isSatisfiedBy(deepNode))
 
         let tabNode = RawLine(text: "\t\"bad\"", lineNumber: 1, filePath: "f")
@@ -125,6 +129,7 @@ final class PathSpecsTests: XCTestCase {
         XCTAssertEqual(decision.decide("docs/readme.md"), .allowed(extension: "md"))
         XCTAssertEqual(decision.decide("docs/node.hc"), .allowed(extension: "hc"))
         XCTAssertEqual(decision.decide("docs/notes.txt"), .forbidden(extension: "txt"))
-        XCTAssertEqual(decision.decide("../escape.md"), .invalid(reason: "Path escapes root or is malformed"))
+        XCTAssertEqual(
+            decision.decide("../escape.md"), .invalid(reason: "Path escapes root or is malformed"))
     }
 }

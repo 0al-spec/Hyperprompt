@@ -27,14 +27,20 @@ public struct EndsWithDoubleQuoteSpec: Specification {
 public struct ContentWithinQuotesIsSingleLineSpec: Specification {
     public typealias T = RawLine
 
-    public init() {}
+    private let boundariesSpec: AnySpecification<RawLine>
+
+    public init() {
+        self.boundariesSpec = AnySpecification(
+            StartsWithDoubleQuoteSpec().and(EndsWithDoubleQuoteSpec())
+        )
+    }
 
     public func isSatisfiedBy(_ candidate: RawLine) -> Bool {
-        let trimmed = trimmedCandidate(candidate)
-        guard trimmed.first == "\"", trimmed.last == "\"" else {
+        guard boundariesSpec.isSatisfiedBy(candidate) else {
             return false
         }
 
+        let trimmed = trimmedCandidate(candidate)
         let content = trimmed.dropFirst().dropLast()
         return !content.contains("\n") && !content.contains("\r")
     }
