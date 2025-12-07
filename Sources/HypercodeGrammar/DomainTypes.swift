@@ -43,7 +43,7 @@ public struct ParsedLine: Equatable, Codable, Sendable {
     public init(kind: LineKind, indentSpaces: Int, literal: String?, location: SourceLocation) {
         precondition(indentSpaces >= 0, "Indentation cannot be negative")
         precondition(
-            indentSpaces % Indentation.spacesPerLevel == 0,
+            indentationAlignmentSpec.isSatisfiedBy(indentSpaces),
             "Indentation must align to \(Indentation.spacesPerLevel)-space groups"
         )
         self.kind = kind
@@ -68,7 +68,7 @@ public struct ParsedLine: Equatable, Codable, Sendable {
         self.indentSpaces = try container.decode(Int.self, forKey: .indentSpaces)
         let decodedDepth = try container.decode(Int.self, forKey: .depth)
         precondition(
-            indentSpaces % Indentation.spacesPerLevel == 0,
+            indentationAlignmentSpec.isSatisfiedBy(indentSpaces),
             "Indentation must align to \(Indentation.spacesPerLevel)-space groups"
         )
         let computedDepth = indentSpaces / Indentation.spacesPerLevel
@@ -97,6 +97,8 @@ public struct ParsedLine: Equatable, Codable, Sendable {
         return false
     }
 }
+
+private let indentationAlignmentSpec = IndentGroupAlignmentSpec()
 
 /// Classification for path validation outcomes used by the resolver.
 public enum PathKind: Equatable, Codable, Sendable {

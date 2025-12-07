@@ -28,13 +28,18 @@ import Foundation
 public final class Lexer {
     /// File system abstraction for reading files.
     private let fileSystem: FileSystem
+    private let indentAlignmentSpec: IndentGroupAlignmentSpec
 
     /// Create a new Lexer instance.
     ///
     /// - Parameter fileSystem: File system to use for reading files.
     ///   Defaults to `LocalFileSystem()` for production use.
-    public init(fileSystem: FileSystem = LocalFileSystem()) {
+    public init(
+        fileSystem: FileSystem = LocalFileSystem(),
+        indentAlignmentSpec: IndentGroupAlignmentSpec = IndentGroupAlignmentSpec()
+    ) {
         self.fileSystem = fileSystem
+        self.indentAlignmentSpec = indentAlignmentSpec
     }
 
     /// Tokenize a Hypercode source file.
@@ -194,7 +199,7 @@ public final class Lexer {
         }
 
         // Validate indent is multiple of 4
-        if indent % Indentation.spacesPerLevel != 0 {
+        if !indentAlignmentSpec.isSatisfiedBy(indent) {
             throw LexerError.misalignedIndentation(location: location, actual: indent)
         }
 

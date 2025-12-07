@@ -33,9 +33,13 @@ public struct NoTabsIndentSpec: Specification {
 public struct IndentMultipleOf4Spec: Specification {
     public typealias T = RawLine
 
-    public init() {}
+    private let alignmentSpec: IndentGroupAlignmentSpec
+
+    public init(spacesPerLevel: Int = Indentation.spacesPerLevel) {
+        self.alignmentSpec = IndentGroupAlignmentSpec(spacesPerLevel: spacesPerLevel)
+    }
 
     public func isSatisfiedBy(_ candidate: RawLine) -> Bool {
-        candidate.leadingSpaces % Indentation.spacesPerLevel == 0
+        alignmentSpec.isSatisfiedBy(candidate.leadingSpaces)
     }
 }
