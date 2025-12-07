@@ -1,3 +1,4 @@
+import Core
 import Foundation
 import SpecificationCore
 
@@ -8,7 +9,7 @@ public struct StartsWithDoubleQuoteSpec: Specification {
     public init() {}
 
     public func isSatisfiedBy(_ candidate: RawLine) -> Bool {
-        trimmedCandidate(candidate).first == "\""
+        trimmedCandidate(candidate).first == QuoteDelimiter.doubleQuote
     }
 }
 
@@ -19,7 +20,7 @@ public struct EndsWithDoubleQuoteSpec: Specification {
     public init() {}
 
     public func isSatisfiedBy(_ candidate: RawLine) -> Bool {
-        trimmedCandidate(candidate).last == "\""
+        trimmedCandidate(candidate).last == QuoteDelimiter.doubleQuote
     }
 }
 

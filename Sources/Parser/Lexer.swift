@@ -147,7 +147,7 @@ public final class Lexer {
         }
 
         // Check for node (quoted literal)
-        if content.hasPrefix("\"") {
+        if content.hasPrefix(QuoteDelimiter.doubleQuoteString) {
             let literal = try extractLiteral(content, location: location)
             return .node(indent: indent, literal: literal, location: location)
         }
@@ -216,7 +216,7 @@ public final class Lexer {
     ///           or `LexerError.trailingContent`
     func extractLiteral(_ content: String, location: SourceLocation) throws -> String {
         // Content should start with quote
-        guard content.hasPrefix("\"") else {
+        guard content.hasPrefix(QuoteDelimiter.doubleQuoteString) else {
             throw LexerError.invalidLineFormat(location: location)
         }
 
@@ -228,7 +228,10 @@ public final class Lexer {
         }
 
         // Look for closing quote
-        guard let closingQuoteIndex = content[afterOpeningQuote...].firstIndex(of: "\"") else {
+        guard
+            let closingQuoteIndex = content[afterOpeningQuote...]
+                .firstIndex(of: QuoteDelimiter.doubleQuote)
+        else {
             throw LexerError.unclosedQuote(location: location)
         }
 

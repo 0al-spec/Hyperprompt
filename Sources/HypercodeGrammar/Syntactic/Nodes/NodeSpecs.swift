@@ -1,3 +1,4 @@
+import Core
 import Foundation
 import SpecificationCore
 
@@ -58,7 +59,9 @@ public struct SingleLineLiteralSpec: Specification {
 /// Extracts literal content (without quotes) from a raw node line when possible.
 public func extractLiteral(_ candidate: RawLine) -> String? {
     let trimmed = candidate.text.drop(while: { $0 == " " })
-    guard trimmed.first == "\"", trimmed.last == "\"" else {
+    guard trimmed.first == QuoteDelimiter.doubleQuote,
+        trimmed.last == QuoteDelimiter.doubleQuote
+    else {
         return nil
     }
     return String(trimmed.dropFirst().dropLast())
