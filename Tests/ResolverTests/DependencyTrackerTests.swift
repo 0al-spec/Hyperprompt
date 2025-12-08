@@ -330,12 +330,14 @@ final class DependencyTrackerTests: XCTestCase {
     func testReferenceResolverCheckForCycle() {
         // Test the ReferenceResolver integration with DependencyTracker
 
-        let fileSystem = MockFileSystem(files: [:])
+        let fileSystem = MockFileSystem()
         var resolver = ReferenceResolver(
             fileSystem: fileSystem,
             rootPath: "/root",
             mode: .strict
         )
+
+        let location = SourceLocation(filePath: "/root/b.hc", line: 3)
 
         // Simulate processing main.hc → a.hc → b.hc
         resolver.pushVisitationStack(path: "main.hc")
@@ -343,24 +345,20 @@ final class DependencyTrackerTests: XCTestCase {
         resolver.pushVisitationStack(path: "b.hc")
 
         // Check for cycle when trying to reference a.hc again
-        let result = resolver.checkForCycle(path: "a.hc")
+        let error = resolver.checkForCycle(path: "a.hc", location: location)
 
         // Should detect cycle
-        if case .failure(let cyclePath) = result {
-            XCTAssertEqual(cyclePath, [
-                "/root/a.hc",
-                "/root/b.hc",
-                "/root/a.hc"
-            ])
-        } else {
-            XCTFail("Expected cycle to be detected")
+        XCTAssertNotNil(error, "Expected cycle to be detected")
+        if let error = error {
+            XCTAssertTrue(error.message.contains("Circular dependency detected"))
+            XCTAssertTrue(error.message.contains("/root/a.hc → /root/b.hc → /root/a.hc"))
         }
     }
 
     func testReferenceResolverStackManagement() {
         // Test push/pop operations maintain stack correctly
 
-        let fileSystem = MockFileSystem(files: [:])
+        let fileSystem = MockFileSystem()
         var resolver = ReferenceResolver(
             fileSystem: fileSystem,
             rootPath: "/root",
@@ -389,7 +387,7 @@ final class DependencyTrackerTests: XCTestCase {
     func testReferenceResolverClearStack() {
         // Test clearing the visitation stack
 
-        let fileSystem = MockFileSystem(files: [:])
+        let fileSystem = MockFileSystem()
         var resolver = ReferenceResolver(
             fileSystem: fileSystem,
             rootPath: "/root",
@@ -409,22 +407,22 @@ final class DependencyTrackerTests: XCTestCase {
     func testReferenceResolverNoCycleInAcyclicGraph() {
         // Test that acyclic graphs don't trigger false positives
 
-        let fileSystem = MockFileSystem(files: [:])
+        let fileSystem = MockFileSystem()
         var resolver = ReferenceResolver(
             fileSystem: fileSystem,
             rootPath: "/root",
             mode: .strict
         )
 
+        let location = SourceLocation(filePath: "/root/b.hc", line: 5)
+
         resolver.pushVisitationStack(path: "main.hc")
         resolver.pushVisitationStack(path: "a.hc")
         resolver.pushVisitationStack(path: "b.hc")
 
         // Check for cycle with a new file (should not detect cycle)
-        let result = resolver.checkForCycle(path: "c.hc")
+        let error = resolver.checkForCycle(path: "c.hc", location: location)
 
-        if case .failure = result {
-            XCTFail("Should not detect cycle in acyclic graph")
-        }
+        XCTAssertNil(error, "Should not detect cycle in acyclic graph")
     }
 }

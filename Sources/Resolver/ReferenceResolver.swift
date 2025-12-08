@@ -394,28 +394,29 @@ public struct ReferenceResolver {
     /// This method checks whether the given path is already in the visitation
     /// stack, which would indicate a circular dependency.
     ///
-    /// - Parameter path: The file path to check (will be normalized)
-    /// - Returns: Result containing cycle path array if cycle detected, otherwise success
+    /// - Parameters:
+    ///   - path: The file path to check (will be normalized)
+    ///   - location: Source location for error reporting
+    /// - Returns: ResolutionError if cycle detected, nil otherwise
     ///
     /// ## Usage
     ///
     /// ```swift
     /// // Before resolving a .hc file reference
-    /// if case .failure(let cyclePath) = resolver.checkForCycle(path: "a.hc") {
-    ///     // Handle circular dependency error
-    ///     return .failure(.circularDependency(cyclePath: cyclePath, location: node.location))
+    /// if let error = resolver.checkForCycle(path: "a.hc", location: node.location) {
+    ///     return .failure(error)
     /// }
     /// ```
-    public func checkForCycle(path: String) -> Result<Void, [String]> {
+    public func checkForCycle(path: String, location: SourceLocation) -> ResolutionError? {
         let normalized = constructFullPath(path)
         if dependencyTracker.isInCycle(path: normalized, stack: visitationStack) {
             let cyclePath = dependencyTracker.getCyclePath(
                 stack: visitationStack,
                 offendingPath: normalized
             )
-            return .failure(cyclePath)
+            return .circularDependency(cyclePath: cyclePath, location: location)
         }
-        return .success(())
+        return nil
     }
 
     /// Push a path onto the visitation stack.
