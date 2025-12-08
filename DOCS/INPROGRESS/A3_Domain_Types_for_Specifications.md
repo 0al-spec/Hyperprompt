@@ -3,7 +3,7 @@
 **Priority:** P1 (High)  \
 **Phase:** Phase 1 — Foundation & Core Types  \
 **Track:** B — Specifications  \
-**Status:** In Progress  \
+**Status:** ✅ Completed on 2025-12-07  \
 **Estimated Effort:** 3 hours  \
 **Dependencies:** A1 (Project Init), A2 (Core Types)  \
 **Blocking:** Phase 3 (Specifications) and all specification tasks listed in Workplan
@@ -122,9 +122,9 @@
 ---
 
 ## 11. Deliverable Checklist (Ready for Implementation)
-- [ ] Package scaffold with SpecificationCore dependency checked in.
-- [ ] Domain types (`RawLine`, `LineKind`, `ParsedLine`, `PathKind`) implemented with docs.
-- [ ] Lexical, syntactic, semantic/path specs implemented per mapping table.
-- [ ] Factory methods exporting composed specs for lexer/resolver consumption.
-- [ ] Unit tests (≥45 total cases across spec groups) passing via `swift test`.
-- [ ] Documentation within module mirrors terminology in Workplan and PRD.
+- [x] Package scaffold with SpecificationCore dependency checked in.
+- [x] Domain types (`RawLine`, `LineKind`, `ParsedLine`, `PathKind`) implemented with docs.
+- [x] Lexical, syntactic, semantic/path specs implemented per mapping table.
+- [x] Factory methods exporting composed specs for lexer/resolver consumption.
+- [x] Unit tests (≥45 total cases across spec groups) passing via `swift test`.
+- [x] Documentation within module mirrors terminology in Workplan and PRD.

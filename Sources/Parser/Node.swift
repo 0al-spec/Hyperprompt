@@ -15,7 +15,7 @@ public final class Node: Equatable {
     public let literal: String
 
     /// The indentation depth (0-10).
-    /// Computed as: indentation_spaces / 4
+    /// Computed as: indentationSpaces / indentation group width
     /// Depth 0 is the root node; depth > 0 are nested children.
     public let depth: Int
 
@@ -110,3 +110,6 @@ public enum ResolutionKind: Equatable, Sendable {
     /// Examples: .txt, .py, .json (only .md and .hc are allowed).
     case forbidden(extension: String)
 }
+
+// AST nodes stay on parser queues; mark unchecked to silence Sendable warnings.
+extension Node: @unchecked Sendable {}

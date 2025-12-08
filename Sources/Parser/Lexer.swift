@@ -28,13 +28,18 @@ import Foundation
 public final class Lexer {
     /// File system abstraction for reading files.
     private let fileSystem: FileSystem
+    private let indentAlignmentSpec: IndentGroupAlignmentSpec
 
     /// Create a new Lexer instance.
     ///
     /// - Parameter fileSystem: File system to use for reading files.
     ///   Defaults to `LocalFileSystem()` for production use.
-    public init(fileSystem: FileSystem = LocalFileSystem()) {
+    public init(
+        fileSystem: FileSystem = LocalFileSystem(),
+        indentAlignmentSpec: IndentGroupAlignmentSpec = IndentGroupAlignmentSpec()
+    ) {
         self.fileSystem = fileSystem
+        self.indentAlignmentSpec = indentAlignmentSpec
     }
 
     /// Tokenize a Hypercode source file.
@@ -107,7 +112,7 @@ public final class Lexer {
         var lines = content.components(separatedBy: "\n")
 
         // Remove trailing empty line if content ended with newline
-        if content.hasSuffix("\n") && lines.last == "" {
+        if content.hasSuffix(LineBreak.lineFeedString) && lines.last == "" {
             lines.removeLast()
         }
 
@@ -142,12 +147,12 @@ public final class Lexer {
         let content = String(line[contentStart...])
 
         // Check for comment
-        if content.hasPrefix("#") {
+        if content.hasPrefix(CommentDelimiter.hashString) {
             return .comment(indent: indent, location: location)
         }
 
         // Check for node (quoted literal)
-        if content.hasPrefix("\"") {
+        if content.hasPrefix(QuoteDelimiter.doubleQuoteString) {
             let literal = try extractLiteral(content, location: location)
             return .node(indent: indent, literal: literal, location: location)
         }
@@ -163,7 +168,7 @@ public final class Lexer {
     /// - Parameter line: The line to check
     /// - Returns: `true` if line is blank
     func isBlankLine(_ line: String) -> Bool {
-        line.isEmpty || line.allSatisfy { $0 == " " }
+        line.isEmpty || line.allSatisfy { $0 == Whitespace.space }
     }
 
     // MARK: - Indentation Handling
@@ -175,17 +180,18 @@ public final class Lexer {
     ///   - location: Source location for error reporting
     /// - Returns: Tuple of (indent count, index where content starts)
     /// - Throws: `LexerError.tabInIndentation` or `LexerError.misalignedIndentation`
-    func extractIndentation(_ line: String, location: SourceLocation) throws -> (Int, String.Index) {
+    func extractIndentation(_ line: String, location: SourceLocation) throws -> (Int, String.Index)
+    {
         var indent = 0
         var index = line.startIndex
 
         while index < line.endIndex {
             let char = line[index]
 
-            if char == " " {
+            if char == Whitespace.space {
                 indent += 1
                 index = line.index(after: index)
-            } else if char == "\t" {
+            } else if char == Whitespace.tab {
                 throw LexerError.tabInIndentation(location: location)
             } else {
                 break
@@ -193,7 +199,7 @@ public final class Lexer {
         }
 
         // Validate indent is multiple of 4
-        if indent % 4 != 0 {
+        if !indentAlignmentSpec.isSatisfiedBy(indent) {
             throw LexerError.misalignedIndentation(location: location, actual: indent)
         }
 
@@ -215,7 +221,7 @@ public final class Lexer {
     ///           or `LexerError.trailingContent`
     func extractLiteral(_ content: String, location: SourceLocation) throws -> String {
         // Content should start with quote
-        guard content.hasPrefix("\"") else {
+        guard content.hasPrefix(QuoteDelimiter.doubleQuoteString) else {
             throw LexerError.invalidLineFormat(location: location)
         }
 
@@ -227,7 +233,10 @@ public final class Lexer {
         }
 
         // Look for closing quote
-        guard let closingQuoteIndex = content[afterOpeningQuote...].firstIndex(of: "\"") else {
+        guard
+            let closingQuoteIndex = content[afterOpeningQuote...]
+                .firstIndex(of: QuoteDelimiter.doubleQuote)
+        else {
             throw LexerError.unclosedQuote(location: location)
         }
 
@@ -235,7 +244,7 @@ public final class Lexer {
         let literal = String(content[afterOpeningQuote..<closingQuoteIndex])
 
         // Check for multi-line content
-        if literal.contains("\n") || literal.contains("\r") {
+        if literal.contains(LineBreak.lineFeed) || literal.contains(LineBreak.carriageReturn) {
             throw LexerError.multilineLiteral(location: location)
         }
 
@@ -244,7 +253,7 @@ public final class Lexer {
         if afterClosingQuote < content.endIndex {
             let trailing = content[afterClosingQuote...]
             // Allow only whitespace after closing quote
-            if !trailing.allSatisfy({ $0 == " " }) {
+            if !trailing.allSatisfy({ $0 == Whitespace.space }) {
                 throw LexerError.trailingContent(location: location)
             }
         }

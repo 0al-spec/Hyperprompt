@@ -10,7 +10,11 @@ let package = Package(
         .executable(
             name: "hyperprompt",
             targets: ["CLI"]
-        )
+        ),
+        .library(
+            name: "HypercodeGrammar",
+            targets: ["HypercodeGrammar"]
+        ),
     ],
     dependencies: [
         .package(
@@ -24,14 +28,15 @@ let package = Package(
         .package(
             url: "https://github.com/SoundBlaster/SpecificationCore",
             from: "1.0.0"
-        )
+        ),
     ],
     targets: [
         // Core module
         .target(
             name: "Core",
             dependencies: [
-                .product(name: "Crypto", package: "swift-crypto")
+                .product(name: "Crypto", package: "swift-crypto"),
+                "SpecificationCore",
             ]
         ),
         .testTarget(
@@ -88,7 +93,7 @@ let package = Package(
                 "Resolver",
                 "Emitter",
                 "Statistics",
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
         .testTarget(
@@ -104,8 +109,21 @@ let package = Package(
                 "Parser",
                 "Resolver",
                 "Emitter",
-                "CLI"
+                "CLI",
             ]
-        )
+        ),
+
+        // Hypercode grammar specifications
+        .target(
+            name: "HypercodeGrammar",
+            dependencies: [
+                "Core",
+                "SpecificationCore",
+            ]
+        ),
+        .testTarget(
+            name: "HypercodeGrammarTests",
+            dependencies: ["HypercodeGrammar"]
+        ),
     ]
 )

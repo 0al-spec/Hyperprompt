@@ -1,4 +1,5 @@
 import XCTest
+
 @testable import Core
 
 /// Comprehensive tests for FileLoader functionality.
@@ -99,7 +100,7 @@ final class FileLoaderTests: XCTestCase {
 
         // Then: CRLF converted to LF
         XCTAssertEqual(normalized, "Line 1\nLine 2\nLine 3")
-        XCTAssertFalse(normalized.contains("\r"))
+        XCTAssertFalse(normalized.contains(LineBreak.carriageReturn))
     }
 
     func testNormalizeLineEndingsCR() {
@@ -111,7 +112,7 @@ final class FileLoaderTests: XCTestCase {
 
         // Then: CR converted to LF
         XCTAssertEqual(normalized, "Line 1\nLine 2\nLine 3")
-        XCTAssertFalse(normalized.contains("\r"))
+        XCTAssertFalse(normalized.contains(LineBreak.carriageReturn))
     }
 
     func testNormalizeLineEndingsMixed() {
@@ -123,7 +124,7 @@ final class FileLoaderTests: XCTestCase {
 
         // Then: All converted to LF
         XCTAssertEqual(normalized, "Line 1\nLine 2\nLine 3\nLine 4")
-        XCTAssertFalse(normalized.contains("\r"))
+        XCTAssertFalse(normalized.contains(LineBreak.carriageReturn))
     }
 
     func testNormalizeLineEndingsTrailingNewline() {
@@ -297,7 +298,7 @@ final class FileLoaderTests: XCTestCase {
             "/test/file.html",
             "/test/file",
             "/test/file.mdx",
-            "/test/file.hcc"
+            "/test/file.hcc",
         ]
 
         // When/Then: All throw IO error
@@ -404,6 +405,7 @@ final class FileLoaderTests: XCTestCase {
 
 extension Character {
     var isHexDigit: Bool {
-        return self.isASCII && (self.isNumber || ("a"..."f").contains(self) || ("A"..."F").contains(self))
+        return self.isASCII
+            && (self.isNumber || ("a"..."f").contains(self) || ("A"..."F").contains(self))
     }
 }

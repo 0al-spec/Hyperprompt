@@ -95,7 +95,8 @@ public struct ReferenceResolver {
         case "hc":
             return resolveHypercode(literal, node: node)
         default:
-            return .failure(.forbiddenExtension(path: literal, ext: ".\(ext)", location: node.location))
+            return .failure(
+                .forbiddenExtension(path: literal, ext: ".\(ext)", location: node.location))
         }
     }
 
@@ -202,8 +203,8 @@ public struct ReferenceResolver {
     /// - Returns: `true` if path contains traversal components
     public func containsPathTraversal(_ path: String) -> Bool {
         // Split by path separator and check each component
-        let components = path.split(separator: "/", omittingEmptySubsequences: false)
-        return components.contains { $0 == ".." }
+        let components = path.components(separatedBy: PathSegment.separators)
+        return components.contains { $0 == PathSegment.traversal }
     }
 
     /// Check if a file exists at the given path relative to root.
@@ -233,22 +234,30 @@ public struct ReferenceResolver {
     ///   - fullPath: Absolute path to validate
     ///   - location: Source location for error reporting
     /// - Returns: Success when the path is within root or a resolution error otherwise.
-    private func validateWithinRoot(fullPath: String, location: SourceLocation) -> Result<Void, ResolutionError> {
+    private func validateWithinRoot(fullPath: String, location: SourceLocation) -> Result<
+        Void, ResolutionError
+    > {
         do {
             let canonicalRoot = try fileSystem.canonicalizePath(rootPath)
             let canonicalTarget = try fileSystem.canonicalizePath(fullPath)
 
-            let isInsideRoot = canonicalTarget == canonicalRoot || canonicalTarget.hasPrefix(canonicalRoot + "/")
+            let isInsideRoot =
+                canonicalTarget == canonicalRoot || canonicalTarget.hasPrefix(canonicalRoot + "/")
 
             if isInsideRoot {
                 return .success(())
             }
 
-            return .failure(.outsideRoot(path: canonicalTarget, root: canonicalRoot, location: location))
+            return .failure(
+                .outsideRoot(path: canonicalTarget, root: canonicalRoot, location: location))
         } catch let compilerError as CompilerError {
-            return .failure(ResolutionError(message: compilerError.message, location: compilerError.location ?? location))
+            return .failure(
+                ResolutionError(
+                    message: compilerError.message, location: compilerError.location ?? location))
         } catch {
-            return .failure(ResolutionError(message: "Failed to canonicalize path: \(fullPath)", location: location))
+            return .failure(
+                ResolutionError(
+                    message: "Failed to canonicalize path: \(fullPath)", location: location))
         }
     }
 
@@ -260,7 +269,9 @@ public struct ReferenceResolver {
     ///   - path: The file path
     ///   - node: The source node for error location
     /// - Returns: Result with `.markdownFile` or error
-    private func resolveMarkdown(_ path: String, node: Node) -> Result<ResolutionKind, ResolutionError> {
+    private func resolveMarkdown(_ path: String, node: Node) -> Result<
+        ResolutionKind, ResolutionError
+    > {
         let fullPath = constructFullPath(path)
 
         switch validateWithinRoot(fullPath: fullPath, location: node.location) {
@@ -281,10 +292,11 @@ public struct ReferenceResolver {
                 // For now, return as inline text in lenient mode, error in strict
                 switch mode {
                 case .strict:
-                    return .failure(ResolutionError(
-                        message: "Failed to read file: \(path)",
-                        location: node.location
-                    ))
+                    return .failure(
+                        ResolutionError(
+                            message: "Failed to read file: \(path)",
+                            location: node.location
+                        ))
                 case .lenient:
                     return .success(.inlineText)
                 }
@@ -306,7 +318,9 @@ public struct ReferenceResolver {
     ///   - path: The file path
     ///   - node: The source node for error location
     /// - Returns: Result with `.hypercodeFile` or error
-    private mutating func resolveHypercode(_ path: String, node: Node) -> Result<ResolutionKind, ResolutionError> {
+    private mutating func resolveHypercode(_ path: String, node: Node) -> Result<
+        ResolutionKind, ResolutionError
+    > {
         let fullPath = constructFullPath(path)
 
         switch validateWithinRoot(fullPath: fullPath, location: node.location) {
@@ -332,14 +346,20 @@ public struct ReferenceResolver {
             do {
                 if let error = try tracker.checkAndPush(path: fullPath, location: node.location) {
                     dependencyTracker = tracker
-                    return .failure(ResolutionError(message: error.message, location: error.location))
+                    return .failure(
+                        ResolutionError(message: error.message, location: error.location))
                 }
                 dependencyTracker = tracker
                 pushedToTracker = true
             } catch let compilerError as CompilerError {
-                return .failure(ResolutionError(message: compilerError.message, location: compilerError.location))
+                return .failure(
+                    ResolutionError(
+                        message: compilerError.message, location: compilerError.location))
             } catch {
-                return .failure(ResolutionError(message: "Unknown error during cycle detection for \(path)", location: node.location))
+                return .failure(
+                    ResolutionError(
+                        message: "Unknown error during cycle detection for \(path)",
+                        location: node.location))
             }
         }
 
@@ -399,9 +419,13 @@ public struct ReferenceResolver {
                 return .failure(error)
             }
         } catch let compilerError as CompilerError {
-            return .failure(ResolutionError(message: compilerError.message, location: compilerError.location))
+            return .failure(
+                ResolutionError(message: compilerError.message, location: compilerError.location))
         } catch {
-            return .failure(ResolutionError(message: "Unknown error during Hypercode compilation at \(fullPath)", location: nil))
+            return .failure(
+                ResolutionError(
+                    message: "Unknown error during Hypercode compilation at \(fullPath)",
+                    location: nil))
         }
     }
 
@@ -424,7 +448,8 @@ public struct ReferenceResolver {
             contextLines.append("Resolution path: " + pathChain.joined(separator: " → "))
         }
 
-        return ResolutionError(message: contextLines.joined(separator: "\n"), location: error.location)
+        return ResolutionError(
+            message: contextLines.joined(separator: "\n"), location: error.location)
     }
 
     /// Merge a child AST into the parent tree with depth adjustments.
