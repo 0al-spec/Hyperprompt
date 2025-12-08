@@ -64,18 +64,27 @@ public struct ResolutionError: CompilerError, Equatable {
         )
     }
 
-    /// Create error for references that escape the configured root.
+    /// Create error for circular dependency.
     ///
     /// - Parameters:
-    ///   - path: The offending path
-    ///   - root: The allowed root directory
-    ///   - location: Source location of the reference
-    /// - Returns: ResolutionError describing the root containment violation
-    public static func outsideRoot(path: String, root: String, location: SourceLocation) -> ResolutionError {
-        ResolutionError(
-            message: "Referenced path is outside the compilation root.\n" +
-                     "Path: \(path)\n" +
-                     "Root: \(root)",
+    ///   - cyclePath: Array of file paths forming the cycle
+    ///   - location: Source location of the reference that caused the cycle
+    /// - Returns: ResolutionError for circular dependency
+    ///
+    /// ## Error Message Format
+    ///
+    /// ```
+    /// Circular dependency detected
+    ///   Cycle path: /root/a.hc → /root/b.hc → /root/c.hc → /root/a.hc
+    /// ```
+    ///
+    /// The cycle path shows the complete chain of file references that form
+    /// the circular dependency, making it easy to identify and fix the issue.
+    public static func circularDependency(cyclePath: [String], location: SourceLocation) -> ResolutionError {
+        let cycleDescription = cyclePath.joined(separator: " → ")
+        return ResolutionError(
+            message: "Circular dependency detected\n" +
+                     "  Cycle path: \(cycleDescription)",
             location: location
         )
     }
