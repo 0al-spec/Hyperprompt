@@ -259,7 +259,7 @@ c.hc: "b.hc"  // Cycle here, not at root
 #### A1: Define DependencyTracker Type
 **Effort:** 30 min | **Priority:** High | **Acceptance:** Type compiles, basic structure in place
 
-- [ ] Create `DependencyTracker.swift` file in Resolver module
+- [x] Create `DependencyTracker.swift` file in Resolver module
 - [x] Define `struct DependencyTracker` with visitation stack parameter
 - [x] Implement `isInCycle(path:)` → `Bool` method (simple stack membership check)
 - [x] Add initializer accepting optional stack for testing
@@ -275,7 +275,7 @@ c.hc: "b.hc"  // Cycle here, not at root
 #### A3: Define Error Type
 **Effort:** 30 min | **Priority:** High | **Acceptance:** Error type conforms to CompilerError
 
-- [x] Create `CircularDependencyError` struct conforming to `CompilerError`
+- [x] Create `CircularDependencyError` factory method in `ResolutionError`
 - [x] Implement `message` property formatting cycle path
 - [x] Implement `location` property (from resolver context)
 - [x] Implement `exitCode` property = 3 (Resolution Error)
@@ -283,10 +283,11 @@ c.hc: "b.hc"  // Cycle here, not at root
 #### A4: Integration with Resolver
 **Effort:** 30 min | **Priority:** High | **Acceptance:** Resolver calls DependencyTracker correctly
 
-- [x] Modify `ReferenceResolver.resolve()` to check cycles before `.hc` resolution
+- [x] Modify `ReferenceResolver` to use `DependencyTracker`
+- [x] Add `checkForCycle()` method to check cycles before `.hc` resolution
 - [x] Pass absolute canonical path to cycle check
 - [x] Return `CircularDependencyError` on detection
-- [x] Maintain stack correctly across recursive calls
+- [x] Maintain stack correctly with `pushVisitationStack()` and `popVisitationStack()`
 
 ### Phase B: Testing & Refinement (2 hours)
 
@@ -319,8 +320,8 @@ c.hc: "b.hc"  // Cycle here, not at root
 #### B4: Code Coverage & Documentation
 **Effort:** 15 min | **Priority:** Medium | **Acceptance:** >90% coverage, inline comments
 
-- [x] Measure code coverage for DependencyTracker
-- [x] Add inline comments explaining stack mechanics
+- [x] Comprehensive inline comments added to DependencyTracker
+- [x] Inline comments explaining stack mechanics
 - [x] Document assumptions (e.g., paths are canonicalized)
 - [x] Document integration contract with ReferenceResolver
 
