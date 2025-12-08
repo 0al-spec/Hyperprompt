@@ -33,12 +33,7 @@ public struct ReferenceResolver {
     public let mode: ResolutionMode
 
     /// Dependency tracker for circular dependency detection.
-    private let dependencyTracker: DependencyTracker
-
-    /// Visitation stack for tracking the current path through file tree.
-    /// Used by DependencyTracker to detect circular dependencies.
-    /// Stack contains canonical absolute paths of files currently being processed.
-    public private(set) var visitationStack: [String] = []
+    public var dependencyTracker: DependencyTracker?
 
     /// Initialize a new reference resolver.
     ///
@@ -46,12 +41,11 @@ public struct ReferenceResolver {
     ///   - fileSystem: File system abstraction for file operations
     ///   - rootPath: Root directory for resolving relative file paths
     ///   - mode: Resolution mode (strict or lenient)
-    ///   - dependencyTracker: Dependency tracker for cycle detection (default: new instance)
     public init(
         fileSystem: FileSystem,
         rootPath: String,
         mode: ResolutionMode,
-        dependencyTracker: DependencyTracker = DependencyTracker()
+        dependencyTracker: DependencyTracker? = nil
     ) {
         self.fileSystem = fileSystem
         self.rootPath = rootPath
@@ -389,73 +383,126 @@ public struct ReferenceResolver {
 
     // MARK: - Integration Hooks for B2, B3, B4
 
-    /// Check if resolving a path would create a circular dependency.
+    /// Recursively compile a Hypercode file into a resolved AST.
     ///
-    /// This method checks whether the given path is already in the visitation
-    /// stack, which would indicate a circular dependency.
+    /// - Parameter fullPath: Absolute path to the `.hc` file.
+    /// - Returns: Root node of the compiled AST or a resolution error.
+    private mutating func compileHypercode(at fullPath: String) -> Result<Node, ResolutionError> {
+        do {
+            // Parse the Hypercode file into an AST.
+            let lexer = Lexer(fileSystem: fileSystem)
+            let tokens = try lexer.tokenize(fullPath)
+            let parser = Parser()
+
+            let program: Program
+            switch parser.parse(tokens: tokens) {
+            case .success(let parsedProgram):
+                program = Program(root: parsedProgram.root, sourceFile: fullPath)
+            case .failure(let error):
+                return .failure(ResolutionError(message: error.message, location: error.location))
+            }
+
+            // Resolve references within the nested AST using the same resolver settings.
+            var childResolver = ReferenceResolver(
+                fileSystem: fileSystem,
+                rootPath: rootPath,
+                mode: mode,
+                dependencyTracker: dependencyTracker
+            )
+
+            switch childResolver.resolveTree(root: program.root) {
+            case .success:
+                dependencyTracker = childResolver.dependencyTracker
+                return .success(program.root)
+            case .failure(let error):
+                dependencyTracker = childResolver.dependencyTracker
+                return .failure(error)
+            }
+        } catch let compilerError as CompilerError {
+            return .failure(
+                ResolutionError(message: compilerError.message, location: compilerError.location))
+        } catch {
+            return .failure(
+                ResolutionError(
+                    message: "Unknown error during Hypercode compilation at \(fullPath)",
+                    location: nil))
+        }
+    }
+
+    /// Attach resolution stack context to a nested error.
     ///
     /// - Parameters:
-    ///   - path: The file path to check (will be normalized)
-    ///   - location: Source location for error reporting
-    /// - Returns: ResolutionError if cycle detected, nil otherwise
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// // Before resolving a .hc file reference
-    /// if let error = resolver.checkForCycle(path: "a.hc", location: node.location) {
-    ///     return .failure(error)
-    /// }
-    /// ```
-    public func checkForCycle(path: String, location: SourceLocation) -> ResolutionError? {
-        let normalized = constructFullPath(path)
-        if dependencyTracker.isInCycle(path: normalized, stack: visitationStack) {
-            let cyclePath = dependencyTracker.getCyclePath(
-                stack: visitationStack,
-                offendingPath: normalized
-            )
-            return .circularDependency(cyclePath: cyclePath, location: location)
+    ///   - error: The original resolution error.
+    ///   - fullPath: The nested file path that failed to compile.
+    /// - Returns: A new ResolutionError with path chain appended for diagnostics.
+    private func contextualize(error: ResolutionError, for fullPath: String) -> ResolutionError {
+        var contextLines: [String] = [error.message]
+
+        var pathChain: [String] = []
+        if let tracker = dependencyTracker {
+            pathChain.append(contentsOf: tracker.stack)
         }
-        return nil
-    }
+        pathChain.append(fullPath)
 
-    /// Push a path onto the visitation stack.
-    ///
-    /// Call this method before recursively processing a `.hc` file.
-    /// The path will be normalized to an absolute path before pushing.
-    ///
-    /// - Parameter path: The file path being visited
-    ///
-    /// ## Important
-    ///
-    /// Always call `popVisitationStack()` after processing completes,
-    /// typically using `defer`:
-    ///
-    /// ```swift
-    /// resolver.pushVisitationStack(path: "a.hc")
-    /// defer { resolver.popVisitationStack() }
-    /// // ... recursive processing ...
-    /// ```
-    public mutating func pushVisitationStack(path: String) {
-        let normalized = constructFullPath(path)
-        visitationStack.append(normalized)
-    }
-
-    /// Pop the most recent path from the visitation stack.
-    ///
-    /// Call this method after completing processing of a `.hc` file.
-    /// Use `defer` to ensure this is always called even if errors occur.
-    public mutating func popVisitationStack() {
-        guard !visitationStack.isEmpty else {
-            return
+        if !pathChain.isEmpty {
+            contextLines.append("Resolution path: " + pathChain.joined(separator: " → "))
         }
-        visitationStack.removeLast()
+
+        return ResolutionError(
+            message: contextLines.joined(separator: "\n"), location: error.location)
     }
 
-    /// Clear the visitation stack (for new resolution context).
+    /// Merge a child AST into the parent tree with depth adjustments.
     ///
-    /// Call this method when starting resolution of a new root file.
-    public mutating func clearVisitationStack() {
-        visitationStack.removeAll()
+    /// - Parameters:
+    ///   - childRoot: Root node of the child AST to merge.
+    ///   - parent: The node that referenced the child AST.
+    /// - Returns: A new root node whose subtree depths are offset relative to the parent.
+    private func merge(childRoot: Node, into parent: Node) -> Node {
+        clone(node: childRoot, depthOffset: parent.depth + 1)
+    }
+
+    /// Create a deep copy of a node applying a depth offset throughout the subtree.
+    ///
+    /// - Parameters:
+    ///   - node: Node to clone.
+    ///   - depthOffset: Depth adjustment applied to the node and all descendants.
+    /// - Returns: Cloned node with adjusted depths and preserved source locations.
+    private func clone(node: Node, depthOffset: Int) -> Node {
+        let clonedChildren = node.children.map { clone(node: $0, depthOffset: depthOffset) }
+
+        let clonedResolution: ResolutionKind?
+        if let resolution = node.resolution {
+            switch resolution {
+            case .inlineText:
+                clonedResolution = .inlineText
+            case .markdownFile(let path, let content):
+                clonedResolution = .markdownFile(path: path, content: content)
+            case .hypercodeFile(let path, let ast):
+                let adjustedAst = clone(node: ast, depthOffset: depthOffset)
+                clonedResolution = .hypercodeFile(path: path, ast: adjustedAst)
+            case .forbidden(let ext):
+                clonedResolution = .forbidden(extension: ext)
+            }
+        } else {
+            clonedResolution = nil
+        }
+
+        return Node(
+            literal: node.literal,
+            depth: node.depth + depthOffset,
+            location: node.location,
+            children: clonedChildren,
+            resolution: clonedResolution
+        )
+    }
+
+    // MARK: - Deprecated visitation helpers
+
+    /// Clear visited paths (for new resolution context).
+    ///
+    /// Maintained for backward compatibility with earlier workflows.
+    public mutating func clearVisited() {
+        dependencyTracker = nil
     }
 }
