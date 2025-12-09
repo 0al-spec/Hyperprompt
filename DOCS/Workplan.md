@@ -423,19 +423,20 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 11 hours
 **Track:** A (Core Compiler)
 
-### C1: Heading Adjuster **[P1]** **INPROGRESS**
+### C1: Heading Adjuster **[P1]**
 **Dependencies:** A2
 **Estimated:** 6 hours
+**Status:** ✅ Completed on 2025-12-09
 
-- [ ] **[P1, depends: A2]** Parse ATX-style headings (# prefix)
-- [ ] **[P1, depends: A2]** Parse Setext-style headings (underlines with = or -)
-- [ ] **[P1, depends: A2]** Compute adjusted heading level (original + offset)
-- [ ] **[P1, depends: A2]** Handle overflow beyond H6 (convert to **bold**)
-- [ ] **[P2, depends: A2]** Preserve heading attributes and trailing content
-- [ ] **[P1, depends: A2]** Normalize line endings in embedded content to LF
-- [ ] **[P1, depends: A2]** Write tests for all heading styles and edge cases
+- [x] **[P1, depends: A2]** Parse ATX-style headings (# prefix)
+- [x] **[P1, depends: A2]** Parse Setext-style headings (underlines with = or -)
+- [x] **[P1, depends: A2]** Compute adjusted heading level (original + offset)
+- [x] **[P1, depends: A2]** Handle overflow beyond H6 (convert to **bold**)
+- [x] **[P2, depends: A2]** Preserve heading attributes and trailing content
+- [x] **[P1, depends: A2]** Normalize line endings in embedded content to LF
+- [x] **[P1, depends: A2]** Write tests for all heading styles and edge cases
 
-**Acceptance Criteria:** All heading styles correctly adjusted, overflow handled, test corpus passes
+**Acceptance Criteria:** ✅ All heading styles correctly adjusted, overflow handled, test corpus passes
 
 **Blocks:** C2 (emitter uses heading adjuster)
 
