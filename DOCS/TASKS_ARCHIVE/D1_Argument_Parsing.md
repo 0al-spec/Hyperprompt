@@ -786,3 +786,6 @@ Integration Readiness:
 [ ] All fields present for D2 Driver consumption
 ```
 
+---
+
+**Archived:** 2025-12-09
