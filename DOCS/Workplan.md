@@ -487,28 +487,30 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 13 hours
 **Track:** A (Core Compiler)
 
-### D1: Argument Parsing **[P1]** **INPROGRESS**
-**Dependencies:** A1
+### D1: Argument Parsing **[P1]**
+**Dependencies:** A1 ✅
 **Estimated:** 4 hours
-**Status:** Selected on 2025-12-09
+**Status:** ✅ Completed on 2025-12-09
 
-- [ ] **[P1, depends: A1]** Define command structure with swift-argument-parser
-- [ ] **[P1, depends: A1]** Implement `@Argument` for input file
-- [ ] **[P1, depends: A1]** Implement `--output, -o` option
-- [ ] **[P1, depends: A1]** Implement `--manifest, -m` option
-- [ ] **[P1, depends: A1]** Implement `--root, -r` option
-- [ ] **[P1, depends: A1]** Implement `--strict` flag (default)
-- [ ] **[P1, depends: A1]** Implement `--lenient` flag
-- [ ] **[P1, depends: A1]** Implement `--stats` flag
-- [ ] **[P1, depends: A1]** Implement `--dry-run` flag
-- [ ] **[P1, depends: A1]** Implement `--verbose, -v` flag
-- [ ] **[P1, depends: A1]** Implement `--version` flag
-- [ ] **[P1, depends: A1]** Implement `--help, -h` flag
-- [ ] **[P1, depends: A1]** Validate argument combinations (strict XOR lenient)
-- [ ] **[P1, depends: A1]** Generate help text
-- [ ] **[P1, depends: A1]** Write argument parsing tests
+- [x] **[P1, depends: A1]** Define command structure with swift-argument-parser
+- [x] **[P1, depends: A1]** Implement `@Argument` for input file
+- [x] **[P1, depends: A1]** Implement `--output, -o` option
+- [x] **[P1, depends: A1]** Implement `--manifest, -m` option
+- [x] **[P1, depends: A1]** Implement `--root, -r` option
+- [x] **[P1, depends: A1]** Implement `--strict` flag (default)
+- [x] **[P1, depends: A1]** Implement `--lenient` flag
+- [x] **[P1, depends: A1]** Implement `--stats` flag
+- [x] **[P1, depends: A1]** Implement `--dry-run` flag
+- [x] **[P1, depends: A1]** Implement `--verbose, -v` flag
+- [x] **[P1, depends: A1]** Implement `--version` flag
+- [x] **[P1, depends: A1]** Implement `--help, -h` flag
+- [x] **[P1, depends: A1]** Validate argument combinations (strict XOR lenient)
+- [x] **[P1, depends: A1]** Generate help text
+- [x] **[P1, depends: A1]** Write argument parsing tests
 
-**Acceptance Criteria:** All documented arguments recognized and validated, help text accurate
+**Acceptance Criteria:** ✅ All documented arguments recognized and validated, help text accurate
+
+**Completion Note (2025-12-09):** Implemented full CLI argument parsing using swift-argument-parser. All 11 arguments (1 positional, 3 options, 4 action flags, 2 system flags) functional. 38 comprehensive unit tests added (363 total). CompilerArguments struct created for D2 integration.
 
 **Blocks:** D2 (driver needs argument parsing)
 
