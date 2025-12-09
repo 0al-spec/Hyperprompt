@@ -4,6 +4,8 @@
 
 - [A1 — Project Initialization](./A1_Project_Initialization.md) ✓ 2025-12-04
 - [A2 — Core Types Implementation](./A2_Core_Types_Implementation.md) ✓ 2025-12-05
+- [A3 — Domain Types for Specifications](./A3_Domain_Types_for_Specifications.md) ✓ 2025-12-08
+  - [Summary Report](./A3-summary.md)
 
 ## Phase 2: Lexer & Parser
 
