@@ -465,6 +465,7 @@ Non-blocking: Can develop in parallel with Track A
 ### C3: Manifest Generator **[P1]**
 **Dependencies:** B3
 **Estimated:** 3 hours
+**Status:** 🔄 INPROGRESS
 
 - [ ] **[P1, depends: B3]** Implement `Manifest` struct (timestamp, version, root, sources)
 - [ ] **[P1, depends: B3]** Generate ISO 8601 timestamp

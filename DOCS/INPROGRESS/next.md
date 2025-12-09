@@ -1,18 +1,18 @@
-# Next Task: C2  Markdown Emitter
+# Next Task: C3  Manifest Generator
 
-**Priority:** P0
+**Priority:** P1
 **Phase:** Phase 5 (Markdown Emission)
-**Effort:** 8 hours
-**Dependencies:** B4 (Recursive Compilation), C1 (Heading Adjuster)
-**Status:** ✅ Completed on 2025-12-09
+**Effort:** 3 hours
+**Dependencies:** B3 (File Loader & Caching)
+**Status:** Selected
 
 ## Description
 
-Implement tree traversal for output generation, embed file content with adjusted headings, and ensure output follows Markdown conventions. This is a critical component that transforms the compiled AST into the final output document.
+Implement the manifest generator that creates JSON metadata for all processed source files with deterministic key ordering and proper file metadata (path, SHA256, size, type).
 
 ## Next Step
 
 Run PLAN command to generate detailed PRD:
 ```
-claude "K?>;=8 :><0=4C PLAN"
+$ claude "K?>;=8 :><0=4C PLAN"
 ```
