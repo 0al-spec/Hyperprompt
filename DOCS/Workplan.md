@@ -487,9 +487,10 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 13 hours
 **Track:** A (Core Compiler)
 
-### D1: Argument Parsing **[P1]**
+### D1: Argument Parsing **[P1]** **INPROGRESS**
 **Dependencies:** A1
 **Estimated:** 4 hours
+**Status:** Selected on 2025-12-09
 
 - [ ] **[P1, depends: A1]** Define command structure with swift-argument-parser
 - [ ] **[P1, depends: A1]** Implement `@Argument` for input file
