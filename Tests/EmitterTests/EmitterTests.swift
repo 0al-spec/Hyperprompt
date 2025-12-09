@@ -1,10 +1,22 @@
 import XCTest
+@testable import Emitter
 
-/// Placeholder test file for Emitter module
-/// Tests will be added when Emitter is implemented in Phase 5
+/// Main test suite for Emitter module
+/// HeadingAdjuster tests are in HeadingAdjusterTests.swift
 final class EmitterTests: XCTestCase {
-    func testPlaceholder() {
-        // Placeholder test
-        XCTAssertTrue(true)
+
+    // MARK: - Integration Smoke Tests
+
+    func testHeadingAdjusterExists() {
+        // Verify HeadingAdjuster can be instantiated
+        let adjuster = HeadingAdjuster()
+        XCTAssertNotNil(adjuster)
+    }
+
+    func testHeadingAdjusterBasicFunctionality() {
+        // Quick smoke test for basic functionality
+        let adjuster = HeadingAdjuster()
+        let result = adjuster.adjustHeadings(in: "# Test", offset: 1)
+        XCTAssertEqual(result, "## Test\n")
     }
 }
