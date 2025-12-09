@@ -27,3 +27,5 @@
 - [C1 — Heading Adjuster](./C1_Heading_Adjuster.md) ✓ 2025-12-09
 - [C2 — Markdown Emitter](./C2_Markdown_Emitter.md) ✓ 2025-12-09
   - [Summary Report](./C2-summary.md)
+- [C3 — Manifest Generator](./C3_Manifest_Generator.md) ✓ 2025-12-09
+  - [Summary Report](./C3-summary.md)
