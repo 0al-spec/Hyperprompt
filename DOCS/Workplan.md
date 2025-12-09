@@ -445,6 +445,7 @@ Non-blocking: Can develop in parallel with Track A
 ### C2: Markdown Emitter **[P0]**
 **Dependencies:** B4, C1
 **Estimated:** 8 hours
+**Status:** **INPROGRESS**
 
 - [ ] **[P0, depends: B4]** Implement tree traversal for output generation
 - [ ] **[P0, depends: B4]** Generate headings from node content or file names
