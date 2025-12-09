@@ -445,16 +445,16 @@ Non-blocking: Can develop in parallel with Track A
 ### C2: Markdown Emitter **[P0]**
 **Dependencies:** B4, C1
 **Estimated:** 8 hours
-**Status:** **INPROGRESS**
+**Status:** ✅ Completed on 2025-12-09
 
-- [ ] **[P0, depends: B4]** Implement tree traversal for output generation
-- [ ] **[P0, depends: B4]** Generate headings from node content or file names
-- [ ] **[P0, depends: B4]** Use effective depth for nested embeddings (parent + node depth)
-- [ ] **[P0, depends: B4, C1]** Embed file content with adjusted headings
-- [ ] **[P1, depends: B4]** Insert blank lines between sibling sections
-- [ ] **[P0, depends: B4]** Handle inline text literals as body content
-- [ ] **[P0, depends: B4]** Ensure final output ends with exactly one LF
-- [ ] **[P1, depends: B4]** Write emitter tests matching expected output
+- [x] **[P0, depends: B4]** Implement tree traversal for output generation
+- [x] **[P0, depends: B4]** Generate headings from node content or file names
+- [x] **[P0, depends: B4]** Use effective depth for nested embeddings (parent + node depth)
+- [x] **[P0, depends: B4, C1]** Embed file content with adjusted headings
+- [x] **[P1, depends: B4]** Insert blank lines between sibling sections
+- [x] **[P0, depends: B4]** Handle inline text literals as body content
+- [x] **[P0, depends: B4]** Ensure final output ends with exactly one LF
+- [x] **[P1, depends: B4]** Write emitter tests matching expected output
 
 **Acceptance Criteria:** Emitter produces valid Markdown matching expected output for all test cases
 
