@@ -128,3 +128,6 @@
 - [x] Factory methods exporting composed specs for lexer/resolver consumption.
 - [x] Unit tests (≥45 total cases across spec groups) passing via `swift test`.
 - [x] Documentation within module mirrors terminology in Workplan and PRD.
+
+---
+**Archived:** 2025-12-09

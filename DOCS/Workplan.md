@@ -181,16 +181,16 @@ Non-blocking: Can develop in parallel with Track A
 **Dependencies:** A1, A2
 **Estimated:** 3 hours
 **Track:** B (Specifications) — can start in parallel with A4
-**Status:** **INPROGRESS**
+**Status:** ✅ Completed on 2025-12-08
 
-- [ ] **[P1, depends: A1]** Create `HypercodeGrammar` module with SpecificationCore dependency
-- [ ] **[P1, depends: A2]** Define `RawLine` struct (text, lineNumber, filePath)
-- [ ] **[P1, depends: A2]** Define `LineKind` enum (blank, comment, node)
-- [ ] **[P1, depends: A2]** Define `ParsedLine` struct (kind, indentSpaces, depth, literal, location)
-- [ ] **[P1, depends: A2]** Define `PathKind` enum (allowed, forbidden, invalid)
-- [ ] **[P1, depends: A2]** Write unit tests for domain type conversions
+- [x] **[P1, depends: A1]** Create `HypercodeGrammar` module with SpecificationCore dependency
+- [x] **[P1, depends: A2]** Define `RawLine` struct (text, lineNumber, filePath)
+- [x] **[P1, depends: A2]** Define `LineKind` enum (blank, comment, node)
+- [x] **[P1, depends: A2]** Define `ParsedLine` struct (kind, indentSpaces, depth, literal, location)
+- [x] **[P1, depends: A2]** Define `PathKind` enum (allowed, forbidden, invalid)
+- [x] **[P1, depends: A2]** Write unit tests for domain type conversions
 
-**Acceptance Criteria:** Domain types properly model lexer/resolver input/output, tests verify correct behavior
+**Acceptance Criteria:** ✅ Domain types properly model lexer/resolver input/output, tests verify correct behavior
 
 **Blocks:** Phase 3 (Specifications)
 
