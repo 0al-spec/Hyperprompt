@@ -17,7 +17,7 @@ jobs:
 
       - name: Cache Swift dependencies
         id: cache-spm
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             .build
@@ -28,7 +28,6 @@ jobs:
             ${{ runner.os }}-spm-
 
       - name: Install Swift
-        if: steps.cache-spm.outputs.cache-hit != 'true'
         run: |
           # Check if swift is already available
           if ! command -v swift &> /dev/null; then
@@ -40,16 +39,13 @@ jobs:
           fi
           swift --version
 
-      - name: Build (with cache)
-        if: steps.cache-spm.outputs.cache-hit == 'true'
+      - name: Build
         run: |
-          echo "Using cached dependencies..."
-          time swift build
-
-      - name: Build (without cache)
-        if: steps.cache-spm.outputs.cache-hit != 'true'
-        run: |
-          echo "Building from scratch (no cache)..."
+          if [ "${{ steps.cache-spm.outputs.cache-hit }}" == "true" ]; then
+            echo "✓ Using cached dependencies"
+          else
+            echo "Building from scratch (no cache)"
+          fi
           time swift build
 
       - name: Run tests

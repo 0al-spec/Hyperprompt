@@ -33,7 +33,7 @@ echo ""
 
 # Step 1: Check if cache exists
 if [ -f "${CACHE_DIR}/${CACHE_NAME}.tar.gz" ]; then
-    CACHE_DATE=$(stat -c %y "${CACHE_DIR}/${CACHE_NAME}.tar.gz" 2>/dev/null || stat -f "%Sm" "${CACHE_DIR}/${CACHE_NAME}.tar.gz" 2>/dev/null)
+    CACHE_DATE=$(stat -f "%Sm" "${CACHE_DIR}/${CACHE_NAME}.tar.gz" 2>/dev/null || stat -c %y "${CACHE_DIR}/${CACHE_NAME}.tar.gz" 2>/dev/null)
     CACHE_SIZE=$(du -sh "${CACHE_DIR}/${CACHE_NAME}.tar.gz" | cut -f1)
     echo -e "${YELLOW}Existing cache found:${NC}"
     echo "  File: ${CACHE_DIR}/${CACHE_NAME}.tar.gz"

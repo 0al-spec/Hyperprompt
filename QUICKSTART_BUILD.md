@@ -1,6 +1,6 @@
 # Quick Start: Fast Builds with Cache
 
-This guide shows how to speed up Hyperprompt builds from **82 seconds to 5-10 seconds** using build cache.
+This guide shows how to speed up Hyperprompt builds from **82 seconds to ~30 seconds (first build) or ~2 seconds (incremental)** using build cache.
 
 ---
 
@@ -24,7 +24,7 @@ swift build
 # On a fresh clone or after cleaning:
 ./.github/scripts/restore-build-cache.sh
 
-# Now build (takes only 5-10s! ⚡)
+# Now build (takes only ~30s first time, then ~2s! ⚡)
 swift build
 ```
 
@@ -37,7 +37,7 @@ swift build
 | Scenario | Time | Speedup |
 |----------|------|---------|
 | Clean build (no cache) | **82 seconds** | 1x baseline |
-| With cache restored | **5-10 seconds** | **8-16x faster** ⚡ |
+| First build with cache | **~30 seconds** | **2.7x faster** ⚡ |
 | Incremental build | **2-5 seconds** | **16-41x faster** ⚡⚡ |
 
 ---
@@ -116,7 +116,7 @@ cd Hyperprompt
 ./.github/scripts/restore-build-cache.sh
 
 # 3. Build instantly! ⚡
-swift build  # Only 5-10 seconds
+swift build  # Only ~30 seconds first time, then ~2 seconds
 ```
 
 ### Scenario 3: CI/CD Pipeline
@@ -272,7 +272,7 @@ After setting up cache:
 
 1. **Verify speedup:**
    ```bash
-   time swift build  # Should be 5-10s
+   time swift build  # Should be ~30s first, ~2s incremental
    ```
 
 2. **Share with team:**
