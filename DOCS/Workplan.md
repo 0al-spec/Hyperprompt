@@ -423,7 +423,7 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 11 hours
 **Track:** A (Core Compiler)
 
-### C1: Heading Adjuster **[P1]**
+### C1: Heading Adjuster **[P1]** **INPROGRESS**
 **Dependencies:** A2
 **Estimated:** 6 hours
 
