@@ -563,3 +563,7 @@ Output Markdown
 ---
 
 **Ready for implementation.**
+
+---
+
+**Archived:** 2025-12-09

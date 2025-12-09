@@ -21,3 +21,7 @@
 - [B3 — File Loader & Caching](./B3_File_Loader_Caching.md) ✓ 2025-12-06
 - [B4 — Recursive Compilation](./B4_Recursive_Compilation.md) ✓ 2025-12-06
   - [Summary Report](./B4-summary.md)
+
+## Phase 5: Markdown Emission
+
+- [C1 — Heading Adjuster](./C1_Heading_Adjuster.md) ✓ 2025-12-09

@@ -29,8 +29,8 @@ Move completed PRDs from `INPROGRESS/` to `TASKS_ARCHIVE/` and remove from `next
 
 - Scan `INPROGRESS/*.md` for PRD files
 - Check `Workplan.md`: task marked `[x]`
-- Skip if task currently active in `next.md` (not marked completed)
-- Add to candidates
+- Add to candidates (will remove from `next.md` if present)
+- Archive regardless of whether task is currently active in `next.md`
 
 ### 2. Archive Each Task
 
