@@ -1,28 +1,18 @@
-# Next Task: D1 — Argument Parsing
+# Next Task: D2  Compiler Driver
 
-**Priority:** P1
+**Priority:** P0
 **Phase:** Phase 6 (CLI & Integration)
-**Effort:** 4 hours
-**Dependencies:** A1
-**Status:** ✅ Completed on 2025-12-09
+**Effort:** 6 hours
+**Dependencies:** C2 , C3 , D1 
+**Status:** Selected
 
 ## Description
 
-Define command-line argument parsing using swift-argument-parser. Implement options for input file, output path, manifest path, root directory, compilation mode (strict/lenient), and flags for verbose output, statistics, dry-run, and version display. Validate argument combinations to ensure only one of strict/lenient is specified.
-
-## Completion Summary
-
-✅ All 12 implementation subtasks completed across 6 phases
-✅ Hyperprompt command fully functional with all arguments
-✅ CompilerArguments struct created for D2 driver integration
-✅ 38 comprehensive unit tests pass (363 total tests)
-✅ Build successful, zero warnings
-✅ Help and version flags working
-✅ All argument combinations validated
+Implement the compiler driver that orchestrates the complete compilation pipeline (parse � resolve � emit � manifest), integrating all components together. The driver will handle dry-run mode, verbose logging, and end-to-end compilation testing with the test corpus.
 
 ## Next Step
 
-Run SELECT command to choose next task:
+Run PLAN command to generate detailed PRD:
 ```bash
-$ claude "Выполни команду SELECT"
+$ claude "K?>;=8 :><0=4C PLAN"
 ```

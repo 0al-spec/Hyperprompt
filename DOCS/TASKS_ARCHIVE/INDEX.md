@@ -29,3 +29,8 @@
   - [Summary Report](./C2-summary.md)
 - [C3 — Manifest Generator](./C3_Manifest_Generator.md) ✓ 2025-12-09
   - [Summary Report](./C3-summary.md)
+
+## Phase 6: CLI & Integration
+
+- [D1 — Argument Parsing](./D1_Argument_Parsing.md) ✓ 2025-12-09
+  - [Summary Report](./D1-summary.md)
