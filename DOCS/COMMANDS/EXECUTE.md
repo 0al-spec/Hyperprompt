@@ -143,7 +143,28 @@ If `--interactive` mode:
 
 **CRITICAL:** Every EXECUTE cycle MUST run `swift build` and `swift test` before committing!
 
-1. **MANDATORY: Run build and test commands:**
+1. **OPTIONAL: Restore build cache for faster compilation:**
+   ```bash
+   # Speeds up compilation from 82s to ~5-10s (8-16x faster)
+   ./.github/scripts/restore-build-cache.sh
+   ```
+
+   **What this does:**
+   - Restores pre-built Swift package dependencies from `.build-cache/`
+   - Eliminates dependency resolution and compilation time
+   - Uses platform-specific cache: `swift-build-cache-{OS}-{ARCH}.tar.gz`
+
+   **If cache doesn't exist:**
+   - Script will show available caches or indicate none exist
+   - First build will be slower (82s), but subsequent builds faster (2-5s incremental)
+   - After successful build, create cache: `./.github/scripts/create-build-cache.sh`
+
+   **Notes:**
+   - Cache is stored in `.build-cache/` (tracked via Git LFS)
+   - Safe to skip if cache not available — build will work normally
+   - Update cache after changing `Package.swift`: `./.github/scripts/update-build-cache.sh`
+
+2. **MANDATORY: Run build and test commands:**
    ```bash
    # REQUIRED - Must pass before commit
    swift build 2>&1
@@ -160,11 +181,17 @@ If `--interactive` mode:
    - Do NOT commit code with failing tests
    - Re-run tests until all pass
 
-2. **Extract additional verification commands from PRD §3.3:**
+   **After successful first build (if no cache was used):**
+   ```bash
+   # Create cache for future use (saves 70+ seconds on next build)
+   ./.github/scripts/create-build-cache.sh
+   ```
+
+3. **Extract additional verification commands from PRD §3.3:**
    - Parse "Acceptance Criteria per Task" section
    - Find validation commands (ls, grep, etc.)
 
-3. **Run each verification command:**
+4. **Run each verification command:**
    ```bash
    # Example for A1:
    swift package resolve
@@ -174,7 +201,7 @@ If `--interactive` mode:
    cat Package.swift | grep "swift-crypto"  # Check dependency
    ```
 
-4. **Collect results:**
+5. **Collect results:**
    ```
    Acceptance Criteria Validation:
    [✓] swift package resolve — PASS (3 dependencies resolved)
@@ -194,7 +221,7 @@ If `--interactive` mode:
    Overall: 11/12 items verified (92%)
    ```
 
-5. **Generate completion report:**
+6. **Generate completion report:**
    ```
    ╔════════════════════════════════════════════════════════════╗
    ║  VALIDATION REPORT: {TASK_ID}                              ║
@@ -209,7 +236,7 @@ If `--interactive` mode:
    Status: READY TO COMMIT
    ```
 
-6. **If validation fails:**
+7. **If validation fails:**
    ```
    ✗ VALIDATION FAILED
 
