@@ -495,6 +495,17 @@ final class CompilerDriverTests: XCTestCase {
         let input = fixtureURL("Invalid/I09.hc")
         let output = tempURL("I09.md")
 
+        // Make the file unreadable to trigger I/O error
+        let fileManager = FileManager.default
+        let originalPermissions = try fileManager.attributesOfItem(atPath: input.path)[.posixPermissions] as? NSNumber
+        defer {
+            // Restore original permissions after test
+            if let perms = originalPermissions {
+                try? fileManager.setAttributes([.posixPermissions: perms], ofItemAtPath: input.path)
+            }
+        }
+        try fileManager.setAttributes([.posixPermissions: NSNumber(value: 0o000)], ofItemAtPath: input.path)
+
         XCTAssertThrowsError(try compileFile(input, outputPath: output)) { error in
             guard let compilerError = error as? CompilerError else {
                 XCTFail("Expected CompilerError, got \(error)")
