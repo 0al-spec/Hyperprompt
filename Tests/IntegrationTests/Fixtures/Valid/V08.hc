@@ -1,4 +1,4 @@
 "Introduction"
     "Inline text node"
-    details.md
+    "details.md"
     "Another inline node"

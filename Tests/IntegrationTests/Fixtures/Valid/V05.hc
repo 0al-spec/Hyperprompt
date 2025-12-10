@@ -1,2 +1,2 @@
 "Overview"
-    details/summary.md
+    "details/summary.md"
