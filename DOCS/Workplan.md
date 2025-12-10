@@ -623,6 +623,7 @@ Non-blocking: Can develop in parallel with Track A
 ### E1: Test Corpus Implementation **[P0]**
 **Dependencies:** D2 (needs working compiler)
 **Estimated:** 8 hours
+**Status:** INPROGRESS
 
 - [ ] **[P1, depends: D2]** Create test corpus directory structure
 - [ ] **[P0, depends: D2]** Implement Valid Input Tests (V01-V14):
