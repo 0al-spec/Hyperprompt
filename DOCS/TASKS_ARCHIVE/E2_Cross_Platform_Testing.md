@@ -317,3 +317,7 @@ If cross-platform differences detected:
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-12-10 | Claude | Initial PRD for cross-platform testing |
+
+---
+
+**Archived:** 2025-12-11

@@ -1,20 +1,6 @@
-# Next Task: E2  Cross-Platform Testing
+# Next Task: (none — all tasks archived, ready for next phase)
 
-**Priority:** P1
-**Phase:** Phase 8 (Testing & Quality Assurance)
-**Effort:** 4 hours
-**Dependencies:** E1 
-**Status:** ✅ Complete (2/2 in-scope platforms tested — Linux ✅, macOS ARM64 ✅)
-**Date Started:** 2025-12-11
-**Date Completed:** 2025-12-11
-
-## Description
-
-Test the compiled Hyperprompt compiler on multiple platforms (macOS Intel, Apple Silicon, Ubuntu 22.04) to ensure identical binary output and correct LF line endings across all systems. Verify deterministic compilation with byte-for-byte identical outputs on all platforms.
-
-## Next Step
-
-Run PLAN command to generate detailed PRD:
+To select the next task to work on, run:
 ```bash
-$ claude "K?>;=8 :><0=4C PLAN"
+$ claude "Выполни команду SELECT"
 ```

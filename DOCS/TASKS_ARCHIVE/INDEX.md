@@ -43,3 +43,6 @@
 - [E1 — Test Corpus Implementation](./E1_Test_Corpus_Implementation.md) ✓ 2025-12-10
   - [Summary Report](./E1-summary.md)
   - [Test Results](./E1-test-results-final.md)
+- [E2 — Cross-Platform Testing](./E2_Cross_Platform_Testing.md) ✓ 2025-12-11
+  - [Summary Report](./E2-summary.md)
+  - [Test Results](./E2-test-results.md)
