@@ -10,3 +10,7 @@
 
 ## Phase 3: Quality Gates
 - [CI-05 — Add Build and Test Steps](./CI-05_Add_Build_and_Test_Steps.md) ✓ 2025-12-05
+
+## Phase 4: Validation & Docs
+- [CI-08 — Document CI Usage](./CI-08_Document_CI_Usage.md) ✓ 2025-12-11
+  - [Summary Report](./CI-08-summary.md)
