@@ -1,28 +1,19 @@
-# Next Task: CI-08 — Document CI Usage
+# Next Task: CI-10 — Enable required status checks on default branch
 
 **Priority:** High
 **Phase:** Validation & Docs
 **Effort:** 0.5h
-**Dependencies:** CI-02–CI-07
-**Status:** ✅ Completed on 2025-12-06
+**Dependencies:** CI-05 ✅
+**Status:** ⏸️ Ready for Manual Execution (Implementation guide created)
+**Date Prepared:** 2025-12-11
 
 ## Description
 
-Document CI usage, variables, and extension guidance in DOCS/CI/README.md or existing documentation. Explains workflow structure and customization for developers.
+Enable required status checks on the default branch to ensure CI passes before merging. Configure GitHub branch protection rules with the `build` job as a required status check, integrating with GitHub's branch protection mechanism to enforce code quality gates.
 
-## Completion Summary
+## Next Step
 
-- [x] Reviewed existing CI implementation (.github/workflows/ci.yml, Package.swift)
-- [x] Updated DOCS/CI/README.md with comprehensive documentation
-- [x] Added Configuration Variables table with all customizable parameters
-- [x] Added Usage Examples (manual trigger, viewing logs, cache performance, artifacts)
-- [x] Expanded Troubleshooting section (8 common scenarios with solutions)
-- [x] Added "Extending CI to Other Operating Systems" section with macOS/Windows guidance
-- [x] Added Branch Protection & Status Checks integration guidance
-- [x] Added Quick Reference section with common commands and environment variables
-- [x] Cross-linked to all relevant workflow files and GitHub Actions documentation
-
-**Deliverables:**
-- DOCS/CI/README.md updated (794 lines, comprehensive CI documentation)
-
-**Validation:** 9/9 acceptance criteria passed
+Run PLAN command to generate detailed PRD:
+```bash
+$ claude "Выполни команду PLAN для CI"
+```

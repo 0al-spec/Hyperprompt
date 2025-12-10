@@ -37,3 +37,9 @@
 - [D2 — Compiler Driver](./D2_Compiler_Driver.md) ✓ 2025-12-10
   - [Summary Report](./D2-summary.md)
   - [Technical Debt](./D2-tech-debt.md)
+
+## Phase 8: Testing & Quality Assurance
+
+- [E1 — Test Corpus Implementation](./E1_Test_Corpus_Implementation.md) ✓ 2025-12-10
+  - [Summary Report](./E1-summary.md)
+  - [Test Results](./E1-test-results-final.md)

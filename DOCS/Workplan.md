@@ -663,8 +663,9 @@ Non-blocking: Can develop in parallel with Track A
 ---
 
 ### E2: Cross-Platform Testing **[P1]**
-**Dependencies:** E1
+**Dependencies:** E1 ✅
 **Estimated:** 4 hours
+**Status:** 🔄 **INPROGRESS**
 
 - [ ] **[P1, depends: E1]** Test on macOS Intel
 - [ ] **[P1, depends: E1]** Test on macOS Apple Silicon (M1/M2)
