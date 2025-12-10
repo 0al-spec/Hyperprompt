@@ -64,4 +64,24 @@ public class ManifestBuilder {
     public var count: Int {
         return entries.count
     }
+
+    /// Convenience accessor for entry count.
+    public var entryCount: Int {
+        return entries.count
+    }
+
+    /// Count of Hypercode files (.hc) in the manifest.
+    public var hypercodeFileCount: Int {
+        return entries.filter { $0.type == .hypercode }.count
+    }
+
+    /// Count of Markdown files (.md) in the manifest.
+    public var markdownFileCount: Int {
+        return entries.filter { $0.type == .markdown }.count
+    }
+
+    /// Total size in bytes of all input files.
+    public var totalInputBytes: Int {
+        return entries.reduce(0) { $0 + $1.size }
+    }
 }

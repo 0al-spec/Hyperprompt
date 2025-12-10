@@ -53,6 +53,20 @@ public struct LocalFileSystem: FileSystem {
         FileManager.default.currentDirectoryPath
     }
 
+    /// Write string content to file.
+    ///
+    /// - Parameters:
+    ///   - path: File path (absolute or relative to current directory)
+    ///   - content: String content to write (will be encoded as UTF-8)
+    /// - Throws: CompilerError with category `.io` if file cannot be written
+    public func writeFile(at path: String, content: String) throws {
+        do {
+            try content.write(toFile: path, atomically: true, encoding: .utf8)
+        } catch {
+            throw mapFoundationError(error, path: path)
+        }
+    }
+
     // MARK: - Error Mapping
 
     /// Map Foundation errors to CompilerError.

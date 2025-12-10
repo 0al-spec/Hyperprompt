@@ -519,15 +519,15 @@ Non-blocking: Can develop in parallel with Track A
 ### D2: Compiler Driver **[P0]**
 **Dependencies:** C2, C3, D1
 **Estimated:** 6 hours
-**Status:** ⏳ Selected for implementation — Ready to start
+**Status:** ✅ Completed on 2025-12-09
 
-- [ ] **[P0, depends: C2, D1]** Implement `CompilerDriver` orchestrating parse → resolve → emit → manifest pipeline
-- [ ] **[P1, depends: D1]** Implement dry-run mode (validate without writing)
-- [ ] **[P1, depends: D1]** Implement verbose logging
-- [ ] **[P2, depends: D1]** Handle interruption signals (SIGINT, SIGTERM) gracefully
-- [ ] **[P1, depends: D1]** Set default values for output/manifest/root paths
-- [ ] **[P1, depends: C2, C3]** Write end-to-end compilation tests
-- [ ] **[P1, depends: C2, C3]** Test with all test corpus files (V01-V14, I01-I10)
+- [x] **[P0, depends: C2, D1]** Implement `CompilerDriver` orchestrating parse → resolve → emit → manifest pipeline
+- [x] **[P1, depends: D1]** Implement dry-run mode (validate without writing)
+- [x] **[P1, depends: D1]** Implement verbose logging
+- [ ] **[P2, depends: D1]** Handle interruption signals (SIGINT, SIGTERM) gracefully (deferred)
+- [x] **[P1, depends: D1]** Set default values for output/manifest/root paths
+- [ ] **[P1, depends: C2, C3]** Write end-to-end compilation tests (needs Swift environment)
+- [ ] **[P1, depends: C2, C3]** Test with all test corpus files (V01-V14, I01-I10) (needs Swift environment)
 
 **Acceptance Criteria:** End-to-end compilation succeeds for all valid inputs, fails correctly for invalid inputs
 

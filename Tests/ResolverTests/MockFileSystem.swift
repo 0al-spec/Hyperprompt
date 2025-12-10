@@ -61,6 +61,10 @@ class MockFileSystem: FileSystem {
     func currentDirectory() -> String {
         _currentDirectory
     }
+
+    func writeFile(at path: String, content: String) throws {
+        files[path] = content
+    }
 }
 
 /// Simple IO error for mock file system.

@@ -49,4 +49,18 @@ public protocol FileSystem {
     ///
     /// - Returns: Absolute path to current directory (always ends without trailing slash)
     func currentDirectory() -> String
+
+    /// Write string content to file.
+    ///
+    /// - Parameters:
+    ///   - path: File path (absolute or relative to current directory)
+    ///   - content: String content to write (will be encoded as UTF-8)
+    /// - Throws: CompilerError with category `.io` if file cannot be written
+    ///
+    /// Error conditions:
+    /// - Directory does not exist
+    /// - Permission denied
+    /// - Disk full
+    /// - I/O error during writing
+    func writeFile(at path: String, content: String) throws
 }
