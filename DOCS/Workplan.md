@@ -256,6 +256,7 @@ Non-blocking: Can develop in parallel with Track A
 ### Spec-1: Lexical Specifications **[P1]**
 **Dependencies:** A3
 **Estimated:** 6 hours
+**Status:** 🔄 **INPROGRESS**
 
 - [ ] **[P1, depends: A3]** Implement `IsBlankLineSpec` (line contains only spaces)
 - [ ] **[P1, depends: A3]** Implement `IsCommentLineSpec` (starts with # after indent)
