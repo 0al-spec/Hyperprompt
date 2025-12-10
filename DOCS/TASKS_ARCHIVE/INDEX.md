@@ -34,3 +34,6 @@
 
 - [D1 — Argument Parsing](./D1_Argument_Parsing.md) ✓ 2025-12-09
   - [Summary Report](./D1-summary.md)
+- [D2 — Compiler Driver](./D2_Compiler_Driver.md) ✓ 2025-12-10
+  - [Summary Report](./D2-summary.md)
+  - [Technical Debt](./D2-tech-debt.md)
