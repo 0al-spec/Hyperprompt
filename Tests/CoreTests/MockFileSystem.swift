@@ -128,6 +128,15 @@ class MockFileSystem: FileSystem {
     func currentDirectory() -> String {
         _currentDirectory
     }
+
+    /// Write file content to in-memory storage.
+    ///
+    /// - Parameters:
+    ///   - path: File path
+    ///   - content: Content to write
+    func writeFile(at path: String, content: String) throws {
+        files[path] = content
+    }
 }
 
 /// Concrete CompilerError implementation for MockFileSystem errors.

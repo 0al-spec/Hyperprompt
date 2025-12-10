@@ -1,18 +1,18 @@
-# Next Task: D2  Compiler Driver
+# Next Task: E1 — Test Corpus Implementation
 
 **Priority:** P0
-**Phase:** Phase 6 (CLI & Integration)
-**Effort:** 6 hours
-**Dependencies:** C2 , C3 , D1 
+**Phase:** Phase 8 (Testing & Quality Assurance)
+**Effort:** 8 hours
+**Dependencies:** D2 (needs working compiler)
 **Status:** Selected
 
 ## Description
 
-Implement the compiler driver that orchestrates the complete compilation pipeline (parse � resolve � emit � manifest), integrating all components together. The driver will handle dry-run mode, verbose logging, and end-to-end compilation testing with the test corpus.
+Implement comprehensive test corpus with all valid input tests (V01-V14) and invalid input tests (I01-I10). Create golden files for each test case and implement golden-file comparison framework to verify compiler output matches expected results. Achieve >80% code coverage.
 
 ## Next Step
 
 Run PLAN command to generate detailed PRD:
 ```bash
-$ claude "K?>;=8 :><0=4C PLAN"
+$ claude "Выполни команду PLAN"
 ```

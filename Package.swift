@@ -110,6 +110,9 @@ let package = Package(
                 "Resolver",
                 "Emitter",
                 "CLI",
+            ],
+            resources: [
+                .copy("Fixtures")
             ]
         ),
 
