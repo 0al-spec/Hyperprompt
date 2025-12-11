@@ -279,56 +279,59 @@ Non-blocking: Can develop in parallel with Track A
 ---
 
 ### Spec-2: Indentation & Depth Specifications **[P1]**
-**Dependencies:** A3, Spec-1
+**Dependencies:** A3 ✅, Spec-1 ✅
 **Estimated:** 4 hours
+**Status:** ✅ Completed on 2025-12-11
 
-- [ ] **[P1, depends: A3]** Implement `NoTabsIndentSpec` (no tabs in indentation)
-- [ ] **[P1, depends: A3]** Implement `IndentMultipleOf4Spec` (indent % 4 == 0)
-- [ ] **[P1, depends: A3]** Implement `DepthWithinLimitSpec` (depth <= 10, configurable)
-- [ ] **[P1, depends: Spec-1]** Write unit tests for edge cases (depth 0, depth 10, depth 11)
-- [ ] **[P1, depends: Spec-1]** Test composition with ValidNodeLineSpec
+- [x] **[P1, depends: A3]** Implement `NoTabsIndentSpec` (no tabs in indentation) ✅
+- [x] **[P1, depends: A3]** Implement `IndentMultipleOf4Spec` (indent % 4 == 0) ✅
+- [x] **[P1, depends: A3]** Implement `DepthWithinLimitSpec` (depth <= 10, configurable) ✅
+- [x] **[P1, depends: Spec-1]** Write unit tests for edge cases (depth 0, depth 10, depth 11) ✅
+- [x] **[P1, depends: Spec-1]** Test composition with ValidNodeLineSpec ✅
 
-**Acceptance Criteria:** Indentation validation catches all forbidden patterns, depth limits enforced correctly
+**Acceptance Criteria:** ✅ Indentation validation catches all forbidden patterns, depth limits enforced correctly (5 specs, 14/14 tests passing)
 
 **Blocks:** Integration-1 (lexer integration needs specs)
 
 ---
 
 ### Spec-3: Path Validation Specifications **[P1]**
-**Dependencies:** A3
+**Dependencies:** A3 ✅
 **Estimated:** 4 hours
+**Status:** ✅ Completed on 2025-12-11
 
-- [ ] **[P1, depends: A3]** Implement `HasMarkdownExtensionSpec` (.md suffix)
-- [ ] **[P1, depends: A3]** Implement `HasHypercodeExtensionSpec` (.hc suffix)
-- [ ] **[P1, depends: A3]** Implement `IsAllowedExtensionSpec` (composite: .md OR .hc)
-- [ ] **[P1, depends: A3]** Implement `ContainsPathSeparatorSpec` (contains /)
-- [ ] **[P1, depends: A3]** Implement `ContainsExtensionDotSpec` (contains .)
-- [ ] **[P1, depends: A3]** Implement `LooksLikeFileReferenceSpec` (heuristic: separator OR dot)
-- [ ] **[P1, depends: A3]** Implement `NoTraversalSpec` (no .. components)
-- [ ] **[P1, depends: A3]** Implement `WithinRootSpec` (path starts with root)
-- [ ] **[P1, depends: A3]** Write unit tests for all path validation cases
+- [x] **[P1, depends: A3]** Implement `HasMarkdownExtensionSpec` (.md suffix) ✅
+- [x] **[P1, depends: A3]** Implement `HasHypercodeExtensionSpec` (.hc suffix) ✅
+- [x] **[P1, depends: A3]** Implement `IsAllowedExtensionSpec` (composite: .md OR .hc) ✅
+- [x] **[P1, depends: A3]** Implement `ContainsPathSeparatorSpec` (contains /) ✅
+- [x] **[P1, depends: A3]** Implement `ContainsExtensionDotSpec` (contains .) ✅
+- [x] **[P1, depends: A3]** Implement `LooksLikeFileReferenceSpec` (heuristic: separator OR dot) ✅
+- [x] **[P1, depends: A3]** Implement `NoTraversalSpec` (no .. components) ✅
+- [x] **[P1, depends: A3]** Implement `WithinRootSpec` (path starts with root) ✅
+- [x] **[P1, depends: A3]** Write unit tests for all path validation cases ✅
 
-**Acceptance Criteria:** Path specs correctly identify allowed/forbidden extensions, security violations detected
+**Acceptance Criteria:** ✅ Path specs correctly identify allowed/forbidden extensions, security violations detected (9 specs, 14/14 tests passing)
 
 **Blocks:** Integration-2 (resolver integration needs specs)
 
 ---
 
 ### Spec-4: Composite & Decision Specifications **[P1]**
-**Dependencies:** Spec-1, Spec-2, Spec-3
+**Dependencies:** Spec-1 ✅, Spec-2 ✅, Spec-3 ✅
 **Estimated:** 3 hours
+**Status:** ✅ Completed on 2025-12-11
 
-- [ ] **[P1, depends: Spec-1, Spec-2]** Implement `ValidNodeLineSpec` (composite: NoTabs AND Indent AND Depth AND Quotes AND IsNode)
-- [ ] **[P1, depends: Spec-3]** Implement `ValidReferencePathSpec` (composite: NoTraversal AND AllowedExtension)
-- [ ] **[P1, depends: Spec-1]** Implement `IsSkippableLineSpec` (semantic: IsBlank OR IsComment)
-- [ ] **[P1, depends: Spec-1]** Implement `IsSemanticLineSpec` (semantic: NOT IsSkippable)
-- [ ] **[P1, depends: Spec-1]** Implement `LineKindDecision` using `FirstMatchSpec` (blank → comment → node priority)
-- [ ] **[P1, depends: Spec-3]** Implement `PathTypeDecision` using `FirstMatchSpec`
-- [ ] **[P1, depends: Spec-1, Spec-2, Spec-3]** Write composition tests (AND, OR, NOT truth tables)
-- [ ] **[P1, depends: Spec-1, Spec-2, Spec-3]** Write decision spec tests (priority ordering, nil handling)
-- [ ] **[P1, depends: Spec-1]** Test De Morgan's Law equivalences
+- [x] **[P1, depends: Spec-1, Spec-2]** Implement `ValidNodeLineSpec` (composite: NoTabs AND Indent AND Depth AND Quotes AND IsNode) ✅
+- [x] **[P1, depends: Spec-3]** Implement `ValidReferencePathSpec` (composite: NoTraversal AND AllowedExtension) ✅
+- [x] **[P1, depends: Spec-1]** Implement `IsSkippableLineSpec` (semantic: IsBlank OR IsComment) ✅
+- [x] **[P1, depends: Spec-1]** Implement `IsSemanticLineSpec` (semantic: NOT IsSkippable) ✅
+- [x] **[P1, depends: Spec-1]** Implement `LineKindDecision` using `FirstMatchSpec` (blank → comment → node priority) ✅
+- [x] **[P1, depends: Spec-3]** Implement `PathTypeDecision` using `FirstMatchSpec` ✅
+- [x] **[P1, depends: Spec-1, Spec-2, Spec-3]** Write composition tests (AND, OR, NOT truth tables) ✅
+- [x] **[P1, depends: Spec-1, Spec-2, Spec-3]** Write decision spec tests (priority ordering, nil handling) ✅
+- [x] **[P1, depends: Spec-1]** Test De Morgan's Law equivalences ✅
 
-**Acceptance Criteria:** Composite specs correctly combine atomic rules, decision specs return correct classifications
+**Acceptance Criteria:** ✅ Composite specs correctly combine atomic rules, decision specs return correct classifications (11 specs, 14/14 tests passing)
 
 **Blocks:** Phase 7 (integration needs all specs)
 

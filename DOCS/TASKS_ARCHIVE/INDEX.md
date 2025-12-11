@@ -15,6 +15,9 @@
 ## Phase 3: Specifications (HypercodeGrammar Module)
 
 - [Spec-1 — Lexical Specifications](./Spec-1_Lexical_Specifications.md) ✓ 2025-12-11
+- [Spec-2 — Indentation & Depth Specifications](./Spec-2_Indentation_And_Depth_Specifications.md) ✓ 2025-12-11
+- [Spec-3 — Path Validation Specifications](./Spec-3_Path_Validation_Specifications.md) ✓ 2025-12-11
+- [Spec-4 — Composite & Decision Specifications](./Spec-4_Composite_And_Decision_Specifications.md) ✓ 2025-12-11
 
 ## Phase 4: Reference Resolution
 
