@@ -47,7 +47,7 @@ let package = Package(
         // Parser module
         .target(
             name: "Parser",
-            dependencies: ["Core"]
+            dependencies: ["Core", "HypercodeGrammar"]
         ),
         .testTarget(
             name: "ParserTests",

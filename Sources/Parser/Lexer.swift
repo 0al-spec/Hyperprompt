@@ -1,5 +1,6 @@
 import Core
 import Foundation
+import HypercodeGrammar
 
 /// Lexer for Hypercode (.hc) source files.
 ///
@@ -123,11 +124,8 @@ public final class Lexer {
 
     /// Classify a single line into a token.
     ///
-    /// Classification priority:
-    /// 1. Blank line (empty or only spaces)
-    /// 2. Comment line (# after optional indent)
-    /// 3. Node line (quoted literal after optional indent)
-    /// 4. Error (invalid format)
+    /// Uses LineKindDecision from HypercodeGrammar specifications for classification
+    /// with priority: blank → comment → node.
     ///
     /// - Parameters:
     ///   - line: The line content (without newline)
@@ -135,30 +133,45 @@ public final class Lexer {
     /// - Returns: Classified token
     /// - Throws: `LexerError` if line is invalid
     func classifyLine(_ line: String, location: SourceLocation) throws -> Token {
-        // Check for blank line first
-        if isBlankLine(line) {
+        // Create RawLine for specification-based classification (blank check doesn't require valid indentation)
+        let rawLine = RawLine(text: line, lineNumber: location.line, filePath: location.filePath)
+        let blankSpec = IsBlankLineSpec()
+
+        // Check if blank first (doesn't require indentation validation)
+        if blankSpec.isSatisfiedBy(rawLine) {
             return .blank(location: location)
         }
 
-        // Extract and validate indentation
+        // For non-blank lines, validate indentation to provide detailed error messages
         let (indent, contentStart) = try extractIndentation(line, location: location)
 
-        // Get content after indentation
+        // Extract content after indentation
         let content = String(line[contentStart...])
 
-        // Check for comment
-        if content.hasPrefix(CommentDelimiter.hashString) {
-            return .comment(indent: indent, location: location)
-        }
-
-        // Check for node (quoted literal)
-        if content.hasPrefix(QuoteDelimiter.doubleQuoteString) {
+        // For non-blank, non-comment lines, validate as node with detailed error messages
+        if !content.isEmpty && content.first != "#" {
+            // Extract and validate literal content for detailed error reporting
             let literal = try extractLiteral(content, location: location)
             return .node(indent: indent, literal: literal, location: location)
         }
 
-        // Invalid line format
-        throw LexerError.invalidLineFormat(location: location)
+        // Use LineKindDecision for comment classification
+        let classifier = HypercodeGrammar.makeLineClassifier()
+        guard let kind = classifier.decide(rawLine) else {
+            throw LexerError.invalidLineFormat(location: location)
+        }
+
+        // Handle classification result
+        switch kind {
+        case .blank:
+            return .blank(location: location)
+        case .comment:
+            return .comment(indent: indent, location: location)
+        case .node:
+            // Should not reach here, but handle for completeness
+            let literal = try extractLiteral(content, location: location)
+            return .node(indent: indent, literal: literal, location: location)
+        }
     }
 
     // MARK: - Blank Line Detection
@@ -167,6 +180,10 @@ public final class Lexer {
     ///
     /// - Parameter line: The line to check
     /// - Returns: `true` if line is blank
+    ///
+    /// - Warning: This method is deprecated. Use `LineKindDecision` from HypercodeGrammar
+    ///   for specification-based line classification instead.
+    @available(*, deprecated, message: "Use LineKindDecision for specification-based classification")
     func isBlankLine(_ line: String) -> Bool {
         line.isEmpty || line.allSatisfy { $0 == Whitespace.space }
     }
@@ -180,6 +197,10 @@ public final class Lexer {
     ///   - location: Source location for error reporting
     /// - Returns: Tuple of (indent count, index where content starts)
     /// - Throws: `LexerError.tabInIndentation` or `LexerError.misalignedIndentation`
+    ///
+    /// - Warning: This method is deprecated. Use `LineKindDecision` from HypercodeGrammar
+    ///   for specification-based indentation validation instead.
+    @available(*, deprecated, message: "Use LineKindDecision for specification-based indentation validation")
     func extractIndentation(_ line: String, location: SourceLocation) throws -> (Int, String.Index)
     {
         var indent = 0
@@ -219,6 +240,10 @@ public final class Lexer {
     /// - Returns: The literal content (without quotes)
     /// - Throws: `LexerError.unclosedQuote`, `LexerError.multilineLiteral`,
     ///           or `LexerError.trailingContent`
+    ///
+    /// - Warning: This method is deprecated. Use `LineKindDecision` from HypercodeGrammar
+    ///   for specification-based literal validation instead.
+    @available(*, deprecated, message: "Use LineKindDecision for specification-based literal validation")
     func extractLiteral(_ content: String, location: SourceLocation) throws -> String {
         // Content should start with quote
         guard content.hasPrefix(QuoteDelimiter.doubleQuoteString) else {
