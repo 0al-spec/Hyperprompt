@@ -78,7 +78,7 @@ public struct MarkdownEmitter {
     ///         This is the responsibility of the resolver (B4).
     public func emit(_ root: Node) -> String {
         var builder = StringBuilder()
-        emitNode(root, parentDepth: 0, output: &builder)
+        emitNode(root, parentDepth: -1, output: &builder)
         return builder.build()
     }
 
@@ -91,8 +91,10 @@ public struct MarkdownEmitter {
     ///   - parentDepth: The effective depth of the parent node.
     ///   - output: The output builder to accumulate content.
     private func emitNode(_ node: Node, parentDepth: Int, output: inout StringBuilder) {
-        // Calculate effective depth
-        let effectiveDepth = parentDepth + node.depth
+        // Calculate effective depth based on tree structure, not source indentation
+        // Each level in the tree hierarchy adds 1 to the depth
+        // Root nodes (parentDepth == -1) start at depth 0
+        let effectiveDepth = parentDepth + 1
 
         // Validate depth (resolver should enforce this)
         assert(effectiveDepth <= 10, "Depth exceeds maximum of 10 (resolver should prevent this)")
