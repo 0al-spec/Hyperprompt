@@ -211,8 +211,8 @@ public final class Lexer {
 
     /// Validate and extract literal content from a quoted string.
     ///
-    /// Ensures literal starts and ends with quotes, is single-line, and has no
-    /// trailing non-whitespace content.
+    /// Uses HypercodeGrammar specifications to validate quote structure and content.
+    /// Provides detailed error messages for specific validation failures.
     ///
     /// - Parameters:
     ///   - content: Content starting with opening quote
@@ -224,10 +224,15 @@ public final class Lexer {
         from content: String,
         location: SourceLocation
     ) throws -> String {
-        guard content.hasPrefix(QuoteDelimiter.doubleQuoteString) else {
+        // Validate starts with quote using specification
+        let rawLine = RawLine(text: content, lineNumber: location.line, filePath: location.filePath)
+        let startsWithQuote = StartsWithDoubleQuoteSpec()
+
+        guard startsWithQuote.isSatisfiedBy(rawLine) else {
             throw LexerError.invalidLineFormat(location: location)
         }
 
+        // Find closing quote manually to handle trailing whitespace
         let afterOpeningQuote = content.index(after: content.startIndex)
 
         guard afterOpeningQuote < content.endIndex else {
@@ -241,14 +246,16 @@ public final class Lexer {
             throw LexerError.unclosedQuote(location: location)
         }
 
+        // Extract literal between quotes
         let literal = String(content[afterOpeningQuote..<closingQuoteIndex])
 
-        // Check for multi-line content
-        if literal.contains(LineBreak.lineFeed) || literal.contains(LineBreak.carriageReturn) {
+        // Validate single-line content using specification
+        let singleLineSpec = SingleLineContentSpec()
+        guard singleLineSpec.isSatisfiedBy(literal) else {
             throw LexerError.multilineLiteral(location: location)
         }
 
-        // Check for trailing content after closing quote
+        // Validate trailing content: only whitespace allowed after closing quote
         let afterClosingQuote = content.index(after: closingQuoteIndex)
         if afterClosingQuote < content.endIndex {
             let trailing = content[afterClosingQuote...]
