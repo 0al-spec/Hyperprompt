@@ -131,9 +131,26 @@ Future work (Integration-2 and beyond):
 
 ## Files Modified
 
+### Phase 1: Initial Integration (Completed)
 1. `Package.swift` - Added HypercodeGrammar dependency
 2. `Sources/Parser/Lexer.swift` - Refactored classifyLine(), added deprecation notices
 3. `Tests/IntegrationTests/LexerSpecificationsIntegrationTests.swift` - New integration tests (265 lines)
+
+### Phase 2: Deprecation Removal (Completed)
+1. `Sources/Parser/Lexer.swift` - Removed three deprecated helper methods, inlined validation logic
+2. `Tests/ParserTests/LexerTests.swift` - Refactored isBlankLine tests to use IsBlankLineSpec directly
+
+**Removed Methods:**
+- `isBlankLine(_:)` - Now use `IsBlankLineSpec().isSatisfiedBy(_:)` directly
+- `extractIndentation(_:location:)` - Logic inlined into `classifyLine()`
+- `extractLiteral(_:location:)` - Logic inlined into `classifyLine()`
+
+**Final Implementation:**
+- All validation logic is now inline within `classifyLine()`
+- Uses `IsBlankLineSpec` for blank detection
+- Uses `LineKindDecision` for comment/node classification
+- Maintains detailed error messages for all validation failures
+- Zero deprecation warnings in build
 
 ## Next Steps
 
