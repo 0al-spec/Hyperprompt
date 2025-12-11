@@ -543,7 +543,7 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### D3: Diagnostic Printer **[P1]**
+### D3: Diagnostic Printer **[P1]** **INPROGRESS**
 **Dependencies:** A2
 **Estimated:** 4 hours
 
