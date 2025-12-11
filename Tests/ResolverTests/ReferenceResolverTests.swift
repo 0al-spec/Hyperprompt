@@ -84,36 +84,34 @@ final class ReferenceResolverTests: XCTestCase {
     }
 
     func testTextWithSentenceEndingDotTreatedAsPotentialPath() {
-        // "Version 1.0" contains a dot, so it's treated as potential path
-        // In strict mode, missing file → error
+        // NEW BEHAVIOR: "Version 1.0" doesn't end with known extension
+        // and has no path separator, so it's treated as inline text
         var resolver = makeResolver(mode: .strict)
         let node = makeNode("Version 1.0")
 
         let result = resolver.resolve(node: node)
 
-        // Contains "." so looks like file path
-        // Extension would be "0" which is forbidden
         switch result {
-        case .success:
-            XCTFail("Expected forbidden extension error for '.0'")
-        case .failure(let error):
-            XCTAssertTrue(error.message.contains("Unsupported file extension"))
+        case .success(let kind):
+            XCTAssertEqual(kind, .inlineText, "Should be treated as inline text")
+        case .failure:
+            XCTFail("Should not fail - this is inline text, not a file path")
         }
     }
 
     func testTextWithSentenceEndingDotLenientMode() {
-        // In lenient mode, forbidden extension still causes error
+        // NEW BEHAVIOR: Strings with dots but no known file extension
+        // are treated as inline text
         var resolver = makeResolver(mode: .lenient)
         let node = makeNode("Version 1.0")
 
         let result = resolver.resolve(node: node)
 
-        // Forbidden extensions are always errors regardless of mode
         switch result {
-        case .success:
-            XCTFail("Expected forbidden extension error")
-        case .failure(let error):
-            XCTAssertTrue(error.message.contains("Unsupported file extension"))
+        case .success(let kind):
+            XCTAssertEqual(kind, .inlineText, "Should be treated as inline text")
+        case .failure:
+            XCTFail("Should not fail - this is inline text, not a file path")
         }
     }
 
@@ -921,9 +919,13 @@ final class ReferenceResolverTests: XCTestCase {
 
     func testLooksLikeFilePathWithDot() {
         let resolver = makeResolver()
-        XCTAssertTrue(resolver.looksLikeFilePath("file.md"))
-        XCTAssertTrue(resolver.looksLikeFilePath(".hidden"))
-        XCTAssertTrue(resolver.looksLikeFilePath("name.ext.backup"))
+        // NEW BEHAVIOR: Only files with KNOWN extensions are treated as file paths
+        XCTAssertTrue(resolver.looksLikeFilePath("file.md"), "Known .md extension")
+        XCTAssertFalse(resolver.looksLikeFilePath(".hidden"), "No known extension")
+        XCTAssertFalse(resolver.looksLikeFilePath("name.ext.backup"), "Unknown .backup extension")
+        // Additional tests for known extensions
+        XCTAssertTrue(resolver.looksLikeFilePath("file.hc"), "Known .hc extension")
+        XCTAssertTrue(resolver.looksLikeFilePath("script.py"), "Known .py extension")
     }
 
     func testLooksLikeFilePathWithNeither() {
