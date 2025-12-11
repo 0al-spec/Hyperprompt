@@ -1,19 +1,22 @@
-# Next Task: CI-10 — Enable required status checks on default branch
+# Next Task: (none — awaiting admin action)
 
-**Priority:** High
-**Phase:** Validation & Docs
-**Effort:** 0.5h
-**Dependencies:** CI-05 ✅
-**Status:** ⏸️ Ready for Manual Execution (Implementation guide created)
-**Date Prepared:** 2025-12-11
+**Status:** CI-10 marked as BLOCKED
 
-## Description
+## Blocked Task
 
-Enable required status checks on the default branch to ensure CI passes before merging. Configure GitHub branch protection rules with the `build` job as a required status check, integrating with GitHub's branch protection mechanism to enforce code quality gates.
+**CI-10 — Enable required status checks on default branch** (🚫 BLOCKED)
+- **Priority:** High
+- **Phase:** Validation & Docs
+- **Status:** ⏸️ Awaiting admin manual execution (GitHub UI configuration)
+- **Blocker:** Requires repository administrator to manually configure branch protection rules via GitHub Settings → Branches
+- **Time to unblock:** ~15-20 minutes of manual GitHub UI work
+- **Files:** BLOCKED-CI-10_* (renamed to indicate blocked status)
 
-## Next Step
+All preparation work is complete. See `BLOCKED-CI-10-implementation-guide.md` for step-by-step instructions.
 
-Run PLAN command to generate detailed PRD:
+## Ready for Next Task
+
+Once CI-10 manual steps are completed and verified, run:
 ```bash
-$ claude "Выполни команду PLAN для CI"
+$ claude "Выполни команду SELECT для CI"
 ```

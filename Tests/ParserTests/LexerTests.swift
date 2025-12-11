@@ -1,6 +1,7 @@
 import XCTest
 @testable import Parser
 @testable import Core
+import HypercodeGrammar
 
 /// Unit tests for the Lexer component.
 ///
@@ -672,19 +673,30 @@ final class LexerTests: XCTestCase {
         XCTAssertEqual(result, ["a", ""])
     }
 
-    // MARK: - Blank Line Detection Tests
+    // MARK: - Blank Line Detection Tests (Specification-Based)
 
     func testIsBlankLine_Empty() {
-        XCTAssertTrue(lexer.isBlankLine(""))
+        let spec = IsBlankLineSpec()
+        let rawLine = RawLine(text: "", lineNumber: 1, filePath: "test.hc")
+        XCTAssertTrue(spec.isSatisfiedBy(rawLine))
     }
 
     func testIsBlankLine_Spaces() {
-        XCTAssertTrue(lexer.isBlankLine("    "))
+        let spec = IsBlankLineSpec()
+        let rawLine = RawLine(text: "    ", lineNumber: 1, filePath: "test.hc")
+        XCTAssertTrue(spec.isSatisfiedBy(rawLine))
     }
 
     func testIsBlankLine_WithContent() {
-        XCTAssertFalse(lexer.isBlankLine("x"))
-        XCTAssertFalse(lexer.isBlankLine("  x"))
-        XCTAssertFalse(lexer.isBlankLine("#"))
+        let spec = IsBlankLineSpec()
+
+        let line1 = RawLine(text: "x", lineNumber: 1, filePath: "test.hc")
+        XCTAssertFalse(spec.isSatisfiedBy(line1))
+
+        let line2 = RawLine(text: "  x", lineNumber: 1, filePath: "test.hc")
+        XCTAssertFalse(spec.isSatisfiedBy(line2))
+
+        let line3 = RawLine(text: "#", lineNumber: 1, filePath: "test.hc")
+        XCTAssertFalse(spec.isSatisfiedBy(line3))
     }
 }

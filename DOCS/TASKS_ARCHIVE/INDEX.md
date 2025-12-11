@@ -12,6 +12,13 @@
 - [Lexer Implementation](./Lexer_Implementation.md) ✓ 2025-12-06
 - [A4 — Parser & AST Construction](./A4_Parser_And_AST_Construction.md) ✓ 2025-12-06
 
+## Phase 3: Specifications (HypercodeGrammar Module)
+
+- [Spec-1 — Lexical Specifications](./Spec-1_Lexical_Specifications.md) ✓ 2025-12-11
+- [Spec-2 — Indentation & Depth Specifications](./Spec-2_Indentation_And_Depth_Specifications.md) ✓ 2025-12-11
+- [Spec-3 — Path Validation Specifications](./Spec-3_Path_Validation_Specifications.md) ✓ 2025-12-11
+- [Spec-4 — Composite & Decision Specifications](./Spec-4_Composite_And_Decision_Specifications.md) ✓ 2025-12-11
+
 ## Phase 4: Reference Resolution
 
 - [B1 — Reference Resolver](./B1_Reference_Resolver.md) ✓ 2025-12-06
@@ -43,3 +50,6 @@
 - [E1 — Test Corpus Implementation](./E1_Test_Corpus_Implementation.md) ✓ 2025-12-10
   - [Summary Report](./E1-summary.md)
   - [Test Results](./E1-test-results-final.md)
+- [E2 — Cross-Platform Testing](./E2_Cross_Platform_Testing.md) ✓ 2025-12-11
+  - [Summary Report](./E2-summary.md)
+  - [Test Results](./E2-test-results.md)

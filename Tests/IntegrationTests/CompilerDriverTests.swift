@@ -302,6 +302,83 @@ final class CompilerDriverTests: XCTestCase {
         XCTAssertTrue(result.markdown.contains("🌍"))
     }
 
+    func testV15_MultipleSiblingsAtDifferentLevels() throws {
+        let input = fixtureURL("Valid/V15.hc")
+        let output = tempURL("V15.md")
+        let expected = fixtureURL("Valid/V15.expected.md")
+
+        // Compile
+        let result = try compileFile(input, outputPath: output)
+
+        // Verify output file was written
+        XCTAssertTrue(FileManager.default.fileExists(atPath: output.path))
+
+        // Compare with golden file
+        let actualMD = try readFile(output)
+        let expectedMD = try readFile(expected)
+        XCTAssertEqual(actualMD, expectedMD, "V15 markdown output should match golden file")
+
+        // Verify siblings at same level have same heading
+        XCTAssertTrue(result.markdown.contains("# Root"))
+        XCTAssertTrue(result.markdown.contains("## Child 1"))
+        XCTAssertTrue(result.markdown.contains("## Child 2"))
+        XCTAssertTrue(result.markdown.contains("## Child 3"))
+        XCTAssertTrue(result.markdown.contains("## Child 4"))
+        XCTAssertTrue(result.markdown.contains("### Grandchild 1"))
+        XCTAssertTrue(result.markdown.contains("### Grandchild 2"))
+    }
+
+    func testV16_ComplexMixedNesting() throws {
+        let input = fixtureURL("Valid/V16.hc")
+        let output = tempURL("V16.md")
+        let expected = fixtureURL("Valid/V16.expected.md")
+
+        // Compile
+        let result = try compileFile(input, outputPath: output)
+
+        // Verify output file was written
+        XCTAssertTrue(FileManager.default.fileExists(atPath: output.path))
+
+        // Compare with golden file
+        let actualMD = try readFile(output)
+        let expectedMD = try readFile(expected)
+        XCTAssertEqual(actualMD, expectedMD, "V16 markdown output should match golden file")
+
+        // Verify complex nesting structure
+        XCTAssertTrue(result.markdown.contains("# Document"))
+        XCTAssertTrue(result.markdown.contains("## Section A"))
+        XCTAssertTrue(result.markdown.contains("### Subsection Alpha"))
+        XCTAssertTrue(result.markdown.contains("#### Item Alpha-a"))
+        XCTAssertTrue(result.markdown.contains("##### Detail Alpha-b-i"))
+        XCTAssertTrue(result.markdown.contains("## Section B"))
+        XCTAssertTrue(result.markdown.contains("##### Detail Gamma-a-ii"))
+    }
+
+    func testV17_DeepNestingWithSiblings() throws {
+        let input = fixtureURL("Valid/V17.hc")
+        let output = tempURL("V17.md")
+        let expected = fixtureURL("Valid/V17.expected.md")
+
+        // Compile
+        let result = try compileFile(input, outputPath: output)
+
+        // Verify output file was written
+        XCTAssertTrue(FileManager.default.fileExists(atPath: output.path))
+
+        // Compare with golden file
+        let actualMD = try readFile(output)
+        let expectedMD = try readFile(expected)
+        XCTAssertEqual(actualMD, expectedMD, "V17 markdown output should match golden file")
+
+        // Verify deep nesting with H5 and H6
+        XCTAssertTrue(result.markdown.contains("##### Level 4 - First"))
+        XCTAssertTrue(result.markdown.contains("##### Level 4 - Second"))
+        XCTAssertTrue(result.markdown.contains("###### Level 5 - First"))
+        XCTAssertTrue(result.markdown.contains("###### Level 5 - Second"))
+        // Level 6 (depth 6) should overflow to bold
+        XCTAssertTrue(result.markdown.contains("**Level 6**"))
+    }
+
     // MARK: - Invalid Input Tests
 
     func testI01_TabIndentation() throws {

@@ -1,5 +1,6 @@
 import Core
 import Parser
+import HypercodeGrammar
 
 /// Reference resolver for classifying node literals.
 ///
@@ -133,19 +134,17 @@ public struct ReferenceResolver {
 
     /// Check if a literal looks like a file path (heuristic).
     ///
-    /// A literal is heuristically identified as a potential file path if:
-    /// - Contains path separator (`/`), OR
-    /// - Contains extension marker (`.`)
+    /// Uses `LooksLikeFileReferenceSpec` heuristic criteria:
+    /// - Contains path separator (`/` or `\`), OR
+    /// - Ends with a known file extension (.md, .hc, .txt, etc.)
     ///
-    /// This heuristic is safe because:
-    /// - Pure inline text typically doesn't contain slashes or dots
-    /// - If a literal looks like a path but isn't, lenient mode treats it as inline
-    /// - Strict mode explicitly fails on missing files (catch errors early)
+    /// This improved heuristic avoids false positives like "Version: 3.0.0" or "Section A.1"
+    /// while still correctly identifying file paths.
     ///
     /// - Parameter literal: The literal string to check
     /// - Returns: `true` if the literal looks like a file path
     public func looksLikeFilePath(_ literal: String) -> Bool {
-        literal.contains("/") || literal.contains(".")
+        LooksLikeFileReferenceSpec().isSatisfiedBy(literal)
     }
 
     /// Extract the file extension from a path.
