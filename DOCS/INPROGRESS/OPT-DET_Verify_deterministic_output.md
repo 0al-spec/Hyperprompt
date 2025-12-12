@@ -4,7 +4,7 @@
 **Priority:** P0  
 **Phase:** Phase 9 — Optimization & Finalization  
 **Effort:** 3 hours  
-**Status:** INPROGRESS  
+**Status:** ✅ Completed on 2025-12-12
 **Dependencies:** E2 (Cross-Platform Testing)  
 **Related Docs:** DOCS/Workplan.md §Optimization & Release, DOCS/RESOLUTIONS/RES_005_Determinism_Requirements.md
 
@@ -52,11 +52,11 @@ Ensure repeated compilations of identical inputs produce byte-for-byte identical
 ---
 
 ## 5. Quality Checklist
-- [ ] Swift build succeeds.  
-- [ ] Swift test suite passes.  
-- [ ] Determinism checks executed twice without mutation of inputs between runs.  
-- [ ] Hash comparisons documented.  
-- [ ] Added regression guard covers discovered risk areas.
+- [x] Swift build succeeds.
+- [x] Swift test suite passes.
+- [x] Determinism checks executed twice without mutation of inputs between runs.
+- [x] Hash comparisons documented.
+- [x] Added regression guard covers discovered risk areas.
 
 ---
 
@@ -93,6 +93,18 @@ If any differences appear, capture artifacts and investigate sources (timestamps
 ---
 
 ## 8. Deliverables
-- Updated code/tests/scripts ensuring deterministic output.  
-- Validation evidence (hash logs) recorded in task notes or summaries.  
+- Updated code/tests/scripts ensuring deterministic output.
+- Validation evidence (hash logs) recorded in task notes or summaries.
 - Commit implementing fixes and documentation, referencing this task ID (OPT-DET).
+
+---
+
+## 9. Validation Evidence (2025-12-12)
+
+- Added deterministic timestamp resolution with environment overrides and file modification fallback in `DeterministicTimestampProvider`.
+- Verified reproducible builds with fixed epoch:
+  - Command set: `HYPERPROMPT_BUILD_TIMESTAMP=1700000000` with `.build/debug/hyperprompt` on `Tests/IntegrationTests/Fixtures/Valid/V01.hc`.
+  - Hash comparisons:
+    - `fd3ba1c5ee1a3b668246b5bcda864533c220f47938b6f022cf71150884be0150  manifest.json`
+    - `92669ca9e003b6f3ae15b3d15b08d23fe24b0dc52ba06adb2c7bc92f1b92d323  out.md`
+  - `diff -u run1.sha run2.sha` → no differences (paths only).
