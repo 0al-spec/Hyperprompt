@@ -48,6 +48,11 @@
   - [Summary Report](./D3-summary.md)
 - [PR 65 — Fix Caret Alignment (DiagnosticPrinter)](./PR65_Fix_Caret_Alignment.md) ✓ 2025-12-12
 
+## Phase 7: Lexer & Resolver Integration with Specs
+
+- [Integration-1 — Lexer with Specifications](./Integration-1_Lexer_with_Specifications.md) ✓ 2025-12-12
+  - [Summary Report](./Integration-1-summary.md)
+
 ## Phase 8: Testing & Quality Assurance
 
 - [E1 — Test Corpus Implementation](./E1_Test_Corpus_Implementation.md) ✓ 2025-12-10
