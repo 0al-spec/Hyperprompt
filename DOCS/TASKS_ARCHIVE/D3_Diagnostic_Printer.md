@@ -649,4 +649,7 @@ print(printer.formatMultiple(errors: errors))
 ### Acceptance Criteria Status
 All 12 acceptance criteria from §9 verified and met ✅
 
-See `DOCS/INPROGRESS/D3-summary.md` for detailed completion report.
+See `DOCS/TASKS_ARCHIVE/D3-summary.md` for detailed completion report.
+
+---
+**Archived:** 2025-12-12
