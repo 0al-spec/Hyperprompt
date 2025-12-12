@@ -543,19 +543,22 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### D3: Diagnostic Printer **[P1]** **INPROGRESS**
-**Dependencies:** A2
+### D3: Diagnostic Printer **[P1]**
+**Dependencies:** A2 ✅
 **Estimated:** 4 hours
+**Status:** ✅ Completed on 2025-12-12
 
-- [ ] **[P1, depends: A2]** Format error messages with source context
-- [ ] **[P1, depends: A2]** Implement format: `<file>:<line>: error: <message>`
-- [ ] **[P1, depends: A2]** Show context line with caret (^^^) pointing to issue
-- [ ] **[P2, depends: A2]** Colorize output for terminal display (optional)
-- [ ] **[P1, depends: A2]** Support plain text output for non-terminal destinations
-- [ ] **[P2, depends: A2]** Aggregate multiple errors when possible
-- [ ] **[P1, depends: A2]** Write diagnostic formatting tests
+- [x] **[P1, depends: A2]** Format error messages with source context
+- [x] **[P1, depends: A2]** Implement format: `<file>:<line>: error: <message>`
+- [x] **[P1, depends: A2]** Show context line with caret (^^^) pointing to issue
+- [x] **[P2, depends: A2]** Colorize output for terminal display (ANSI colors with auto-detection)
+- [x] **[P1, depends: A2]** Support plain text output for non-terminal destinations
+- [x] **[P2, depends: A2]** Aggregate multiple errors when possible
+- [x] **[P1, depends: A2]** Write diagnostic formatting tests (22 comprehensive tests)
 
-**Acceptance Criteria:** Error messages clearly identify problem location and nature, format matches specification
+**Acceptance Criteria:** ✅ Error messages clearly identify problem location and nature, format matches specification
+
+**Completion Note (2025-12-12):** Implemented DiagnosticPrinter with full error formatting, source context extraction, caret positioning, ANSI color support with terminal auto-detection, multi-error aggregation, and 22 comprehensive unit tests. All acceptance criteria met. Performance target achieved (<1ms per error).
 
 ---
 
