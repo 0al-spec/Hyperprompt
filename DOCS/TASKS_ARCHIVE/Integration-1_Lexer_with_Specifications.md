@@ -99,3 +99,7 @@
 - Prefer constructing decision/spec instances once per lexer or per file to minimize allocations.
 - Align naming with SpecCore classes; avoid duplicating validation logic already encoded in specs.
 - Keep TODO checklist synchronized with Workplan Phase 7 entries when marking completion.
+
+---
+
+**Archived:** 2025-12-12
