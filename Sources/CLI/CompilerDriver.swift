@@ -437,7 +437,8 @@ public final class CompilerDriver {
     /// Generate manifest JSON.
     private func generateManifest(
         rootPath: String,
-        verbose: Bool
+        verbose: Bool,
+        timestampProvider: DeterministicTimestampProvider = DeterministicTimestampProvider()
     ) throws -> String {
         let generator = ManifestGenerator()
         let builder = ManifestBuilder()  // Empty for now - will be populated in future
@@ -445,7 +446,7 @@ public final class CompilerDriver {
             builder: builder,
             version: version,
             root: rootPath,
-            timestamp: Date()
+            timestamp: timestampProvider.resolveDate(for: rootPath)
         )
 
         do {
