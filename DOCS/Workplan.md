@@ -590,7 +590,7 @@ Non-blocking: Can develop in parallel with Track A
 ### Integration-1: Lexer with Specifications **[P1]**
 **Dependencies:** Phase 2 (Lexer) ✅, Phase 3 (Specs) ✅
 **Estimated:** 5 hours
-**Status:** 🔄 **INPROGRESS** (selected as next task)
+**Status:** 🔄 **INPROGRESS** (selected via SELECT command)
 
 - [ ] **[P1, depends: Lexer, Spec-4]** Refactor Lexer to use `LineKindDecision` for classification
 - [ ] **[P1, depends: Lexer, Spec-2]** Replace imperative tab checking with `NoTabsIndentSpec`
