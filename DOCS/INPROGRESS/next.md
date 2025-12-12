@@ -1,14 +1,14 @@
-# Next Task: Integration-1 — Lexer with Specifications
+# Next Task: D3 — Diagnostic Printer
 
 **Priority:** P1
-**Phase:** Phase 7 (Lexer & Resolver Integration with Specs)
-**Effort:** 5 hours
-**Dependencies:** Phase 2 ✅, Phase 3 ✅
+**Phase:** Phase 6 (CLI & Integration)
+**Effort:** 4 hours
+**Dependencies:** A2 ✅
 **Status:** Selected
 
 ## Description
 
-Replace imperative validation logic in the Lexer with declarative specifications from Phase 3 (Specs). Refactor line classification to use `LineKindDecision` and replace manual tab/indent/depth checking with corresponding specification classes. Verify all existing tests pass and add integration tests demonstrating specification-based validation.
+Implement error message formatting with source context. Format error messages as `<file>:<line>: error: <message>`, show context line with caret indicators, support plain text and colored output for terminal display.
 
 ## Next Step
 
