@@ -396,7 +396,7 @@ public final class CompilerDriver {
     ) throws -> Program {
         let resolutionMode: ResolutionMode = mode == .strict ? .strict : .lenient
 
-        var dependencyTracker = DependencyTracker(fileSystem: fileSystem)
+        let dependencyTracker = DependencyTracker(fileSystem: fileSystem)
         var resolver = ReferenceResolver(
             fileSystem: fileSystem,
             rootPath: rootPath,
@@ -405,7 +405,7 @@ public final class CompilerDriver {
         )
 
         // Resolve root node
-        var mutableRoot = program.root
+        let mutableRoot = program.root
 
         switch resolver.resolveTree(root: mutableRoot) {
         case .success:
