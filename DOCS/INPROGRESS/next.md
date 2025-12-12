@@ -1,14 +1,14 @@
-# Next Task: Integration-1 — Lexer with Specifications
+# Next Task: Integration-2 — Resolver with Specifications
 
 **Priority:** P1
 **Phase:** Phase 7 - Lexer & Resolver Integration with Specs
-**Effort:** 5 hours
-**Dependencies:** Phase 2 (Lexer) ✅, Phase 3 (Specs) ✅
+**Effort:** 6 hours
+**Dependencies:** Phase 4 (Resolver) ✅, Phase 3 (Specs) ✅
 **Status:** Selected
 
 ## Description
 
-Refactor the imperative Lexer to use declarative specifications from Phase 3 for all validation. Replace tab checking, indentation validation, and depth checking with corresponding specs. Use LineKindDecision for line classification and ValidNodeLineSpec for comprehensive node validation.
+Refactor the imperative ReferenceResolver to use declarative specifications from Phase 3 for path validation and classification. Replace imperative path validation with ValidReferencePathSpec, NoTraversalSpec, and IsAllowedExtensionSpec. Use PathTypeDecision for path classification (allowed/forbidden/invalid).
 
 ## Next Step
 

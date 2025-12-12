@@ -587,28 +587,29 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 11 hours
 **Track:** Integration (requires both A and B tracks complete)
 
-### Integration-1: Lexer with Specifications **[P1]** **INPROGRESS**
+### Integration-1: Lexer with Specifications **[P1]**
 **Dependencies:** Phase 2 (Lexer) ✅, Phase 3 (Specs) ✅
 **Estimated:** 5 hours
-**Status:** 🔄 In Progress (selected on 2025-12-12)
+**Status:** ✅ Completed on 2025-12-11
 
-- [ ] **[P1, depends: Lexer, Spec-4]** Refactor Lexer to use `LineKindDecision` for classification
-- [ ] **[P1, depends: Lexer, Spec-2]** Replace imperative tab checking with `NoTabsIndentSpec`
-- [ ] **[P1, depends: Lexer, Spec-2]** Replace imperative indent validation with `IndentMultipleOf4Spec`
-- [ ] **[P1, depends: Lexer, Spec-2]** Replace imperative depth checking with `DepthWithinLimitSpec`
-- [ ] **[P1, depends: Lexer, Spec-4]** Use `ValidNodeLineSpec` for comprehensive node validation
-- [ ] **[P1, depends: Lexer, Spec-4]** Update error messages to reference specification failures
-- [ ] **[P1, depends: Lexer, Spec-4]** Verify all existing lexer tests pass
-- [ ] **[P1, depends: Lexer, Spec-4]** Add integration tests for specification-based lexer
-- [ ] **[P2, depends: Lexer, Spec-4]** Benchmark performance vs imperative version
+- [x] **[P1, depends: Lexer, Spec-4]** Refactor Lexer to use `LineKindDecision` for classification ✅
+- [x] **[P1, depends: Lexer, Spec-2]** Replace imperative tab checking with `NoTabsIndentSpec` ✅
+- [x] **[P1, depends: Lexer, Spec-2]** Replace imperative indent validation with `IndentMultipleOf4Spec` ✅
+- [x] **[P1, depends: Lexer, Spec-2]** Replace imperative depth checking with `DepthWithinLimitSpec` ✅
+- [x] **[P1, depends: Lexer, Spec-4]** Use `ValidNodeLineSpec` for comprehensive node validation ✅
+- [x] **[P1, depends: Lexer, Spec-4]** Update error messages to reference specification failures ✅
+- [x] **[P1, depends: Lexer, Spec-4]** Verify all existing lexer tests pass ✅
+- [x] **[P1, depends: Lexer, Spec-4]** Add integration tests for specification-based lexer ✅
+- [x] **[P2, depends: Lexer, Spec-4]** Benchmark performance vs imperative version ✅
 
-**Acceptance Criteria:** Lexer uses specifications for all validation, tests pass, <10% performance overhead
+**Acceptance Criteria:** ✅ Lexer uses specifications for all validation, tests pass, <10% performance overhead (399 tests, 14 skipped, 0 failures)
 
 ---
 
-### Integration-2: Resolver with Specifications **[P1]**
-**Dependencies:** Phase 4 (Resolver), Phase 3 (Specs)
+### Integration-2: Resolver with Specifications **[P1]** **INPROGRESS**
+**Dependencies:** Phase 4 (Resolver) ✅, Phase 3 (Specs) ✅
 **Estimated:** 6 hours
+**Status:** 🔄 In Progress (selected on 2025-12-12)
 
 - [ ] **[P1, depends: B1, Spec-4]** Refactor ReferenceResolver to use `ValidReferencePathSpec`
 - [ ] **[P1, depends: B1, Spec-3]** Replace imperative path validation with `NoTraversalSpec`
