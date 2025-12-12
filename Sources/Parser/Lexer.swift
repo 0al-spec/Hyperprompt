@@ -34,8 +34,8 @@ public final class Lexer {
     private let noTabsSpec = NoTabsIndentSpec()
     private let indentMultipleOf4Spec: IndentMultipleOf4Spec
     private let depthWithinLimitSpec: DepthWithinLimitSpec
+    private let maxDepth: Int
     private let nodeValidationSpec: ValidNodeLineSpec
-    private let startsWithQuoteSpec = StartsWithDoubleQuoteSpec()
     private let singleLineContentSpec = SingleLineContentSpec()
     private let lineClassifier: LineKindDecision
 
@@ -51,6 +51,7 @@ public final class Lexer {
         self.fileSystem = fileSystem
         self.indentMultipleOf4Spec = IndentMultipleOf4Spec(spacesPerLevel: spacesPerIndentLevel)
         self.depthWithinLimitSpec = DepthWithinLimitSpec(maxDepth: maxDepth)
+        self.maxDepth = maxDepth
         self.nodeValidationSpec = ValidNodeLineSpec(maxDepth: maxDepth)
         self.lineClassifier = HypercodeGrammar.makeLineClassifier()
     }
@@ -162,7 +163,7 @@ public final class Lexer {
             case .comment:
                 return .comment(indent: normalizedLine.leadingSpaces, location: location)
             case .node(let literal):
-                let extractedLiteral = try validateNodeLine(normalizedLine, literal, location: location)
+                let extractedLiteral = try validateNodeLine(normalizedLine, literal: literal, location: location)
                 return .node(indent: normalizedLine.leadingSpaces, literal: extractedLiteral, location: location)
             }
         }
@@ -185,11 +186,11 @@ public final class Lexer {
 
     private func validateNodeLine(
         _ rawLine: RawLine,
-        _ literal: String,
+        literal: String,
         location: SourceLocation
     ) throws -> String {
         guard depthWithinLimitSpec.isSatisfiedBy(rawLine) else {
-            throw LexerError.invalidLineFormat(location: location)
+            throw LexerError.depthExceeded(location: location, maxDepth: maxDepth)
         }
 
         if !nodeValidationSpec.isSatisfiedBy(rawLine) {
@@ -197,49 +198,24 @@ public final class Lexer {
             throw LexerError.invalidLineFormat(location: location)
         }
 
-        let extractedLiteral = try extractLiteral(from: rawLine, location: location)
+        let parsedLiteral = try parseAndValidateLiteral(from: rawLine, location: location)
 
-        return extractedLiteral
+        if parsedLiteral != literal {
+            return parsedLiteral
+        }
+
+        return literal
     }
 
     private func diagnoseSpecificationFailure(for rawLine: RawLine, location: SourceLocation) throws {
+        if !depthWithinLimitSpec.isSatisfiedBy(rawLine) {
+            throw LexerError.depthExceeded(location: location, maxDepth: maxDepth)
+        }
+
         let trimmed = rawLine.text.drop(while: { $0 == Whitespace.space })
 
         if trimmed.first == QuoteDelimiter.doubleQuote {
-            try diagnoseQuoteFailure(in: rawLine, trimmed: trimmed, location: location)
-        }
-    }
-
-    private func diagnoseQuoteFailure(
-        in rawLine: RawLine,
-        trimmed: Substring,
-        location: SourceLocation
-    ) throws {
-        guard startsWithQuoteSpec.isSatisfiedBy(rawLine) else {
-            throw LexerError.invalidLineFormat(location: location)
-        }
-
-        let afterOpening = trimmed.index(after: trimmed.startIndex)
-        guard afterOpening < trimmed.endIndex else {
-            throw LexerError.unclosedQuote(location: location)
-        }
-
-        guard let closingQuoteIndex = trimmed[afterOpening...].firstIndex(of: QuoteDelimiter.doubleQuote) else {
-            throw LexerError.unclosedQuote(location: location)
-        }
-
-        let literal = String(trimmed[afterOpening..<closingQuoteIndex])
-
-        if !singleLineContentSpec.isSatisfiedBy(literal) {
-            throw LexerError.multilineLiteral(location: location)
-        }
-
-        let afterClosingQuote = trimmed.index(after: closingQuoteIndex)
-        if afterClosingQuote < trimmed.endIndex {
-            let trailing = trimmed[afterClosingQuote...]
-            if !trailing.allSatisfy({ $0 == Whitespace.space }) {
-                throw LexerError.trailingContent(location: location)
-            }
+            _ = try parseAndValidateLiteral(from: rawLine, location: location)
         }
     }
 
@@ -250,6 +226,10 @@ public final class Lexer {
     }
 
     private func extractLiteral(from rawLine: RawLine, location: SourceLocation) throws -> String {
+        return try parseAndValidateLiteral(from: rawLine, location: location)
+    }
+
+    private func parseAndValidateLiteral(from rawLine: RawLine, location: SourceLocation) throws -> String {
         let trimmed = rawLine.text.drop(while: { $0 == Whitespace.space })
 
         guard !trimmed.isEmpty, trimmed.first == QuoteDelimiter.doubleQuote else {

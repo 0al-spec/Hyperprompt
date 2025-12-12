@@ -251,11 +251,12 @@ final class LexerSpecificationsIntegrationTests: XCTestCase {
                 return
             }
 
-            guard case .invalidLineFormat = lexerError else {
-                XCTFail("Expected invalidLineFormat for depth overflow")
+            guard case .depthExceeded(_, let maxDepth) = lexerError else {
+                XCTFail("Expected depthExceeded for depth overflow")
                 return
             }
 
+            XCTAssertEqual(maxDepth, 10)
             XCTAssertTrue(
                 lexerError.message.contains("DepthWithinLimitSpec"),
                 "Depth limit failures should cite specification"
