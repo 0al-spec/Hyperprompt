@@ -609,7 +609,7 @@ Non-blocking: Can develop in parallel with Track A
 ### Integration-2: Resolver with Specifications **[P1]** **INPROGRESS**
 **Dependencies:** Phase 4 (Resolver) ✅, Phase 3 (Specs) ✅
 **Estimated:** 6 hours
-**Status:** 🔄 In Progress (selected on 2025-12-12)
+**Status:** 🔄 In Progress — PRD Generated (2025-12-12)
 
 - [ ] **[P1, depends: B1, Spec-4]** Refactor ReferenceResolver to use `ValidReferencePathSpec`
 - [ ] **[P1, depends: B1, Spec-3]** Replace imperative path validation with `NoTraversalSpec`
