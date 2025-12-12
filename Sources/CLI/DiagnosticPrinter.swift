@@ -196,8 +196,10 @@ public struct DiagnosticPrinter {
             wasTruncated = true
         }
 
-        // Trim trailing whitespace
-        contextLine = contextLine.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Trim only trailing whitespace (preserve leading indentation for caret alignment)
+        while contextLine.last?.isWhitespace == true {
+            contextLine.removeLast()
+        }
 
         // Generate caret indicator
         // For now, we'll position it at the start of the quoted content or at column 0
