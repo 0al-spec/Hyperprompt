@@ -687,9 +687,10 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### E3: Documentation **[P1]**
-**Dependencies:** D2 (needs working compiler to document)
+### E3: Documentation **[P1]** **INPROGRESS**
+**Dependencies:** D2 (needs working compiler to document) ✅
 **Estimated:** 4 hours
+**Status:** 🔄 In Progress (selected on 2025-12-12)
 
 - [ ] **[P1, depends: D2]** Write README with installation instructions
 - [ ] **[P1, depends: D1, D2]** Document usage examples with all CLI flags

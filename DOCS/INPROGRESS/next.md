@@ -1,29 +1,16 @@
-# Next Task: Integration-2 — Resolver with Specifications
+# Next Task: E3 — Documentation
 
 **Priority:** P1
-**Phase:** Phase 7 - Lexer & Resolver Integration with Specs
-**Effort:** 6 hours
-**Dependencies:** Phase 4 (Resolver) ✅, Phase 3 (Specs) ✅
-**Status:** ✅ Completed on 2025-12-12
+**Phase:** Phase 8 - Testing & Quality Assurance
+**Effort:** 4 hours
+**Dependencies:** D2 (needs working compiler to document) ✅
+**Status:** Selected
 
-## Summary
+## Description
 
-Successfully refactored ReferenceResolver to use HypercodeGrammar specifications for path validation and classification:
-
-- ✅ `NoTraversalSpec` — Replaced imperative `..` detection
-- ✅ `HasMarkdownExtensionSpec` — Markdown file detection
-- ✅ `HasHypercodeExtensionSpec` — Hypercode file detection
-- ✅ `WithinRootSpec` — Root boundary validation
-- ✅ `LooksLikeFileReferenceSpec` — Heuristic path detection (verified)
-
-All changes maintain full backward compatibility with existing API.
-
-## Deliverables
-
-- `Sources/Resolver/ReferenceResolver.swift` — 5 specification integrations
-- `DOCS/INPROGRESS/Integration-2-summary.md` — Detailed implementation report
+Write comprehensive documentation covering installation instructions, usage examples with all CLI flags, Hypercode language specification/grammar, example files demonstrating all features, and error codes/exit codes documentation. Document SpecificationCore integration patterns and provide API documentation.
 
 ## Next Step
 
-Ready for Phase 8 (Testing & QA) or Phase 9 (Release). Run SELECT to choose next task:
-$ claude "Выполни команду SELECT"
+Run PLAN command to generate detailed PRD:
+$ claude "Выполни команду PLAN"
