@@ -169,7 +169,7 @@ public struct MarkdownEmitter {
                 output.append("\n")
             }
 
-        case let .hypercodeFile(_, _):
+        case .hypercodeFile(_, _):
             // Child AST already merged into node.children by B4
             // No additional content to emit here
             break
