@@ -108,3 +108,6 @@ If any differences appear, capture artifacts and investigate sources (timestamps
     - `fd3ba1c5ee1a3b668246b5bcda864533c220f47938b6f022cf71150884be0150  manifest.json`
     - `92669ca9e003b6f3ae15b3d15b08d23fe24b0dc52ba06adb2c7bc92f1b92d323  out.md`
   - `diff -u run1.sha run2.sha` → no differences (paths only).
+
+---
+**Archived:** 2025-12-12

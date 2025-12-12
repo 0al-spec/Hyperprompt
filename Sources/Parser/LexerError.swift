@@ -37,6 +37,13 @@ public enum LexerError: CompilerError, Equatable {
     /// - Parameter location: Where the invalid line was found
     case invalidLineFormat(location: SourceLocation)
 
+    /// Indentation depth exceeds configured maximum.
+    ///
+    /// - Parameters:
+    ///   - location: Where the depth overflow was found
+    ///   - maxDepth: Maximum allowed depth (in indentation levels)
+    case depthExceeded(location: SourceLocation, maxDepth: Int)
+
     /// Trailing content after closing quote.
     ///
     /// Node lines must end immediately after the closing quote.
@@ -52,17 +59,19 @@ public enum LexerError: CompilerError, Equatable {
     public var message: String {
         switch self {
         case .tabInIndentation:
-            return "Tab characters are not allowed in indentation. Use 4 spaces per indent level."
+            return "Tab characters are not allowed in indentation (failed NoTabsIndentSpec). Use 4 spaces per indent level."
         case .misalignedIndentation(_, let actual):
-            return "Indentation must be a multiple of 4 spaces. Found \(actual) space\(actual == 1 ? "" : "s")."
+            return "Indentation must be a multiple of 4 spaces (failed IndentMultipleOf4Spec). Found \(actual) space\(actual == 1 ? "" : "s")."
         case .unclosedQuote:
-            return "Unclosed quotation mark. Literals must be enclosed in double quotes on a single line."
+            return "Unclosed quotation mark (failed ValidQuotesSpec). Literals must be enclosed in double quotes on a single line."
         case .multilineLiteral:
-            return "Literal content cannot span multiple lines. Each node must be on a single line."
+            return "Literal content cannot span multiple lines (failed SingleLineContentSpec). Each node must be on a single line."
         case .invalidLineFormat:
-            return "Invalid line format. Expected blank line, comment (# ...), or quoted literal (\"...\")."
+            return "Invalid line format (failed LineKindDecision/ValidNodeLineSpec). Expected blank line, comment (# ...), or quoted literal (\"...\")."
         case .trailingContent:
-            return "Unexpected content after closing quote. Node lines must end after the closing quote."
+            return "Unexpected content after closing quote (failed ValidNodeLineSpec). Node lines must end after the closing quote."
+        case .depthExceeded(_, let maxDepth):
+            return "Indentation depth exceeds maximum of \(maxDepth) levels (failed DepthWithinLimitSpec). Reduce nesting before this line."
         }
     }
 
@@ -73,6 +82,7 @@ public enum LexerError: CompilerError, Equatable {
              .unclosedQuote(let location),
              .multilineLiteral(let location),
              .invalidLineFormat(let location),
+             .depthExceeded(let location, _),
              .trailingContent(let location):
             return location
         }

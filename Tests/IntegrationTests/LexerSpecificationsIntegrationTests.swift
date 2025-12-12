@@ -241,6 +241,29 @@ final class LexerSpecificationsIntegrationTests: XCTestCase {
         }
     }
 
+    /// DepthWithinLimitSpec should prevent lexing beyond configured depth.
+    func testLexerEnforcesDepthLimitSpecification() throws {
+        let excessiveIndent = String(repeating: " ", count: 44) + "\"too deep\""  // 11 levels when spacesPerIndentLevel == 4
+
+        XCTAssertThrowsError(try lexer.tokenize(content: excessiveIndent, filePath: "test.hc")) { error in
+            guard let lexerError = error as? LexerError else {
+                XCTFail("Expected LexerError")
+                return
+            }
+
+            guard case .depthExceeded(_, let maxDepth) = lexerError else {
+                XCTFail("Expected depthExceeded for depth overflow")
+                return
+            }
+
+            XCTAssertEqual(maxDepth, 10)
+            XCTAssertTrue(
+                lexerError.message.contains("DepthWithinLimitSpec"),
+                "Depth limit failures should cite specification"
+            )
+        }
+    }
+
     /// Demonstrates specification-driven validation of quote integrity.
     func testValidQuotesSpecification() throws {
         let spec = ValidQuotesSpec()

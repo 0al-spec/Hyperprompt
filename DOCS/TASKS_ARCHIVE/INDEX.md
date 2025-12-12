@@ -56,3 +56,8 @@
 - [E2 — Cross-Platform Testing](./E2_Cross_Platform_Testing.md) ✓ 2025-12-11
   - [Summary Report](./E2-summary.md)
   - [Test Results](./E2-test-results.md)
+
+## Phase 9: Optimization & Finalization
+
+- [OPT-DET — Verify deterministic output](./OPT-DET_Verify_deterministic_output.md) ✓ 2025-12-12
+  - [Summary Report](./OPT-DET-summary.md)
