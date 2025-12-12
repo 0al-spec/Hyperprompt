@@ -46,6 +46,7 @@
   - [Technical Debt](./D2-tech-debt.md)
 - [D3 — Diagnostic Printer](./D3_Diagnostic_Printer.md) ✓ 2025-12-12
   - [Summary Report](./D3-summary.md)
+- [PR 65 — Fix Caret Alignment (DiagnosticPrinter)](./PR65_Fix_Caret_Alignment.md) ✓ 2025-12-12
 
 ## Phase 8: Testing & Quality Assurance
 
