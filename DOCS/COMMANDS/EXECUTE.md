@@ -15,11 +15,14 @@ Provide a **thin workflow wrapper** around task execution. This command:
 
 > **CRITICAL VALIDATION REQUIREMENT**
 >
-> Every EXECUTE cycle MUST run `swift build` and `swift test` before committing!
-> - Do NOT commit code that doesn't compile
-> - Do NOT commit code with failing tests
-> - If Swift is not available, install it first: **[Swift Installation Guide](../RULES/02_Swift_Installation.md)**
-> - If Swift cannot be installed in the environment, note this explicitly in the commit message and task summary
+> - **Swift must be installed before starting EXECUTE.** If it's missing, install it first: **[Swift Installation Guide](../RULES/02_Swift_Installation.md)**
+> - After code changes, validation MUST start with the Git LFS-backed cache restore command and then run tests (which also build):
+>   ```bash
+>   ./.github/scripts/restore-build-cache.sh
+>   swift test 2>&1
+>   ```
+> - Do NOT commit code that doesn't compile or has failing tests
+> - If Swift or the cache cannot be used in the environment, note this explicitly in the commit message and task summary
 
 ## Philosophy
 
@@ -54,28 +57,32 @@ This ensures test-driven development, incremental delivery, and continuous main-
 
 **Purpose:** Ensure environment is ready for work
 
-1. **Verify Git state:**
+1. **Ensure Swift is available (install if missing):**
+   - Follow **[Swift Installation Guide](../RULES/02_Swift_Installation.md)** before running any other steps
+   - Confirm installation: `swift --version`
+
+2. **Verify Git state:**
    ```bash
    git status --porcelain
    # Must be empty (no uncommitted changes)
    ```
 
-2. **Load task context:**
+3. **Load task context:**
    ```bash
    TASK_ID=$(head -1 DOCS/INPROGRESS/next.md | sed 's/# Next Task: \(.*\) —.*/\1/')
    PRD="DOCS/INPROGRESS/${TASK_ID}_*.md"
    ```
 
-3. **Check dependencies:**
+4. **Check dependencies:**
    - Read `Dependencies:` line from next.md
    - Verify all upstream tasks marked `[x]` in Workplan
    - **Exit if dependencies not satisfied**
 
-4. **Verify PRD exists:**
+5. **Verify PRD exists:**
    - Check `DOCS/INPROGRESS/{TASK_ID}_*.md` exists
    - **Exit if not found:** "Run PLAN command first"
 
-5. **Display plan summary:**
+6. **Display plan summary:**
    ```
    ╔════════════════════════════════════════════════════════════╗
    ║  EXECUTE: {TASK_ID} — {TASK_NAME}                         ║
@@ -95,7 +102,7 @@ This ensures test-driven development, incremental delivery, and continuous main-
    ✅ Quality Checklist: {COUNT} items
    ```
 
-6. **Prompt user:**
+7. **Prompt user:**
    ```
    Ready to execute {TASK_ID}?
    - PRD contains all implementation instructions
@@ -141,7 +148,7 @@ If `--interactive` mode:
 
 **Purpose:** Verify implementation meets requirements
 
-**CRITICAL:** Every EXECUTE cycle MUST run `swift build` and `swift test` before committing!
+**CRITICAL:** Every EXECUTE cycle MUST restore the Git LFS-backed build cache and run `swift test` (which performs the build) before committing!
 
 1. **OPTIONAL: Restore build cache for faster compilation:**
    ```bash
@@ -164,17 +171,17 @@ If `--interactive` mode:
    - Safe to skip if cache not available — build will work normally
    - Update cache after changing `Package.swift`: `./.github/scripts/update-build-cache.sh`
 
-2. **MANDATORY: Run build and test commands:**
+2. **MANDATORY: Use cache-backed validation instead of bare `swift build`:**
    ```bash
    # REQUIRED - Must pass before commit
-   swift build 2>&1
+   ./.github/scripts/restore-build-cache.sh
    swift test 2>&1
    ```
 
-   **If `swift build` fails:**
-   - Fix all compilation errors before proceeding
+   **If `swift test` (build + tests) fails:**
+   - Fix all compilation errors or failing tests before proceeding
    - Do NOT commit code that doesn't compile
-   - Re-run build until it passes
+   - Re-run tests (which rebuild) until they pass
 
    **If `swift test` fails:**
    - Fix all failing tests before proceeding
