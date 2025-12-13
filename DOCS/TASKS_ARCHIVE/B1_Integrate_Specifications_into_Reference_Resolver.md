@@ -643,3 +643,6 @@ enum ResolutionError: CompilerError {
 ---
 
 **END OF PRD**
+
+---
+**Archived:** 2025-12-13

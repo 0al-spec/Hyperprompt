@@ -1,16 +1,16 @@
-# Next Task: B1  Integrate Specifications into Reference Resolver
+# Next Task: Optimization Tasks — Performance Tuning & Verification
 
 **Priority:** P1
-**Phase:** Phase 4: Reference Resolution
+**Phase:** Phase 9: Optimization & Finalization
 **Effort:** 3 hours
-**Dependencies:** Spec-3 
-**Status:** ✅ Completed on 2025-12-13
+**Dependencies:** E1 ✅, E2 ✅
+**Status:** Selected
 
 ## Description
 
-Integrate ValidReferencePathSpec and PathTypeDecision specifications into the ReferenceResolver. ValidReferencePathSpec provides declarative validation for file reference paths (no traversal, allowed extensions), while PathTypeDecision classifies paths into allowed/forbidden/invalid categories. This replaces remaining imperative validation logic with declarative specifications.
+Profile and optimize compilation performance, benchmark against performance targets (1000-node tree compilation < 5 seconds with linear scaling), verify manifest JSON key alphabetical sorting, and validate behavior with large test corpus and memory usage with large files (>1MB).
 
 ## Next Step
 
 Run PLAN command to generate detailed PRD:
-$ claude "K?>;=8 :><0=4C PLAN"
+$ claude "Выполни команду PLAN"
