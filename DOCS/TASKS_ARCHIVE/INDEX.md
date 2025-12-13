@@ -52,6 +52,8 @@
 
 - [Integration-1 — Lexer with Specifications](./Integration-1_Lexer_with_Specifications.md) ✓ 2025-12-12
   - [Summary Report](./Integration-1-summary.md)
+- [Integration-2 — Resolver with Specifications](./Integration-2_Resolver_with_Specifications.md) ✓ 2025-12-12
+  - [Summary Report](./Integration-2-summary.md)
 
 ## Phase 8: Testing & Quality Assurance
 
@@ -61,6 +63,7 @@
 - [E2 — Cross-Platform Testing](./E2_Cross_Platform_Testing.md) ✓ 2025-12-11
   - [Summary Report](./E2-summary.md)
   - [Test Results](./E2-test-results.md)
+- [E3 — Documentation](./E3_Documentation.md) ✓ 2025-12-12
 
 ## Phase 9: Optimization & Finalization
 
