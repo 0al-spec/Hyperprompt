@@ -36,6 +36,14 @@ public struct ReferenceResolver {
     /// Dependency tracker for circular dependency detection.
     public var dependencyTracker: DependencyTracker?
 
+    /// Path validator using declarative specifications.
+    /// Validates paths for traversal safety and root boundary containment.
+    private let pathValidator: ValidReferencePathSpec
+
+    /// Path classifier using decision specifications.
+    /// Classifies paths into allowed/forbidden/invalid categories.
+    private let pathDecision: PathTypeDecision
+
     /// Initialize a new reference resolver.
     ///
     /// - Parameters:
@@ -52,6 +60,8 @@ public struct ReferenceResolver {
         self.rootPath = rootPath
         self.mode = mode
         self.dependencyTracker = dependencyTracker
+        self.pathValidator = ValidReferencePathSpec(rootPath: rootPath)
+        self.pathDecision = PathTypeDecision(rootPath: rootPath)
     }
 
     // MARK: - Main Resolution API
@@ -78,23 +88,73 @@ public struct ReferenceResolver {
             return .success(.inlineText)
         }
 
-        // Check for path traversal
-        if containsPathTraversal(literal) {
-            return .failure(.pathTraversal(path: literal, location: node.location))
+        // Validate path using ValidReferencePathSpec (checks traversal and root containment)
+        if !pathValidator.isSatisfiedBy(literal) {
+            // Determine specific failure reason for detailed error messages
+            if !NoTraversalSpec().isSatisfiedBy(literal) {
+                return .failure(.pathTraversal(path: literal, location: node.location))
+            }
+
+            if !WithinRootSpec(rootPath: rootPath).isSatisfiedBy(literal) {
+                let fullPath = constructFullPath(literal)
+                return .failure(
+                    ResolutionError(
+                        message: "Path outside the compilation root: \(fullPath)",
+                        location: node.location))
+            }
+
+            if !IsAllowedExtensionSpec().isSatisfiedBy(literal), let ext = fileExtension(literal) {
+                return .failure(
+                    .forbiddenExtension(path: literal, ext: ".\(ext)", location: node.location))
+            }
+
+            // Generic invalid path error
+            return .failure(
+                ResolutionError(
+                    message: "Invalid path reference (violates ValidReferencePathSpec): \(literal)",
+                    location: node.location))
         }
 
-        // Validate and classify by extension using specifications
-        if HasMarkdownExtensionSpec().isSatisfiedBy(literal) {
-            return resolveMarkdown(literal, node: node)
-        } else if HasHypercodeExtensionSpec().isSatisfiedBy(literal) {
-            return resolveHypercode(literal, node: node)
-        } else if let ext = fileExtension(literal) {
-            // Has an extension but not allowed
-            return .failure(
-                .forbiddenExtension(path: literal, ext: ".\(ext)", location: node.location))
-        } else {
-            // No extension found, treat as inline text
+        // Classify path using PathTypeDecision
+        guard let pathKind = pathDecision.decide(literal) else {
+            // Decision returned nil - treat as inline text
             return .success(.inlineText)
+        }
+
+        switch pathKind {
+        case .allowed(let ext):
+            // Route to appropriate handler based on extension
+            if ext == "md" {
+                return resolveMarkdown(literal, node: node)
+            } else if ext == "hc" {
+                return resolveHypercode(literal, node: node)
+            } else {
+                // Allowed but not recognized - treat as inline text
+                return .success(.inlineText)
+            }
+        case .forbidden(let ext):
+            // If path has no extension (empty), treat as inline text instead of error
+            if ext.isEmpty {
+                return .success(.inlineText)
+            }
+            return .failure(
+                .forbiddenExtension(
+                    path: literal,
+                    ext: ".\(ext)",
+                    location: node.location))
+        case .invalid(let reason):
+            // Check if this is an "outside root" error for better message
+            if reason.contains("escapes root") || !WithinRootSpec(rootPath: rootPath).isSatisfiedBy(literal) {
+                let fullPath = constructFullPath(literal)
+                return .failure(
+                    ResolutionError(
+                        message: "Path outside the compilation root: \(fullPath)",
+                        location: node.location))
+            }
+            return .failure(
+                ResolutionError(
+                    message: "Invalid path: \(reason)",
+                    location: node.location))
         }
     }
 
