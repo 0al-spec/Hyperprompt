@@ -41,7 +41,7 @@ public struct ReferenceResolver {
     /// Validates: NoTraversal AND WithinRoot AND LooksLikeFile
     /// Classifies: allowed/forbidden/invalid based on extension
     private let pathDecision: PathTypeDecision
-    
+
     /// Optional statistics collector for instrumentation.
     private let statsCollector: StatsCollector?
 
@@ -79,8 +79,8 @@ public struct ReferenceResolver {
     /// Algorithm:
     /// 1. Check if literal looks like a file path (contains `/` or `.`)
     /// 2. If not, return `.inlineText`
-    /// 3. Check for path traversal (`..`) → error
-    /// 4. Extract extension and route by type
+    /// 3. Use PathTypeDecision for validation and classification
+    /// 4. Route to appropriate handler based on path kind
     /// 5. Validate file existence per mode
     public mutating func resolve(node: Node) -> Result<ResolutionKind, ResolutionError> {
         let literal = node.literal.trimmingCharacters(in: .whitespaces)
@@ -131,10 +131,11 @@ public struct ReferenceResolver {
             }
 
             // Check if path is outside root (PathTypeDecision already validated this)
-            if reason.contains("escapes root") {
+            if reason.contains("escapes root") || !WithinRootSpec(rootPath: rootPath).isSatisfiedBy(literal) {
+                let fullPath = constructFullPath(literal)
                 return .failure(
                     ResolutionError(
-                        message: "Path \(literal) is outside the compilation root",
+                        message: "Path outside the compilation root: \(fullPath)",
                         location: node.location
                     ))
             }
