@@ -36,6 +36,11 @@ public struct ReferenceResolver {
     /// Dependency tracker for circular dependency detection.
     public var dependencyTracker: DependencyTracker?
 
+    /// Decision spec for path validation and classification.
+    /// Validates: NoTraversal AND WithinRoot AND LooksLikeFile
+    /// Classifies: allowed/forbidden/invalid based on extension
+    private let pathDecision: PathTypeDecision
+
     /// Initialize a new reference resolver.
     ///
     /// - Parameters:
@@ -52,6 +57,7 @@ public struct ReferenceResolver {
         self.rootPath = rootPath
         self.mode = mode
         self.dependencyTracker = dependencyTracker
+        self.pathDecision = PathTypeDecision(rootPath: rootPath)
     }
 
     // MARK: - Main Resolution API
@@ -73,28 +79,66 @@ public struct ReferenceResolver {
     public mutating func resolve(node: Node) -> Result<ResolutionKind, ResolutionError> {
         let literal = node.literal.trimmingCharacters(in: .whitespaces)
 
-        // Check if looks like a file path
+        // Check if looks like a file path (using heuristic from LooksLikeFileReferenceSpec)
         guard looksLikeFilePath(literal) else {
             return .success(.inlineText)
         }
 
-        // Check for path traversal
-        if containsPathTraversal(literal) {
-            return .failure(.pathTraversal(path: literal, location: node.location))
+        // Use PathTypeDecision for comprehensive path validation and classification
+        // This checks: NoTraversal AND WithinRoot AND LooksLikeFile, then classifies
+        guard let pathKind = pathDecision.decide(literal) else {
+            // Decision couldn't classify - treat as inline text
+            return .success(.inlineText)
         }
 
-        // Validate and classify by extension using specifications
-        if HasMarkdownExtensionSpec().isSatisfiedBy(literal) {
-            return resolveMarkdown(literal, node: node)
-        } else if HasHypercodeExtensionSpec().isSatisfiedBy(literal) {
-            return resolveHypercode(literal, node: node)
-        } else if let ext = fileExtension(literal) {
-            // Has an extension but not allowed
+        // Route based on path classification
+        switch pathKind {
+        case .allowed(let ext):
+            // Route to appropriate resolver based on extension
+            if ext == "md" {
+                return resolveMarkdown(literal, node: node)
+            } else if ext == "hc" {
+                return resolveHypercode(literal, node: node)
+            } else {
+                // Allowed extension but not md/hc - shouldn't happen with current specs
+                return .failure(
+                    .forbiddenExtension(path: literal, ext: ".\(ext)", location: node.location))
+            }
+
+        case .forbidden(let ext):
+            // If no extension, treat as inline text (e.g., "docs/readme" or "config")
+            if ext.isEmpty {
+                return .success(.inlineText)
+            }
+            // Extension exists but is not allowed
             return .failure(
                 .forbiddenExtension(path: literal, ext: ".\(ext)", location: node.location))
-        } else {
-            // No extension found, treat as inline text
-            return .success(.inlineText)
+
+        case .invalid(let reason):
+            // Path validation failed - PathTypeDecision provides detailed reason
+            // Common reasons: "Path escapes root or is malformed"
+
+            // Determine specific error type from validation context
+            if containsPathTraversal(literal) {
+                // Path contains ".." traversal
+                return .failure(.pathTraversal(path: literal, location: node.location))
+            }
+
+            // Check if path is outside root (PathTypeDecision already validated this)
+            if reason.contains("escapes root") {
+                return .failure(
+                    ResolutionError(
+                        message: "Path \(literal) is outside the compilation root",
+                        location: node.location
+                    ))
+            }
+
+            // Other validation failures
+            return .failure(
+                ResolutionError(
+                    message: "Invalid path: \(literal) (\(reason))",
+                    location: node.location
+                ))
         }
     }
 
