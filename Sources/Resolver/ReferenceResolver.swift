@@ -83,21 +83,18 @@ public struct ReferenceResolver {
             return .failure(.pathTraversal(path: literal, location: node.location))
         }
 
-        // Get extension
-        guard let ext = fileExtension(literal) else {
-            // No extension found, treat as inline text
-            return .success(.inlineText)
-        }
-
-        // Route by extension
-        switch ext.lowercased() {
-        case "md":
+        // Validate and classify by extension using specifications
+        if HasMarkdownExtensionSpec().isSatisfiedBy(literal) {
             return resolveMarkdown(literal, node: node)
-        case "hc":
+        } else if HasHypercodeExtensionSpec().isSatisfiedBy(literal) {
             return resolveHypercode(literal, node: node)
-        default:
+        } else if let ext = fileExtension(literal) {
+            // Has an extension but not allowed
             return .failure(
                 .forbiddenExtension(path: literal, ext: ".\(ext)", location: node.location))
+        } else {
+            // No extension found, treat as inline text
+            return .success(.inlineText)
         }
     }
 
@@ -189,7 +186,7 @@ public struct ReferenceResolver {
 
     /// Check if a path contains path traversal components.
     ///
-    /// Detects `..` components which could escape the root directory.
+    /// Uses `NoTraversalSpec` to detect `..` components which could escape the root directory.
     /// Note: `./` is allowed (same directory reference).
     ///
     /// Detection patterns:
@@ -201,9 +198,7 @@ public struct ReferenceResolver {
     /// - Parameter path: The path to check
     /// - Returns: `true` if path contains traversal components
     public func containsPathTraversal(_ path: String) -> Bool {
-        // Split by path separator and check each component
-        let components = path.components(separatedBy: PathSegment.separators)
-        return components.contains { $0 == PathSegment.traversal }
+        !NoTraversalSpec().isSatisfiedBy(path)
     }
 
     /// Check if a file exists at the given path relative to root.
@@ -229,6 +224,8 @@ public struct ReferenceResolver {
 
     /// Validate that a path is contained within the configured root directory.
     ///
+    /// Uses `WithinRootSpec` to verify the path stays within root directory boundaries.
+    ///
     /// - Parameters:
     ///   - fullPath: Absolute path to validate
     ///   - location: Source location for error reporting
@@ -240,10 +237,9 @@ public struct ReferenceResolver {
             let canonicalRoot = try fileSystem.canonicalizePath(rootPath)
             let canonicalTarget = try fileSystem.canonicalizePath(fullPath)
 
-            let isInsideRoot =
-                canonicalTarget == canonicalRoot || canonicalTarget.hasPrefix(canonicalRoot + "/")
-
-            if isInsideRoot {
+            // Use WithinRootSpec to validate boundary
+            let rootSpec = WithinRootSpec(rootPath: canonicalRoot)
+            if rootSpec.isSatisfiedBy(canonicalTarget) {
                 return .success(())
             }
 
