@@ -347,6 +347,7 @@ Non-blocking: Can develop in parallel with Track A
 **Dependencies:** A4 (needs AST)
 **Estimated:** 6 hours
 **Status:** ✅ Completed on 2025-12-06
+**INPROGRESS (Spec Integration):** Started on 2025-12-13 — Integrate ValidReferencePathSpec and PathTypeDecision
 
 - [x] **[P0, depends: A4]** Implement file existence checking against root directory
 - [x] **[P0, depends: A4]** Classify literals as file references or inline text
