@@ -3,8 +3,12 @@ name: Build with Cache
 on:
   push:
     branches: [ main, "claude/**", "feature/**" ]
+    paths-ignore:
+      - 'DOCS/**'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - 'DOCS/**'
 
 jobs:
   build:
