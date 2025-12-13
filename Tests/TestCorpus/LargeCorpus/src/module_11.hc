@@ -1,0 +1,7 @@
+"Module 11 - Main Component"
+    "Component 11.1 - Implementation"
+        "Subcomponent 11.1.1"
+        "Subcomponent 11.1.2"
+    "Component 11.2 - Tests"
+        "Test Suite 11.2.1"
+        "Test Suite 11.2.2"
