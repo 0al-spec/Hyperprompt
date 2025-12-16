@@ -22,7 +22,7 @@
 ## Phase 4: Reference Resolution
 
 - [B1 — Reference Resolver](./B1_Reference_Resolver.md) ✓ 2025-12-06
-  - [Summary Report](./B1-summary.md)
+  - [Summary Report](./B1-summary.md) ✓ 2025-12-16
   - [Spec Integration](./B1_Integrate_Specifications_into_Reference_Resolver.md) ✓ 2025-12-13
 - [B2 — Dependency Tracker](./B2_Dependency_Tracker.md) ✓ 2025-12-06
   - [Summary Report](./B2-summary.md) ✓ 2025-12-08
