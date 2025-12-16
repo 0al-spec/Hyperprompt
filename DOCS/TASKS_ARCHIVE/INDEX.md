@@ -70,3 +70,7 @@
 
 - [OPT-DET — Verify deterministic output](./OPT-DET_Verify_deterministic_output.md) ✓ 2025-12-12
   - [Summary Report](./OPT-DET-summary.md)
+- [P9 — Optimization Tasks](./P9_Optimization_Tasks.md) ✓ 2025-12-16
+  - [Summary Report](./P9_Optimization_Tasks-summary.md) ✓ 2025-12-13
+  - [Performance Results](./P9_Performance_Results.md) ✓ 2025-12-16
+- [Release Preparation — v0.1.0 Final Release](./Release_Preparation.md) ✓ 2025-12-16
