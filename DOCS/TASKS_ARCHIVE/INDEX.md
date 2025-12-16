@@ -22,7 +22,7 @@
 ## Phase 4: Reference Resolution
 
 - [B1 — Reference Resolver](./B1_Reference_Resolver.md) ✓ 2025-12-06
-  - [Summary Report](./B1-summary.md)
+  - [Summary Report](./B1-summary.md) ✓ 2025-12-16
   - [Spec Integration](./B1_Integrate_Specifications_into_Reference_Resolver.md) ✓ 2025-12-13
 - [B2 — Dependency Tracker](./B2_Dependency_Tracker.md) ✓ 2025-12-06
   - [Summary Report](./B2-summary.md) ✓ 2025-12-08
@@ -70,3 +70,7 @@
 
 - [OPT-DET — Verify deterministic output](./OPT-DET_Verify_deterministic_output.md) ✓ 2025-12-12
   - [Summary Report](./OPT-DET-summary.md)
+- [P9 — Optimization Tasks](./P9_Optimization_Tasks.md) ✓ 2025-12-16
+  - [Summary Report](./P9_Optimization_Tasks-summary.md) ✓ 2025-12-13
+  - [Performance Results](./P9_Performance_Results.md) ✓ 2025-12-16
+- [Release Preparation — v0.1.0 Final Release](./Release_Preparation.md) ✓ 2025-12-16
