@@ -717,7 +717,7 @@ Non-blocking: Can develop in parallel with Track A
 ### Optimization Tasks **[P1]**
 **Dependencies:** E1, E2
 **Estimated:** 3 hours
-**Status:** 🔄 **INPROGRESS** (selected 2025-12-13)
+**Status:** ✅ **COMPLETED** on 2025-12-16
 
 - [ ] **[P2, depends: E1]** Profile compilation with Instruments (macOS) or Valgrind (Linux)
 - [ ] **[P2, depends: E1]** Optimize hot paths identified in profiling
@@ -737,6 +737,7 @@ Non-blocking: Can develop in parallel with Track A
 ### Release Preparation **[P0]**
 **Dependencies:** E1, E2, E3, Optimization
 **Estimated:** 3 hours
+**Status:** 🔄 **INPROGRESS** (selected 2025-12-16)
 
 - [ ] **[P0, depends: E1, E2]** Tag version 0.1.0
 - [ ] **[P0, depends: E2]** Build release binaries for all platforms
