@@ -1,0 +1,7 @@
+"Module 7 - Main Component"
+    "Component 7.1 - Implementation"
+        "Subcomponent 7.1.1"
+        "Subcomponent 7.1.2"
+    "Component 7.2 - Tests"
+        "Test Suite 7.2.1"
+        "Test Suite 7.2.2"

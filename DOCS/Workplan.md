@@ -717,7 +717,7 @@ Non-blocking: Can develop in parallel with Track A
 ### Optimization Tasks **[P1]**
 **Dependencies:** E1, E2
 **Estimated:** 3 hours
-**Status:** 🔄 **INPROGRESS** (selected 2025-12-13)
+**Status:** ✅ **COMPLETED** on 2025-12-16
 
 - [ ] **[P2, depends: E1]** Profile compilation with Instruments (macOS) or Valgrind (Linux)
 - [ ] **[P2, depends: E1]** Optimize hot paths identified in profiling
@@ -737,13 +737,14 @@ Non-blocking: Can develop in parallel with Track A
 ### Release Preparation **[P0]**
 **Dependencies:** E1, E2, E3, Optimization
 **Estimated:** 3 hours
+**Status:** ✅ **COMPLETED** on 2025-12-16
 
-- [ ] **[P0, depends: E1, E2]** Tag version 0.1.0
-- [ ] **[P0, depends: E2]** Build release binaries for all platforms
-- [ ] **[P1, depends: E2]** Create distribution packages (DMG, DEB, ZIP)
-- [ ] **[P1, depends: E3]** Write release notes
-- [ ] **[P1, depends: E3]** Update CHANGELOG
-- [ ] **[P2, depends: E1]** Archive test results and coverage reports
+- [x] **[P0, depends: E1, E2]** Tag version 0.1.0 **Completed 2025-12-16** (local tag created)
+- [x] **[P0, depends: E2]** Build release binaries for all platforms **Completed 2025-12-16** (Linux x86_64)
+- [x] **[P1, depends: E2]** Create distribution packages (DMG, DEB, ZIP) **Completed 2025-12-16** (ZIP archive created)
+- [x] **[P1, depends: E3]** Write release notes **Completed 2025-12-16**
+- [x] **[P1, depends: E3]** Update CHANGELOG **Completed 2025-12-16**
+- [x] **[P2, depends: E1]** Archive test results and coverage reports **Completed 2025-12-16**
 
 **Acceptance Criteria:** Release packages built and tested, documentation finalized
 

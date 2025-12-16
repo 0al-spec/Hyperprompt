@@ -1,0 +1,7 @@
+"Module 26 - Main Component"
+    "Component 26.1 - Implementation"
+        "Subcomponent 26.1.1"
+        "Subcomponent 26.1.2"
+    "Component 26.2 - Tests"
+        "Test Suite 26.2.1"
+        "Test Suite 26.2.2"
