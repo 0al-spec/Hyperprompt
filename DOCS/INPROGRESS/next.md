@@ -1,14 +1,14 @@
-# Next Task: OPT-BENCH — Benchmark against performance targets
+# Next Task: D4 — Statistics Reporter
 
-**Priority:** P1
-**Phase:** Phase 9 — Optimization & Finalization
+**Priority:** P2
+**Phase:** Phase 6 — CLI & Integration
 **Effort:** 3 hours
-**Dependencies:** E1
+**Dependencies:** D1
 **Status:** Selected
 
 ## Description
 
-Benchmark compiler performance to confirm 1000-node trees compile in under 5 seconds and scaling remains linear with file count.
+Implement the statistics collector and reporter so the `--stats` flag and verbose mode surface compilation metrics (files, bytes, depth, duration).
 
 ## Next Step
 

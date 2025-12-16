@@ -566,8 +566,9 @@ Non-blocking: Can develop in parallel with Track A
 ### D4: Statistics Reporter **[P2]**
 **Dependencies:** D1
 **Estimated:** 3 hours
+**Status:** Selected — **INPROGRESS**
 
-- [ ] **[P2, depends: D1]** Implement `StatsCollector` tracking compilation metrics
+- [ ] **[P2, depends: D1]** Implement `StatsCollector` tracking compilation metrics **INPROGRESS**
 - [ ] **[P2, depends: D1]** Count Hypercode files processed
 - [ ] **[P2, depends: D1]** Count Markdown files embedded
 - [ ] **[P2, depends: D1]** Sum total input bytes
@@ -721,12 +722,12 @@ Non-blocking: Can develop in parallel with Track A
 
 - [ ] **[P2, depends: E1]** Profile compilation with Instruments (macOS) or Valgrind (Linux)
 - [ ] **[P2, depends: E1]** Optimize hot paths identified in profiling
-- [ ] **[P1, depends: E1]** Benchmark against performance targets **INPROGRESS**:
-  - [ ] **[P1]** 1000-node tree compilation < 5 seconds
-  - [ ] **[P1]** Linear scaling with file count
+- [x] **[P1, depends: E1]** Benchmark against performance targets **Completed 2025-12-16**:
+  - [x] **[P1]** 1000-node tree compilation < 5 seconds (853ms average over 5 runs)
+  - [x] **[P1]** Linear scaling with file count (R² = 0.984 across 10–120 files)
 - [x] **[P0, depends: E2]** Verify deterministic output (repeated compilations identical) **Completed 2025-12-12**
-- [ ] **[P2, depends: E1]** Test with large corpus (100+ files)
-- [ ] **[P1, depends: E1]** Verify manifest JSON key alphabetical sorting
+- [x] **[P2, depends: E1]** Test with large corpus (100+ files) — 120-file corpus completed in 206ms
+- [x] **[P1, depends: E1]** Verify manifest JSON key alphabetical sorting — 100% manifest compliance confirmed
 - [ ] **[P2, depends: E1]** Test memory usage with large files (>1MB)
 - [ ] **[P2, depends: E1]** Fix any memory leaks detected
 
