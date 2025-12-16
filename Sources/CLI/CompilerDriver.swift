@@ -9,6 +9,7 @@ import Core
 import Parser
 import Resolver
 import Emitter
+import Statistics
 
 /// Result of successful compilation containing all generated outputs.
 public struct CompilationResult {
@@ -25,43 +26,6 @@ public struct CompilationResult {
         self.markdown = markdown
         self.manifestJSON = manifestJSON
         self.statistics = statistics
-    }
-}
-
-/// Compilation metrics collected during pipeline execution.
-public struct CompilationStats {
-    /// Number of .hc files processed
-    public let numHypercodeFiles: Int
-
-    /// Number of .md files embedded
-    public let numMarkdownFiles: Int
-
-    /// Total input bytes (all source files)
-    public let totalInputBytes: Int
-
-    /// Output bytes (compiled Markdown)
-    public let outputBytes: Int
-
-    /// Maximum nesting depth encountered
-    public let maxDepth: Int
-
-    /// Compilation duration in milliseconds
-    public let durationMs: Int
-
-    public init(
-        numHypercodeFiles: Int,
-        numMarkdownFiles: Int,
-        totalInputBytes: Int,
-        outputBytes: Int,
-        maxDepth: Int,
-        durationMs: Int
-    ) {
-        self.numHypercodeFiles = numHypercodeFiles
-        self.numMarkdownFiles = numMarkdownFiles
-        self.totalInputBytes = totalInputBytes
-        self.outputBytes = outputBytes
-        self.maxDepth = maxDepth
-        self.durationMs = durationMs
     }
 }
 
@@ -131,7 +95,8 @@ public final class CompilerDriver {
     /// - Returns: CompilationResult containing all generated outputs
     /// - Throws: CompilerError on any compilation failure
     public func compile(_ args: CompilerArguments) throws -> CompilationResult {
-        let startTime = Date()
+        let statsCollector = StatsCollector(enabled: args.stats)
+        statsCollector.start()
 
         // Verbose logging: show compilation start
         if args.verbose {
@@ -170,7 +135,8 @@ public final class CompilerDriver {
 
         let program = try parseInputFile(
             path: validatedPaths.inputPath,
-            verbose: args.verbose
+            verbose: args.verbose,
+            statsCollector: statsCollector
         )
 
         if args.verbose {
@@ -185,14 +151,12 @@ public final class CompilerDriver {
             logVerbose("[PHASE 3] Resolve phase - loading file references")
         }
 
-        let fileLoader = FileLoader(fileSystem: fileSystem)
-
         let resolvedProgram = try resolveReferences(
             program: program,
             rootPath: validatedPaths.rootPath,
             mode: args.mode,
-            fileLoader: fileLoader,
-            verbose: args.verbose
+            verbose: args.verbose,
+            statsCollector: statsCollector
         )
 
         if args.verbose {
@@ -261,21 +225,12 @@ public final class CompilerDriver {
         }
 
         // Calculate statistics if enabled
-        let stats: CompilationStats?
-        if args.stats {
-            let duration = Int(Date().timeIntervalSince(startTime) * 1000)
-            stats = CompilationStats(
-                numHypercodeFiles: 0, // TODO: collect during resolution
-                numMarkdownFiles: 0,  // TODO: collect during resolution
-                totalInputBytes: 0,   // TODO: collect during resolution
-                outputBytes: markdown.utf8.count,
-                maxDepth: program.root.depth, // Simplified - would need tree traversal for actual max
-                durationMs: duration
-            )
+        statsCollector.recordOutputBytes(markdown.utf8.count + manifestJSON.utf8.count)
+        statsCollector.updateMaxDepth(resolvedProgram.maxDepth)
 
-            printStatistics(stats!)
-        } else {
-            stats = nil
+        let stats = statsCollector.finish()
+        if let stats {
+            StatsReporter().print(stats)
         }
 
         if args.verbose {
@@ -341,7 +296,11 @@ public final class CompilerDriver {
     }
 
     /// Parse input file into AST.
-    private func parseInputFile(path: String, verbose: Bool) throws -> Program {
+    private func parseInputFile(
+        path: String,
+        verbose: Bool,
+        statsCollector: StatsCollector?
+    ) throws -> Program {
         // Read file content
         let content: String
         do {
@@ -352,6 +311,9 @@ public final class CompilerDriver {
                 location: nil
             )
         }
+
+        let canonicalPath = (try? fileSystem.canonicalizePath(path)) ?? path
+        statsCollector?.recordHypercodeFile(path: canonicalPath, bytes: content.utf8.count)
 
         // Create lexer and tokenize
         let lexer = Lexer()
@@ -391,8 +353,8 @@ public final class CompilerDriver {
         program: Program,
         rootPath: String,
         mode: CompilerArguments.CompilationMode,
-        fileLoader: FileLoader,
-        verbose: Bool
+        verbose: Bool,
+        statsCollector: StatsCollector?
     ) throws -> Program {
         let resolutionMode: ResolutionMode = mode == .strict ? .strict : .lenient
 
@@ -401,7 +363,8 @@ public final class CompilerDriver {
             fileSystem: fileSystem,
             rootPath: rootPath,
             mode: resolutionMode,
-            dependencyTracker: dependencyTracker
+            dependencyTracker: dependencyTracker,
+            statsCollector: statsCollector
         )
 
         // Resolve root node
@@ -499,44 +462,5 @@ public final class CompilerDriver {
     /// Log message to stderr when verbose mode enabled.
     private func logVerbose(_ message: String) {
         fputs(message + "\n", stderr)
-    }
-
-    /// Print compilation statistics to stderr.
-    private func printStatistics(_ stats: CompilationStats) {
-        fputs("\n", stderr)
-        fputs("╔════════════════════════════════════════════════════════════╗\n", stderr)
-        fputs("║  Compilation Statistics                                    ║\n", stderr)
-        fputs("╚════════════════════════════════════════════════════════════╝\n", stderr)
-        fputs("\n", stderr)
-        fputs("  Source files:     \(stats.numHypercodeFiles + stats.numMarkdownFiles) ", stderr)
-        fputs("(\(stats.numHypercodeFiles) Hypercode, \(stats.numMarkdownFiles) Markdown)\n", stderr)
-        fputs("  Input size:       \(formatBytes(stats.totalInputBytes))\n", stderr)
-        fputs("  Output size:      \(formatBytes(stats.outputBytes))\n", stderr)
-
-        if stats.totalInputBytes > 0 {
-            let ratio = Double(stats.outputBytes) / Double(stats.totalInputBytes) * 100.0
-            fputs(String(format: "  Compression:      %.1f%%\n", ratio), stderr)
-        }
-
-        fputs("  Max depth:        \(stats.maxDepth)/10\n", stderr)
-        fputs("  Duration:         \(stats.durationMs) ms\n", stderr)
-
-        if stats.durationMs > 0 {
-            let rate = Double(stats.totalInputBytes) / Double(stats.durationMs) * 1000.0
-            fputs("  Processing rate:  \(formatBytes(Int(rate)))/s\n", stderr)
-        }
-
-        fputs("\n", stderr)
-    }
-
-    /// Format byte count as human-readable string.
-    private func formatBytes(_ bytes: Int) -> String {
-        if bytes < 1024 {
-            return "\(bytes) bytes"
-        } else if bytes < 1024 * 1024 {
-            return String(format: "%.1f KB", Double(bytes) / 1024.0)
-        } else {
-            return String(format: "%.1f MB", Double(bytes) / (1024.0 * 1024.0))
-        }
     }
 }

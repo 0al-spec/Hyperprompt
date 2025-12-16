@@ -566,20 +566,22 @@ Non-blocking: Can develop in parallel with Track A
 ### D4: Statistics Reporter **[P2]**
 **Dependencies:** D1
 **Estimated:** 3 hours
-**Status:** Selected — **INPROGRESS**
+**Status:** ✅ Completed on 2025-12-16
 
-- [ ] **[P2, depends: D1]** Implement `StatsCollector` tracking compilation metrics **INPROGRESS**
-- [ ] **[P2, depends: D1]** Count Hypercode files processed
-- [ ] **[P2, depends: D1]** Count Markdown files embedded
-- [ ] **[P2, depends: D1]** Sum total input bytes
-- [ ] **[P2, depends: D1]** Record output bytes
-- [ ] **[P2, depends: D1]** Track maximum depth encountered
-- [ ] **[P2, depends: D1]** Measure elapsed time (ms)
-- [ ] **[P2, depends: D1]** Implement `StatsReporter` formatting output
-- [ ] **[P2, depends: D1]** Integrate with `--stats` flag and verbose mode
-- [ ] **[P2, depends: D1]** Write statistics tests
+- [x] **[P2, depends: D1]** Implement `StatsCollector` tracking compilation metrics
+- [x] **[P2, depends: D1]** Count Hypercode files processed
+- [x] **[P2, depends: D1]** Count Markdown files embedded
+- [x] **[P2, depends: D1]** Sum total input bytes
+- [x] **[P2, depends: D1]** Record output bytes
+- [x] **[P2, depends: D1]** Track maximum depth encountered
+- [x] **[P2, depends: D1]** Measure elapsed time (ms)
+- [x] **[P2, depends: D1]** Implement `StatsReporter` formatting output
+- [x] **[P2, depends: D1]** Integrate with `--stats` flag and verbose mode
+- [x] **[P2, depends: D1]** Write statistics tests
 
 **Acceptance Criteria:** Statistics output includes all specified metrics, integrates with CLI flags
+
+**Completion Note (2025-12-16):** Added Statistics module with collector/reporter, instrumented CompilerDriver and ReferenceResolver to gather metrics, and validated via unit and integration tests. Statistics printing now triggered by `--stats`; outputs remain unchanged when disabled.
 
 ---
 

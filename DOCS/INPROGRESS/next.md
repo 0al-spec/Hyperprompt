@@ -4,7 +4,7 @@
 **Phase:** Phase 6 — CLI & Integration
 **Effort:** 3 hours
 **Dependencies:** D1
-**Status:** Selected
+**Status:** ✅ Completed on 2025-12-16
 
 ## Description
 
@@ -12,5 +12,4 @@ Implement the statistics collector and reporter so the `--stats` flag and verbos
 
 ## Next Step
 
-Run PLAN command to generate detailed PRD:
-$ claude "Выполни команду PLAN"
+**Completed:** 2025-12-16
