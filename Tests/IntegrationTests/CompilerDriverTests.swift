@@ -629,31 +629,27 @@ final class CompilerDriverTests: XCTestCase {
     // MARK: - Statistics Tests
 
     func testStatisticsCollection() throws {
-        // TEMPORARILY DISABLED: Statistics integration incomplete (tech debt)
-        // See: DOCS/INPROGRESS/D2-tech-debt.md
-        // Will be fixed in: D4 (Statistics Reporter, P2, 3h)
-        // Issue: ManifestBuilder not integrated with ReferenceResolver, shows zeros for input bytes and maxDepth
-        throw XCTSkip("Temporarily disabled - statistics integration incomplete. Will fix in D4 task.")
-
-        /* Original test - restore after D4 completion:
-        let input = fixtureURL("Valid/V03.hc")
-        let output = tempURL("V03-stats.md")
+        let input = fixtureURL("Valid/V05.hc")
+        let output = tempURL("V05-stats.md")
 
         let result = try compileFile(input, outputPath: output, stats: true)
 
-        // Verify statistics are collected
         guard let stats = result.statistics else {
             XCTFail("Statistics should be collected when stats=true")
             return
         }
 
-        XCTAssertGreaterThan(stats.durationMs, 0, "Compilation should take some time")
-        XCTAssertGreaterThan(stats.totalInputBytes, 0, "Should have input bytes")
-        XCTAssertGreaterThan(stats.outputBytes, 0, "Should have output bytes")
+        XCTAssertEqual(stats.numHypercodeFiles, 1)
+        XCTAssertEqual(stats.numMarkdownFiles, 1)
 
-        // For V03 (3-level hierarchy):
-        XCTAssertEqual(stats.maxDepth, 2, "V03 has max depth 2 (0-indexed)")
-        */
+        let rootBytes = try readFile(input).utf8.count
+        let embeddedBytes = try readFile(fixtureURL("Valid/details/summary.md")).utf8.count
+        XCTAssertEqual(stats.totalInputBytes, rootBytes + embeddedBytes)
+
+        let expectedOutputBytes = result.markdown.utf8.count + result.manifestJSON.utf8.count
+        XCTAssertEqual(stats.totalOutputBytes, expectedOutputBytes)
+        XCTAssertEqual(stats.maxDepth, 1)
+        XCTAssertGreaterThanOrEqual(stats.durationMs, 0)
     }
 
     // MARK: - Error Code Mapping Tests

@@ -1,6 +1,7 @@
 import Core
 import Parser
 import HypercodeGrammar
+import Statistics
 
 /// Reference resolver for classifying node literals.
 ///
@@ -40,6 +41,9 @@ public struct ReferenceResolver {
     /// Validates: NoTraversal AND WithinRoot AND LooksLikeFile
     /// Classifies: allowed/forbidden/invalid based on extension
     private let pathDecision: PathTypeDecision
+    
+    /// Optional statistics collector for instrumentation.
+    private let statsCollector: StatsCollector?
 
     /// Initialize a new reference resolver.
     ///
@@ -51,13 +55,15 @@ public struct ReferenceResolver {
         fileSystem: FileSystem,
         rootPath: String,
         mode: ResolutionMode,
-        dependencyTracker: DependencyTracker? = nil
+        dependencyTracker: DependencyTracker? = nil,
+        statsCollector: StatsCollector? = nil
     ) {
         self.fileSystem = fileSystem
         self.rootPath = rootPath
         self.mode = mode
         self.dependencyTracker = dependencyTracker
         self.pathDecision = PathTypeDecision(rootPath: rootPath)
+        self.statsCollector = statsCollector
     }
 
     // MARK: - Main Resolution API
@@ -266,6 +272,14 @@ public struct ReferenceResolver {
         return rootPath + "/" + relativePath
     }
 
+    /// Canonicalize a path for deduplication purposes.
+    ///
+    /// Falls back to the original path if canonicalization fails to avoid
+    /// impacting compilation behavior when stats are enabled.
+    private func canonicalPath(_ path: String) -> String {
+        (try? fileSystem.canonicalizePath(path)) ?? path
+    }
+
     /// Validate that a path is contained within the configured root directory.
     ///
     /// Uses `WithinRootSpec` to verify the path stays within root directory boundaries.
@@ -325,6 +339,10 @@ public struct ReferenceResolver {
             // Note: Content loading is placeholder for B3: FileLoader integration
             do {
                 let content = try fileSystem.readFile(at: fullPath)
+                statsCollector?.recordMarkdownFile(
+                    path: canonicalPath(fullPath),
+                    bytes: content.utf8.count
+                )
                 return .success(.markdownFile(path: path, content: content))
             } catch {
                 // File exists but couldn't read - treat as IO error propagated up
@@ -428,9 +446,15 @@ public struct ReferenceResolver {
     /// - Returns: Root node of the compiled AST or a resolution error.
     private mutating func compileHypercode(at fullPath: String) -> Result<Node, ResolutionError> {
         do {
+            let content = try fileSystem.readFile(at: fullPath)
+            statsCollector?.recordHypercodeFile(
+                path: canonicalPath(fullPath),
+                bytes: content.utf8.count
+            )
+
             // Parse the Hypercode file into an AST.
             let lexer = Lexer(fileSystem: fileSystem)
-            let tokens = try lexer.tokenize(fullPath)
+            let tokens = try lexer.tokenize(content: content, filePath: fullPath)
             let parser = Parser()
 
             let program: Program
@@ -446,7 +470,8 @@ public struct ReferenceResolver {
                 fileSystem: fileSystem,
                 rootPath: rootPath,
                 mode: mode,
-                dependencyTracker: dependencyTracker
+                dependencyTracker: dependencyTracker,
+                statsCollector: statsCollector
             )
 
             switch childResolver.resolveTree(root: program.root) {
