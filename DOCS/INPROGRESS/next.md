@@ -1,14 +1,14 @@
-# Next Task: EE1 — Editor Engine Implementation
+# Next Task: EE1 — Project Indexing
 
 **Priority:** P1
 **Phase:** Phase 10 — Editor Engine Module
-**Effort:** 16 hours
-**Dependencies:** D2 (Phase 6 — CLI & Integration) ✅
+**Effort:** 3 hours
+**Dependencies:** EE0 (EditorEngine Module Foundation) ✅
 **Status:** Selected
 
 ## Description
 
-Implement the Editor Engine module aligned with PRD requirements. The module will define core data models, interfaces, lifecycle management, and integration points for the editor pipeline.
+Implement project indexing for EditorEngine. Scan workspace for .hc and .md files with deterministic ordering (lexicographic sort), support .hyperpromptignore patterns, and exclude hidden directories by default.
 
 ## Next Step
 

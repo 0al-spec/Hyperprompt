@@ -113,3 +113,7 @@ Implement a statistics collection and reporting capability so the `--stats` flag
 - Stats output is deterministic, labeled with units, and produced only when `--stats` is requested.
 - No changes to generated Markdown or manifests when stats are disabled; outputs remain byte-identical to pre-feature baselines.
 - Overhead remains under 1% relative to the 206ms 120-file corpus baseline when stats are enabled.
+
+---
+
+**Archived:** 2025-12-20

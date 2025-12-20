@@ -15,6 +15,10 @@ let package = Package(
             name: "HypercodeGrammar",
             targets: ["HypercodeGrammar"]
         ),
+        .library(
+            name: "EditorEngine",
+            targets: ["EditorEngine"]
+        ),
     ],
     dependencies: [
         .package(
@@ -127,6 +131,22 @@ let package = Package(
         .testTarget(
             name: "HypercodeGrammarTests",
             dependencies: ["HypercodeGrammar"]
+        ),
+
+        // Editor Engine module (experimental/optional)
+        .target(
+            name: "EditorEngine",
+            dependencies: [
+                "Core",
+                "Parser",
+                "Resolver",
+                "Emitter",
+                "Statistics",
+            ]
+        ),
+        .testTarget(
+            name: "EditorEngineTests",
+            dependencies: ["EditorEngine"]
         ),
     ]
 )
