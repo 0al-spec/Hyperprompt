@@ -756,21 +756,97 @@ Non-blocking: Can develop in parallel with Track A
 ## Phase 10: Editor Engine Module
 
 **Goal:** Implement the Editor Engine module per PRD requirements
-**Estimated Duration:** 16 hours
+**Estimated Duration:** 21 hours
 **Track:** C (Editor Engine)
 
-### EE1: Editor Engine Implementation **[P1]** **INPROGRESS**
-**Dependencies:** Phase 6 (CLI & Integration)
-**Estimated:** 16 hours
+### EE0: EditorEngine Module Foundation **[P1]**
+**Dependencies:** D2 (Phase 6 — CLI & Integration)
+**Estimated:** 1 hour
+**Status:** ✅ Completed on 2025-12-20
+
+- [x] **[P1, depends: D2]** Define SPM `Editor` trait in Package.swift
+- [x] **[P1, depends: D2]** Create EditorEngine target with dependencies (Core, Parser, Resolver, Emitter, Statistics)
+- [x] **[P1, depends: D2]** Create Sources/EditorEngine/ directory with module entry point
+- [x] **[P1, depends: D2]** Create Tests/EditorEngineTests/ with basic tests
+- [x] **[P1, depends: D2]** Verify compilation (swift test passes)
+
+**Acceptance Criteria:** EditorEngine module compiles, all existing tests pass
+
+### EE1: Project Indexing **[P1]** **INPROGRESS**
+**Dependencies:** EE0
+**Estimated:** 3 hours
 **Status:** ⬜ In Progress (selected 2025-12-20)
 
-- [ ] **[P1, depends: D2]** Create `EditorEngine` module aligned with `DOCS/PRD/PRD_EditorEngine.md`
-- [ ] **[P1, depends: D2]** Define core data models, interfaces, and lifecycle described in PRD
-- [ ] **[P1, depends: D2]** Implement editor pipeline wiring and integration points
-- [ ] **[P1, depends: D2]** Add unit tests for key engine behaviors and edge cases
-- [ ] **[P1, depends: D2]** Document module usage and configuration in DOCS
+- [ ] **[P1, depends: EE0]** Define `ProjectIndex` struct with file metadata
+- [ ] **[P1, depends: EE0]** Implement file scanner with deterministic ordering (lexicographic sort)
+- [ ] **[P1, depends: EE0]** Add `.hyperpromptignore` support (glob patterns)
+- [ ] **[P1, depends: EE0]** Exclude hidden directories by default (.git, build, node_modules)
+- [ ] **[P1, depends: EE0]** Write unit tests (5+ tests covering edge cases)
 
-**Acceptance Criteria:** EditorEngine module matches PRD requirements, tests pass, documentation updated
+**Acceptance Criteria:** Index lists all .hc and .md files, deterministic ordering, respects ignore rules
+
+### EE2: Parsing with Link Spans **[P1]**
+**Dependencies:** EE1
+**Estimated:** 3 hours
+**Status:** ⬜ Not started
+
+- [ ] **[P1, depends: EE1]** Define `LinkSpan` struct with byte/line ranges
+- [ ] **[P1, depends: EE1]** Extend Parser to extract link spans during parsing
+- [ ] **[P1, depends: EE1]** Implement link detection heuristic (LooksLikeFileReferenceSpec)
+- [ ] **[P1, depends: EE1]** Handle parse errors gracefully (partial AST + diagnostics)
+- [ ] **[P1, depends: EE1]** Write unit tests (5+ tests including UTF-8 edge cases)
+
+**Acceptance Criteria:** All file references captured with accurate byte/line ranges
+
+### EE3: Link Resolution **[P1]**
+**Dependencies:** EE2
+**Estimated:** 2 hours
+**Status:** ⬜ Not started
+
+- [ ] **[P1, depends: EE2]** Define `ResolvedTarget` enum (inlineText, markdownFile, hypercodeFile, forbidden, invalid, ambiguous)
+- [ ] **[P1, depends: EE2]** Implement `EditorResolver` wrapper around existing ReferenceResolver
+- [ ] **[P1, depends: EE2]** Handle missing files gracefully (strict vs lenient mode)
+- [ ] **[P1, depends: EE2]** Detect and report ambiguous matches (multiple candidates)
+- [ ] **[P1, depends: EE2]** Write unit tests (6+ tests including path traversal rejection)
+
+**Acceptance Criteria:** Resolution matches CLI behavior exactly, edge cases handled
+
+### EE4: Editor Compilation **[P1]**
+**Dependencies:** EE3
+**Estimated:** 3 hours
+**Status:** ⬜ Not started
+
+- [ ] **[P1, depends: EE3]** Define `CompileOptions` and `CompileResult` structs
+- [ ] **[P1, depends: EE3]** Implement `EditorCompiler` wrapper around CompilerDriver
+- [ ] **[P1, depends: EE3]** Capture all errors as diagnostics (no throwing in public API)
+- [ ] **[P1, depends: EE3]** Ensure deterministic output (matches CLI byte-for-byte)
+- [ ] **[P1, depends: EE3]** Write unit tests (5+) and integration tests (4+)
+
+**Acceptance Criteria:** Output matches CLI exactly, diagnostics capture all errors
+
+### EE5: Diagnostics Mapping **[P1]**
+**Dependencies:** EE4
+**Estimated:** 2 hours
+**Status:** ⬜ Not started
+
+- [ ] **[P1, depends: EE4]** Define `Diagnostic` struct with error codes, severity, ranges
+- [ ] **[P1, depends: EE4]** Implement `DiagnosticMapper` (CompilerError → Diagnostic)
+- [ ] **[P1, depends: EE4]** Assign error codes by category (E001-E099: syntax, E100-E199: resolution, etc.)
+- [ ] **[P1, depends: EE4]** Write unit tests (4+ tests verifying error code mapping)
+
+**Acceptance Criteria:** All CLI errors map to editor diagnostics with ranges
+
+### EE6: Documentation & Testing **[P1]**
+**Dependencies:** EE5
+**Estimated:** 7 hours
+**Status:** ⬜ Not started
+
+- [ ] **[P1, depends: EE5]** Write DOCS/EDITOR_ENGINE.md (API reference, usage guide, integration patterns)
+- [ ] **[P1, depends: EE5]** Achieve >80% code coverage with unit tests
+- [ ] **[P1, depends: EE5]** Write integration tests with test corpus (V01-V14, I01-I10)
+- [ ] **[P1, depends: EE5]** Verify CLI vs Editor output is byte-for-byte identical
+
+**Acceptance Criteria:** API documented, >80% coverage, integration tests pass
 
 ---
 
