@@ -18,3 +18,7 @@
 
 ## Next Steps
 - Consider creating/updating the build cache artifact for faster future builds once available.
+
+---
+
+**Archived:** 2025-12-20
