@@ -14,7 +14,7 @@ This work plan combines tasks from:
 - **SpecificationCore Integration** (Design Spec §10: Implementation Checklist)
 - **Testing & Documentation** requirements
 
-**Total Estimated Effort:** ~60 hours (~8 days)
+**Total Estimated Effort:** ~76 hours (~10 days)
 
 ### Priority Levels
 
@@ -753,6 +753,27 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
+## Phase 10: Editor Engine Module
+
+**Goal:** Implement the Editor Engine module per PRD requirements
+**Estimated Duration:** 16 hours
+**Track:** C (Editor Engine)
+
+### EE1: Editor Engine Implementation **[P1]**
+**Dependencies:** Phase 6 (CLI & Integration)
+**Estimated:** 16 hours
+**Status:** ⬜ Not started
+
+- [ ] **[P1, depends: D2]** Create `EditorEngine` module aligned with `DOCS/PRD/PRD_EditorEngine.md`
+- [ ] **[P1, depends: D2]** Define core data models, interfaces, and lifecycle described in PRD
+- [ ] **[P1, depends: D2]** Implement editor pipeline wiring and integration points
+- [ ] **[P1, depends: D2]** Add unit tests for key engine behaviors and edge cases
+- [ ] **[P1, depends: D2]** Document module usage and configuration in DOCS
+
+**Acceptance Criteria:** EditorEngine module matches PRD requirements, tests pass, documentation updated
+
+---
+
 ## Exit Codes Reference
 
 | Code | Category         | Description                                            |
@@ -767,7 +788,7 @@ Non-blocking: Can develop in parallel with Track A
 
 ## Progress Tracking
 
-**Overall Progress:** 0 / 153 tasks completed (0%)
+**Overall Progress:** 0 / 154 tasks completed (0%)
 
 ### By Phase
 - [ ] **Phase 1:** Foundation & Core Types (0/3 major tasks) — **6h** — Track A
@@ -779,10 +800,11 @@ Non-blocking: Can develop in parallel with Track A
 - [ ] **Phase 7:** Integration with Specs (0/2 major tasks) — **11h** — Integration
 - [ ] **Phase 8:** Testing & QA (0/3 major tasks) — **12h** — Integration
 - [ ] **Phase 9:** Optimization & Release (0/2 major tasks) — **4h** — Release
+- [ ] **Phase 10:** Editor Engine Module (0/1 major tasks) — **16h** — Track C
 
 ### By Priority
 - **[P0] Critical:** 0 / 47 tasks (blocks project)
-- **[P1] High:** 0 / 89 tasks (required for v0.1)
+- **[P1] High:** 0 / 90 tasks (required for v0.1)
 - **[P2] Medium:** 0 / 17 tasks (can defer)
 
 ### By Track
@@ -790,6 +812,7 @@ Non-blocking: Can develop in parallel with Track A
 - **Track B (Specifications):** Phase 3 — Parallel with Track A, 17 hours
 - **Integration:** Phase 7, 8 — Requires both tracks, 23 hours
 - **Release:** Phase 9 — Final QA, 4 hours
+- **Track C (Editor Engine):** Phase 10 — 16 hours
 
 ---
 
