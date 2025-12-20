@@ -54,7 +54,7 @@ EditorEngine **does not** introduce new language semantics and **does not** depe
 
 | Dependency | Purpose |
 |-----------|---------|
-| Swift 5.9+ | Language & concurrency model |
+| Swift 6.1+ | Language & concurrency model |
 | SwiftPM Traits | Optional compilation (`Editor` trait) |
 | Hyperprompt Core Modules | Parsing, resolution, emission |
 
