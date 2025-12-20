@@ -7,6 +7,7 @@
 - `DOCS/RULES/01_PRD_PROMPT.md` — PRD rules
 - `DOCS/Workplan.md` — task context
 - `DOCS/PRD/v0.0.1/00_PRD_001.md` — project PRD
+- `DOCS/PRD/PRD_EditorEngine.md` — future EditorEngine module PRD
 - `DOCS/PRD/v0.0.1/01_DESIGN_SPEC_001.md` — design spec
 - `DOCS/PRD/v0.0.1/02_DESIGN_SPEC_SPECIFICATION_CORE.md` — SpecCore spec
 

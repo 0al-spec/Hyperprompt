@@ -749,6 +749,7 @@ func extractLiteral(_ line: String) throws -> String {
 ## 13. References
 
 - **PRD v0.0.1:** `DOCS/PRD/v0.0.1/00_PRD_001.md` — Product requirements
+- **EditorEngine PRD:** `DOCS/PRD/PRD_EditorEngine.md` — Future module context
 - **Design Spec v0.0.1:** `DOCS/PRD/v0.0.1/01_DESIGN_SPEC_001.md` — Architecture §4.1 (Parsing Algorithm)
 - **SpecificationCore Integration:** `DOCS/PRD/v0.0.1/02_DESIGN_SPEC_SPECIFICATION_CORE.md` — §7.1 (Lexer Integration)
 - **Workplan v2.0.0:** `DOCS/Workplan.md` — Phase 2, Lexer Implementation

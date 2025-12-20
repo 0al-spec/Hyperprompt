@@ -579,6 +579,7 @@ This task is complete when:
 ## 9. References
 
 - **PRD**: `DOCS/PRD/v0.0.1/00_PRD_001.md` — §8 (Error Handling & Exit Codes)
+- **EditorEngine PRD**: `DOCS/PRD/PRD_EditorEngine.md` — Future module context
 - **Design Spec**: `DOCS/PRD/v0.0.1/01_DESIGN_SPEC_001.md` — §2.1, §3 (Module Organization, Data Structures)
 - **Workplan**: `DOCS/Workplan.md` — Phase 1, Task A2
 - **Swift API Guidelines**: https://swift.org/documentation/api-design-guidelines/
