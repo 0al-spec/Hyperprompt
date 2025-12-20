@@ -302,6 +302,7 @@ Invalid Hypercode syntax in source file.
 - **Workplan v2.0.0:** `DOCS/Workplan.md` — Phase 8, E3
 - **D1 PRD:** `DOCS/TASKS_ARCHIVE/D1_Argument_Parsing.md` — CLI argument definitions
 - **PRD v0.0.1:** `DOCS/PRD/v0.0.1/00_PRD_001.md` — Feature descriptions
+- **EditorEngine PRD:** `DOCS/PRD/PRD_EditorEngine.md` — Future module documentation scope
 - **Design Spec:** `DOCS/PRD/v0.0.1/01_DESIGN_SPEC_001.md` — Architecture
 - **Test Corpus:** `DOCS/TASKS_ARCHIVE/E1_Test_Corpus_Implementation.md` — Valid/invalid examples
 

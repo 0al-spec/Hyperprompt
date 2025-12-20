@@ -849,6 +849,7 @@ Output:
 ### 12.1 Project Documents
 
 - **PRD v0.0.1**: `/home/user/Hyperprompt/DOCS/PRD/v0.0.1/00_PRD_001.md` §3.3 (Output generation requirements)
+- **EditorEngine PRD**: `/home/user/Hyperprompt/DOCS/PRD/PRD_EditorEngine.md` (Future module context)
 - **Design Spec v0.0.1**: `/home/user/Hyperprompt/DOCS/PRD/v0.0.1/01_DESIGN_SPEC_001.md` §4.3 (Markdown emission algorithm)
 - **Workplan v2.0.0**: `/home/user/Hyperprompt/DOCS/Workplan.md` Phase 5, Task C2
 

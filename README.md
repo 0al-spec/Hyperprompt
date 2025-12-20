@@ -101,6 +101,7 @@ hyperprompt root.hc --verbose --stats
 - **[ERROR_CODES.md](DOCS/ERROR_CODES.md)** — Exit codes, error scenarios, and solutions
 - **[SPECS_INTEGRATION.md](DOCS/SPECS_INTEGRATION.md)** — SpecificationCore integration patterns
 - **[TROUBLESHOOTING.md](DOCS/TROUBLESHOOTING.md)** — Common issues and frequently asked questions
+- **[PRD_EditorEngine.md](DOCS/PRD/PRD_EditorEngine.md)** — Future EditorEngine module plan
 
 ## Example Files
 
@@ -156,7 +157,8 @@ Hyperprompt/
 │   ├── Resolver/               # File reference resolver
 │   ├── Emitter/                # Markdown emitter
 │   ├── Statistics/             # Compilation metrics
-│   └── HypercodeGrammar/        # Grammar specifications
+│   ├── HypercodeGrammar/        # Grammar specifications
+│   └── EditorEngine/            # Future optional editor-facing engine (planned)
 ├── Tests/                       # Test suites
 ├── docs/examples/               # Example .hc files
 ├── DOCS/                        # User documentation
