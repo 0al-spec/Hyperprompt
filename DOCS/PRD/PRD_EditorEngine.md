@@ -43,7 +43,7 @@ EditorEngine **does not** introduce new language semantics and **does not** depe
 ### 1.4 Constraints & Assumptions
 
 - EditorEngine is **experimental** until Hyperprompt v1.0.
-- API stability is not guaranteed before v1.0.
+- API stability is not guaranteed before v1.0; a stable public surface is targeted only at v1.0.
 - EditorEngine must reuse existing compiler modules:
   `Core`, `Parser`, `Resolver`, `Emitter`, `Statistics`.
 - No HTML, WebView, SwiftUI, or AppKit dependencies.
@@ -57,6 +57,15 @@ EditorEngine **does not** introduce new language semantics and **does not** depe
 | Swift 6.1+ | Language & concurrency model |
 | SwiftPM Traits | Optional compilation (`Editor` trait) |
 | Hyperprompt Core Modules | Parsing, resolution, emission |
+
+---
+
+### 1.6 Definitions & Conventions
+
+- **Workspace Root:** The directory passed by the editor client; defaults to the entry file's parent if not provided.
+- **Indexing Order:** Files are collected via deterministic traversal (lexicographic sort on full path).
+- **Offsets:** Source ranges are expressed in UTF-8 byte offsets and 1-based line/column pairs.
+- **Line Endings:** Input is normalized to `\n` before range calculations; original file contents remain unchanged.
 
 ---
 
@@ -97,14 +106,19 @@ Metadata:
 #### 2.1.1 Project Indexing
 
 - **Input:** Workspace root URL
-- **Process:** Scan supported files (`.hc`, `.md`)
+- **Process:** Scan supported files (`.hc`, `.md`) with deterministic ordering
 - **Output:** `ProjectIndex`
 
 Metadata:
 - Priority: High
 - Effort: Medium
 - Tools: FileManager
-- Acceptance: Index lists all reachable files deterministically
+- Acceptance: Index lists all reachable files deterministically, honoring ignore rules
+
+Notes:
+- Ignore hidden directories and `.git`, `build`, `node_modules`, and `Packages` by default.
+- Do not follow symlinks unless explicitly enabled by options.
+- Apply project-level ignore rules when provided (e.g., `.hyperpromptignore`).
 
 ---
 
@@ -118,7 +132,7 @@ Metadata:
 - Priority: High
 - Effort: Medium
 - Tools: Existing Parser
-- Acceptance: All file references are captured with byte/line ranges
+- Acceptance: All file references are captured with byte/line ranges in normalized form
 
 ---
 
@@ -132,7 +146,12 @@ Metadata:
 - Priority: High
 - Effort: Low
 - Tools: Resolver
-- Acceptance: Matches CLI resolution behavior exactly
+- Acceptance: Matches CLI resolution behavior exactly with explicit root rules
+
+Notes:
+- Resolution roots are ordered: explicit workspace root → entry file directory → current working directory.
+- Ambiguous matches return a diagnostic with all candidate targets.
+- Missing targets return a diagnostic, not a fatal error.
 
 ---
 
@@ -162,7 +181,11 @@ Metadata:
 - Priority: High
 - Effort: Medium
 - Tools: Error codes
-- Acceptance: All CLI errors appear as editor diagnostics
+- Acceptance: All CLI errors appear as editor diagnostics with ranges and metadata
+
+Notes:
+- Diagnostics include: code, severity, message, primary range, related ranges, and optional fix-its.
+- Partial parse output is allowed even with errors.
 
 ---
 
@@ -179,6 +202,34 @@ Metadata:
 - Effort: High
 - Tools: Emitter hooks
 - Acceptance: Output lines map back to source ranges
+
+---
+
+#### 2.3.2 Symbol Index (Optional)
+
+- **Input:** Parsed ASTs
+- **Process:** Build definition/reference index for identifiers
+- **Output:** `SymbolIndex`
+
+Metadata:
+- Priority: Medium
+- Effort: High
+- Tools: Parser/Resolver
+- Acceptance: Editor can implement peek definition without invoking compile
+
+---
+
+#### 2.3.3 Incremental Parsing & Caching (Optional)
+
+- **Input:** File versions + edits
+- **Process:** Cache parse trees and resolution results per file
+- **Output:** `CacheStore`
+
+Metadata:
+- Priority: Medium
+- Effort: High
+- Tools: Core/Parser
+- Acceptance: Typing in a single file does not reparse the entire workspace
 
 ---
 
@@ -215,6 +266,8 @@ It bridges the gap between:
 | FR-3 | Compile projects programmatically |
 | FR-4 | Emit structured diagnostics |
 | FR-5 | Be disabled unless `Editor` trait is enabled |
+| FR-6 | Provide deterministic indexing with defined ignore rules |
+| FR-7 | Provide offset conventions suitable for editor integrations |
 
 ---
 
@@ -223,7 +276,7 @@ It bridges the gap between:
 | Category | Requirement |
 |--------|-------------|
 | Determinism | Same input → same output |
-| Performance | <100ms for medium projects |
+| Performance | <100ms for medium projects when caches are warm |
 | Stability | Invalid files never crash engine |
 | Portability | macOS + Linux |
 | Isolation | No UI or LLM dependencies |
