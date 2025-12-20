@@ -49,6 +49,7 @@ The foundational release that establishes Hyperprompt as a deterministic, standa
 - Introduce `EditorEngine` target
 - Workspace indexing
 - Parsing with link span extraction
+- Build an internal syntax tree (CST/AST) with stable source spans for editor features
 - Deterministic link resolution API
 - Programmatic compilation entry point
 - Structured diagnostics suitable for editors
@@ -159,6 +160,7 @@ The foundational release that establishes Hyperprompt as a deterministic, standa
 ### Post–1.0 Possibilities
 - Extract EditorEngine as a standalone SDK
 - Additional editors (Zed, Neovim)
+- LSP server (e.g. `hyperprompt-lsp`) built on EditorEngine for cross-editor support
 - Alternative frontends (desktop / web)
 - Ecosystem tooling built on Hyperprompt
 
