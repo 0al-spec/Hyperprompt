@@ -1,15 +1,16 @@
-# Next Task: D4 — Statistics Reporter
+# Next Task: EE1 — Editor Engine Implementation
 
-**Priority:** P2
-**Phase:** Phase 6 — CLI & Integration
-**Effort:** 3 hours
-**Dependencies:** D1
-**Status:** ✅ Completed on 2025-12-16
+**Priority:** P1
+**Phase:** Phase 10 — Editor Engine Module
+**Effort:** 16 hours
+**Dependencies:** D2 (Phase 6 — CLI & Integration) ✅
+**Status:** Selected
 
 ## Description
 
-Implement the statistics collector and reporter so the `--stats` flag and verbose mode surface compilation metrics (files, bytes, depth, duration).
+Implement the Editor Engine module aligned with PRD requirements. The module will define core data models, interfaces, lifecycle management, and integration points for the editor pipeline.
 
 ## Next Step
 
-**Completed:** 2025-12-16
+Run PLAN command to generate detailed PRD:
+$ claude "Выполни команду PLAN"
