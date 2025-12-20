@@ -85,6 +85,13 @@ The foundational release that establishes Hyperprompt as a deterministic, standa
 - Incremental recompilation on file changes
 - Editor performance optimizations
 
+### Acceptance Criteria
+- Navigation UX supports side-by-side editing of referenced files without losing cursor/selection state.
+- Dependency graph renders the current workspace graph deterministically (stable node ordering and layout inputs).
+- Hover previews and go-to-definition remain correct under file edits and renames.
+- Incremental recompilation triggers on save and updates diagnostics/preview without requiring a full workspace rebuild.
+- Large workspaces remain usable (indexing, navigation, and incremental compile do not degrade into multi-second stalls during typical editing).
+
 ### Outcome
 > Hyperprompt feels like an IDE for structured documents.
 
@@ -105,6 +112,12 @@ The foundational release that establishes Hyperprompt as a deterministic, standa
 - Error provenance across file boundaries
 - Optional compilation tracing for debugging
 
+### Acceptance Criteria
+- A versioned SourceMap format exists and is emitted deterministically for the same inputs.
+- Preview-to-source navigation lands on the correct originating file/region for composed output.
+- Diagnostics include provenance across file boundaries (origin file + include/reference chain).
+- Tracing output is machine-readable and stable enough to diff across runs (no timestamps/random IDs unless explicitly requested).
+
 ### Outcome
 > Users can clearly understand *why* a given output looks the way it does.
 
@@ -124,6 +137,8 @@ The foundational release that establishes Hyperprompt as a deterministic, standa
 - Removal of experimental interfaces
 - Documentation and specification review
 - Tooling polish and consistency checks
+- Publish a formal Hypercode spec (grammar + key semantic rules) aligned with the compiler behavior.
+- Add a conformance corpus (golden inputs/outputs) that locks parser, resolver, and compiler determinism.
 
 ### Outcome
 > Hyperprompt APIs are stable and predictable.
