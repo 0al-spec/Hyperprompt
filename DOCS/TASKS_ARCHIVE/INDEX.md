@@ -33,6 +33,17 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Phase 9: Optimization & Finalization
+
+### P9 — Optimization Tasks **[P2]** ✓ 2025-12-21
+- **PRD:** [P9_Optimization_Tasks.md](./P9_Optimization_Tasks.md)
+- **Summary:** [P9-summary.md](./P9-summary.md)
+- **Effort:** 3 hours
+- **Dependencies:** E1, E2
+- **Description:** Profile compilation, validate memory usage, and check for leaks.
+
+---
+
 ## Phase 10: Editor Engine Module
 
 ### EE0 — EditorEngine Module Foundation **[P1]** ✓ 2025-12-20
@@ -92,9 +103,9 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 11 items
-- **Total Effort:** 34 hours (tracked tasks only)
-- **Phases Represented:** 3 (Phase 4, Phase 6, Phase 10)
+- **Total Archived:** 12 items
+- **Total Effort:** 37 hours (tracked tasks only)
+- **Phases Represented:** 4 (Phase 4, Phase 6, Phase 9, Phase 10)
 
 ---
 
