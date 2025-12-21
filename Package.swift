@@ -138,6 +138,7 @@ let package = Package(
             name: "EditorEngine",
             dependencies: [
                 "Core",
+                "HypercodeGrammar",
                 "Parser",
                 "Resolver",
                 "Emitter",

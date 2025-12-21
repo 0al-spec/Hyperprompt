@@ -787,16 +787,16 @@ Non-blocking: Can develop in parallel with Track A
 
 **Completion Note (2025-12-20):** Implemented full project indexing with 6 new files (~800 LOC), 47+ unit tests, and comprehensive glob pattern matching. Swift compiler not available for validation; code review completed. See `DOCS/INPROGRESS/EE1-summary.md` for details.
 
-### EE2: Parsing with Link Spans **[P1]** **INPROGRESS**
+### EE2: Parsing with Link Spans **[P1]**
 **Dependencies:** EE1
 **Estimated:** 3 hours
-**Status:** ⬜ Not started
+**Status:** ✅ Completed on 2025-12-21
 
-- [ ] **[P1, depends: EE1]** Define `LinkSpan` struct with byte/line ranges
-- [ ] **[P1, depends: EE1]** Extend Parser to extract link spans during parsing
-- [ ] **[P1, depends: EE1]** Implement link detection heuristic (LooksLikeFileReferenceSpec)
-- [ ] **[P1, depends: EE1]** Handle parse errors gracefully (partial AST + diagnostics)
-- [ ] **[P1, depends: EE1]** Write unit tests (5+ tests including UTF-8 edge cases)
+- [x] **[P1, depends: EE1]** Define `LinkSpan` struct with byte/line ranges
+- [x] **[P1, depends: EE1]** Extend Parser to extract link spans during parsing
+- [x] **[P1, depends: EE1]** Implement link detection heuristic (LooksLikeFileReferenceSpec)
+- [x] **[P1, depends: EE1]** Handle parse errors gracefully (partial AST + diagnostics)
+- [x] **[P1, depends: EE1]** Write unit tests (5+ tests including UTF-8 edge cases)
 
 **Acceptance Criteria:** All file references captured with accurate byte/line ranges
 
