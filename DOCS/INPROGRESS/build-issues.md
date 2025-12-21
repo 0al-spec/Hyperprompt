@@ -1,11 +1,35 @@
 # Build Issues & Warnings
 
-**Last Updated:** 2025-12-12
-**Build Status:** ✅ Successful (0 warnings)
+**Last Updated:** 2025-12-21
+**Build Status:** ⚠️ Successful (warnings present)
 
 ## Active Warnings
 
-None - all warnings have been resolved.
+### 1. Unused `result` variable in integration tests ⚠️
+
+**Severity:** Low (Code Quality)
+**Location:** `Tests/IntegrationTests/CompilerDriverTests.swift:207:13`, `Tests/IntegrationTests/CompilerDriverTests.swift:222:13`
+**Type:** Unused immutable value
+**Status:** Active
+
+**Issue:**
+Two tests assign `let result = ...` but never use the value.
+
+**Suggested Fix:**
+Replace the binding with `_ =` or remove the unused assignment.
+
+### 2. Unreachable code after `XCTSkip` ⚠️
+
+**Severity:** Low (Code Quality)
+**Location:** `Tests/IntegrationTests/CompilerDriverTests.swift:117:9`, `Tests/IntegrationTests/CompilerDriverTests.swift:133:9`, `Tests/IntegrationTests/CompilerDriverTests.swift:150:9`, `Tests/IntegrationTests/CompilerDriverTests.swift:167:9`, `Tests/IntegrationTests/CompilerDriverTests.swift:185:9`, `Tests/IntegrationTests/CompilerDriverTests.swift:203:9`, `Tests/IntegrationTests/CompilerDriverTests.swift:218:9`, `Tests/IntegrationTests/CompilerDriverTests.swift:291:9`, `Tests/IntegrationTests/CompilerDriverTests.swift:572:9`
+**Type:** Unreachable code
+**Status:** Active
+
+**Issue:**
+Test bodies include code after `throw XCTSkip(...)`, which is never executed and triggers compiler warnings.
+
+**Suggested Fix:**
+Move skip to the end, or wrap the rest of the test body in a conditional that only runs when not skipping.
 
 ---
 
@@ -28,7 +52,7 @@ Removed the unnecessary `let` keyword from the pattern match.
 
 ## Summary
 
-- **Total Warnings:** 0
+- **Total Warnings:** 11
 - **Critical Issues:** 0
 - **Resolved Issues:** 1
 - **Build Time:** ~0.23s
