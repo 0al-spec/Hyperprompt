@@ -4,6 +4,17 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Phase 4: Reference Resolution
+
+### B2 — Dependency Tracker **[P1]** ✓ 2025-12-21
+- **PRD:** [B2_Dependency_Tracker.md](./B2_Dependency_Tracker.md)
+- **Summary:** [B2-summary.md](./B2-summary.md)
+- **Effort:** 4 hours
+- **Dependencies:** A4 (Parser & AST Construction)
+- **Description:** Optimize dependency cycle detection for deep trees with memoized stack indexes.
+
+---
+
 ## Phase 6: CLI & Integration
 
 ### D4 — Statistics Reporter **[P2]** ✓ 2025-12-16
@@ -74,9 +85,9 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 9 items
-- **Total Effort:** 24 hours (tracked tasks only)
-- **Phases Represented:** 2 (Phase 6, Phase 10)
+- **Total Archived:** 10 items
+- **Total Effort:** 28 hours (tracked tasks only)
+- **Phases Represented:** 3 (Phase 4, Phase 6, Phase 10)
 
 ---
 
