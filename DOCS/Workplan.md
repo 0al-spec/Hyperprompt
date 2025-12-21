@@ -711,10 +711,10 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### E4: Build Warnings Cleanup **[P2]**
+### E4: Build Warnings Cleanup **[P2]** **INPROGRESS**
 **Dependencies:** D2 (compiler driver), E1 (test corpus)
 **Estimated:** 2 hours
-**Status:** ⬜ Not started
+**Status:** 🟨 In progress
 
 - [ ] **[P2, depends: D2]** Remove unused `result` bindings in integration tests
 - [ ] **[P2, depends: E1]** Remove unreachable code after `XCTSkip` in integration tests
