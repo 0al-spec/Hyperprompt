@@ -144,6 +144,7 @@ let package = Package(
                 "Resolver",
                 "Emitter",
                 "Statistics",
+                "SpecificationCore",
             ]
         ),
         .testTarget(

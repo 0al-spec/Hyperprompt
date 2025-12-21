@@ -25,11 +25,11 @@ import Core
 
 /// Configuration options for project indexing behavior
 public struct IndexerOptions {
-    /// Follow symbolic links during traversal (default: false for security)
-    public let followSymlinks: Bool
+    /// Symlink traversal policy (default: skip for security)
+    public let symlinkPolicy: SymlinkPolicy
 
-    /// Include hidden files and directories (default: false)
-    public let includeHidden: Bool
+    /// Hidden file policy (default: exclude)
+    public let hiddenEntryPolicy: HiddenEntryPolicy
 
     /// Maximum directory depth to traverse (default: 100)
     public let maxDepth: Int
@@ -39,18 +39,18 @@ public struct IndexerOptions {
 
     /// Creates indexer options with specified settings
     /// - Parameters:
-    ///   - followSymlinks: Whether to follow symlinks (default: false)
-    ///   - includeHidden: Whether to include hidden files (default: false)
+    ///   - symlinkPolicy: Symlink traversal policy (default: skip)
+    ///   - hiddenEntryPolicy: Hidden entry policy (default: exclude)
     ///   - maxDepth: Maximum traversal depth (default: 100)
     ///   - customIgnorePatterns: Additional patterns to ignore (default: empty)
     public init(
-        followSymlinks: Bool = false,
-        includeHidden: Bool = false,
+        symlinkPolicy: SymlinkPolicy = .skip,
+        hiddenEntryPolicy: HiddenEntryPolicy = .exclude,
         maxDepth: Int = 100,
         customIgnorePatterns: [String] = []
     ) {
-        self.followSymlinks = followSymlinks
-        self.includeHidden = includeHidden
+        self.symlinkPolicy = symlinkPolicy
+        self.hiddenEntryPolicy = hiddenEntryPolicy
         self.maxDepth = maxDepth
         self.customIgnorePatterns = customIgnorePatterns
     }
@@ -100,6 +100,8 @@ public struct ProjectIndexer {
 
     /// Configuration options
     private let options: IndexerOptions
+    private let directoryDecision = DirectoryDispositionDecisionSpec()
+    private let targetFileSpec = TargetFileSpec()
 
     /// Default directories to ignore (common build artifacts and VCS)
     private static let defaultIgnoreDirs: Set<String> = [
@@ -213,24 +215,18 @@ public struct ProjectIndexer {
 
     /// Checks if a directory should be skipped
     private func shouldSkipDirectory(_ path: String) -> Bool {
-        let basename = (path as NSString).lastPathComponent
-
-        // Skip hidden directories (unless includeHidden is true)
-        if !options.includeHidden && basename.hasPrefix(".") {
-            return true
-        }
-
-        // Skip default ignore directories
-        if Self.defaultIgnoreDirs.contains(basename) {
-            return true
-        }
-
-        return false
+        let context = DirectoryDecisionContext(
+            path: path,
+            includeHidden: options.hiddenEntryPolicy == .include,
+            ignoredDirectories: Self.defaultIgnoreDirs
+        )
+        let decision = directoryDecision.decide(context) ?? .include
+        return decision == .skip
     }
 
     /// Checks if a file is a target file (.hc or .md)
     private func isTargetFile(_ path: String) -> Bool {
-        path.hasSuffix(".hc") || path.hasSuffix(".md")
+        targetFileSpec.isSatisfiedBy(path)
     }
 
     /// Loads ignore patterns from .hyperpromptignore file

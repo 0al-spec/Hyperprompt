@@ -17,8 +17,8 @@ public struct LinkSpan: Equatable, Sendable {
     /// Column range (1-based, end-exclusive).
     public let columnRange: Range<Int>
 
-    /// Whether the literal looks like a file reference per heuristic.
-    public let isFileReference: Bool
+    /// Reference hint derived from link heuristics.
+    public let referenceHint: LinkReferenceHint
 
     /// Source file path for this span.
     public let sourceFile: String
@@ -34,14 +34,14 @@ public struct LinkSpan: Equatable, Sendable {
         byteRange: Range<Int>,
         lineRange: Range<Int>,
         columnRange: Range<Int>,
-        isFileReference: Bool,
+        referenceHint: LinkReferenceHint,
         sourceFile: String
     ) {
         self.literal = literal
         self.byteRange = byteRange
         self.lineRange = lineRange
         self.columnRange = columnRange
-        self.isFileReference = isFileReference
+        self.referenceHint = referenceHint
         self.sourceFile = sourceFile
     }
 }

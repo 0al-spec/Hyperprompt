@@ -24,6 +24,8 @@ public struct EditorCompiler {
         let outputPath = options.outputPath ?? computeDefaultOutput(from: entryFile)
         let manifestPath = options.manifestPath ?? computeDefaultManifest(from: outputPath)
         let rootPath = options.workspaceRoot ?? computeDefaultRoot(from: entryFile)
+        let statsDecision = StatisticsPolicyDecisionSpec()
+        let outputDecision = OutputWritePolicyDecisionSpec()
 
         let args = CompilerArguments(
             input: entryFile,
@@ -32,19 +34,24 @@ public struct EditorCompiler {
             root: rootPath,
             mode: options.mode,
             verbose: false,
-            stats: options.collectStats,
-            dryRun: !options.writeOutput
+            stats: statsDecision.decide(options.statisticsPolicy) ?? false,
+            dryRun: !(outputDecision.decide(options.outputWritePolicy) ?? false)
         )
 
         let driver = CompilerDriver(fileSystem: fileSystem, version: version)
+        let manifestDecision = ManifestPolicyDecisionSpec()
 
         do {
             let result = try driver.compile(args)
             return CompileResult(
                 output: result.markdown,
                 diagnostics: [],
-                manifest: options.emitManifest ? result.manifestJSON : nil,
-                statistics: options.collectStats ? result.statistics : nil
+                manifest: (manifestDecision.decide(options.manifestPolicy) ?? false)
+                    ? result.manifestJSON
+                    : nil,
+                statistics: (statsDecision.decide(options.statisticsPolicy) ?? false)
+                    ? result.statistics
+                    : nil
             )
         } catch let error as CompilerError {
             return CompileResult(
@@ -70,10 +77,13 @@ public struct EditorCompiler {
     // MARK: - Default Path Computation (matches CLI)
 
     private func computeDefaultOutput(from inputPath: String) -> String {
-        if inputPath.hasSuffix(".hc") {
+        let decision = OutputPathStrategyDecisionSpec().decide(inputPath) ?? .appendMarkdownExtension
+        switch decision {
+        case .replaceHypercodeExtension:
             return String(inputPath.dropLast(3)) + ".md"
+        case .appendMarkdownExtension:
+            return inputPath + ".md"
         }
-        return inputPath + ".md"
     }
 
     private func computeDefaultManifest(from outputPath: String) -> String {
@@ -81,9 +91,15 @@ public struct EditorCompiler {
     }
 
     private func computeDefaultRoot(from inputPath: String) -> String {
-        if let lastSlash = inputPath.lastIndex(of: "/") {
+        let decision = RootPathStrategyDecisionSpec().decide(inputPath) ?? .currentDirectory
+        switch decision {
+        case .parentDirectory:
+            guard let lastSlash = inputPath.lastIndex(of: "/") else {
+                return "."
+            }
             return String(inputPath[..<lastSlash])
+        case .currentDirectory:
+            return "."
         }
-        return "."
     }
 }

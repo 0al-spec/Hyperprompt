@@ -58,7 +58,7 @@ final class EditorCompilerTests: XCTestCase {
         try "\"Root\"\n".write(to: input, atomically: true, encoding: .utf8)
 
         let compiler = EditorCompiler()
-        let options = CompileOptions(emitManifest: false)
+        let options = CompileOptions(manifestPolicy: .omit)
         let result = compiler.compile(entryFile: input.path, options: options)
 
         XCTAssertNotNil(result.output)
@@ -71,7 +71,7 @@ final class EditorCompilerTests: XCTestCase {
         try "\"Root\"\n".write(to: input, atomically: true, encoding: .utf8)
 
         let compiler = EditorCompiler()
-        let options = CompileOptions(collectStats: true)
+        let options = CompileOptions(statisticsPolicy: .include)
         let result = compiler.compile(entryFile: input.path, options: options)
 
         XCTAssertNotNil(result.output)
@@ -90,7 +90,7 @@ final class EditorCompilerTests: XCTestCase {
         let options = CompileOptions(
             outputPath: output.path,
             manifestPath: manifest.path,
-            writeOutput: true
+            outputWritePolicy: .write
         )
         let result = compiler.compile(entryFile: input.path, options: options)
 

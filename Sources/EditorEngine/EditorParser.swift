@@ -8,7 +8,7 @@ public struct EditorParser {
     private let fileSystem: FileSystem
     private let lexer: Lexer
     private let parser: Parser
-    private let linkSpec = LooksLikeFileReferenceSpec()
+    private let referenceHintDecision = LinkReferenceHintDecisionSpec()
 
     /// Creates a new editor parser.
     /// - Parameter fileSystem: File system implementation (use MockFileSystem in tests)
@@ -126,7 +126,7 @@ public struct EditorParser {
                 byteRange: byteStart..<byteEnd,
                 lineRange: lineRange,
                 columnRange: columnRange,
-                isFileReference: linkSpec.isSatisfiedBy(literal),
+                referenceHint: referenceHintDecision.decide(literal) ?? .inlineText,
                 sourceFile: sourceFile
             )
             spans.append(span)

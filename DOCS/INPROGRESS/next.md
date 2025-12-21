@@ -4,7 +4,7 @@
 **Phase:** Phase 10: Editor Engine Module
 **Effort:** 4 hours
 **Dependencies:** EE6
-**Status:** Selected
+**Status:** ✅ Completed on 2025-12-22
 
 ## Description
 
@@ -12,5 +12,5 @@ Refactor EditorEngine decision logic to use SpecificationCore SPM specs and Deci
 
 ## Next Step
 
-Run PLAN command to generate detailed PRD:
-$ claude "Выполни команду PLAN"
+Run SELECT to choose the next task:
+$ claude "Выполни команду SELECT"

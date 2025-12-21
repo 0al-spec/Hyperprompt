@@ -12,7 +12,7 @@ final class EditorResolverTests: XCTestCase {
             byteRange: 0..<11,
             lineRange: 1..<2,
             columnRange: 1..<12,
-            isFileReference: false,
+            referenceHint: .inlineText,
             sourceFile: "/workspace/main.hc"
         )
 
@@ -32,7 +32,7 @@ final class EditorResolverTests: XCTestCase {
             byteRange: 0..<14,
             lineRange: 1..<2,
             columnRange: 1..<15,
-            isFileReference: true,
+            referenceHint: .fileReference,
             sourceFile: "/workspace/main.hc"
         )
 
@@ -52,7 +52,7 @@ final class EditorResolverTests: XCTestCase {
             byteRange: 0..<10,
             lineRange: 1..<2,
             columnRange: 1..<11,
-            isFileReference: true,
+            referenceHint: .fileReference,
             sourceFile: "/workspace/main.hc"
         )
 
@@ -70,7 +70,7 @@ final class EditorResolverTests: XCTestCase {
             byteRange: 0..<9,
             lineRange: 1..<2,
             columnRange: 1..<10,
-            isFileReference: true,
+            referenceHint: .fileReference,
             sourceFile: "/workspace/main.hc"
         )
 
@@ -88,7 +88,7 @@ final class EditorResolverTests: XCTestCase {
             byteRange: 0..<12,
             lineRange: 1..<2,
             columnRange: 1..<13,
-            isFileReference: true,
+            referenceHint: .fileReference,
             sourceFile: "/workspace/main.hc"
         )
 
@@ -113,7 +113,7 @@ final class EditorResolverTests: XCTestCase {
             byteRange: 0..<14,
             lineRange: 1..<2,
             columnRange: 1..<15,
-            isFileReference: true,
+            referenceHint: .fileReference,
             sourceFile: "/project/main.hc"
         )
 

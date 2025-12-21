@@ -877,16 +877,16 @@ Non-blocking: Can develop in parallel with Track A
 
 **Acceptance Criteria:** API documented, >80% coverage, integration tests pass
 
-### EE7: SpecificationCore Decision Refactor **[P1]** **INPROGRESS**
+### EE7: SpecificationCore Decision Refactor **[P1]**
 **Dependencies:** EE6
 **Estimated:** 4 hours
-**Status:** 🟦 Not started
+**Status:** ✅ Completed on 2025-12-22
 
-- [ ] **[P1, depends: EE6]** Add SpecificationCore SPM dependency to EditorEngine target
-- [ ] **[P1, depends: EE6]** Audit EditorEngine decision points (if/else, boolean flags, decision enums)
-- [ ] **[P1, depends: EE6]** Model decisions with SpecificationCore specs and DecisionSpec/FirstMatchSpec
-- [ ] **[P1, depends: EE6]** Replace boolean flags and branching with spec evaluation and adapters
-- [ ] **[P1, depends: EE6]** Update tests to cover spec-driven decision paths
+- [x] **[P1, depends: EE6]** Add SpecificationCore SPM dependency to EditorEngine target
+- [x] **[P1, depends: EE6]** Audit EditorEngine decision points (if/else, boolean flags, decision enums)
+- [x] **[P1, depends: EE6]** Model decisions with SpecificationCore specs and DecisionSpec/FirstMatchSpec
+- [x] **[P1, depends: EE6]** Replace boolean flags and branching with spec evaluation and adapters
+- [x] **[P1, depends: EE6]** Update tests to cover spec-driven decision paths
 
 **Acceptance Criteria:** EditorEngine relies on SpecificationCore for decision logic; boolean flags and imperative branching are removed from decision points; tests cover all decision paths.
 
@@ -906,7 +906,7 @@ Non-blocking: Can develop in parallel with Track A
 
 ## Progress Tracking
 
-**Overall Progress:** 154 / 155 tasks completed (99%)
+**Overall Progress:** 155 / 155 tasks completed (100%)
 
 ### By Phase
 - [x] **Phase 1:** Foundation & Core Types (3/3 major tasks) — **6h** — Track A
@@ -918,11 +918,11 @@ Non-blocking: Can develop in parallel with Track A
 - [x] **Phase 7:** Integration with Specs (2/2 major tasks) — **11h** — Integration
 - [x] **Phase 8:** Testing & QA (4/4 major tasks) — **12h** — Integration
 - [x] **Phase 9:** Optimization & Release (2/2 major tasks) — **4h** — Release
-- [ ] **Phase 10:** Editor Engine Module (7/8 major tasks) — **25h** — Track C
+- [x] **Phase 10:** Editor Engine Module (8/8 major tasks) — **25h** — Track C
 
 ### By Priority
 - **[P0] Critical:** 47 / 47 tasks (blocks project)
-- **[P1] High:** 90 / 91 tasks (required for v0.1)
+- **[P1] High:** 91 / 91 tasks (required for v0.1)
 - **[P2] Medium:** 17 / 17 tasks (can defer)
 
 ### By Track

@@ -17,22 +17,22 @@ final class ProjectIndexerTests: XCTestCase {
     func testIndexerOptions_DefaultValues() {
         let options = IndexerOptions.default
 
-        XCTAssertFalse(options.followSymlinks)
-        XCTAssertFalse(options.includeHidden)
+        XCTAssertEqual(options.symlinkPolicy, .skip)
+        XCTAssertEqual(options.hiddenEntryPolicy, .exclude)
         XCTAssertEqual(options.maxDepth, 100)
         XCTAssertTrue(options.customIgnorePatterns.isEmpty)
     }
 
     func testIndexerOptions_CustomValues() {
         let options = IndexerOptions(
-            followSymlinks: true,
-            includeHidden: true,
+            symlinkPolicy: .follow,
+            hiddenEntryPolicy: .include,
             maxDepth: 50,
             customIgnorePatterns: ["*.draft", "tmp/"]
         )
 
-        XCTAssertTrue(options.followSymlinks)
-        XCTAssertTrue(options.includeHidden)
+        XCTAssertEqual(options.symlinkPolicy, .follow)
+        XCTAssertEqual(options.hiddenEntryPolicy, .include)
         XCTAssertEqual(options.maxDepth, 50)
         XCTAssertEqual(options.customIgnorePatterns.count, 2)
     }
