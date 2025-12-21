@@ -177,3 +177,6 @@ swift test 2>&1
 |------|--------|------------|
 | Incorrect codes | Editor UX confusion | Centralize code mapping and test | 
 | Missing ranges | Poor highlighting | Default to line range when column unknown |
+
+---
+**Archived:** 2025-12-21

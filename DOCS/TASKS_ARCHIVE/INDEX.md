@@ -51,6 +51,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE3 (Link Resolution)
 - **Description:** Provide editor compilation with deterministic output and diagnostics via CompilerDriver wrapper.
 
+### EE5 — Diagnostics Mapping **[P1]** ✓ 2025-12-21
+- **PRD:** [EE5_Diagnostics_Mapping.md](./EE5_Diagnostics_Mapping.md)
+- **Summary:** [EE5-summary.md](./EE5-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** EE4 (Editor Compilation)
+- **Description:** Map compiler errors into editor diagnostics with stable codes and ranges.
+
 ### BUG-EE1-001 — GlobMatcher Pattern Matching Issues ✓ 2025-12-21
 - **PRD:** [BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md](./BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md)
 - **Related Task:** EE1 — Project Indexing
@@ -60,8 +67,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 7 items
-- **Total Effort:** 15 hours (tracked tasks only)
+- **Total Archived:** 8 items
+- **Total Effort:** 17 hours (tracked tasks only)
 - **Phases Represented:** 2 (Phase 6, Phase 10)
 
 ---
