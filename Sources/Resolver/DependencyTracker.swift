@@ -14,6 +14,9 @@ public struct DependencyTracker {
     /// Visitation stack of canonical absolute paths.
     private var visitationStack: [String]
 
+    /// Memoized index lookup for paths in the stack.
+    private var stackIndexByPath: [String: Int]
+
     /// Create a tracker with an optional initial stack (useful for tests).
     ///
     /// - Parameters:
@@ -22,6 +25,11 @@ public struct DependencyTracker {
     public init(fileSystem: FileSystem, initialStack: [String] = []) {
         self.fileSystem = fileSystem
         self.visitationStack = initialStack
+        var indexByPath: [String: Int] = [:]
+        for (index, path) in initialStack.enumerated() {
+            indexByPath[path] = index
+        }
+        self.stackIndexByPath = indexByPath
     }
 
     /// Current visitation stack (read-only).
@@ -43,12 +51,16 @@ public struct DependencyTracker {
         }
 
         visitationStack.append(canonicalPath)
+        stackIndexByPath[canonicalPath] = visitationStack.count - 1
         return nil
     }
 
     /// Remove the most recently visited path from the stack.
     public mutating func pop() {
-        _ = visitationStack.popLast()
+        guard let removed = visitationStack.popLast() else {
+            return
+        }
+        stackIndexByPath.removeValue(forKey: removed)
     }
 
     /// Determine whether the given path is already in the current visitation stack.
@@ -58,7 +70,7 @@ public struct DependencyTracker {
     /// - Throws: CompilerError from the file system if canonicalization fails.
     public func isInCycle(path: String) throws -> Bool {
         let canonicalPath = try canonicalize(path)
-        return visitationStack.contains(canonicalPath)
+        return stackIndexByPath[canonicalPath] != nil
     }
 
     /// Get the full cycle path for an offending path using the current stack.
@@ -79,7 +91,7 @@ public struct DependencyTracker {
 
     /// Build the cycle slice from the stack when present.
     private func cyclePathIfPresent(for canonicalPath: String) -> [String]? {
-        guard let startIndex = visitationStack.firstIndex(of: canonicalPath) else {
+        guard let startIndex = stackIndexByPath[canonicalPath] else {
             return nil
         }
 

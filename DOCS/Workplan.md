@@ -366,16 +366,16 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### B2: Dependency Tracker **[P1]** **INPROGRESS**
+### B2: Dependency Tracker **[P1]**
 **Dependencies:** A4 ✅
 **Estimated:** 4 hours
-**Status:** 🟨 In progress (deferred optimization)
+**Status:** ✅ Completed on 2025-12-21
 
 - [x] **[P1, depends: A4]** Implement visitation stack for cycle detection
 - [x] **[P1, depends: A4]** Detect direct circular dependencies (A → A)
 - [x] **[P1, depends: A4]** Detect transitive circular dependencies (A → B → A)
 - [x] **[P1, depends: A4]** Produce clear cycle path descriptions in error messages
-- [ ] **[P2, depends: A4]** Optimize for deep trees with memoization (deferred to v0.1.1)
+- [x] **[P2, depends: A4]** Optimize for deep trees with memoization
 - [x] **[P1, depends: A4]** Write tests for various cycle patterns
 
 **Acceptance Criteria:** ✅ All circular dependencies detected, error messages show full cycle path

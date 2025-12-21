@@ -62,4 +62,20 @@ final class DependencyTrackerTests: XCTestCase {
         XCTAssertEqual(tracker.stack.last, "/workspace/libs/module.hc")
         XCTAssertFalse(try tracker.isInCycle(path: "other.hc"))
     }
+
+    func testPopRemovesPathFromMemoizedIndex() throws {
+        var tracker = DependencyTracker(fileSystem: fileSystem, initialStack: ["/workspace/root.hc"])
+
+        let error = try tracker.checkAndPush(
+            path: "./child.hc",
+            location: SourceLocation(filePath: "root.hc", line: 12)
+        )
+
+        XCTAssertNil(error)
+        XCTAssertTrue(try tracker.isInCycle(path: "/workspace/child.hc"))
+
+        tracker.pop()
+
+        XCTAssertFalse(try tracker.isInCycle(path: "/workspace/child.hc"))
+    }
 }
