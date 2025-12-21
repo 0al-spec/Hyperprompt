@@ -1,7 +1,16 @@
-# Next Task: None
+# Next Task: BUG-D2-001 — Signal Handling Regression
 
-**Status:** No tasks available
+**Priority:** P1
+**Phase:** Phase 6 — CLI & Integration
+**Effort:** 1 hour
+**Dependencies:** D2
+**Status:** Selected
 
 ## Description
 
-All tasks in DOCS/Workplan.md are marked completed.
+Ensure SIGINT/SIGTERM handling works even when the main thread is busy by moving signal handling off the main queue.
+
+## Next Step
+
+Run PLAN command to generate detailed PRD:
+$ claude "Выполни команду PLAN"
