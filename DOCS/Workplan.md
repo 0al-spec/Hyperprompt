@@ -717,21 +717,21 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 4 hours
 **Track:** Release
 
-### P9: Optimization Tasks **[P1]** **INPROGRESS**
+### P9: Optimization Tasks **[P1]**
 **Dependencies:** E1, E2
 **Estimated:** 3 hours
-**Status:** 🟨 In progress (profiling and memory checks)
+**Status:** ✅ **COMPLETED** on 2025-12-21
 
-- [ ] **[P2, depends: E1]** Profile compilation with Instruments (macOS) or Valgrind (Linux)
-- [ ] **[P2, depends: E1]** Optimize hot paths identified in profiling
+- [x] **[P2, depends: E1]** Profile compilation with Instruments (macOS) or Valgrind (Linux)
+- [x] **[P2, depends: E1]** Optimize hot paths identified in profiling
 - [x] **[P1, depends: E1]** Benchmark against performance targets **Completed 2025-12-16**:
   - [x] **[P1]** 1000-node tree compilation < 5 seconds (853ms average over 5 runs)
   - [x] **[P1]** Linear scaling with file count (R² = 0.984 across 10–120 files)
 - [x] **[P0, depends: E2]** Verify deterministic output (repeated compilations identical) **Completed 2025-12-12**
 - [x] **[P2, depends: E1]** Test with large corpus (100+ files) — 120-file corpus completed in 206ms
 - [x] **[P1, depends: E1]** Verify manifest JSON key alphabetical sorting — 100% manifest compliance confirmed
-- [ ] **[P2, depends: E1]** Test memory usage with large files (>1MB)
-- [ ] **[P2, depends: E1]** Fix any memory leaks detected
+- [x] **[P2, depends: E1]** Test memory usage with large files (>1MB)
+- [x] **[P2, depends: E1]** Fix any memory leaks detected
 
 **Acceptance Criteria:** Performance targets met, no memory leaks, deterministic output verified
 
