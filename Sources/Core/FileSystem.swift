@@ -1,3 +1,5 @@
+import Foundation
+
 /// Abstract interface for file system operations.
 ///
 /// This protocol abstracts file I/O to enable:
@@ -63,4 +65,50 @@ public protocol FileSystem {
     /// - Disk full
     /// - I/O error during writing
     func writeFile(at path: String, content: String) throws
+
+    /// List contents of a directory.
+    ///
+    /// - Parameter path: Directory path (absolute or relative to current directory)
+    /// - Returns: Array of file/directory names (not full paths, just basenames)
+    /// - Throws: CompilerError with category `.io` if directory cannot be read
+    ///
+    /// Error conditions:
+    /// - Directory does not exist
+    /// - Permission denied
+    /// - Path is not a directory
+    func listDirectory(at path: String) throws -> [String]
+
+    /// Check if path is a directory.
+    ///
+    /// - Parameter path: Path to check (absolute or relative to current directory)
+    /// - Returns: `true` if path exists and is a directory, `false` otherwise
+    ///
+    /// Note: Returns `false` for permission errors or non-existent paths.
+    func isDirectory(at path: String) -> Bool
+
+    /// Get file attributes (size, modification date).
+    ///
+    /// - Parameter path: File path (absolute or relative to current directory)
+    /// - Returns: File attributes if file exists and is readable, `nil` otherwise
+    ///
+    /// Note: Returns `nil` for permission errors or non-existent files.
+    func fileAttributes(at path: String) -> FileAttributes?
+}
+
+/// File attributes for indexing and caching
+public struct FileAttributes: Equatable {
+    /// File size in bytes
+    public let size: Int
+
+    /// Last modification date
+    public let modificationDate: Date?
+
+    /// Creates file attributes
+    /// - Parameters:
+    ///   - size: File size in bytes
+    ///   - modificationDate: Optional modification date
+    public init(size: Int, modificationDate: Date? = nil) {
+        self.size = size
+        self.modificationDate = modificationDate
+    }
 }

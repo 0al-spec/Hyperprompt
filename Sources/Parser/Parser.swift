@@ -122,4 +122,98 @@ public struct Parser {
         let root = rootNodes[0].node
         return .success(Program(root: root))
     }
+
+    /// Parse a token stream into an AST with best-effort recovery.
+    ///
+    /// This variant attempts to continue parsing after syntax errors,
+    /// returning a partial AST (if possible) plus collected diagnostics.
+    ///
+    /// - Parameter tokens: Token stream from the Lexer
+    /// - Returns: ParserRecoveryResult with partial program and diagnostics
+    public func parseWithRecovery(tokens: [Token]) -> ParserRecoveryResult {
+        // Extract semantic tokens (nodes only; skip blank and comment)
+        let semanticTokens = tokens.filter { $0.isSemantic }
+
+        // Empty token stream produces no AST
+        guard !semanticTokens.isEmpty else {
+            return ParserRecoveryResult(program: nil, diagnostics: [.emptyTokenStream])
+        }
+
+        var diagnostics: [ParserError] = []
+        var stack: [(depth: Int, node: Node)] = []
+        var rootNode: Node?
+        var rootLocations: [SourceLocation] = []
+
+        func resetStackToRoot() {
+            if let rootNode {
+                stack = [(depth: rootNode.depth, node: rootNode)]
+            } else {
+                stack.removeAll()
+            }
+        }
+
+        for token in semanticTokens {
+            guard case .node(_, let literal, let location) = token else {
+                continue
+            }
+
+            let depth = token.depth
+
+            if depth > Parser.maxDepth {
+                diagnostics.append(.depthExceeded(depth: depth, location: location))
+                continue
+            }
+
+            if stack.isEmpty {
+                if depth != 0 {
+                    diagnostics.append(
+                        .invalidDepthJump(from: -1, to: depth, location: location)
+                    )
+                    continue
+                }
+            } else {
+                let previousDepth = stack.last!.depth
+                if depth > previousDepth + 1 {
+                    diagnostics.append(
+                        .invalidDepthJump(from: previousDepth, to: depth, location: location)
+                    )
+                    continue
+                }
+            }
+
+            let newNode = Node(literal: literal, depth: depth, location: location)
+
+            while !stack.isEmpty && stack.last!.depth >= depth {
+                stack.removeLast()
+            }
+
+            if depth == 0 {
+                rootLocations.append(location)
+                if rootNode == nil {
+                    rootNode = newNode
+                } else {
+                    resetStackToRoot()
+                    continue
+                }
+            }
+
+            if let parent = stack.last?.node {
+                parent.addChild(newNode)
+            }
+
+            stack.append((depth: depth, node: newNode))
+        }
+
+        if rootLocations.count > 1 {
+            diagnostics.append(.multipleRoots(locations: rootLocations))
+        }
+
+        guard let rootNode else {
+            diagnostics.append(.noRoot)
+            return ParserRecoveryResult(program: nil, diagnostics: diagnostics)
+        }
+
+        let program = Program(root: rootNode, sourceFile: rootNode.location.filePath)
+        return ParserRecoveryResult(program: program, diagnostics: diagnostics)
+    }
 }

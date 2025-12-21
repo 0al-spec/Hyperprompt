@@ -137,7 +137,9 @@ let package = Package(
         .target(
             name: "EditorEngine",
             dependencies: [
+                "CLI",
                 "Core",
+                "HypercodeGrammar",
                 "Parser",
                 "Resolver",
                 "Emitter",
@@ -146,7 +148,7 @@ let package = Package(
         ),
         .testTarget(
             name: "EditorEngineTests",
-            dependencies: ["EditorEngine"]
+            dependencies: ["CLI", "EditorEngine"]
         ),
     ]
 )

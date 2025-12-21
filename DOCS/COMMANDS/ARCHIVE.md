@@ -34,37 +34,17 @@ Move completed PRDs from `INPROGRESS/` to `TASKS_ARCHIVE/` and remove from `next
 
 ### 2. Archive Each Task
 
-```bash
-# Remove from next.md (counterbalance to SELECT)
-sed -i "/^# Next Task: ${TASK_ID}/,/^# Next Task:/d" DOCS/INPROGRESS/next.md
-
-# Move PRD to archive
-mv "DOCS/INPROGRESS/${TASK_ID}_${TASK_NAME}.md" \
-   "DOCS/TASKS_ARCHIVE/${TASK_ID}_${TASK_NAME}.md"
-
-# Add archive timestamp
-echo "\n---\n**Archived:** ${DATE}" >> "DOCS/TASKS_ARCHIVE/${TASK_ID}_${TASK_NAME}.md"
-```
+The per-task archive operations (remove the entry from `next.md`, move the PRD file, append the archive timestamp) are covered step-by-step in [`DOCS/COMMANDS/PRIMITIVES/ARCHIVE_TASK.md`](./PRIMITIVES/ARCHIVE_TASK.md). Follow that primitive for each candidate before updating the index.
 
 ### 3. Update INDEX.md
 
-Create/update `DOCS/TASKS_ARCHIVE/INDEX.md` with links organized by phase:
+Create/update `DOCS/TASKS_ARCHIVE/INDEX.md` with links organized by phase.
 
-```markdown
-# Archived Tasks
-
-## Phase 1: Foundation
-- [A1 — Project Initialization](./A1_Project_Initialization.md) ✓ 2025-12-03
-- [A2 — Core Types](./A2_Core_Types.md) ✓ 2025-12-04
-```
+Use [`DOCS/COMMANDS/PRIMITIVES/UPDATE_ARCHIVE_INDEX.md`](./PRIMITIVES/UPDATE_ARCHIVE_INDEX.md) for the detailed edit pattern, formatting guidelines, and statistics adjustments; mirror the existing phase headings and bullet entries in the file when you add a new task.
 
 ### 4. Commit
 
-```bash
-git add DOCS/INPROGRESS/ DOCS/TASKS_ARCHIVE/
-git commit -m "Archive completed tasks: A1, A2"
-git push
-```
+Follow the steps documented in [`DOCS/COMMANDS/PRIMITIVES/COMMIT.md`](./PRIMITIVES/COMMIT.md) to stage and record the completed archive actions.
 
 ---
 

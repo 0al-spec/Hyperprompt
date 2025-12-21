@@ -44,4 +44,49 @@ public enum EditorEngine {
 
     /// Indicates whether EditorEngine is available in this build
     public static let isAvailable = true
+
+    // MARK: - Project Indexing
+
+    /// Indexes a workspace directory to discover all Hypercode and Markdown files
+    ///
+    /// - Parameters:
+    ///   - workspaceRoot: Absolute path to workspace root directory
+    ///   - options: Optional indexing configuration (defaults to secure settings)
+    /// - Returns: Project index with all discovered files
+    /// - Throws: IndexerError if workspace cannot be scanned
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let index = try EditorEngine.indexProject(workspaceRoot: "/path/to/workspace")
+    /// print("Found \(index.totalFiles) files:")
+    /// for file in index.files {
+    ///     print("  - \(file.path) (\(file.type))")
+    /// }
+    /// ```
+    public static func indexProject(
+        workspaceRoot: String,
+        options: IndexerOptions = .default
+    ) throws -> ProjectIndex {
+        let fileSystem = LocalFileSystem()
+        let indexer = ProjectIndexer(fileSystem: fileSystem, options: options)
+        return try indexer.index(workspaceRoot: workspaceRoot)
+    }
+
+    /// Indexes a workspace with custom file system (for testing)
+    ///
+    /// - Parameters:
+    ///   - workspaceRoot: Absolute path to workspace root directory
+    ///   - fileSystem: File system implementation (use for testing with MockFileSystem)
+    ///   - options: Optional indexing configuration
+    /// - Returns: Project index with all discovered files
+    /// - Throws: IndexerError if workspace cannot be scanned
+    public static func indexProject(
+        workspaceRoot: String,
+        fileSystem: FileSystem,
+        options: IndexerOptions = .default
+    ) throws -> ProjectIndex {
+        let indexer = ProjectIndexer(fileSystem: fileSystem, options: options)
+        return try indexer.index(workspaceRoot: workspaceRoot)
+    }
 }

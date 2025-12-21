@@ -67,6 +67,44 @@ public struct LocalFileSystem: FileSystem {
         }
     }
 
+    /// List contents of a directory.
+    ///
+    /// - Parameter path: Directory path (absolute or relative to current directory)
+    /// - Returns: Array of file/directory names (basenames only, not full paths)
+    /// - Throws: CompilerError with category `.io` if directory cannot be read
+    public func listDirectory(at path: String) throws -> [String] {
+        do {
+            return try FileManager.default.contentsOfDirectory(atPath: path)
+        } catch {
+            throw mapFoundationError(error, path: path)
+        }
+    }
+
+    /// Check if path is a directory.
+    ///
+    /// - Parameter path: Path to check (absolute or relative to current directory)
+    /// - Returns: `true` if path exists and is a directory, `false` otherwise
+    public func isDirectory(at path: String) -> Bool {
+        var isDir: ObjCBool = false
+        let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDir)
+        return exists && isDir.boolValue
+    }
+
+    /// Get file attributes (size, modification date).
+    ///
+    /// - Parameter path: File path (absolute or relative to current directory)
+    /// - Returns: File attributes if file exists and is readable, `nil` otherwise
+    public func fileAttributes(at path: String) -> FileAttributes? {
+        guard let attrs = try? FileManager.default.attributesOfItem(atPath: path) else {
+            return nil
+        }
+
+        let size = (attrs[.size] as? NSNumber)?.intValue ?? 0
+        let modificationDate = attrs[.modificationDate] as? Date
+
+        return FileAttributes(size: size, modificationDate: modificationDate)
+    }
+
     // MARK: - Error Mapping
 
     /// Map Foundation errors to CompilerError.

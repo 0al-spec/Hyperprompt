@@ -137,6 +137,43 @@ class MockFileSystem: FileSystem {
     func writeFile(at path: String, content: String) throws {
         files[path] = content
     }
+
+    /// List contents of a directory (mock implementation).
+    ///
+    /// Returns basenames of files that start with the given directory path.
+    func listDirectory(at path: String) throws -> [String] {
+        let normalizedPath = path.hasSuffix("/") ? path : path + "/"
+        var results: Set<String> = []
+
+        for filePath in files.keys {
+            if filePath.hasPrefix(normalizedPath) {
+                let relativePath = String(filePath.dropFirst(normalizedPath.count))
+                if let firstComponent = relativePath.split(separator: "/").first {
+                    results.insert(String(firstComponent))
+                }
+            }
+        }
+
+        return Array(results)
+    }
+
+    /// Check if path is a directory (mock implementation).
+    ///
+    /// Returns true if any file path starts with this path as a directory prefix.
+    func isDirectory(at path: String) -> Bool {
+        let normalizedPath = path.hasSuffix("/") ? path : path + "/"
+        return files.keys.contains { $0.hasPrefix(normalizedPath) }
+    }
+
+    /// Get file attributes (mock implementation).
+    ///
+    /// Returns attributes based on in-memory file content.
+    func fileAttributes(at path: String) -> FileAttributes? {
+        guard let content = files[path] else {
+            return nil
+        }
+        return FileAttributes(size: content.utf8.count, modificationDate: Date())
+    }
 }
 
 /// Concrete CompilerError implementation for MockFileSystem errors.

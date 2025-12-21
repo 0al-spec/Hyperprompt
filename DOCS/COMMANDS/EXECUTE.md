@@ -283,23 +283,7 @@ If `--interactive` mode:
    ```
 
 5. **Create commit:**
-   ```
-   Complete {TASK_ID} — {TASK_NAME}
-
-   Deliverables:
-   - Created Sources/{Core,Parser,Resolver,Emitter,CLI,Statistics}/
-   - Created Tests/{CoreTests,ParserTests,...,IntegrationTests}/
-   - Added Package.swift with 3 dependencies
-   - Added Sources/CLI/main.swift entry point
-
-   Verification:
-   - Acceptance criteria: 5/5 passed
-   - Build: PASS
-   - Tests: PASS (0 tests)
-   - Quality checklist: 11/12 verified
-
-   Closes task A1 from Workplan Phase 1.
-   ```
+   Follow the lightweight checklist in [`DOCS/COMMANDS/PRIMITIVES/COMMIT.md`](./PRIMITIVES/COMMIT.md) to stage and record the changes before pushing.
 
 6. **Push to remote:**
    ```bash
