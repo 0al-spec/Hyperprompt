@@ -366,10 +366,10 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### B2: Dependency Tracker **[P1]**
+### B2: Dependency Tracker **[P1]** **INPROGRESS**
 **Dependencies:** A4 ✅
 **Estimated:** 4 hours
-**Status:** ✅ Completed on 2025-12-08
+**Status:** 🟨 In progress (deferred optimization)
 
 - [x] **[P1, depends: A4]** Implement visitation stack for cycle detection
 - [x] **[P1, depends: A4]** Detect direct circular dependencies (A → A)
