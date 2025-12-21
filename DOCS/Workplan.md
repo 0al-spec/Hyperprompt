@@ -717,7 +717,7 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 4 hours
 **Track:** Release
 
-### Optimization Tasks **[P1]** **INPROGRESS**
+### P9: Optimization Tasks **[P1]** **INPROGRESS**
 **Dependencies:** E1, E2
 **Estimated:** 3 hours
 **Status:** 🟨 In progress (profiling and memory checks)
