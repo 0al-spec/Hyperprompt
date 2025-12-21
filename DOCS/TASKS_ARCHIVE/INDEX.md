@@ -33,6 +33,17 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Phase 8: Testing & Quality Assurance
+
+### E4 — Build Warnings Cleanup **[P2]** ✓ 2025-12-21
+- **PRD:** [E4_Build_Warnings_Cleanup.md](./E4_Build_Warnings_Cleanup.md)
+- **Summary:** [E4-summary.md](./E4-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** D2, E1
+- **Description:** Remove integration-test warnings and refresh build issues log.
+
+---
+
 ## Phase 9: Optimization & Finalization
 
 ### P9 — Optimization Tasks **[P2]** ✓ 2025-12-21
@@ -104,9 +115,9 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 12 items
-- **Total Effort:** 37 hours (tracked tasks only)
-- **Phases Represented:** 4 (Phase 4, Phase 6, Phase 9, Phase 10)
+- **Total Archived:** 13 items
+- **Total Effort:** 39 hours (tracked tasks only)
+- **Phases Represented:** 5 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10)
 
 ---
 

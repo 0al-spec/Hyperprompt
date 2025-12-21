@@ -176,3 +176,6 @@ swift test 2>&1
 | Warnings persist after edits | Task incomplete | Re-check compiler output, adjust test code |
 | Skip logic changes behavior | False test execution | Keep skip reasons and condition visible |
 
+
+---
+**Archived:** 2025-12-21
