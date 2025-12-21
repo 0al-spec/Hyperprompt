@@ -247,3 +247,6 @@ public enum ResolvedTarget: Equatable, Sendable {
 |------|--------|------------|
 | Divergence from CLI resolver | Editor inconsistencies | Reuse ReferenceResolver and tests |
 | Ambiguity handling unclear | Broken UX | Return candidate list in ResolvedTarget |
+
+---
+**Archived:** 2025-12-21

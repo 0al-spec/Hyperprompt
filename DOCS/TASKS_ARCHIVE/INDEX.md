@@ -37,6 +37,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE1 (Project Indexing)
 - **Description:** Extend parsing to capture link spans with UTF-8 ranges, heuristic link detection, and graceful diagnostics.
 
+### EE3 — Link Resolution **[P1]** ✓ 2025-12-21
+- **PRD:** [EE3_Link_Resolution.md](./EE3_Link_Resolution.md)
+- **Summary:** [EE3-summary.md](./EE3-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** EE2 (Parsing with Link Spans)
+- **Description:** Resolve editor link spans using CLI-equivalent path rules with diagnostics and ambiguity handling.
+
 ### BUG-EE1-001 — GlobMatcher Pattern Matching Issues ✓ 2025-12-21
 - **PRD:** [BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md](./BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md)
 - **Related Task:** EE1 — Project Indexing
@@ -46,8 +53,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 5 items
-- **Total Effort:** 10 hours (tracked tasks only)
+- **Total Archived:** 6 items
+- **Total Effort:** 12 hours (tracked tasks only)
 - **Phases Represented:** 2 (Phase 6, Phase 10)
 
 ---
