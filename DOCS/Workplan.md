@@ -826,15 +826,15 @@ Non-blocking: Can develop in parallel with Track A
 
 **Acceptance Criteria:** Output matches CLI exactly, diagnostics capture all errors
 
-### EE5: Diagnostics Mapping **[P1]** **INPROGRESS**
+### EE5: Diagnostics Mapping **[P1]**
 **Dependencies:** EE4
 **Estimated:** 2 hours
-**Status:** ⬜ Not started
+**Status:** ✅ Completed on 2025-12-21
 
-- [ ] **[P1, depends: EE4]** Define `Diagnostic` struct with error codes, severity, ranges
-- [ ] **[P1, depends: EE4]** Implement `DiagnosticMapper` (CompilerError → Diagnostic)
-- [ ] **[P1, depends: EE4]** Assign error codes by category (E001-E099: syntax, E100-E199: resolution, etc.)
-- [ ] **[P1, depends: EE4]** Write unit tests (4+ tests verifying error code mapping)
+- [x] **[P1, depends: EE4]** Define `Diagnostic` struct with error codes, severity, ranges
+- [x] **[P1, depends: EE4]** Implement `DiagnosticMapper` (CompilerError → Diagnostic)
+- [x] **[P1, depends: EE4]** Assign error codes by category (E001-E099: syntax, E100-E199: resolution, etc.)
+- [x] **[P1, depends: EE4]** Write unit tests (4+ tests verifying error code mapping)
 
 **Acceptance Criteria:** All CLI errors map to editor diagnostics with ranges
 
