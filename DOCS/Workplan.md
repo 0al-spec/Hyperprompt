@@ -800,7 +800,7 @@ Non-blocking: Can develop in parallel with Track A
 
 **Acceptance Criteria:** All file references captured with accurate byte/line ranges
 
-### EE3: Link Resolution **[P1]**
+### EE3: Link Resolution **[P1]** **INPROGRESS**
 **Dependencies:** EE2
 **Estimated:** 2 hours
 **Status:** ⬜ Not started
