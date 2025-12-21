@@ -725,3 +725,6 @@ Implement the **EditorEngine** module as an optional, trait-gated component with
 ---
 
 **End of PRD**
+
+---
+**Archived:** 2025-12-21

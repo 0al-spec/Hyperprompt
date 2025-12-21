@@ -54,6 +54,7 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ### EE1 — Project Indexing **[P1]** ✓ 2025-12-20
 - **PRD:** [EE1_Project_Indexing.md](./EE1_Project_Indexing.md)
+- **Legacy PRD:** [EE1_Editor_Engine_Implementation.md](./EE1_Editor_Engine_Implementation.md)
 - **Summary:** [EE1-summary.md](./EE1-summary.md)
 - **Effort:** 3 hours
 - **Dependencies:** EE0 (EditorEngine Module Foundation)
