@@ -2,8 +2,9 @@
 
 **Task ID:** EE1
 **Task Name:** Project Indexing
-**Status:** ✅ Implementation Complete (Validation Limited)
+**Status:** ⚠️ Implementation Complete (4 Test Failures in GlobMatcher)
 **Completed:** 2025-12-20
+**Updated:** 2025-12-21 (Validation completed)
 **Effort:** ~3 hours actual (3 hours estimated)
 
 ---
@@ -13,7 +14,16 @@
 Successfully implemented project indexing for the EditorEngine module, enabling workspace-wide file discovery for Hypercode (`.hc`) and Markdown (`.md`) files with deterministic ordering, configurable ignore patterns, and secure defaults.
 
 **Implementation Status:** All code written and unit tests created (47+ test cases)
-**Validation Status:** ⚠️ **Swift compiler not available in environment** — code review completed, compilation validation deferred
+**Validation Status:** ⚠️ **4 GlobMatcher tests failing** — Build passes, 43/47 tests pass
+
+### Validation Results (2025-12-21)
+
+- **Build:** ✅ Passes (after fixing `Foundation` import in `FileSystem.swift`)
+- **ProjectIndexTests:** ✅ 13/13 tests pass
+- **ProjectIndexerTests:** ✅ 8/8 tests pass
+- **GlobMatcherTests:** ⚠️ 22/26 tests pass (4 failures)
+
+**Bug Filed:** `DOCS/INPROGRESS/BUG_GlobMatcher_Pattern_Matching.md`
 
 ---
 
@@ -181,23 +191,23 @@ Tests/EditorEngineTests/
 
 ## Known Limitations
 
-### 1. Swift Compiler Not Available
+### 1. GlobMatcher Pattern Matching Bugs
 
-**Impact:** Cannot verify compilation or run tests
-**Mitigation:** Code review completed, follows established patterns from EE0
-**Next Steps:** Run `swift test` when Swift environment is available
+**Impact:** 4 tests failing — wildcard patterns don't match `.gitignore` semantics
+**Bug:** `DOCS/INPROGRESS/BUG_GlobMatcher_Pattern_Matching.md`
+**Next Steps:** Fix GlobMatcher to correctly handle `*` and `**` patterns
 
-### 2. MockFileSystem Not Implemented
+### 2. MockFileSystem Incomplete
 
-**Impact:** Integration tests are placeholders
+**Impact:** Integration tests are placeholders (require in-memory directory structure)
 **Mitigation:** Unit tests cover individual components thoroughly
-**Next Steps:** Implement MockFileSystem in Core module for full integration testing
+**Next Steps:** Extend MockFileSystem in test targets for full integration testing
 
 ### 3. Performance Not Measured
 
 **Impact:** Cannot verify 1000 files < 500ms target
 **Mitigation:** Algorithm is efficient (O(n) scan + O(n log n) sort)
-**Next Steps:** Add performance benchmarks when Swift is available
+**Next Steps:** Add performance benchmarks
 
 ---
 
@@ -326,22 +336,29 @@ build/
 
 ### Current Blockers
 
-**❌ Swift Compiler Not Available**
-- **Impact:** HIGH — Cannot validate implementation
-- **Resolution:** Run tests when Swift environment is available
-- **Workaround:** Comprehensive code review completed
+**⚠️ GlobMatcher Pattern Bugs**
+- **Impact:** MEDIUM — 4 tests failing, affects `.hyperpromptignore` pattern matching
+- **Resolution:** Fix pattern matching logic in `GlobMatcher.swift`
+- **Bug Report:** `DOCS/INPROGRESS/BUG_GlobMatcher_Pattern_Matching.md`
+
+### Resolved
+
+**✅ Swift Compiler Validation**
+- **Resolution:** Build and tests run successfully (2025-12-21)
+- **Fix Applied:** Added `import Foundation` to `FileSystem.swift`
+- **Fix Applied:** Updated MockFileSystem in 3 test targets
 
 ### Risks
 
 **⚠️ FileSystem API Compatibility**
 - **Risk:** New FileSystem methods may conflict with existing usage
-- **Mitigation:** All changes are backward compatible (extensions only)
-- **Verification:** Check existing tests pass when Swift available
+- **Status:** ✅ Verified — All existing tests pass
+- **Note:** MockFileSystem implementations updated in all test targets
 
 **⚠️ Performance on Large Workspaces**
 - **Risk:** May not meet 500ms target for 1000 files
 - **Mitigation:** Algorithm is efficient, similar to `find` command
-- **Verification:** Add benchmarks in EE2
+- **Verification:** Add benchmarks in future task
 
 ---
 

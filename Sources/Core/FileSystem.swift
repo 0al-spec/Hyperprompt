@@ -1,3 +1,5 @@
+import Foundation
+
 /// Abstract interface for file system operations.
 ///
 /// This protocol abstracts file I/O to enable:

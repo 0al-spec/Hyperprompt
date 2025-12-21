@@ -48,6 +48,30 @@ final class DiagnosticPrinterTests: XCTestCase {
         func writeFile(at path: String, content: String) throws {
             files[path] = content
         }
+
+        func listDirectory(at path: String) throws -> [String] {
+            let normalizedPath = path.hasSuffix("/") ? path : path + "/"
+            var results: Set<String> = []
+            for filePath in files.keys {
+                if filePath.hasPrefix(normalizedPath) {
+                    let relativePath = String(filePath.dropFirst(normalizedPath.count))
+                    if let firstComponent = relativePath.split(separator: "/").first {
+                        results.insert(String(firstComponent))
+                    }
+                }
+            }
+            return Array(results)
+        }
+
+        func isDirectory(at path: String) -> Bool {
+            let normalizedPath = path.hasSuffix("/") ? path : path + "/"
+            return files.keys.contains { $0.hasPrefix(normalizedPath) }
+        }
+
+        func fileAttributes(at path: String) -> FileAttributes? {
+            guard let content = files[path] else { return nil }
+            return FileAttributes(size: content.utf8.count, modificationDate: Date())
+        }
     }
 
     // MARK: - Basic Error Formatting Tests

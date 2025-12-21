@@ -4,47 +4,46 @@
 **Phase:** Phase 10 — Editor Engine Module
 **Effort:** 3 hours (actual: ~3 hours)
 **Dependencies:** EE0 (EditorEngine Module Foundation) ✅
-**Status:** ✅ **Completed on 2025-12-20**
+**Status:** ⚠️ **Implementation Complete — 4 GlobMatcher Tests Failing**
+**Updated:** 2025-12-21
 
 ## Description
 
 Implement project indexing for EditorEngine. Scan workspace for .hc and .md files with deterministic ordering (lexicographic sort), support .hyperpromptignore patterns, and exclude hidden directories by default.
 
-## Completion Summary
+## Validation Results (2025-12-21)
 
-**Implementation:** Complete (6 new files, 3 modified files, ~800 LOC)
-**Tests:** Complete (47+ test cases across 3 test suites)
-**Validation:** ⚠️ Limited (Swift compiler not available in environment)
+**Build:** ✅ Passes
+**Tests:** ⚠️ 43/47 pass (4 failures in GlobMatcher pattern matching)
+
+| Test Suite | Result |
+|------------|--------|
+| ProjectIndexTests | ✅ 13/13 pass |
+| ProjectIndexerTests | ✅ 8/8 pass |
+| GlobMatcherTests | ⚠️ 22/26 pass |
+
+### Bug Filed
+
+**`BUG_GlobMatcher_Pattern_Matching.md`** — 4 tests fail due to incorrect wildcard pattern semantics
 
 ### Deliverables
 
 - ✅ `ProjectIndex` data structures with computed properties
 - ✅ `ProjectIndexer` with recursive file discovery
-- ✅ `GlobMatcher` with full pattern support
+- ⚠️ `GlobMatcher` — 4 pattern matching bugs (see bug report)
 - ✅ `.hyperpromptignore` parsing and application
 - ✅ Default ignore patterns (13 common directories)
 - ✅ Public API integration via `EditorEngine.indexProject()`
-- ✅ 47+ unit tests (ProjectIndex, GlobMatcher, ProjectIndexer)
 - ✅ Extended FileSystem protocol for directory operations
 
-### Acceptance Criteria
+### Fixes Applied During Validation
 
-- ✅ All `.hc` and `.md` files indexed
-- ✅ Deterministic lexicographic ordering
-- ✅ `.hyperpromptignore` support with glob patterns
-- ✅ Hidden directories excluded by default
-- ✅ Public API accessible from EditorEngine
-- ⚠️ Performance: 1000 files < 500ms (not measured, Swift unavailable)
-- ⚠️ >90% code coverage (not measured, Swift unavailable)
+1. **`Sources/Core/FileSystem.swift`** — Added missing `import Foundation`
+2. **`Tests/CoreTests/MockFileSystem.swift`** — Added new protocol methods
+3. **`Tests/ResolverTests/MockFileSystem.swift`** — Added new protocol methods
+4. **`Tests/CLITests/DiagnosticPrinterTests.swift`** — Added new protocol methods
 
-### Notes
+## Next Steps
 
-Swift compiler not available in current environment. Code review completed.
-Full validation (compilation + tests) should be performed when Swift is available.
-
-See: `DOCS/INPROGRESS/EE1-summary.md` for detailed completion report.
-
-## Next Step
-
-Run SELECT command to choose next task:
-$ claude "Выполни команду SELECT"
+1. **Fix GlobMatcher bugs** (see `BUG_GlobMatcher_Pattern_Matching.md`)
+2. **Run SELECT** to choose next task after bug fix
