@@ -55,8 +55,8 @@ Removed the unnecessary `let` keyword from the pattern match.
 - **Total Warnings:** 11
 - **Critical Issues:** 0
 - **Resolved Issues:** 1
-- **Build Time:** ~0.23s
+- **Build Time:** ~1.4s
 
 ## Notes
 
-The codebase now builds successfully with no warnings. The unnecessary pattern binding warning has been resolved by removing the `let` keyword from the pattern match in MarkdownEmitter.swift.
+The codebase builds successfully but emits warnings in integration tests. The unnecessary pattern binding warning has been resolved by removing the `let` keyword from the pattern match in MarkdownEmitter.swift.
