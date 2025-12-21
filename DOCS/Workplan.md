@@ -717,10 +717,10 @@ Non-blocking: Can develop in parallel with Track A
 **Estimated Duration:** 4 hours
 **Track:** Release
 
-### Optimization Tasks **[P1]**
+### Optimization Tasks **[P1]** **INPROGRESS**
 **Dependencies:** E1, E2
 **Estimated:** 3 hours
-**Status:** ✅ **COMPLETED** on 2025-12-16
+**Status:** 🟨 In progress (profiling and memory checks)
 
 - [ ] **[P2, depends: E1]** Profile compilation with Instruments (macOS) or Valgrind (Linux)
 - [ ] **[P2, depends: E1]** Optimize hot paths identified in profiling
