@@ -44,6 +44,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE2 (Parsing with Link Spans)
 - **Description:** Resolve editor link spans using CLI-equivalent path rules with diagnostics and ambiguity handling.
 
+### EE4 — Editor Compilation **[P1]** ✓ 2025-12-21
+- **PRD:** [EE4_Editor_Compilation.md](./EE4_Editor_Compilation.md)
+- **Summary:** [EE4-summary.md](./EE4-summary.md)
+- **Effort:** 3 hours
+- **Dependencies:** EE3 (Link Resolution)
+- **Description:** Provide editor compilation with deterministic output and diagnostics via CompilerDriver wrapper.
+
 ### BUG-EE1-001 — GlobMatcher Pattern Matching Issues ✓ 2025-12-21
 - **PRD:** [BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md](./BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md)
 - **Related Task:** EE1 — Project Indexing
@@ -53,8 +60,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 6 items
-- **Total Effort:** 12 hours (tracked tasks only)
+- **Total Archived:** 7 items
+- **Total Effort:** 15 hours (tracked tasks only)
 - **Phases Represented:** 2 (Phase 6, Phase 10)
 
 ---

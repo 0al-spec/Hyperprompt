@@ -251,3 +251,6 @@ swift test 2>&1
 |------|--------|------------|
 | Output mismatch vs CLI | Editor inconsistencies | Use CompilerDriver directly, compare in tests |
 | Diagnostics incomplete | Poor editor UX | Capture and return all CompilerError instances |
+
+---
+**Archived:** 2025-12-21
