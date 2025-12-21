@@ -800,16 +800,16 @@ Non-blocking: Can develop in parallel with Track A
 
 **Acceptance Criteria:** All file references captured with accurate byte/line ranges
 
-### EE3: Link Resolution **[P1]** **INPROGRESS**
+### EE3: Link Resolution **[P1]**
 **Dependencies:** EE2
 **Estimated:** 2 hours
-**Status:** ⬜ Not started
+**Status:** ✅ Completed on 2025-12-21
 
-- [ ] **[P1, depends: EE2]** Define `ResolvedTarget` enum (inlineText, markdownFile, hypercodeFile, forbidden, invalid, ambiguous)
-- [ ] **[P1, depends: EE2]** Implement `EditorResolver` wrapper around existing ReferenceResolver
-- [ ] **[P1, depends: EE2]** Handle missing files gracefully (strict vs lenient mode)
-- [ ] **[P1, depends: EE2]** Detect and report ambiguous matches (multiple candidates)
-- [ ] **[P1, depends: EE2]** Write unit tests (6+ tests including path traversal rejection)
+- [x] **[P1, depends: EE2]** Define `ResolvedTarget` enum (inlineText, markdownFile, hypercodeFile, forbidden, invalid, ambiguous)
+- [x] **[P1, depends: EE2]** Implement `EditorResolver` wrapper around existing ReferenceResolver
+- [x] **[P1, depends: EE2]** Handle missing files gracefully (strict vs lenient mode)
+- [x] **[P1, depends: EE2]** Detect and report ambiguous matches (multiple candidates)
+- [x] **[P1, depends: EE2]** Write unit tests (6+ tests including path traversal rejection)
 
 **Acceptance Criteria:** Resolution matches CLI behavior exactly, edge cases handled
 
