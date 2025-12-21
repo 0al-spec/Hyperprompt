@@ -6,6 +6,7 @@ import Glibc
 #error("Unsupported platform")
 #endif
 
+import Dispatch
 import ArgumentParser
 import Core
 
@@ -62,6 +63,9 @@ struct Hyperprompt: ParsableCommand {
     // MARK: - Run Method
 
     mutating func run() throws {
+        let signalSources = installSignalHandlers()
+        defer { _ = signalSources }
+
         // Validation: strict and lenient are mutually exclusive
         // Note: strict mode is implicit (default) when lenient is false
         // Currently no explicit --strict flag needed; just ensure lenient flag exists
@@ -156,5 +160,59 @@ struct Hyperprompt: ParsableCommand {
 
         fputs("\n", stderr)
         fputs("Exit code: \(error.exitCode)\n", stderr)
+    }
+
+    // MARK: - Signal Handling
+
+    private func installSignalHandlers() -> [DispatchSourceSignal] {
+        let signals: [Int32] = [SIGINT, SIGTERM]
+        var sources: [DispatchSourceSignal] = []
+
+        for signalValue in signals {
+            #if canImport(Darwin)
+            _ = Darwin.signal(signalValue, SIG_IGN)
+            #elseif canImport(Glibc)
+            _ = Glibc.signal(signalValue, SIG_IGN)
+            #endif
+
+            let source = DispatchSource.makeSignalSource(
+                signal: signalValue,
+                queue: DispatchQueue.main
+            )
+
+            source.setEventHandler {
+                let name = Self.signalName(forSignal: signalValue)
+                fputs("Interrupted by signal: \(name)\n", stderr)
+                let code = Self.interruptionExitCode(forSignal: signalValue)
+                Self.exit(withError: ExitCode(code))
+            }
+
+            source.resume()
+            sources.append(source)
+        }
+
+        return sources
+    }
+
+    static func interruptionExitCode(forSignal signal: Int32) -> Int32 {
+        switch signal {
+        case SIGINT:
+            return 130
+        case SIGTERM:
+            return 143
+        default:
+            return 1
+        }
+    }
+
+    private static func signalName(forSignal signal: Int32) -> String {
+        switch signal {
+        case SIGINT:
+            return "SIGINT"
+        case SIGTERM:
+            return "SIGTERM"
+        default:
+            return "SIGNAL(\(signal))"
+        }
     }
 }

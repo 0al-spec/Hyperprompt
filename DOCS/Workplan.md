@@ -523,15 +523,15 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### D2: Compiler Driver **[P0]** **INPROGRESS**
+### D2: Compiler Driver **[P0]**
 **Dependencies:** C2, C3, D1
 **Estimated:** 6 hours
-**Status:** 🟨 In progress (deferred signals)
+**Status:** ✅ Completed on 2025-12-21
 
 - [x] **[P0, depends: C2, D1]** Implement `CompilerDriver` orchestrating parse → resolve → emit → manifest pipeline
 - [x] **[P1, depends: D1]** Implement dry-run mode (validate without writing)
 - [x] **[P1, depends: D1]** Implement verbose logging
-- [ ] **[P2, depends: D1]** Handle interruption signals (SIGINT, SIGTERM) gracefully (deferred)
+- [x] **[P2, depends: D1]** Handle interruption signals (SIGINT, SIGTERM) gracefully
 - [x] **[P1, depends: D1]** Set default values for output/manifest/root paths
 - [x] **[P1, depends: C2, C3]** Write end-to-end compilation tests (7/10 tests passing)
 - [~] **[P1, depends: C2, C3]** Test with test corpus files (partial: V01, V03, I01-I03, I10 implemented)
