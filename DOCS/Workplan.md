@@ -838,7 +838,7 @@ Non-blocking: Can develop in parallel with Track A
 
 **Acceptance Criteria:** All CLI errors map to editor diagnostics with ranges
 
-### EE6: Documentation & Testing **[P1]**
+### EE6: Documentation & Testing **[P1]** **INPROGRESS**
 **Dependencies:** EE5
 **Estimated:** 7 hours
 **Status:** ⬜ Not started
