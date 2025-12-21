@@ -369,13 +369,13 @@ Non-blocking: Can develop in parallel with Track A
 ### B2: Dependency Tracker **[P1]**
 **Dependencies:** A4 ✅
 **Estimated:** 4 hours
-**Status:** ✅ Completed on 2025-12-08
+**Status:** ✅ Completed on 2025-12-21
 
 - [x] **[P1, depends: A4]** Implement visitation stack for cycle detection
 - [x] **[P1, depends: A4]** Detect direct circular dependencies (A → A)
 - [x] **[P1, depends: A4]** Detect transitive circular dependencies (A → B → A)
 - [x] **[P1, depends: A4]** Produce clear cycle path descriptions in error messages
-- [ ] **[P2, depends: A4]** Optimize for deep trees with memoization (deferred to v0.1.1)
+- [x] **[P2, depends: A4]** Optimize for deep trees with memoization
 - [x] **[P1, depends: A4]** Write tests for various cycle patterns
 
 **Acceptance Criteria:** ✅ All circular dependencies detected, error messages show full cycle path
@@ -526,12 +526,12 @@ Non-blocking: Can develop in parallel with Track A
 ### D2: Compiler Driver **[P0]**
 **Dependencies:** C2, C3, D1
 **Estimated:** 6 hours
-**Status:** ✅ Completed on 2025-12-09
+**Status:** ✅ Completed on 2025-12-21
 
 - [x] **[P0, depends: C2, D1]** Implement `CompilerDriver` orchestrating parse → resolve → emit → manifest pipeline
 - [x] **[P1, depends: D1]** Implement dry-run mode (validate without writing)
 - [x] **[P1, depends: D1]** Implement verbose logging
-- [ ] **[P2, depends: D1]** Handle interruption signals (SIGINT, SIGTERM) gracefully (deferred)
+- [x] **[P2, depends: D1]** Handle interruption signals (SIGINT, SIGTERM) gracefully
 - [x] **[P1, depends: D1]** Set default values for output/manifest/root paths
 - [x] **[P1, depends: C2, C3]** Write end-to-end compilation tests (7/10 tests passing)
 - [~] **[P1, depends: C2, C3]** Test with test corpus files (partial: V01, V03, I01-I03, I10 implemented)
@@ -541,6 +541,19 @@ Non-blocking: Can develop in parallel with Track A
 **Completion Note (2025-12-10):** Implemented CompilerDriver with full pipeline orchestration. Added integration test suite with 7/10 tests passing. Test fixtures created for key validation cases. Known limitations: statistics integration incomplete (manifest metrics pending), full test corpus (V01-V14, I01-I10) partially implemented.
 
 **Blocks:** E1 (integration tests need working driver)
+
+---
+
+### BUG-D2-001: Signal Handling Regression **[P1]**
+**Dependencies:** D2 ✅
+**Estimated:** 1 hour
+**Status:** ✅ Completed on 2025-12-21
+
+- [x] **[P1, depends: D2]** Move signal handling off main queue to avoid ignored SIGINT/SIGTERM
+- [x] **[P1, depends: D2]** Ensure interruption still exits with standard codes (130/143)
+- [x] **[P1, depends: D2]** Confirm `swift test` passes
+
+**Acceptance Criteria:** SIGINT/SIGTERM are handled even during synchronous compile on main thread
 
 ---
 
@@ -711,27 +724,41 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
+### E4: Build Warnings Cleanup **[P2]**
+**Dependencies:** D2 (compiler driver), E1 (test corpus)
+**Estimated:** 2 hours
+**Status:** ✅ Completed on 2025-12-21
+
+- [x] **[P2, depends: D2]** Remove unused `result` bindings in integration tests
+- [x] **[P2, depends: E1]** Remove unreachable code after `XCTSkip` in integration tests
+- [x] **[P2, depends: D2]** Confirm `swift test` emits zero warnings
+- [x] **[P2, depends: D2]** Update `DOCS/INPROGRESS/build-issues.md` to reflect clean build
+
+**Acceptance Criteria:** `swift test` produces zero warnings; build-issues log updated
+
+---
+
 ## Phase 9: Optimization & Finalization
 
 **Goal:** Performance tuning and release preparation
 **Estimated Duration:** 4 hours
 **Track:** Release
 
-### Optimization Tasks **[P1]**
+### P9: Optimization Tasks **[P1]**
 **Dependencies:** E1, E2
 **Estimated:** 3 hours
-**Status:** ✅ **COMPLETED** on 2025-12-16
+**Status:** ✅ **COMPLETED** on 2025-12-21
 
-- [ ] **[P2, depends: E1]** Profile compilation with Instruments (macOS) or Valgrind (Linux)
-- [ ] **[P2, depends: E1]** Optimize hot paths identified in profiling
+- [x] **[P2, depends: E1]** Profile compilation with Instruments (macOS) or Valgrind (Linux)
+- [x] **[P2, depends: E1]** Optimize hot paths identified in profiling
 - [x] **[P1, depends: E1]** Benchmark against performance targets **Completed 2025-12-16**:
   - [x] **[P1]** 1000-node tree compilation < 5 seconds (853ms average over 5 runs)
   - [x] **[P1]** Linear scaling with file count (R² = 0.984 across 10–120 files)
 - [x] **[P0, depends: E2]** Verify deterministic output (repeated compilations identical) **Completed 2025-12-12**
 - [x] **[P2, depends: E1]** Test with large corpus (100+ files) — 120-file corpus completed in 206ms
 - [x] **[P1, depends: E1]** Verify manifest JSON key alphabetical sorting — 100% manifest compliance confirmed
-- [ ] **[P2, depends: E1]** Test memory usage with large files (>1MB)
-- [ ] **[P2, depends: E1]** Fix any memory leaks detected
+- [x] **[P2, depends: E1]** Test memory usage with large files (>1MB)
+- [x] **[P2, depends: E1]** Fix any memory leaks detected
 
 **Acceptance Criteria:** Performance targets met, no memory leaks, deterministic output verified
 

@@ -67,6 +67,10 @@ final class CompilerDriverTests: XCTestCase {
         return try String(contentsOf: url, encoding: .utf8)
     }
 
+    private func shouldSkipKnownIssue() -> Bool {
+        return ProcessInfo.processInfo.environment["HP_RUN_SKIPPED_TESTS"] == nil
+    }
+
     // MARK: - Valid Input Tests
 
     func testV01_SingleRootNode() throws {
@@ -112,7 +116,9 @@ final class CompilerDriverTests: XCTestCase {
     }
 
     func testV04_SingleMarkdownReference() throws {
-        throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        }
 
         let input = fixtureURL("Valid/V04.hc")
         let output = tempURL("V04.md")
@@ -128,7 +134,9 @@ final class CompilerDriverTests: XCTestCase {
     }
 
     func testV05_NestedMarkdownReferences() throws {
-        throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        }
 
         let input = fixtureURL("Valid/V05.hc")
         let output = tempURL("V05.md")
@@ -145,7 +153,9 @@ final class CompilerDriverTests: XCTestCase {
     }
 
     func testV06_SingleHypercodeReference() throws {
-        throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        }
 
         let input = fixtureURL("Valid/V06.hc")
         let output = tempURL("V06.md")
@@ -162,7 +172,9 @@ final class CompilerDriverTests: XCTestCase {
     }
 
     func testV07_NestedHypercodeReferences() throws {
-        throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        }
 
         let input = fixtureURL("Valid/V07.hc")
         let output = tempURL("V07.md")
@@ -180,7 +192,9 @@ final class CompilerDriverTests: XCTestCase {
     }
 
     func testV08_MixedInlineAndReferences() throws {
-        throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        }
 
         let input = fixtureURL("Valid/V08.hc")
         let output = tempURL("V08.md")
@@ -198,13 +212,15 @@ final class CompilerDriverTests: XCTestCase {
     }
 
     func testV09_MarkdownHeadings() throws {
-        throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        }
 
         let input = fixtureURL("Valid/V09.hc")
         let output = tempURL("V09.md")
         let expected = fixtureURL("Valid/V09.expected.md")
 
-        let result = try compileFile(input, outputPath: output)
+        _ = try compileFile(input, outputPath: output)
         XCTAssertTrue(FileManager.default.fileExists(atPath: output.path))
 
         let actualMD = try readFile(output)
@@ -213,13 +229,15 @@ final class CompilerDriverTests: XCTestCase {
     }
 
     func testV10_SetextHeadings() throws {
-        throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        }
 
         let input = fixtureURL("Valid/V10.hc")
         let output = tempURL("V10.md")
         let expected = fixtureURL("Valid/V10.expected.md")
 
-        let result = try compileFile(input, outputPath: output)
+        _ = try compileFile(input, outputPath: output)
         XCTAssertTrue(FileManager.default.fileExists(atPath: output.path))
 
         let actualMD = try readFile(output)
@@ -247,7 +265,9 @@ final class CompilerDriverTests: XCTestCase {
         // TEMPORARILY DISABLED: Multiple roots correctly rejected by parser
         // See: DOCS/INPROGRESS/E1-test-results.md
         // Decision needed: Reclassify as invalid test or adjust parser to allow multiple roots
-        throw XCTSkip("Temporarily disabled - parser correctly rejects multiple roots. Needs design decision.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - parser correctly rejects multiple roots. Needs design decision.")
+        }
 
         /* Original test - restore after design decision:
         let input = fixtureURL("Valid/V12.hc")
@@ -268,7 +288,9 @@ final class CompilerDriverTests: XCTestCase {
         // See: DOCS/INPROGRESS/E1-test-results.md
         // Will be fixed in follow-up task for depth validation (P1)
         // Issue: Emitter assertion fires before parser validation
-        throw XCTSkip("Temporarily disabled - depth validation not implemented in parser. Fix in follow-up task.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - depth validation not implemented in parser. Fix in follow-up task.")
+        }
 
         /* Original test - restore after parser depth validation implemented:
         let input = fixtureURL("Valid/V13.hc")
@@ -286,7 +308,9 @@ final class CompilerDriverTests: XCTestCase {
     }
 
     func testV14_UnicodeContent() throws {
-        throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.")
+        }
 
         let input = fixtureURL("Valid/V14.hc")
         let output = tempURL("V14.md")
@@ -406,7 +430,9 @@ final class CompilerDriverTests: XCTestCase {
         // See: DOCS/INPROGRESS/D2-tech-debt.md
         // Will be fixed in: Integration-1 (Lexer with Specifications, P1, 5h)
         // Issue: Lexer uses generic error message instead of specific "indent/divisible/align" wording
-        throw XCTSkip("Temporarily disabled - error message wording issue. Will fix in Integration-1 task.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - error message wording issue. Will fix in Integration-1 task.")
+        }
 
         /* Original test - restore after Integration-1 completion:
         let input = fixtureURL("Invalid/I02.hc")
@@ -521,7 +547,9 @@ final class CompilerDriverTests: XCTestCase {
         // See: DOCS/INPROGRESS/E1-test-results.md
         // Will be fixed in follow-up task for depth validation (P1)
         // Issue: Parser doesn't enforce max depth, causes stack overflow in emitter
-        throw XCTSkip("Temporarily disabled - depth validation not implemented in parser. Fix in follow-up task.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - depth validation not implemented in parser. Fix in follow-up task.")
+        }
 
         /* Original test - restore after parser depth validation implemented:
         let input = fixtureURL("Invalid/I07.hc")
@@ -567,7 +595,9 @@ final class CompilerDriverTests: XCTestCase {
         throw XCTSkip("Permission testing not reliable on Windows")
         #endif
 
-        throw XCTSkip("Temporarily disabled - running as root bypasses permission checks. Needs test environment fix.")
+        if shouldSkipKnownIssue() {
+            throw XCTSkip("Temporarily disabled - running as root bypasses permission checks. Needs test environment fix.")
+        }
 
         let input = fixtureURL("Invalid/I09.hc")
         let output = tempURL("I09.md")

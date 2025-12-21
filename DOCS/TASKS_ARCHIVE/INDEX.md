@@ -4,6 +4,17 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Phase 4: Reference Resolution
+
+### B2 — Dependency Tracker **[P1]** ✓ 2025-12-21
+- **PRD:** [B2_Dependency_Tracker.md](./B2_Dependency_Tracker.md)
+- **Summary:** [B2-summary.md](./B2-summary.md)
+- **Effort:** 4 hours
+- **Dependencies:** A4 (Parser & AST Construction)
+- **Description:** Optimize dependency cycle detection for deep trees with memoized stack indexes.
+
+---
+
 ## Phase 6: CLI & Integration
 
 ### D4 — Statistics Reporter **[P2]** ✓ 2025-12-16
@@ -12,6 +23,42 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Effort:** 3 hours
 - **Dependencies:** D1 (Compiler Driver)
 - **Description:** Implement statistics collection and reporting capability for `--stats` flag
+
+### D2 — Compiler Driver (Signal Handling) **[P2]** ✓ 2025-12-21
+- **PRD:** [D2_Compiler_Driver.md](./D2_Compiler_Driver.md)
+- **Summary:** [D2-summary.md](./D2-summary.md)
+- **Effort:** 6 hours
+- **Dependencies:** C2, C3, D1
+- **Description:** Add graceful SIGINT/SIGTERM handling with deterministic exit codes.
+
+### BUG-D2-001 — Signal Handling Regression **[P1]** ✓ 2025-12-21
+- **PRD:** [BUG-D2-001_Signal_Handling_Regression.md](./BUG-D2-001_Signal_Handling_Regression.md)
+- **Summary:** [BUG-D2-001-summary.md](./BUG-D2-001-summary.md)
+- **Effort:** 1 hour
+- **Dependencies:** D2 (Compiler Driver)
+- **Description:** Ensure SIGINT/SIGTERM handling works during synchronous compile on the main thread.
+
+---
+
+## Phase 8: Testing & Quality Assurance
+
+### E4 — Build Warnings Cleanup **[P2]** ✓ 2025-12-21
+- **PRD:** [E4_Build_Warnings_Cleanup.md](./E4_Build_Warnings_Cleanup.md)
+- **Summary:** [E4-summary.md](./E4-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** D2, E1
+- **Description:** Remove integration-test warnings and refresh build issues log.
+
+---
+
+## Phase 9: Optimization & Finalization
+
+### P9 — Optimization Tasks **[P2]** ✓ 2025-12-21
+- **PRD:** [P9_Optimization_Tasks.md](./P9_Optimization_Tasks.md)
+- **Summary:** [P9-summary.md](./P9-summary.md)
+- **Effort:** 3 hours
+- **Dependencies:** E1, E2
+- **Description:** Profile compilation, validate memory usage, and check for leaks.
 
 ---
 
@@ -25,6 +72,7 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ### EE1 — Project Indexing **[P1]** ✓ 2025-12-20
 - **PRD:** [EE1_Project_Indexing.md](./EE1_Project_Indexing.md)
+- **Legacy PRD:** [EE1_Editor_Engine_Implementation.md](./EE1_Editor_Engine_Implementation.md)
 - **Summary:** [EE1-summary.md](./EE1-summary.md)
 - **Effort:** 3 hours
 - **Dependencies:** EE0 (EditorEngine Module Foundation)
@@ -72,11 +120,19 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Other Archives
+
+### Build Issues Log ✓ 2025-12-21
+- **Log:** [build-issues.md](./build-issues.md)
+- **Description:** Archived build warnings log after warnings were resolved.
+
+---
+
 ## Statistics
 
-- **Total Archived:** 9 items
-- **Total Effort:** 24 hours (tracked tasks only)
-- **Phases Represented:** 2 (Phase 6, Phase 10)
+- **Total Archived:** 14 items
+- **Total Effort:** 40 hours (tracked tasks only)
+- **Phases Represented:** 5 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10)
 
 ---
 
