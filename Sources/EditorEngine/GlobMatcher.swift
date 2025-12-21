@@ -17,7 +17,9 @@
 ///
 /// ```swift
 /// let matcher = GlobMatcher()
-/// matcher.matches(path: "src/main.log", pattern: "*.log")  // true
+/// matcher.matches(path: "main.log", pattern: "*.log")  // true
+/// matcher.matches(path: "src/main.log", pattern: "*.log")  // false
+/// matcher.matches(path: "src/main.log", pattern: "**/*.log")  // true
 /// matcher.matches(path: "build/output.txt", pattern: "build/")  // true
 /// matcher.matches(path: "tests/foo.test.md", pattern: "**/*.test.md")  // true
 /// ```
@@ -52,12 +54,17 @@ struct GlobMatcher {
             return matchesGlobPattern(path: normalizedPath, pattern: rootPattern)
         }
 
-        // Check if pattern matches at any level
-        // e.g., "*.log" should match "foo.log" and "dir/foo.log"
         if !normalizedPattern.contains("/") {
-            // Pattern without directory separator - match basename
-            let basename = (normalizedPath as NSString).lastPathComponent
-            return matchesGlobPattern(path: basename, pattern: normalizedPattern)
+            // If the pattern uses **, allow matching across directories even without '/'.
+            if normalizedPattern.contains("**") {
+                return matchesGlobPattern(path: normalizedPath, pattern: normalizedPattern)
+            }
+            // Pattern without directory separator - match only root-level entries
+            // (i.e., no directory components in the path).
+            guard !normalizedPath.contains("/") else {
+                return false
+            }
+            return matchesGlobPattern(path: normalizedPath, pattern: normalizedPattern)
         }
 
         // Full path pattern
@@ -111,10 +118,18 @@ struct GlobMatcher {
                 // Check for **
                 let nextIndex = pattern.index(after: i)
                 if nextIndex < pattern.endIndex && pattern[nextIndex] == "*" {
-                    // ** matches any characters including /
-                    regex += ".*"
-                    i = pattern.index(after: nextIndex)
-                    continue
+                    let afterDoubleStar = pattern.index(after: nextIndex)
+                    if afterDoubleStar < pattern.endIndex, pattern[afterDoubleStar] == "/" {
+                        // **/ matches zero or more path components (including "no directory")
+                        regex += "(?:.*/)?"
+                        i = pattern.index(after: afterDoubleStar)
+                        continue
+                    } else {
+                        // ** matches any characters including /
+                        regex += ".*"
+                        i = afterDoubleStar
+                        continue
+                    }
                 } else {
                     // * matches any characters except /
                     regex += "[^/]*"
