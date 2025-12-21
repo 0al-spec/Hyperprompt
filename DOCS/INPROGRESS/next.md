@@ -1,17 +1,3 @@
-# Next Task: EE2 — Parsing with Link Spans
+# Next Task
 
-**Priority:** P1
-**Phase:** Phase 10 — Editor Engine Module
-**Effort:** 3 hours
-**Dependencies:** EE1
-**Status:** ✅ Completed on 2025-12-21
-**Completed:** 2025-12-21
-
-## Description
-
-Extend the parser to capture link spans during parsing, including a link detection heuristic and graceful error handling. Add unit tests covering edge cases like UTF-8 offsets.
-
-## Next Step
-
-Run PLAN command to generate detailed PRD:
-$ claude "Выполни команду PLAN"
+_No task is currently selected. Run SELECT to choose the next priority._

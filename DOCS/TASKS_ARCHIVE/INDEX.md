@@ -30,6 +30,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE0 (EditorEngine Module Foundation)
 - **Description:** Implement deterministic workspace indexing for `.hc` and `.md` files with `.hyperpromptignore` rules, metadata, and EditorEngine API access.
 
+### EE2 — Parsing with Link Spans **[P1]** ✓ 2025-12-21
+- **PRD:** [EE2_Parsing_with_Link_Spans.md](./EE2_Parsing_with_Link_Spans.md)
+- **Summary:** [EE2-summary.md](./EE2-summary.md)
+- **Effort:** 3 hours
+- **Dependencies:** EE1 (Project Indexing)
+- **Description:** Extend parsing to capture link spans with UTF-8 ranges, heuristic link detection, and graceful diagnostics.
+
 ### BUG-EE1-001 — GlobMatcher Pattern Matching Issues ✓ 2025-12-21
 - **PRD:** [BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md](./BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md)
 - **Related Task:** EE1 — Project Indexing
@@ -39,8 +46,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 4 items
-- **Total Effort:** 7 hours (tracked tasks only)
+- **Total Archived:** 5 items
+- **Total Effort:** 10 hours (tracked tasks only)
 - **Phases Represented:** 2 (Phase 6, Phase 10)
 
 ---

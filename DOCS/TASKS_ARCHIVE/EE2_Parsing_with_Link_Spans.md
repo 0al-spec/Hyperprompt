@@ -327,3 +327,6 @@ public struct ParsedFile {
 | Overly broad heuristic | False positives | Tighten heuristic with suffix checks and path rules |
 | Parser changes regress CLI | Build/test in CI, keep AST unchanged |
 
+
+---
+**Archived:** 2025-12-21
