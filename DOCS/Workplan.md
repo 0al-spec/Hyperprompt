@@ -711,6 +711,20 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
+### E4: Build Warnings Cleanup **[P2]**
+**Dependencies:** D2 (compiler driver), E1 (test corpus)
+**Estimated:** 2 hours
+**Status:** ⬜ Not started
+
+- [ ] **[P2, depends: D2]** Remove unused `result` bindings in integration tests
+- [ ] **[P2, depends: E1]** Remove unreachable code after `XCTSkip` in integration tests
+- [ ] **[P2, depends: D2]** Confirm `swift test` emits zero warnings
+- [ ] **[P2, depends: D2]** Update `DOCS/INPROGRESS/build-issues.md` to reflect clean build
+
+**Acceptance Criteria:** `swift test` produces zero warnings; build-issues log updated
+
+---
+
 ## Phase 9: Optimization & Finalization
 
 **Goal:** Performance tuning and release preparation
