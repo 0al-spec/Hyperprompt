@@ -23,6 +23,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** D2 (Compiler Driver)
 - **Description:** Create foundational structure for EditorEngine module with SPM configuration
 
+### EE1 — Project Indexing **[P1]** ✓ 2025-12-20
+- **PRD:** [EE1_Project_Indexing.md](./EE1_Project_Indexing.md)
+- **Summary:** [EE1-summary.md](./EE1-summary.md)
+- **Effort:** 3 hours
+- **Dependencies:** EE0 (EditorEngine Module Foundation)
+- **Description:** Implement deterministic workspace indexing for `.hc` and `.md` files with `.hyperpromptignore` rules, metadata, and EditorEngine API access.
+
 ### BUG-EE1-001 — GlobMatcher Pattern Matching Issues ✓ 2025-12-21
 - **PRD:** [BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md](./BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md)
 - **Related Task:** EE1 — Project Indexing
@@ -32,8 +39,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 3 items
-- **Total Effort:** 4 hours (tracked tasks only)
+- **Total Archived:** 4 items
+- **Total Effort:** 7 hours (tracked tasks only)
 - **Phases Represented:** 2 (Phase 6, Phase 10)
 
 ---
