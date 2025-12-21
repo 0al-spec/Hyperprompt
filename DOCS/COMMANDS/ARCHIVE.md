@@ -60,11 +60,7 @@ Create/update `DOCS/TASKS_ARCHIVE/INDEX.md` with links organized by phase:
 
 ### 4. Commit
 
-```bash
-git add DOCS/INPROGRESS/ DOCS/TASKS_ARCHIVE/
-git commit -m "Archive completed tasks: A1, A2"
-git push
-```
+Follow the steps documented in [`DOCS/COMMANDS/PRIMITIVES/COMMIT.md`](./PRIMITIVES/COMMIT.md) to stage and record the completed archive actions.
 
 ---
 
