@@ -113,6 +113,14 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Other Archives
+
+### Build Issues Log ✓ 2025-12-21
+- **Log:** [build-issues.md](./build-issues.md)
+- **Description:** Archived build warnings log after warnings were resolved.
+
+---
+
 ## Statistics
 
 - **Total Archived:** 13 items
