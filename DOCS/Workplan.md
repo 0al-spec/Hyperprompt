@@ -523,10 +523,10 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### D2: Compiler Driver **[P0]**
+### D2: Compiler Driver **[P0]** **INPROGRESS**
 **Dependencies:** C2, C3, D1
 **Estimated:** 6 hours
-**Status:** ✅ Completed on 2025-12-09
+**Status:** 🟨 In progress (deferred signals)
 
 - [x] **[P0, depends: C2, D1]** Implement `CompilerDriver` orchestrating parse → resolve → emit → manifest pipeline
 - [x] **[P1, depends: D1]** Implement dry-run mode (validate without writing)
