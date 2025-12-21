@@ -58,6 +58,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE4 (Editor Compilation)
 - **Description:** Map compiler errors into editor diagnostics with stable codes and ranges.
 
+### EE6 — Documentation & Testing **[P1]** ✓ 2025-12-21
+- **PRD:** [EE6_Documentation_and_Testing.md](./EE6_Documentation_and_Testing.md)
+- **Summary:** [EE6-summary.md](./EE6-summary.md)
+- **Effort:** 7 hours
+- **Dependencies:** EE5 (Diagnostics Mapping)
+- **Description:** Document EditorEngine API, expand tests, and verify editor vs CLI parity.
+
 ### BUG-EE1-001 — GlobMatcher Pattern Matching Issues ✓ 2025-12-21
 - **PRD:** [BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md](./BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md)
 - **Related Task:** EE1 — Project Indexing
@@ -67,8 +74,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 8 items
-- **Total Effort:** 17 hours (tracked tasks only)
+- **Total Archived:** 9 items
+- **Total Effort:** 24 hours (tracked tasks only)
 - **Phases Represented:** 2 (Phase 6, Phase 10)
 
 ---

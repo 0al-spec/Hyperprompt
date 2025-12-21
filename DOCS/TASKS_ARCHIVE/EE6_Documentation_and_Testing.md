@@ -145,3 +145,6 @@ swift test 2>&1
 |------|--------|------------|
 | Coverage target not met | Regression risk | Add targeted unit tests |
 | Fixture failures | Blocked parity | Skip with explicit reason and TODO |
+
+---
+**Archived:** 2025-12-21
