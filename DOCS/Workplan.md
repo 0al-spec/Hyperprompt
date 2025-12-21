@@ -838,15 +838,15 @@ Non-blocking: Can develop in parallel with Track A
 
 **Acceptance Criteria:** All CLI errors map to editor diagnostics with ranges
 
-### EE6: Documentation & Testing **[P1]** **INPROGRESS**
+### EE6: Documentation & Testing **[P1]**
 **Dependencies:** EE5
 **Estimated:** 7 hours
-**Status:** ⬜ Not started
+**Status:** ✅ Completed on 2025-12-21
 
-- [ ] **[P1, depends: EE5]** Write DOCS/EDITOR_ENGINE.md (API reference, usage guide, integration patterns)
-- [ ] **[P1, depends: EE5]** Achieve >80% code coverage with unit tests
-- [ ] **[P1, depends: EE5]** Write integration tests with test corpus (V01-V14, I01-I10)
-- [ ] **[P1, depends: EE5]** Verify CLI vs Editor output is byte-for-byte identical
+- [x] **[P1, depends: EE5]** Write DOCS/EDITOR_ENGINE.md (API reference, usage guide, integration patterns)
+- [x] **[P1, depends: EE5]** Achieve >80% code coverage with unit tests
+- [x] **[P1, depends: EE5]** Write integration tests with test corpus (V01-V14, I01-I10)
+- [x] **[P1, depends: EE5]** Verify CLI vs Editor output is byte-for-byte identical
 
 **Acceptance Criteria:** API documented, >80% coverage, integration tests pass
 

@@ -64,6 +64,40 @@ final class EditorCompilerTests: XCTestCase {
         XCTAssertNotNil(result.output)
         XCTAssertNil(result.manifest)
     }
+
+    func testCollectStatsReturnsStatistics() throws {
+        let tempDir = try makeTempDir()
+        let input = tempDir.appendingPathComponent("main.hc")
+        try "\"Root\"\n".write(to: input, atomically: true, encoding: .utf8)
+
+        let compiler = EditorCompiler()
+        let options = CompileOptions(collectStats: true)
+        let result = compiler.compile(entryFile: input.path, options: options)
+
+        XCTAssertNotNil(result.output)
+        XCTAssertNotNil(result.statistics)
+    }
+
+    func testWriteOutputWritesFiles() throws {
+        let tempDir = try makeTempDir()
+        let input = tempDir.appendingPathComponent("main.hc")
+        try "\"Root\"\n".write(to: input, atomically: true, encoding: .utf8)
+
+        let output = tempDir.appendingPathComponent("main.md")
+        let manifest = tempDir.appendingPathComponent("main.md.manifest.json")
+
+        let compiler = EditorCompiler()
+        let options = CompileOptions(
+            outputPath: output.path,
+            manifestPath: manifest.path,
+            writeOutput: true
+        )
+        let result = compiler.compile(entryFile: input.path, options: options)
+
+        XCTAssertNotNil(result.output)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: output.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: manifest.path))
+    }
 }
 
 private func makeTempDir() throws -> URL {
