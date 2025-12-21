@@ -62,3 +62,6 @@ Wrapped skips in a runtime guard to keep the test body reachable.
 ## Notes
 
 The codebase builds successfully with no warnings. All known warnings are resolved.
+
+---
+**Archived:** 2025-12-21
