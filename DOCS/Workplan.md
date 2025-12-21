@@ -826,7 +826,7 @@ Non-blocking: Can develop in parallel with Track A
 
 **Acceptance Criteria:** Output matches CLI exactly, diagnostics capture all errors
 
-### EE5: Diagnostics Mapping **[P1]**
+### EE5: Diagnostics Mapping **[P1]** **INPROGRESS**
 **Dependencies:** EE4
 **Estimated:** 2 hours
 **Status:** ⬜ Not started
