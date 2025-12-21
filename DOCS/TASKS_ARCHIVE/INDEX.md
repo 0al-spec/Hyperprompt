@@ -24,6 +24,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** D1 (Compiler Driver)
 - **Description:** Implement statistics collection and reporting capability for `--stats` flag
 
+### D2 — Compiler Driver (Signal Handling) **[P2]** ✓ 2025-12-21
+- **PRD:** [D2_Compiler_Driver.md](./D2_Compiler_Driver.md)
+- **Summary:** [D2-summary.md](./D2-summary.md)
+- **Effort:** 6 hours
+- **Dependencies:** C2, C3, D1
+- **Description:** Add graceful SIGINT/SIGTERM handling with deterministic exit codes.
+
 ---
 
 ## Phase 10: Editor Engine Module
@@ -85,8 +92,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 10 items
-- **Total Effort:** 28 hours (tracked tasks only)
+- **Total Archived:** 11 items
+- **Total Effort:** 34 hours (tracked tasks only)
 - **Phases Represented:** 3 (Phase 4, Phase 6, Phase 10)
 
 ---
