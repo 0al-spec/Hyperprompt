@@ -142,3 +142,6 @@ swift test 2>&1
 |------|--------|------------|
 | Background queue doesn't fire in CLI runtime | Signals still ignored | Use a dedicated serial queue and keep sources alive |
 
+
+---
+**Archived:** 2025-12-21

@@ -31,6 +31,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** C2, C3, D1
 - **Description:** Add graceful SIGINT/SIGTERM handling with deterministic exit codes.
 
+### BUG-D2-001 — Signal Handling Regression **[P1]** ✓ 2025-12-21
+- **PRD:** [BUG-D2-001_Signal_Handling_Regression.md](./BUG-D2-001_Signal_Handling_Regression.md)
+- **Summary:** [BUG-D2-001-summary.md](./BUG-D2-001-summary.md)
+- **Effort:** 1 hour
+- **Dependencies:** D2 (Compiler Driver)
+- **Description:** Ensure SIGINT/SIGTERM handling works during synchronous compile on the main thread.
+
 ---
 
 ## Phase 8: Testing & Quality Assurance
@@ -123,8 +130,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 13 items
-- **Total Effort:** 39 hours (tracked tasks only)
+- **Total Archived:** 14 items
+- **Total Effort:** 40 hours (tracked tasks only)
 - **Phases Represented:** 5 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10)
 
 ---
