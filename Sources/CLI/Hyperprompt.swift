@@ -167,6 +167,7 @@ struct Hyperprompt: ParsableCommand {
     private func installSignalHandlers() -> [DispatchSourceSignal] {
         let signals: [Int32] = [SIGINT, SIGTERM]
         var sources: [DispatchSourceSignal] = []
+        let queue = DispatchQueue(label: "hyperprompt.signal-handler")
 
         for signalValue in signals {
             #if canImport(Darwin)
@@ -177,7 +178,7 @@ struct Hyperprompt: ParsableCommand {
 
             let source = DispatchSource.makeSignalSource(
                 signal: signalValue,
-                queue: DispatchQueue.main
+                queue: queue
             )
 
             source.setEventHandler {

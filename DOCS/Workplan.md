@@ -544,14 +544,14 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### BUG-D2-001: Signal Handling Regression **[P1]** **INPROGRESS**
+### BUG-D2-001: Signal Handling Regression **[P1]**
 **Dependencies:** D2 ✅
 **Estimated:** 1 hour
-**Status:** 🟨 In progress
+**Status:** ✅ Completed on 2025-12-21
 
-- [ ] **[P1, depends: D2]** Move signal handling off main queue to avoid ignored SIGINT/SIGTERM
-- [ ] **[P1, depends: D2]** Ensure interruption still exits with standard codes (130/143)
-- [ ] **[P1, depends: D2]** Confirm `swift test` passes
+- [x] **[P1, depends: D2]** Move signal handling off main queue to avoid ignored SIGINT/SIGTERM
+- [x] **[P1, depends: D2]** Ensure interruption still exits with standard codes (130/143)
+- [x] **[P1, depends: D2]** Confirm `swift test` passes
 
 **Acceptance Criteria:** SIGINT/SIGTERM are handled even during synchronous compile on main thread
 
