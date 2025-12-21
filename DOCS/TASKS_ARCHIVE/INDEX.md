@@ -23,12 +23,17 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** D2 (Compiler Driver)
 - **Description:** Create foundational structure for EditorEngine module with SPM configuration
 
+### BUG-EE1-001 — GlobMatcher Pattern Matching Issues ✓ 2025-12-21
+- **PRD:** [BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md](./BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md)
+- **Related Task:** EE1 — Project Indexing
+- **Description:** Fix `.gitignore`-compatible wildcard semantics (`*` root-only, `**/` zero-or-more dirs)
+
 ---
 
 ## Statistics
 
-- **Total Archived:** 2 tasks
-- **Total Effort:** 4 hours
+- **Total Archived:** 3 items
+- **Total Effort:** 4 hours (tracked tasks only)
 - **Phases Represented:** 2 (Phase 6, Phase 10)
 
 ---
@@ -48,4 +53,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-20
+**Last Updated:** 2025-12-21

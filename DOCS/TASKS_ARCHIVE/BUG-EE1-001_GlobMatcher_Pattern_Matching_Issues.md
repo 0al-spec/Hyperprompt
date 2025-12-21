@@ -3,15 +3,16 @@
 **Bug ID:** BUG-EE1-001
 **Component:** EditorEngine / GlobMatcher
 **Severity:** Medium
-**Status:** Open
+**Status:** ✅ Resolved
 **Discovered:** 2025-12-21
+**Resolved:** 2025-12-21
 **Related Task:** EE1 — Project Indexing
 
 ---
 
 ## Summary
 
-The `GlobMatcher` implementation in EE1 has 4 failing tests related to pattern matching semantics. The glob pattern matching does not correctly implement the expected `.gitignore`-style behavior for wildcards and directory handling.
+The `GlobMatcher` implementation in EE1 had failing tests related to pattern matching semantics. The glob pattern matching did not correctly implement the expected `.gitignore`-style behavior for wildcards and directory handling.
 
 ---
 
@@ -23,6 +24,20 @@ The `GlobMatcher` implementation in EE1 has 4 failing tests related to pattern m
 | `testDoubleWildcard_MatchesAnyDepth` | 58 | `**/*.test.md` should match `file.test.md` | Does not match |
 | `testRealWorld_BuildArtifacts` | 120 | `*.log` should NOT match `logs/debug.log` | Matches (incorrectly) |
 | `testRealWorld_TemporaryFiles` | 126 | `**/*.tmp` should match `file.tmp` | Does not match |
+
+---
+
+## Resolution
+
+Implemented `.gitignore`-compatible semantics in `Sources/EditorEngine/GlobMatcher.swift`:
+
+- Patterns without `/` match only root-level paths (e.g., `*.log` matches `file.log` but not `dir/file.log`)
+- `**/` matches zero or more directories (e.g., `**/*.tmp` matches `file.tmp` and `dir/file.tmp`)
+
+### Verification
+
+- `swift test --filter GlobMatcherTests`
+- `swift test`
 
 ---
 
@@ -85,7 +100,7 @@ Implement `.gitignore`-compatible semantics since this is what users expect.
 
 ## Acceptance Criteria
 
-1. All 26 GlobMatcherTests pass
+1. All GlobMatcherTests pass
 2. `*.log` matches `file.log` but NOT `dir/file.log`
 3. `**/*.tmp` matches `file.tmp`, `dir/file.tmp`, and `a/b/c/file.tmp`
 4. Edge cases documented in test comments
@@ -117,3 +132,6 @@ Users can use explicit patterns instead:
 
 **Reported by:** Validation during EE1 implementation review
 **Assigned to:** Unassigned
+
+---
+**Archived:** 2025-12-21
