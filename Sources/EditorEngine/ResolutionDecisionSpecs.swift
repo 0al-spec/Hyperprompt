@@ -1,3 +1,4 @@
+import HypercodeGrammar
 import Resolver
 import SpecificationCore
 
