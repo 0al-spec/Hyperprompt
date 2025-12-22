@@ -2,6 +2,7 @@ import Core
 import Foundation
 import HypercodeGrammar
 import Resolver
+import SpecificationCore
 
 /// Result of resolving a link span.
 public struct ResolutionResult: Sendable {
@@ -22,9 +23,10 @@ public struct EditorResolver {
     private let fileSystem: FileSystem
     private let workspaceRoot: String?
     private let mode: ResolutionMode
-
-    private let linkSpec = LooksLikeFileReferenceSpec()
-    private let traversalSpec = NoTraversalSpec()
+    private let linkDecision = LinkLiteralDecisionSpec()
+    private let rootDecision = RootEligibilityDecisionSpec()
+    private let candidateDecision = CandidateResolutionDecisionSpec()
+    private let outcomeDecision = ResolutionOutcomeDecisionSpec()
 
     /// Creates a new resolver instance.
     /// - Parameters:
@@ -68,24 +70,19 @@ public struct EditorResolver {
 
     private func resolve(literal: String, location: SourceLocation, sourceFile: String) -> ResolutionResult {
         let trimmed = literal.trimmingCharacters(in: .whitespaces)
-
-        guard linkSpec.isSatisfiedBy(trimmed) else {
+        let ext = (trimmed as NSString).pathExtension.lowercased()
+        let decision = linkDecision.decide(trimmed) ?? .inlineText
+        switch decision {
+        case .inlineText:
             return ResolutionResult(target: .inlineText, diagnostics: [])
-        }
-
-        guard traversalSpec.isSatisfiedBy(trimmed) else {
+        case .invalidTraversal:
             let error = ResolutionError.pathTraversal(path: trimmed, location: location)
             return ResolutionResult(target: .invalid(reason: error.message), diagnostics: [error])
-        }
-
-        let ext = (trimmed as NSString).pathExtension.lowercased()
-        if !ext.isEmpty && ext != "md" && ext != "hc" {
+        case .forbiddenExtension:
             let error = ResolutionError.forbiddenExtension(path: trimmed, ext: ".\(ext)", location: location)
             return ResolutionResult(target: .forbidden(extension: ext), diagnostics: [error])
-        }
-
-        if ext.isEmpty {
-            return ResolutionResult(target: .inlineText, diagnostics: [])
+        case .markdown, .hypercode:
+            break
         }
 
         let roots = resolutionRoots(sourceFile: sourceFile)
@@ -93,76 +90,92 @@ public struct EditorResolver {
         var diagnostics: [CompilerError] = []
 
         for root in roots {
-            let withinRoot = WithinRootSpec(rootPath: root).isSatisfiedBy(trimmed)
-            if !withinRoot {
-                if mode == .strict {
-                    let fullPath = joinPath(rootPath: root, relativePath: trimmed)
-                    let error = ResolutionError.outsideRoot(path: fullPath, root: root, location: location)
-                    diagnostics.append(error)
-                }
+            let eligibility = rootDecision.decide(
+                RootEligibilityContext(root: root, literal: trimmed, mode: mode)
+            ) ?? .outOfRootLenient
+            switch eligibility {
+            case .eligible:
+                break
+            case .outOfRootStrict:
+                let fullPath = joinPath(rootPath: root, relativePath: trimmed)
+                let error = ResolutionError.outsideRoot(path: fullPath, root: root, location: location)
+                diagnostics.append(error)
+                continue
+            case .outOfRootLenient:
                 continue
             }
 
             let fullPath = joinPath(rootPath: root, relativePath: trimmed)
-            if fileSystem.fileExists(at: fullPath) {
+            let exists = fileSystem.fileExists(at: fullPath)
+            let candidateContext = CandidateResolutionContext(exists: exists, mode: mode)
+            let candidateDecision = candidateDecision.decide(candidateContext) ?? .missingLenient
+            switch candidateDecision {
+            case .found:
                 candidatePaths.append(fullPath)
-            } else if mode == .strict {
+            case .missingStrict:
                 diagnostics.append(ResolutionError.fileNotFound(path: trimmed, location: location))
+            case .missingLenient:
+                break
             }
         }
 
-        if candidatePaths.count > 1 {
+        let outcome = outcomeDecision.decide(
+            ResolutionOutcomeContext(candidateCount: candidatePaths.count, mode: mode)
+        ) ?? .unresolvedLenient
+
+        switch outcome {
+        case .ambiguous:
             let message = "Ambiguous reference: \(trimmed)\nCandidates:\n- " + candidatePaths.joined(separator: "\n- ")
             let error = ResolutionError(message: message, location: location)
             return ResolutionResult(
                 target: .ambiguous(candidates: candidatePaths),
                 diagnostics: [error]
             )
-        }
-
-        if let candidate = candidatePaths.first {
-            let target: ResolvedTarget = (ext == "md")
-                ? .markdownFile(path: candidate)
-                : .hypercodeFile(path: candidate)
+        case .resolved:
+            guard let candidate = candidatePaths.first else {
+                let reason = diagnostics.first?.message ?? "Unresolved reference"
+                return ResolutionResult(target: .invalid(reason: reason), diagnostics: diagnostics)
+            }
+            let target: ResolvedTarget
+            switch decision {
+            case .markdown:
+                target = .markdownFile(path: candidate)
+            case .hypercode:
+                target = .hypercodeFile(path: candidate)
+            case .inlineText, .invalidTraversal, .forbiddenExtension:
+                target = .inlineText
+            }
             return ResolutionResult(target: target, diagnostics: [])
-        }
-
-        switch mode {
-        case .lenient:
+        case .unresolvedLenient:
             return ResolutionResult(target: .inlineText, diagnostics: [])
-        case .strict:
+        case .unresolvedStrict:
             let reason = diagnostics.first?.message ?? "Unresolved reference"
             return ResolutionResult(target: .invalid(reason: reason), diagnostics: diagnostics)
         }
     }
 
     private func resolutionRoots(sourceFile: String) -> [String] {
-        var roots: [String] = []
-
-        if let workspaceRoot, !workspaceRoot.isEmpty {
-            roots.append(normalizePath(workspaceRoot))
+        let rawRoots = [
+            workspaceRoot ?? "",
+            (sourceFile as NSString).deletingLastPathComponent,
+            fileSystem.currentDirectory()
+        ]
+        let nonEmptySpec = PredicateSpec<String>(description: "Non-empty root") { root in
+            !root.isEmpty
         }
-
-        if !sourceFile.isEmpty {
-            let directory = (sourceFile as NSString).deletingLastPathComponent
-            if !directory.isEmpty {
-                roots.append(normalizePath(directory))
-            }
-        }
-
-        let cwd = fileSystem.currentDirectory()
-        if !cwd.isEmpty {
-            roots.append(normalizePath(cwd))
-        }
+        let roots = rawRoots
+            .filter { nonEmptySpec.isSatisfiedBy($0) }
+            .map(normalizePath)
 
         var seen = Set<String>()
-        return roots.filter { root in
+        let uniquenessSpec = PredicateSpec<String>(description: "Unique root") { root in
             if seen.contains(root) {
                 return false
             }
             seen.insert(root)
             return true
         }
+        return roots.filter { uniquenessSpec.isSatisfiedBy($0) }
     }
 
     private func normalizePath(_ path: String) -> String {

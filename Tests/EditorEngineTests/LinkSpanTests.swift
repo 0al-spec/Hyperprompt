@@ -11,7 +11,7 @@ final class LinkSpanTests: XCTestCase {
         let span = parsed.linkSpans[0]
 
         XCTAssertEqual(span.literal, "docs/readme.md")
-        XCTAssertTrue(span.isFileReference)
+        XCTAssertEqual(span.referenceHint, .fileReference)
         XCTAssertEqual(span.lineRange, 1..<2)
         XCTAssertEqual(span.columnRange, 2..<(2 + "docs/readme.md".count))
         XCTAssertEqual(span.byteRange, 1..<(1 + "docs/readme.md".utf8.count))
@@ -25,7 +25,7 @@ final class LinkSpanTests: XCTestCase {
         let span = parsed.linkSpans[0]
 
         XCTAssertEqual(span.literal, "café.md")
-        XCTAssertTrue(span.isFileReference)
+        XCTAssertEqual(span.referenceHint, .fileReference)
         XCTAssertEqual(span.columnRange, 2..<(2 + "café.md".count))
         XCTAssertEqual(span.byteRange, 1..<(1 + "café.md".utf8.count))
         let byteCount = span.byteRange.upperBound - span.byteRange.lowerBound

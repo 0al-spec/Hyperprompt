@@ -14,14 +14,14 @@ public struct CompileOptions {
     /// Optional manifest path override.
     public let manifestPath: String?
 
-    /// Whether to include manifest output in results.
-    public let emitManifest: Bool
+    /// Manifest output policy.
+    public let manifestPolicy: ManifestPolicy
 
-    /// Whether to collect and return compilation statistics.
-    public let collectStats: Bool
+    /// Statistics output policy.
+    public let statisticsPolicy: StatisticsPolicy
 
-    /// Whether to write output files to disk.
-    public let writeOutput: Bool
+    /// Output write policy.
+    public let outputWritePolicy: OutputWritePolicy
 
     /// Create compile options with defaults matching CLI behavior.
     public init(
@@ -29,17 +29,17 @@ public struct CompileOptions {
         workspaceRoot: String? = nil,
         outputPath: String? = nil,
         manifestPath: String? = nil,
-        emitManifest: Bool = true,
-        collectStats: Bool = false,
-        writeOutput: Bool = false
+        manifestPolicy: ManifestPolicy = .include,
+        statisticsPolicy: StatisticsPolicy = .omit,
+        outputWritePolicy: OutputWritePolicy = .dryRun
     ) {
         self.mode = mode
         self.workspaceRoot = workspaceRoot
         self.outputPath = outputPath
         self.manifestPath = manifestPath
-        self.emitManifest = emitManifest
-        self.collectStats = collectStats
-        self.writeOutput = writeOutput
+        self.manifestPolicy = manifestPolicy
+        self.statisticsPolicy = statisticsPolicy
+        self.outputWritePolicy = outputWritePolicy
     }
 
     /// Default options (strict, no disk writes, no stats).

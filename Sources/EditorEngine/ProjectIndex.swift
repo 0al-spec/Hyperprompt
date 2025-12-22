@@ -31,12 +31,7 @@ public enum FileType: String, Codable, Equatable {
     /// - Parameter path: File path with extension
     /// - Returns: FileType if extension is .hc or .md, nil otherwise
     public static func from(path: String) -> FileType? {
-        if path.hasSuffix(".hc") {
-            return .hypercode
-        } else if path.hasSuffix(".md") {
-            return .markdown
-        }
-        return nil
+        FileTypeDecisionSpec().decide(path)
     }
 }
 

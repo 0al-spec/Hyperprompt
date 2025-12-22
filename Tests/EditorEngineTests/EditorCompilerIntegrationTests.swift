@@ -46,9 +46,9 @@ final class EditorCompilerIntegrationTests: XCTestCase {
             workspaceRoot: rootPath,
             outputPath: outputPath,
             manifestPath: manifestPath,
-            emitManifest: true,
-            collectStats: false,
-            writeOutput: false
+            manifestPolicy: .include,
+            statisticsPolicy: .omit,
+            outputWritePolicy: .dryRun
         )
         let editorResult = compiler.compile(entryFile: inputPath, options: options)
 
