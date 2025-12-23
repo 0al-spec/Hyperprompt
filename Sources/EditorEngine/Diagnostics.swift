@@ -1,7 +1,7 @@
 import Core
 
 /// Severity levels for editor diagnostics.
-public enum DiagnosticSeverity: String, Equatable, Sendable {
+public enum DiagnosticSeverity: String, Equatable, Sendable, Codable {
     case error
     case warning
     case info
@@ -9,7 +9,7 @@ public enum DiagnosticSeverity: String, Equatable, Sendable {
 }
 
 /// 1-based position in a source file.
-public struct SourcePosition: Equatable, Sendable {
+public struct SourcePosition: Equatable, Sendable, Codable {
     public let line: Int
     public let column: Int
 
@@ -22,7 +22,7 @@ public struct SourcePosition: Equatable, Sendable {
 }
 
 /// Range in a source file using 1-based line/column positions.
-public struct SourceRange: Equatable, Sendable {
+public struct SourceRange: Equatable, Sendable, Codable {
     public let start: SourcePosition
     public let end: SourcePosition
 
@@ -33,7 +33,7 @@ public struct SourceRange: Equatable, Sendable {
 }
 
 /// Related diagnostic info for secondary locations.
-public struct DiagnosticRelatedInfo: Equatable, Sendable {
+public struct DiagnosticRelatedInfo: Equatable, Sendable, Codable {
     public let message: String
     public let range: SourceRange?
 
@@ -44,7 +44,7 @@ public struct DiagnosticRelatedInfo: Equatable, Sendable {
 }
 
 /// Editor-friendly diagnostic.
-public struct Diagnostic: Equatable, Sendable {
+public struct Diagnostic: Equatable, Sendable, Codable {
     public let code: String
     public let severity: DiagnosticSeverity
     public let message: String
