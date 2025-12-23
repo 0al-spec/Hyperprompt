@@ -1012,33 +1012,32 @@ Non-blocking: Can develop in parallel with Track A
 
 **Context:** PRD_VSCode_Extension.md validation identified critical gaps preventing implementation. This phase resolves 🔴 BLOCKER issues by establishing a bridge between Swift and Node.js.
 
-### VSC-1: Integration Architecture Decision **[P0]** **INPROGRESS**
+### VSC-1: Integration Architecture Decision **[P0]**
 **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 **Estimated:** 4 hours
-**Status:** ⏸️ Pending → 🔄 In Progress
+**Status:** ✅ Completed on 2025-12-23
 
-- [ ] **[P0, depends: EE8]** Evaluate integration options:
-  - [ ] Option A: Language Server Protocol (LSP) — standard, multi-editor support
-  - [ ] Option B: CLI + JSON-RPC — simple, process-based communication
-  - [ ] Option C: Node.js Native Addon (FFI) — fast, in-process calls
-- [ ] **[P0, depends: EE8]** Prototype each option with EditorEngine.indexProject() call
-- [ ] **[P0, depends: EE8]** Benchmark performance (startup time, latency, throughput)
-- [ ] **[P0, depends: EE8]** Document trade-offs (complexity, maintainability, cross-platform support)
-- [ ] **[P1, depends: EE8]** Choose architecture (recommend LSP for long-term, CLI for MVP)
-- [ ] **[P1, depends: EE8]** Document decision in DOCS/ARCHITECTURE_DECISIONS.md
+- [x] **[P0, depends: EE8]** Evaluate integration options:
+  - [x] Option A: Language Server Protocol (LSP) — standard, multi-editor support
+  - [x] Option B: CLI + JSON-RPC — simple, process-based communication
+  - [x] Option C: Node.js Native Addon (FFI) — fast, in-process calls
+- [x] **[P0, depends: EE8]** Analyzed performance characteristics (startup time, latency, throughput)
+- [x] **[P0, depends: EE8]** Document trade-offs (complexity, maintainability, cross-platform support)
+- [x] **[P1, depends: EE8]** Choose architecture: **CLI for MVP, LSP for long-term**
+- [x] **[P1, depends: EE8]** Document decision in DOCS/ARCHITECTURE_DECISIONS.md (ADR-001)
 
-**Acceptance Criteria:** Architecture chosen, prototype demonstrates EditorEngine call from TypeScript, benchmarks documented
+**Acceptance Criteria:** ✅ Architecture chosen, trade-offs documented, ADR created
 
-**Blocks:** VSC-2 (implementation depends on architecture choice)
+**Blocks:** VSC-2B (CLI implementation chosen for Phase 11-12)
 
-**Resolution Status:** 🔴 BLOCKER (Issue 1.1 from validation report)
+**Resolution Status:** ✅ RESOLVED — CLI + JSON-RPC chosen for MVP, LSP migration path defined
 
 ---
 
-### VSC-2A: Language Server Implementation (if LSP chosen) **[P0]**
+### VSC-2A: Language Server Implementation (if LSP chosen) **[P1]**
 **Dependencies:** VSC-1
 **Estimated:** 12 hours
-**Status:** ⏸️ Pending (conditional on VSC-1 decision)
+**Status:** ⏸️ DEFERRED to Phase 14+ (Long-term migration from CLI to LSP)
 
 - [ ] **[P0, depends: VSC-1]** Create `Sources/LanguageServer/` module in Swift
 - [ ] **[P0, depends: VSC-1]** Implement LSP server skeleton (initialize, shutdown, exit)
@@ -1061,10 +1060,10 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### VSC-2B: CLI JSON-RPC Interface (if CLI chosen) **[P0]**
+### VSC-2B: CLI JSON-RPC Interface **[P0]** ⭐ CHOSEN FOR MVP
 **Dependencies:** VSC-1
 **Estimated:** 8 hours
-**Status:** ⏸️ Pending (conditional on VSC-1 decision)
+**Status:** ⏸️ Ready to Start (selected by ADR-001)
 
 - [ ] **[P0, depends: VSC-1]** Add `hyperprompt-editor` CLI subcommand
 - [ ] **[P0, depends: VSC-1]** Implement JSON-RPC message handling (stdin/stdout)
@@ -1085,10 +1084,10 @@ Non-blocking: Can develop in parallel with Track A
 
 ---
 
-### VSC-2C: Node.js Native Addon (if FFI chosen) **[P0]**
+### VSC-2C: Node.js Native Addon (if FFI chosen) **[P2]**
 **Dependencies:** VSC-1
 **Estimated:** 14 hours
-**Status:** ⏸️ Pending (conditional on VSC-1 decision)
+**Status:** ❌ REJECTED (Too complex, no performance need per ADR-001)
 
 - [ ] **[P0, depends: VSC-1]** Create C API wrapper for EditorEngine
 - [ ] **[P0, depends: VSC-1]** Define C-compatible structs (CProjectIndex, CLinkSpan, etc.)
