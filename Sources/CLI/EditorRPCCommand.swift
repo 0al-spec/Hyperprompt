@@ -1,3 +1,4 @@
+#if canImport(EditorEngine)
 import Foundation
 import ArgumentParser
 import EditorEngine
@@ -195,3 +196,4 @@ struct CompileResultResponse: Codable {
     let diagnostics: [Diagnostic]
     let hasErrors: Bool
 }
+#endif
