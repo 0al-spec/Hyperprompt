@@ -19,7 +19,9 @@ struct Hyperprompt: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "hyperprompt",
         abstract: "Compile Hypercode to Markdown with manifest generation",
-        version: "0.1.0"
+        version: "0.1.0",
+        subcommands: [EditorRPCCommand.self],
+        defaultSubcommand: nil
     )
 
     // MARK: - Positional Arguments

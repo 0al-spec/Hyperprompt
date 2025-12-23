@@ -1,7 +1,7 @@
 import Core
 
 /// Compilation options for EditorEngine.
-public struct CompileOptions {
+public struct CompileOptions: Sendable {
     /// Compilation mode (strict or lenient).
     public let mode: CompilerArguments.CompilationMode
 
