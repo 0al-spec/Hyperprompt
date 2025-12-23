@@ -1,82 +1,100 @@
-# Отчёт валидации EditorEngine
+# EditorEngine Validation Report
 
-Дата: 2025-12-?? (сгенерирован в ходе ревью репозитория)
+Date: 2025-12-?? (generated during repository review)
 
-## 1. Область проверки и источники
+## 1. Scope and Sources
 
-**Цель:** провести валидацию выполненных задач по фиче EditorEngine и их соответствие PRD/Workplan, используя:
-- `DOCS/Workplan.md` (фаза 10: EE0–EE7)
+**Goal:** validate completed EditorEngine tasks and their alignment with the PRD/Workplan using:
+- `DOCS/Workplan.md` (Phase 10: EE0–EE7)
 - `DOCS/PRD/PRD_EditorEngine.md`
-- `DOCS/TASKS_ARCHIVE/*` (архив задач EE0–EE6)
-- исходный код в `Sources/EditorEngine/*` и `Package.swift`
+- `DOCS/TASKS_ARCHIVE/*` (EE0–EE6 archives)
+- source code in `Sources/EditorEngine/*` and `Package.swift`
 
-## 2. Проверка выполнения задач Workplan (Phase 10)
+## 2. Workplan Task Validation (Phase 10)
 
-| Task | Статус в Workplan | Фактические артефакты (код/доки) | Итог проверки |
-|------|--------------------|----------------------------------|---------------|
-| **EE0: Module Foundation** | ✅ | `Package.swift` (продукт и таргет EditorEngine), `Sources/EditorEngine/EditorEngine.swift` | ✅ **Выполнено**, но **trait-gating не найден** (см. замечания) |
-| **EE1: Project Indexing** | ✅ | `Sources/EditorEngine/ProjectIndexer.swift`, `ProjectIndex.swift`, `GlobMatcher.swift` | ✅ **Выполнено** |
-| **EE2: Parsing with Link Spans** | ✅ | `Sources/EditorEngine/EditorParser.swift`, `LinkSpan.swift`, `ParsedFile.swift` | ✅ **Выполнено** |
-| **EE3: Link Resolution** | ✅ | `Sources/EditorEngine/EditorResolver.swift`, `ResolvedTarget.swift` | ✅ **Выполнено** |
-| **EE4: Editor Compilation** | ✅ | `Sources/EditorEngine/EditorCompiler.swift`, `CompileOptions.swift`, `CompileResult.swift` | ✅ **Выполнено**, но зависит от `CLI` (см. замечания) |
-| **EE5: Diagnostics Mapping** | ✅ | `Sources/EditorEngine/Diagnostics.swift`, `DiagnosticMapper.swift` | ✅ **Выполнено** |
-| **EE6: Documentation & Testing** | ✅ | `DOCS/EDITOR_ENGINE.md` | ✅ **Выполнено** |
-| **EE7: SpecificationCore Decision Refactor** | ✅ | Набор DecisionSpec файлов: `LinkDecisionSpecs.swift`, `DirectoryDecisionSpecs.swift`, `FileTypeDecisionSpecs.swift`, `CompilePolicyDecisionSpecs.swift`, `OutputPathDecisionSpecs.swift`, `ResolutionDecisionSpecs.swift` | ✅ **Выполнено в коде**, **но отсутствует** отдельный архивный отчёт `DOCS/TASKS_ARCHIVE/EE7-summary.md` |
+| Task | Workplan Status | Evidence (code/docs) | Outcome |
+|------|------------------|----------------------|---------|
+| **EE0: Module Foundation** | ✅ | `Package.swift` (EditorEngine product + target), `Sources/EditorEngine/EditorEngine.swift` | ✅ **Done**, but **trait-gating not found** (see notes) |
+| **EE1: Project Indexing** | ✅ | `Sources/EditorEngine/ProjectIndexer.swift`, `ProjectIndex.swift`, `GlobMatcher.swift` | ✅ **Done** |
+| **EE2: Parsing with Link Spans** | ✅ | `Sources/EditorEngine/EditorParser.swift`, `LinkSpan.swift`, `ParsedFile.swift` | ✅ **Done** |
+| **EE3: Link Resolution** | ✅ | `Sources/EditorEngine/EditorResolver.swift`, `ResolvedTarget.swift` | ✅ **Done** |
+| **EE4: Editor Compilation** | ✅ | `Sources/EditorEngine/EditorCompiler.swift`, `CompileOptions.swift`, `CompileResult.swift` | ✅ **Done**, but depends on `CLI` (see notes) |
+| **EE5: Diagnostics Mapping** | ✅ | `Sources/EditorEngine/Diagnostics.swift`, `DiagnosticMapper.swift` | ✅ **Done** |
+| **EE6: Documentation & Testing** | ✅ | `DOCS/EDITOR_ENGINE.md` | ✅ **Done** |
+| **EE7: SpecificationCore Decision Refactor** | ✅ | DecisionSpec files: `LinkDecisionSpecs.swift`, `DirectoryDecisionSpecs.swift`, `FileTypeDecisionSpecs.swift`, `CompilePolicyDecisionSpecs.swift`, `OutputPathDecisionSpecs.swift`, `ResolutionDecisionSpecs.swift` | ✅ **Implemented in code**, but **no archive report** `DOCS/TASKS_ARCHIVE/EE7-summary.md` |
 
-**Архив задач:**
-- Найдены отчёты `EE0-summary.md` … `EE6-summary.md` в `DOCS/TASKS_ARCHIVE/`.
-- **Не найден** архивный summary-файл для EE7.
+**Task archive:**
+- Found `EE0-summary.md` … `EE6-summary.md` in `DOCS/TASKS_ARCHIVE/`.
+- **Missing** an EE7 summary file.
 
-## 3. Проверка соответствия PRD (FR-1…FR-7)
+## 3. PRD Alignment Check (FR-1…FR-7)
 
-| PRD Requirement | Проверка по коду | Итог |
-|----------------|------------------|------|
-| **FR-1:** Parse Hypercode + link spans | `EditorParser.parse(...)` извлекает `LinkSpan` из токенов (`Sources/EditorEngine/EditorParser.swift`) | ✅ Соответствует |
-| **FR-2:** Resolve file refs идентично CLI | `EditorResolver` использует правила `.md/.hc`, проверку traversal, root order (workspace → source dir → cwd) | ✅ В целом соответствует |
-| **FR-3:** Programmatic compile | `EditorCompiler.compile(...)` вызывает `CompilerDriver` | ✅ Соответствует |
-| **FR-4:** Structured diagnostics | `DiagnosticMapper.map(...)` и `Diagnostics.swift` определяют структуру | ✅ Соответствует (минимально) |
-| **FR-5:** Disable unless `Editor` trait enabled | **В `Package.swift` отсутствует trait-gating**; EditorEngine всегда доступен как продукт | ⚠️ **Не соответствует** |
-| **FR-6:** Deterministic indexing + ignore rules | `ProjectIndexer` сортирует, `.hyperpromptignore`, дефолтные ignore dirs | ✅ Соответствует |
-| **FR-7:** Offsets for editors | `LinkSpan` хранит UTF-8 byte offsets + 1-based line/column | ✅ Соответствует |
+| PRD Requirement | Code Check | Outcome |
+|----------------|------------|---------|
+| **FR-1:** Parse Hypercode + link spans | `EditorParser.parse(...)` extracts `LinkSpan` from tokens (`Sources/EditorEngine/EditorParser.swift`) | ✅ Meets requirement |
+| **FR-2:** Resolve file refs identically to CLI | `EditorResolver` uses `.md/.hc` rules, traversal checks, root order (workspace → source dir → cwd) | ✅ Mostly aligned |
+| **FR-3:** Programmatic compile | `EditorCompiler.compile(...)` invokes `CompilerDriver` | ✅ Meets requirement |
+| **FR-4:** Structured diagnostics | `DiagnosticMapper.map(...)` + `Diagnostics.swift` define the model | ✅ Meets (minimal) |
+| **FR-5:** Disable unless `Editor` trait enabled | **No trait-gating in `Package.swift`**; EditorEngine is always available | ⚠️ **Does not meet** |
+| **FR-6:** Deterministic indexing + ignore rules | `ProjectIndexer` sorts, reads `.hyperpromptignore`, uses default ignore dirs | ✅ Meets requirement |
+| **FR-7:** Offsets for editors | `LinkSpan` stores UTF-8 byte offsets + 1-based line/column | ✅ Meets requirement |
 
-## 4. Нефункциональные требования PRD (ключевые)
+## 4. Non-Functional Requirements (key items)
 
-- **Детерминизм**: операции индексирования/парсинга/компиляции детерминированы (сортировка, статические правила) — ✅.
-- **Стабильность**: парсер использует recovery (`parseWithRecovery`), возвращает `ParsedFile` с diagnostics — ✅ для синтаксических ошибок; **IO ошибки при `parse(filePath:)` кидаются как throw** — ⚠️ потенциальное несоответствие правилу «all errors surfaced as diagnostics».
-- **Изоляция от UI**: в `EditorEngine` нет UI/LLM зависимостей — ✅.
-- **Trait-gating**: отсутствует, см. выше — ❌.
+- **Determinism:** indexing/parsing/compilation are deterministic (sorting + static rules) — ✅.
+- **Stability:** parser uses recovery (`parseWithRecovery`) and returns `ParsedFile` with diagnostics — ✅ for syntax errors; **IO errors in `parse(filePath:)` are thrown** — ⚠️ may conflict with “all errors surfaced as diagnostics.”
+- **UI isolation:** no UI/LLM dependencies in `EditorEngine` — ✅.
+- **Trait-gating:** missing, see above — ❌.
 
-## 5. Замечания и расхождения
+## 5. Notes and Gaps
 
-1. **Trait-gating отсутствует**
-   - PRD явно требует, чтобы EditorEngine был отключён без `--traits Editor`.
-   - В `Package.swift` нет объявления traits, и продукт/таргет EditorEngine доступны всегда.
-   - `DOCS/EDITOR_ENGINE.md` утверждает, что trait-gating есть, но **код не подтверждает это**.
+1. **Trait-gating is missing**
+   - PRD requires EditorEngine to be disabled without `--traits Editor`.
+   - `Package.swift` has no trait declaration; product/target are always available.
+   - `DOCS/EDITOR_ENGINE.md` claims trait-gating, but **code does not confirm this**.
 
-2. **EditorEngine зависит от CLI**
-   - `Package.swift` включает `CLI` в зависимости `EditorEngine`.
-   - `EditorCompiler` импортирует `CLI` и использует `CompilerDriver`.
-   - В PRD (Phase 0.2) указано: **EditorEngine target должен быть изолирован и не зависеть от CLI**.
+2. **EditorEngine depends on CLI**
+   - `Package.swift` lists `CLI` as a dependency of `EditorEngine`.
+   - `EditorCompiler` imports `CLI` and uses `CompilerDriver`.
+   - PRD Phase 0.2 states the EditorEngine target should be isolated from CLI.
 
-3. **Нет архивного отчёта EE7**
-   - В `DOCS/TASKS_ARCHIVE` отсутствует `EE7-summary.md`.
-   - Несмотря на наличие DecisionSpec-файлов (вероятно, реализация EE7), формальная документация задачи отсутствует.
+3. **Missing EE7 archive report**
+   - `DOCS/TASKS_ARCHIVE` lacks `EE7-summary.md`.
+   - DecisionSpec files imply implementation, but the formal archive note is absent.
 
-4. **Ошибки чтения файла при парсинге**
-   - `EditorParser.parse(filePath:)` кидает `CompilerError` при проблемах чтения.
-   - PRD требует, чтобы ошибки были диагностиками (включая IO). Здесь API часть ошибок возвращает через `throws`.
+4. **File-read errors in parsing**
+   - `EditorParser.parse(filePath:)` throws `CompilerError` on read failures.
+   - PRD expects errors surfaced as diagnostics, so this API behavior is inconsistent.
 
-## 6. Итоговый вывод
+## 6. Summary
 
-- Большая часть задач EE0–EE6 реализована и подтверждается исходным кодом.
-- Функциональные требования PRD в целом закрыты, **кроме trait-gating** и **изолированности от CLI**.
-- Документация (`DOCS/EDITOR_ENGINE.md`) описывает trait-gating, но фактическая конфигурация его не содержит.
-- По EE7 реализация DecisionSpec-паттернов присутствует в коде, но **нет архивного отчёта** в `DOCS/TASKS_ARCHIVE`.
+- EE0–EE6 are implemented and supported by source code.
+- PRD functional requirements are broadly covered **except trait-gating** and **CLI isolation**.
+- `DOCS/EDITOR_ENGINE.md` claims trait-gating but the build configuration does not.
+- EE7 appears implemented via DecisionSpecs, but the archive summary is missing.
 
-## 7. Рекомендации (без изменений кода)
+## 7. Recommendations (no code changes)
 
-1. Зафиксировать несоответствие по trait-gating (Package.swift) и обновить план/PRD-статус.
-2. Зафиксировать несоответствие по зависимости от CLI (EditorEngine ← CLI).
-3. Добавить архивный отчёт EE7 в `DOCS/TASKS_ARCHIVE` (если задача действительно завершена).
-4. Уточнить API поведения `EditorParser.parse(filePath:)` и следование правилу «all errors surfaced as diagnostics».
+1. Record the trait-gating mismatch (`Package.swift`) and update plan/PRD status.
+2. Record the CLI dependency mismatch (EditorEngine ← CLI).
+3. Add an EE7 archive report in `DOCS/TASKS_ARCHIVE` if the task is complete.
+4. Clarify `EditorParser.parse(filePath:)` behavior to align with “all errors surfaced as diagnostics.”
 
+## 8. Mini Workplan (Validation Follow-ups)
+
+1. **Introduce Editor trait-gating**
+   - Define the SwiftPM `Editor` trait in `Package.swift`.
+   - Gate the `EditorEngine` target and product behind the trait.
+   - Update `DOCS/EDITOR_ENGINE.md` to match the build configuration.
+
+2. **Decouple EditorEngine from CLI**
+   - Remove `CLI` from `EditorEngine` dependencies.
+   - Extract `CompilerDriver` or shared compile orchestration into a non-CLI module if needed.
+   - Update `EditorCompiler` to depend on the shared module instead of `CLI`.
+
+3. **Backfill EE7 archive summary**
+   - Add `DOCS/TASKS_ARCHIVE/EE7-summary.md` describing the decision refactor work and validation.
+
+4. **Normalize parser IO errors as diagnostics**
+   - Adjust `EditorParser.parse(filePath:)` to return diagnostics instead of throwing, consistent with PRD.
+   - Add tests covering IO errors surfaced in `ParsedFile.diagnostics`.
