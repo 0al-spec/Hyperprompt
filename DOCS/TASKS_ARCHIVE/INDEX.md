@@ -142,6 +142,12 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 - **Description:** Evaluate integration options between Swift EditorEngine and TypeScript VS Code extension. Chose CLI + JSON-RPC for MVP, LSP for long-term.
 
+### VSC-2B — CLI JSON-RPC Interface **[P0]** ✓ 2025-12-23
+- **PRD:** [VSC-2B_CLI_JSON-RPC_Interface.md](./VSC-2B_CLI_JSON-RPC_Interface.md)
+- **Effort:** 8 hours
+- **Dependencies:** VSC-1 (Integration Architecture Decision)
+- **Description:** Implement JSON-RPC 2.0 interface for editor integration. Includes Swift 6 compilation validation, editor.indexProject method, Sendable fixes, and RPC protocol documentation. Builds successfully, all 521 tests pass.
+
 ---
 
 ## Other Archives
@@ -154,8 +160,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 17 items
-- **Total Effort:** 54 hours (tracked tasks only)
+- **Total Archived:** 18 items
+- **Total Effort:** 62 hours (tracked tasks only)
 - **Phases Represented:** 6 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11)
 
 ---
@@ -175,4 +181,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-23 (VSC-1 archived)
+**Last Updated:** 2025-12-23 (VSC-2B archived)
