@@ -890,6 +890,18 @@ Non-blocking: Can develop in parallel with Track A
 
 **Acceptance Criteria:** EditorEngine relies on SpecificationCore for decision logic; boolean flags and imperative branching are removed from decision points; tests cover all decision paths.
 
+### EE8: EditorEngine Validation Follow-ups **[P1]**
+**Dependencies:** EE7
+**Estimated:** 6 hours
+**Status:** ⏳ Planned
+
+- [ ] **[P1, depends: EE7]** Add SwiftPM `Editor` trait and gate EditorEngine product/target
+- [ ] **[P1, depends: EE7]** Remove `CLI` dependency by extracting shared compile orchestration
+- [ ] **[P1, depends: EE7]** Add `DOCS/TASKS_ARCHIVE/EE7-summary.md` archive report
+- [ ] **[P1, depends: EE7]** Map EditorParser IO failures into diagnostics (no throws) and add tests
+
+**Acceptance Criteria:** EditorEngine is trait-gated, no longer depends on CLI, EE7 archive is present, and parser IO errors are surfaced as diagnostics with tests.
+
 ---
 
 ## Exit Codes Reference
@@ -906,7 +918,7 @@ Non-blocking: Can develop in parallel with Track A
 
 ## Progress Tracking
 
-**Overall Progress:** 155 / 155 tasks completed (100%)
+**Overall Progress:** 155 / 159 tasks completed (97%)
 
 ### By Phase
 - [x] **Phase 1:** Foundation & Core Types (3/3 major tasks) — **6h** — Track A
@@ -918,11 +930,11 @@ Non-blocking: Can develop in parallel with Track A
 - [x] **Phase 7:** Integration with Specs (2/2 major tasks) — **11h** — Integration
 - [x] **Phase 8:** Testing & QA (4/4 major tasks) — **12h** — Integration
 - [x] **Phase 9:** Optimization & Release (2/2 major tasks) — **4h** — Release
-- [x] **Phase 10:** Editor Engine Module (8/8 major tasks) — **25h** — Track C
+- [ ] **Phase 10:** Editor Engine Module (8/9 major tasks) — **31h** — Track C
 
 ### By Priority
 - **[P0] Critical:** 47 / 47 tasks (blocks project)
-- **[P1] High:** 91 / 91 tasks (required for v0.1)
+- **[P1] High:** 91 / 95 tasks (required for v0.1)
 - **[P2] Medium:** 17 / 17 tasks (can defer)
 
 ### By Track
@@ -930,7 +942,7 @@ Non-blocking: Can develop in parallel with Track A
 - **Track B (Specifications):** Phase 3 — Parallel with Track A, 17 hours
 - **Integration:** Phase 7, 8 — Requires both tracks, 23 hours
 - **Release:** Phase 9 — Final QA, 4 hours
-- **Track C (Editor Engine):** Phase 10 — 25 hours
+- **Track C (Editor Engine):** Phase 10 — 31 hours
 
 ---
 
