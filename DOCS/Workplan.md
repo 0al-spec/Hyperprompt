@@ -1012,10 +1012,10 @@ Non-blocking: Can develop in parallel with Track A
 
 **Context:** PRD_VSCode_Extension.md validation identified critical gaps preventing implementation. This phase resolves 🔴 BLOCKER issues by establishing a bridge between Swift and Node.js.
 
-### VSC-1: Integration Architecture Decision **[P0]**
+### VSC-1: Integration Architecture Decision **[P0]** **INPROGRESS**
 **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 **Estimated:** 4 hours
-**Status:** ⏸️ Pending
+**Status:** ⏸️ Pending → 🔄 In Progress
 
 - [ ] **[P0, depends: EE8]** Evaluate integration options:
   - [ ] Option A: Language Server Protocol (LSP) — standard, multi-editor support
