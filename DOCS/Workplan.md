@@ -100,7 +100,7 @@ Completed phases include:
 ### VSC-2B: CLI JSON-RPC Interface **[P0]** ⭐ CHOSEN FOR MVP
 **Dependencies:** VSC-1
 **Estimated:** 8 hours
-**Status:** ⏸️ Ready to Start (selected by ADR-001)
+**Status:** 🔄 **INPROGRESS**
 
 - [ ] **[P0, depends: VSC-1]** Add `hyperprompt-editor` CLI subcommand
 - [ ] **[P0, depends: VSC-1]** Implement JSON-RPC message handling (stdin/stdout)
