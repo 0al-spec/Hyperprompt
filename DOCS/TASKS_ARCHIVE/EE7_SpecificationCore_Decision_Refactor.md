@@ -177,3 +177,6 @@ swift test 2>&1
 - `DOCS/SpecificationCore-documentation/markdown/documentation/specificationcore/firstmatchspec.md`
 - `DOCS/SpecificationCore-documentation/markdown/documentation/specificationcore/booleandecisionadapter.md`
 - `DOCS/PRD/PRD_EditorEngine.md`
+
+---
+**Archived:** 2025-12-23

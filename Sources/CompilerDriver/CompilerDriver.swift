@@ -1,5 +1,5 @@
 // CompilerDriver.swift
-// CLI module - D2: Compiler Driver
+// Shared module - D2: Compiler Driver
 //
 // Orchestrates the complete compilation pipeline: parse → resolve → emit → manifest
 // Handles dry-run mode, verbose logging, and end-to-end validation.
@@ -461,6 +461,8 @@ public final class CompilerDriver {
 
     /// Log message to stderr when verbose mode enabled.
     private func logVerbose(_ message: String) {
-        fputs(message + "\n", stderr)
+        if let data = (message + "\n").data(using: .utf8) {
+            FileHandle.standardError.write(data)
+        }
     }
 }

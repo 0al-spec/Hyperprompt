@@ -39,7 +39,7 @@ struct DeterministicTimestampProvider {
     /// Resolve a deterministic ISO-8601 timestamp string in UTC.
     func resolveTimestampString(for inputPath: String) -> String {
         let date = resolveDate(for: inputPath)
-        return Self.iso8601Formatter.string(from: date)
+        return Self.makeISO8601Formatter().string(from: date)
     }
 
     // MARK: - Helpers
@@ -61,10 +61,10 @@ struct DeterministicTimestampProvider {
         }
     }
 
-    private static let iso8601Formatter: ISO8601DateFormatter = {
+    private static func makeISO8601Formatter() -> ISO8601DateFormatter {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime]
         formatter.timeZone = TimeZone(identifier: "UTC")
         return formatter
-    }()
+    }
 }
