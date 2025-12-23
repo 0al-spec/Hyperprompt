@@ -134,6 +134,16 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Phase 11: VS Code Extension Integration Architecture
+
+### VSC-1 — Integration Architecture Decision **[P0]** ✓ 2025-12-23
+- **PRD:** [VSC-1_Integration_Architecture_Decision.md](./VSC-1_Integration_Architecture_Decision.md)
+- **Effort:** 4 hours
+- **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
+- **Description:** Evaluate integration options between Swift EditorEngine and TypeScript VS Code extension. Chose CLI + JSON-RPC for MVP, LSP for long-term.
+
+---
+
 ## Other Archives
 
 ### Build Issues Log ✓ 2025-12-21
@@ -144,9 +154,9 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 16 items
-- **Total Effort:** 50 hours (tracked tasks only)
-- **Phases Represented:** 5 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10)
+- **Total Archived:** 17 items
+- **Total Effort:** 54 hours (tracked tasks only)
+- **Phases Represented:** 6 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11)
 
 ---
 
@@ -165,4 +175,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-23
+**Last Updated:** 2025-12-23 (VSC-1 archived)

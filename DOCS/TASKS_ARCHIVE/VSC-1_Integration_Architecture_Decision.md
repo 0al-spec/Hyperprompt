@@ -482,3 +482,6 @@ This task (VSC-1) focuses on validating that **at least one** of these methods (
 ---
 
 **END OF PRD**
+
+---
+**Archived:** 2025-12-23
