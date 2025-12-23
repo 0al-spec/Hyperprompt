@@ -1,40 +1,32 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.2
 import PackageDescription
 
-let package = Package(
-    name: "Hyperprompt",
-    platforms: [
-        .macOS(.v12)
-    ],
-    products: [
-        .executable(
-            name: "hyperprompt",
-            targets: ["CLI"]
-        ),
-        .library(
-            name: "HypercodeGrammar",
-            targets: ["HypercodeGrammar"]
-        ),
-        .library(
-            name: "EditorEngine",
-            targets: ["EditorEngine"]
-        ),
-    ],
-    dependencies: [
-        .package(
-            url: "https://github.com/apple/swift-argument-parser",
-            from: "1.2.0"
-        ),
-        .package(
-            url: "https://github.com/apple/swift-crypto",
-            from: "3.0.0"
-        ),
-        .package(
-            url: "https://github.com/SoundBlaster/SpecificationCore",
-            from: "1.0.0"
-        ),
-    ],
-    targets: [
+let editorTrait = Trait(
+    name: "Editor",
+    description: "Enable the EditorEngine module",
+    enabledTraits: []
+)
+
+let enabledTraits = Set(
+    (Context.environment["SWIFT_PACKAGE_TRAITS"] ?? "")
+        .split(separator: ",")
+        .map { String($0) }
+)
+let enableAllTraits = Context.environment["SWIFT_ENABLE_ALL_TRAITS"] == "1"
+let editorEnabled = enableAllTraits || enabledTraits.contains(editorTrait.name)
+
+var products: [Product] = [
+    .executable(
+        name: "hyperprompt",
+        targets: ["CLI"]
+    ),
+    .library(
+        name: "HypercodeGrammar",
+        targets: ["HypercodeGrammar"]
+    ),
+]
+
+var targets: [Target] = [
         // Core module
         .target(
             name: "Core",
@@ -92,6 +84,7 @@ let package = Package(
         .executableTarget(
             name: "CLI",
             dependencies: [
+                "CompilerDriver",
                 "Core",
                 "Parser",
                 "Resolver",
@@ -102,18 +95,21 @@ let package = Package(
         ),
         .testTarget(
             name: "CLITests",
-            dependencies: ["CLI"]
+            dependencies: [
+                "CLI",
+                "CompilerDriver",
+            ]
         ),
 
         // Integration tests
         .testTarget(
             name: "IntegrationTests",
             dependencies: [
+                "CompilerDriver",
                 "Core",
                 "Parser",
                 "Resolver",
                 "Emitter",
-                "CLI",
             ],
             resources: [
                 .copy("Fixtures")
@@ -133,11 +129,32 @@ let package = Package(
             dependencies: ["HypercodeGrammar"]
         ),
 
-        // Editor Engine module (experimental/optional)
+        // Shared compiler driver module
+        .target(
+            name: "CompilerDriver",
+            dependencies: [
+                "Core",
+                "Parser",
+                "Resolver",
+                "Emitter",
+                "Statistics",
+            ]
+        ),
+    ]
+
+if editorEnabled {
+    products.append(
+        .library(
+            name: "EditorEngine",
+            targets: ["EditorEngine"]
+        )
+    )
+
+    targets.append(
         .target(
             name: "EditorEngine",
             dependencies: [
-                "CLI",
+                "CompilerDriver",
                 "Core",
                 "HypercodeGrammar",
                 "Parser",
@@ -146,10 +163,40 @@ let package = Package(
                 "Statistics",
                 "SpecificationCore",
             ]
-        ),
+        )
+    )
+
+    targets.append(
         .testTarget(
             name: "EditorEngineTests",
-            dependencies: ["CLI", "EditorEngine"]
+            dependencies: [
+                "CompilerDriver",
+                "EditorEngine",
+            ]
+        )
+    )
+}
+
+let package = Package(
+    name: "Hyperprompt",
+    platforms: [
+        .macOS(.v12)
+    ],
+    products: products,
+    traits: [editorTrait],
+    dependencies: [
+        .package(
+            url: "https://github.com/apple/swift-argument-parser",
+            from: "1.2.0"
         ),
-    ]
+        .package(
+            url: "https://github.com/apple/swift-crypto",
+            from: "3.0.0"
+        ),
+        .package(
+            url: "https://github.com/SoundBlaster/SpecificationCore",
+            from: "1.0.0"
+        ),
+    ],
+    targets: targets
 )

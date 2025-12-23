@@ -7,7 +7,9 @@ import Glibc
 #endif
 
 import Dispatch
+import Foundation
 import ArgumentParser
+import CompilerDriver
 import Core
 
 /// Main command for the Hyperprompt compiler.
@@ -152,14 +154,14 @@ struct Hyperprompt: ParsableCommand {
 
     /// Print compiler error to stderr with formatted diagnostic.
     private func printError(_ error: CompilerError) {
-        fputs("Error: \(error.message)\n", stderr)
+        writeStderr("Error: \(error.message)\n")
 
         if let location = error.location {
-            fputs("  at \(location.filePath):\(location.line)\n", stderr)
+            writeStderr("  at \(location.filePath):\(location.line)\n")
         }
 
-        fputs("\n", stderr)
-        fputs("Exit code: \(error.exitCode)\n", stderr)
+        writeStderr("\n")
+        writeStderr("Exit code: \(error.exitCode)\n")
     }
 
     // MARK: - Signal Handling
@@ -183,7 +185,7 @@ struct Hyperprompt: ParsableCommand {
 
             source.setEventHandler {
                 let name = Self.signalName(forSignal: signalValue)
-                fputs("Interrupted by signal: \(name)\n", stderr)
+                writeStderr("Interrupted by signal: \(name)\n")
                 let code = Self.interruptionExitCode(forSignal: signalValue)
                 Self.exit(withError: ExitCode(code))
             }
@@ -214,6 +216,12 @@ struct Hyperprompt: ParsableCommand {
             return "SIGTERM"
         default:
             return "SIGNAL(\(signal))"
+        }
+    }
+
+    private func writeStderr(_ message: String) {
+        if let data = message.data(using: .utf8) {
+            FileHandle.standardError.write(data)
         }
     }
 }

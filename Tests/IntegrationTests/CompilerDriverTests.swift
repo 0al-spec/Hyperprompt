@@ -1,6 +1,6 @@
 import XCTest
 import Foundation
-@testable import CLI
+@testable import CompilerDriver
 @testable import Core
 
 /// End-to-end integration tests for CompilerDriver
@@ -26,7 +26,7 @@ final class CompilerDriverTests: XCTestCase {
 
         // Locate fixtures directory
         // Assuming tests run from package root
-        let currentFile = URL(fileURLWithPath: #file)
+        let currentFile = URL(fileURLWithPath: #filePath)
         fixturesDir = currentFile
             .deletingLastPathComponent()
             .appendingPathComponent("Fixtures")

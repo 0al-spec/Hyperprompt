@@ -1,5 +1,5 @@
 import XCTest
-@testable import CLI
+@testable import CompilerDriver
 
 final class DeterministicTimestampProviderTests: XCTestCase {
     private var temporaryPaths: [URL] = []

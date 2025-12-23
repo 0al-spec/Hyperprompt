@@ -11,8 +11,8 @@ on:
       - 'DOCS/**'
 
 jobs:
-  build:
-    name: Build and Test
+  build-without-editor-trait:
+    name: Build and Test (default traits)
     runs-on: ubuntu-latest
 
     steps:
@@ -54,6 +54,60 @@ jobs:
 
       - name: Run tests
         run: swift test
+
+      - name: Show cache statistics
+        run: |
+          echo "=== Build Cache Statistics ==="
+          echo "Cache hit: ${{ steps.cache-spm.outputs.cache-hit }}"
+          echo "Build directory size: $(du -sh .build | cut -f1)"
+          echo "Dependency count: $(ls .build/checkouts | wc -l)"
+          echo ""
+          echo "Build artifacts:"
+          ls -lh .build/checkouts/
+
+  build-with-editor-trait:
+    name: Build and Test (Editor trait)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Swift dependencies
+        id: cache-spm
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build
+            ~/.cache/org.swift.swiftpm
+          key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-${{ hashFiles('Package.swift') }}-editor
+          restore-keys: |
+            ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-
+            ${{ runner.os }}-spm-
+
+      - name: Install Swift
+        run: |
+          # Check if swift is already available
+          if ! command -v swift &> /dev/null; then
+            echo "Installing Swift..."
+            cd /tmp
+            curl -L -o swift.tar.gz "https://download.swift.org/development/ubuntu2004/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04.tar.gz"
+            tar zxf swift.tar.gz
+            sudo cp -r swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04/usr/* /usr/
+          fi
+          swift --version
+
+      - name: Build (Editor trait)
+        run: |
+          if [ "${{ steps.cache-spm.outputs.cache-hit }}" == "true" ]; then
+            echo "✓ Using cached dependencies"
+          else
+            echo "Building from scratch (no cache)"
+          fi
+          time swift build --traits Editor
+
+      - name: Run tests (Editor trait)
+        run: swift test --traits Editor
 
       - name: Show cache statistics
         run: |

@@ -1,7 +1,7 @@
 import SpecificationCore
 
 /// Specification ensuring an integer aligns to the configured indentation width.
-public struct IndentGroupAlignmentSpec: Specification {
+public struct IndentGroupAlignmentSpec: Specification, Sendable {
     public typealias T = Int
 
     private let spacesPerLevel: Int

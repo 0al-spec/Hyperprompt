@@ -20,10 +20,10 @@
 /// let index = try ProjectIndexer.index(workspaceRoot: workspaceURL)
 ///
 /// // Parse a file
-/// let parsed = try EditorParser.parse(filePath: "main.hc")
+/// let parsed = EditorParser.parse(filePath: "main.hc")
 ///
 /// // Compile with diagnostics
-/// let result = try EditorCompiler.compile(entryFile: "main.hc", options: options)
+/// let result = EditorCompiler.compile(entryFile: "main.hc", options: options)
 /// ```
 ///
 /// ## Status

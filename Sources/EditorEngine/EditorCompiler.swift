@@ -1,4 +1,4 @@
-import CLI
+import CompilerDriver
 import Core
 
 /// EditorCompiler — Editor-facing wrapper around CompilerDriver.

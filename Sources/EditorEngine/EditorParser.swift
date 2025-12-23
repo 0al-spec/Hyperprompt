@@ -21,10 +21,29 @@ public struct EditorParser {
     /// Parses a file from disk, returning a ParsedFile with link spans.
     /// - Parameter filePath: Path to the Hypercode file
     /// - Returns: ParsedFile containing AST, link spans, and diagnostics
-    /// - Throws: CompilerError if the file cannot be read
-    public func parse(filePath: String) throws -> ParsedFile {
-        let content = try fileSystem.readFile(at: filePath)
-        return parse(content: content, filePath: filePath)
+    public func parse(filePath: String) -> ParsedFile {
+        do {
+            let content = try fileSystem.readFile(at: filePath)
+            return parse(content: content, filePath: filePath)
+        } catch let error as CompilerError {
+            return ParsedFile(
+                ast: nil,
+                linkSpans: [],
+                diagnostics: [error],
+                sourceFile: filePath
+            )
+        } catch {
+            let internalError = ConcreteCompilerError.internalError(
+                message: "Unexpected parser error: \(error)",
+                location: nil
+            )
+            return ParsedFile(
+                ast: nil,
+                linkSpans: [],
+                diagnostics: [internalError],
+                sourceFile: filePath
+            )
+        }
     }
 
     /// Parses Hypercode content, returning a ParsedFile with link spans.
@@ -185,9 +204,9 @@ public struct EditorParser {
 
 extension EditorParser {
     /// Convenience static entry point using the default file system.
-    public static func parse(filePath: String) throws -> ParsedFile {
+    public static func parse(filePath: String) -> ParsedFile {
         let parser = EditorParser()
-        return try parser.parse(filePath: filePath)
+        return parser.parse(filePath: filePath)
     }
 
     /// Convenience static entry point for parsing content directly.
