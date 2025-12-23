@@ -1,16 +1,16 @@
-# Next Task: EE7 — SpecificationCore Decision Refactor
+# Next Task: EE8 — EditorEngine Validation Follow-ups
 
 **Priority:** P1
 **Phase:** Phase 10: Editor Engine Module
-**Effort:** 4 hours
-**Dependencies:** EE6
-**Status:** ✅ Completed on 2025-12-22
+**Effort:** 6 hours
+**Dependencies:** EE7
+**Status:** Selected
 
 ## Description
 
-Refactor EditorEngine decision logic to use SpecificationCore SPM specs and DecisionSpec/FirstMatchSpec instead of if/else branches, boolean flags, and ad-hoc options. Ensure EditorEngine decisions are modeled as specifications and validated by tests.
+Complete the validation follow-ups for the EditorEngine by gating the EditorEngine product/target, removing the CLI dependency, archiving the EE7 summary report, and mapping parser IO failures into diagnostics with tests.
 
 ## Next Step
 
-Run SELECT to choose the next task:
-$ claude "Выполни команду SELECT"
+Run PLAN command to generate detailed PRD:
+$ claude "Выполни команду PLAN"

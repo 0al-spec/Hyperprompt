@@ -893,7 +893,7 @@ Non-blocking: Can develop in parallel with Track A
 ### EE8: EditorEngine Validation Follow-ups **[P1]**
 **Dependencies:** EE7
 **Estimated:** 6 hours
-**Status:** ⏳ Planned
+**Status:** **INPROGRESS**
 
 - [ ] **[P1, depends: EE7]** Add SwiftPM `Editor` trait and gate EditorEngine product/target
 - [ ] **[P1, depends: EE7]** Remove `CLI` dependency by extracting shared compile orchestration
