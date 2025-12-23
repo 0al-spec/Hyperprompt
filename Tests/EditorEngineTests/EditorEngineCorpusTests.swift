@@ -1,5 +1,5 @@
 import XCTest
-import CLI
+import CompilerDriver
 import Core
 @testable import EditorEngine
 

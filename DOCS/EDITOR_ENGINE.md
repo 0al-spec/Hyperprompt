@@ -33,13 +33,13 @@ print("Found \(index.totalFiles) files")
 
 ### Parsing & Link Spans
 
-- `EditorParser.parse(filePath:) -> ParsedFile`
+- `EditorParser.parse(filePath:) -> ParsedFile` (returns diagnostics for I/O failures)
 - `ParsedFile` includes `ast`, `linkSpans`, and `diagnostics`.
 
 Example:
 
 ```swift
-let parsed = try EditorParser.parse(filePath: "main.hc")
+let parsed = EditorParser.parse(filePath: "main.hc")
 for span in parsed.linkSpans {
     print("Link: \(span.literal) at \(span.lineRange)")
 }

@@ -113,6 +113,20 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE5 (Diagnostics Mapping)
 - **Description:** Document EditorEngine API, expand tests, and verify editor vs CLI parity.
 
+### EE7 — SpecificationCore Decision Refactor **[P1]** ✓ 2025-12-22
+- **PRD:** [EE7_SpecificationCore_Decision_Refactor.md](./EE7_SpecificationCore_Decision_Refactor.md)
+- **Summary:** [EE7-summary.md](./EE7-summary.md)
+- **Effort:** 4 hours
+- **Dependencies:** EE6 (Documentation & Testing)
+- **Description:** Refactor EditorEngine decision points to use SpecificationCore specs and decision models.
+
+### EE8 — EditorEngine Validation Follow-ups **[P1]** ✓ 2025-12-23
+- **PRD:** [EE8_EditorEngine_Validation_Follow-ups.md](./EE8_EditorEngine_Validation_Follow-ups.md)
+- **Summary:** [EE8-summary.md](./EE8-summary.md)
+- **Effort:** 6 hours
+- **Dependencies:** EE7 (SpecificationCore Decision Refactor)
+- **Description:** Trait-gate EditorEngine, extract shared compiler orchestration, archive EE7 summary, and map parser I/O errors into diagnostics.
+
 ### BUG-EE1-001 — GlobMatcher Pattern Matching Issues ✓ 2025-12-21
 - **PRD:** [BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md](./BUG-EE1-001_GlobMatcher_Pattern_Matching_Issues.md)
 - **Related Task:** EE1 — Project Indexing
@@ -130,8 +144,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 14 items
-- **Total Effort:** 40 hours (tracked tasks only)
+- **Total Archived:** 16 items
+- **Total Effort:** 50 hours (tracked tasks only)
 - **Phases Represented:** 5 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10)
 
 ---
@@ -151,4 +165,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-21
+**Last Updated:** 2025-12-23
