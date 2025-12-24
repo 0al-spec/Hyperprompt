@@ -313,11 +313,11 @@ IDE support with:
 Share `.hc` file examples:
 
 ```bash
-# Create example in docs/examples/
-echo '"Example Documentation"' > docs/examples/my-example.hc
+# Create example in DOCS/examples/
+echo '"Example Documentation"' > DOCS/examples/my-example.hc
 
 # Document it
-echo "## My Example\nDescription of what this example does" > docs/examples/my-example.md
+echo "## My Example\nDescription of what this example does" > DOCS/examples/my-example.md
 ```
 
 ### Areas Needing Help
@@ -445,7 +445,7 @@ swift build
 swift test
 
 # Run in development
-./.build/debug/hyperprompt docs/examples/hello.hc
+./.build/debug/hyperprompt DOCS/examples/hello.hc
 ```
 
 ### Development Roadmap

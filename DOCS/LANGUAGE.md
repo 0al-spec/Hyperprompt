@@ -540,7 +540,7 @@ For implementation details, see [SPECS_INTEGRATION.md](SPECS_INTEGRATION.md).
 - [USAGE.md](USAGE.md) — CLI reference
 - [ERROR_CODES.md](ERROR_CODES.md) — Error resolution
 - [SPECS_INTEGRATION.md](SPECS_INTEGRATION.md) — Validation implementation
-- [docs/examples/](../docs/examples/) — Example files
+- [examples/](examples/) — Example files
 
 ---
 

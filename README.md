@@ -105,7 +105,7 @@ hyperprompt root.hc --verbose --stats
 
 ## Example Files
 
-See `docs/examples/` for runnable example .hc files:
+See `DOCS/examples/` for runnable example .hc files:
 - `hello.hc` — Simple root node
 - `nested.hc` — Hierarchical structure
 - `with-markdown.hc` — Markdown file references
@@ -160,7 +160,7 @@ Hyperprompt/
 │   ├── HypercodeGrammar/        # Grammar specifications
 │   └── EditorEngine/            # Future optional editor-facing engine (planned)
 ├── Tests/                       # Test suites
-├── docs/examples/               # Example .hc files
+├── DOCS/examples/               # Example .hc files
 ├── DOCS/                        # User documentation
 └── Package.swift                # Swift Package manifest
 ```
@@ -322,7 +322,7 @@ MIT License — See LICENSE file for details.
 
 - **Issues:** [Report bugs on GitHub](https://github.com/0al-spec/Hyperprompt/issues)
 - **Documentation:** See `DOCS/` directory
-- **Examples:** See `docs/examples/` directory
+- **Examples:** See `DOCS/examples/` directory
 
 ## Version History
 

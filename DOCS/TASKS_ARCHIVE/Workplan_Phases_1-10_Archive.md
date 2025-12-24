@@ -725,7 +725,7 @@ Non-blocking: Can develop in parallel with Track A
 - [x] **[P2, depends: D2]** Create troubleshooting guide ✅
 - [x] **[P2, depends: D2]** Document future extensions (v0.2+) ✅
 
-**Acceptance Criteria:** ✅ Documentation is complete, accurate, and covers all features (8 documentation files created in DOCS/, 4 example files in docs/examples/, README updated)
+**Acceptance Criteria:** ✅ Documentation is complete, accurate, and covers all features (8 documentation files created in DOCS/, 4 example files in DOCS/examples/, README updated)
 
 ---
 
