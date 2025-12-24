@@ -24,7 +24,7 @@ import Core
 // MARK: - IndexerOptions
 
 /// Configuration options for project indexing behavior
-public struct IndexerOptions {
+public struct IndexerOptions: Sendable {
     /// Symlink traversal policy (default: skip for security)
     public let symlinkPolicy: SymlinkPolicy
 

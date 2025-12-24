@@ -16,11 +16,21 @@ import Core
 /// Compiles Hypercode (.hc) sources into unified Markdown documents.
 
 struct Hyperprompt: ParsableCommand {
+    #if SWIFT_PACKAGE_TRAIT_Editor
+    static let configuration = CommandConfiguration(
+        commandName: "hyperprompt",
+        abstract: "Compile Hypercode to Markdown with manifest generation",
+        version: "0.1.0",
+        subcommands: [EditorRPCCommand.self],
+        defaultSubcommand: nil
+    )
+    #else
     static let configuration = CommandConfiguration(
         commandName: "hyperprompt",
         abstract: "Compile Hypercode to Markdown with manifest generation",
         version: "0.1.0"
     )
+    #endif
 
     // MARK: - Positional Arguments
 

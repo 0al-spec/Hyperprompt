@@ -37,6 +37,7 @@ permissions:
 
 jobs:
   build:
+    name: CI - Build and Test
     # Linux-only CI job (macOS/Windows deferred to future tasks)
     # Uses Swift 6.0.3 (compatible with Package.swift minimum 5.9)
     # Caches dependencies based on Package.resolved hash
@@ -139,6 +140,7 @@ jobs:
           echo "================================"
 
   build-without-editor-trait:
+    name: CI - Build without Editor trait
     # Validate that default builds exclude EditorEngine when no traits are enabled.
     runs-on: ubuntu-latest
 

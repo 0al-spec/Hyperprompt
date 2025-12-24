@@ -91,7 +91,7 @@ var targets: [Target] = [
                 "Emitter",
                 "Statistics",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-            ]
+            ] + (editorEnabled ? ["EditorEngine"] : [])
         ),
         .testTarget(
             name: "CLITests",
