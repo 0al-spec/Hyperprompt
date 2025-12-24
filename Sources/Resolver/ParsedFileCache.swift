@@ -59,6 +59,38 @@ public final class ParsedFileCache {
         return dirty
     }
 
+    public func topologicalOrder(from roots: [String]) -> [String] {
+        var ordered: [String] = []
+        var visited: Set<String> = []
+        var visiting: Set<String> = []
+
+        func visit(_ path: String) {
+            guard !visited.contains(path) else {
+                return
+            }
+
+            if visiting.contains(path) {
+                return
+            }
+
+            visiting.insert(path)
+            let dependencies = self.dependencies(for: path).sorted()
+            for dependency in dependencies {
+                visit(dependency)
+            }
+            visiting.remove(path)
+
+            visited.insert(path)
+            ordered.append(path)
+        }
+
+        for root in roots {
+            visit(root)
+        }
+
+        return ordered
+    }
+
     public func cachedProgram(for path: String, checksum: String) -> Program? {
         guard let entry = entries[path] else {
             return nil
