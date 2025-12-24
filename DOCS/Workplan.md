@@ -289,18 +289,18 @@ Completed phases include:
 ### PERF-1: Performance Baseline & Benchmarks **[P0]**
 **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 **Estimated:** 3 hours
-**Status:** 🟢 **IN PROGRESS**
+**Status:** ✅ **Completed on 2025-12-24**
 
-- [ ] **[P0, depends: EE8]** Define "medium project" benchmark (50 files, 5000 lines total)
-- [ ] **[P0, depends: EE8]** Create synthetic benchmark corpus (auto-generated .hc files)
-- [ ] **[P0, depends: EE8]** Implement performance test suite (XCTest with XCTMeasure)
-- [ ] **[P0, depends: EE8]** Baseline current performance:
-  - [ ] Full compilation time (entry file → output)
-  - [ ] Parse time per file
-  - [ ] Resolution time per link
-  - [ ] Emission time
-- [ ] **[P1, depends: EE8]** Add CI job to track performance over commits
-- [ ] **[P1, depends: EE8]** Document baseline in DOCS/PERFORMANCE.md
+- [x] **[P0, depends: EE8]** Define "medium project" benchmark (50 files, 5000 lines total)
+- [x] **[P0, depends: EE8]** Create synthetic benchmark corpus (auto-generated .hc files)
+- [x] **[P0, depends: EE8]** Implement performance test suite (XCTest with XCTMeasure)
+- [x] **[P0, depends: EE8]** Baseline current performance:
+  - [x] Full compilation time (entry file → output)
+  - [x] Parse time per file
+  - [x] Resolution time per link
+  - [x] Emission time
+- [x] **[P1, depends: EE8]** Add CI job to track performance over commits
+- [x] **[P1, depends: EE8]** Document baseline in DOCS/PERFORMANCE.md
 
 **Acceptance Criteria:** Benchmark suite runs, baseline documented, CI monitors regressions
 
