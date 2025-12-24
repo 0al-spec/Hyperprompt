@@ -33,11 +33,16 @@ sudo apt install -y \
 cd /tmp
 curl -L -o swift.tar.gz "https://download.swift.org/development/ubuntu2004/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04.tar.gz"
 
-# 3. Extract and install system-wide
+# 3. Extract and install to /opt/swift (avoids conflicts)
 tar zxf swift.tar.gz
-sudo cp -r swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04/usr/* /usr/
+sudo mkdir -p /opt/swift
+sudo mv swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04 /opt/swift/current
 
-# 4. Verify installation
+# 4. Add to PATH (add to ~/.bashrc for persistence)
+export PATH="/opt/swift/current/usr/bin:$PATH"
+echo 'export PATH="/opt/swift/current/usr/bin:$PATH"' >> ~/.bashrc
+
+# 5. Verify installation
 swift --version
 ```
 

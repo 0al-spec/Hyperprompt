@@ -25,8 +25,16 @@ jobs:
           cd /tmp
           curl -L -o swift.tar.gz "https://download.swift.org/development/ubuntu2004/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04.tar.gz"
           tar zxf swift.tar.gz
-          sudo cp -r swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04/usr/* /usr/
-          swift --version
+
+          # Install to /opt/swift instead of /usr to avoid conflicts
+          sudo mkdir -p /opt/swift
+          sudo mv swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04 /opt/swift/current
+
+          # Add to PATH
+          echo "/opt/swift/current/usr/bin" >> $GITHUB_PATH
+
+          # Verify installation
+          /opt/swift/current/usr/bin/swift --version
 
       - name: Cache Swift build
         uses: actions/cache@v4
