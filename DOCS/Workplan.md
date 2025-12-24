@@ -12,7 +12,7 @@
 **Current Focus:** VS Code Extension Development (Phases 11-15)
 
 This work plan focuses on the VS Code Extension implementation:
-- **Phase 11:** VS Code Extension Integration Architecture — ⏸️ Partial (VSC-1 ✅ Complete)
+- **Phase 11:** VS Code Extension Integration Architecture — ⏸️ Partial (VSC-1 + VSC-2B ✅ Complete)
 - **Phase 12:** EditorEngine API Enhancements — ⏸️ Pending
 - **Phase 13:** Performance & Incremental Compilation — ⏸️ Pending
 - **Phase 14:** VS Code Extension Development — ⏸️ Pending
@@ -23,7 +23,7 @@ Parallelizable tasks to start while EditorEngine work continues:
 - VSC-4C (platform guard + engine discovery)
 - VSC-8 (extension settings + configuration schema)
 
-**Total Estimated Effort (Phases 11-15):** ~82 hours remaining (VSC-1 complete: 4h)
+**Total Estimated Effort (Phases 11-15):** ~92 hours total, ~80 hours remaining (VSC-1 + VSC-2B complete: 12h)
 
 ### 📁 Completed Work Archive
 
@@ -50,7 +50,7 @@ Completed phases include:
 **Goal:** Establish interoperability layer between Swift EditorEngine and TypeScript VS Code extension
 **Estimated Duration:** 18 hours (2-3 weeks)
 **Track:** D (VS Code Extension — FFI Layer)
-**Status:** 🟢 **IN PROGRESS** — VSC-1 complete, VSC-2B ready to start
+**Status:** 🟢 **IN PROGRESS** — VSC-1 + VSC-2B complete (MVP)
 
 **Context:** PRD_VSCode_Extension.md validation identified critical gaps preventing implementation. This phase resolves 🔴 BLOCKER issues by establishing a bridge between Swift and Node.js.
 
@@ -155,7 +155,7 @@ Completed phases include:
 **Goal:** Add missing APIs required by VS Code extension PRD
 **Estimated Duration:** 14 hours (2 weeks)
 **Track:** C (Editor Engine — API Extensions)
-**Status:** ⏸️ **PENDING** — Requires VSC-2B completion
+**Status:** ⏸️ **PENDING** — Requires VSC-2B deferred RPC methods
 
 **Context:** VS Code extension requires position-based queries, workspace diagnostics, and async APIs not present in current EditorEngine.
 
@@ -378,7 +378,7 @@ Completed phases include:
 ## Phase 14: VS Code Extension Development
 
 **Goal:** Implement VS Code extension per PRD_VSCode_Extension.md
-**Estimated Duration:** 35 hours (4-5 weeks)
+**Estimated Duration:** 41 hours (5-6 weeks)
 **Track:** D (VS Code Extension — Client Implementation)
 **Status:** ⏸️ **PENDING** — Requires Phase 11; VSC-3/VSC-4C/VSC-8 can run in parallel with Phases 12-13
 
@@ -511,7 +511,7 @@ Completed phases include:
 **Status:** ⏸️ Pending
 
 - [ ] **[P0, depends: VSC-4*, PERF-4]** Create Webview panel for Markdown preview
-- [ ] **[P0, depends: VSC-4*, PERF-4]** Register `hyperprompt.showPreview` command (alias `hyperprompt.preview` if needed)
+- [ ] **[P0, depends: VSC-4*, PERF-4]** Register `hyperprompt.showPreview` command
 - [ ] **[P0, depends: VSC-4*, PERF-4]** Call `EditorCompiler.compile()` on file save
 - [ ] **[P0, depends: VSC-4*, PERF-4]** Render Markdown output in Webview
 - [ ] **[P1, depends: VSC-4*, PERF-4]** Use incremental compilation for <200ms update
@@ -538,7 +538,7 @@ Completed phases include:
 - [ ] **[P1, depends: VSC-4*]** Add `hyperprompt.previewAutoUpdate` setting (boolean)
 - [ ] **[P1, depends: VSC-4*]** Add `hyperprompt.diagnosticsEnabled` setting (boolean)
 - [ ] **[P2, depends: VSC-4*]** Add `hyperprompt.enginePath` setting (EditorEngine CLI path)
-- [ ] **[P2, depends: VSC-4*]** Add `hyperprompt.server.logLevel` setting (error/warn/info/debug)
+- [ ] **[P2, depends: VSC-4*]** Add `hyperprompt.engineLogLevel` setting (error/warn/info/debug)
 - [ ] **[P1, depends: VSC-4*]** Implement settings change handler (restart server if needed)
 - [ ] **[P1, depends: VSC-4*]** Document settings in README
 
@@ -692,26 +692,26 @@ Completed phases include:
 
 ## Progress Tracking
 
-**Overall Progress:** 160 / 245 tasks completed (65%)
-- **Phases 1-10 (Complete):** 159 tasks ✅
-- **Phases 11-15 (In Progress):** 1 / 86 tasks (VSC-1 complete)
+**Overall Progress:** 344 / 546 tasks completed (63%)
+- **Phases 1-10 (Archive):** 305 / 310 tasks ✅ (see archive)
+- **Phases 11-15 (Active):** 39 / 236 tasks
 
-### By Phase
+### By Phase (Checklist Items, Phases 11-15)
 - [x] **Phases 1-10:** Complete (see archive) — **131h** ✅
-- [~] **Phase 11:** VS Code Integration Architecture (1/3 major tasks) — **14h remaining**
-- [ ] **Phase 12:** EditorEngine API Enhancements (0/6 major tasks) — **14h**
-- [ ] **Phase 13:** Performance & Incremental Compilation (0/4 major tasks) — **15h**
-- [ ] **Phase 14:** VS Code Extension Development (0/10 major tasks) — **35h**
-- [ ] **Phase 15:** PRD Validation & Gap Closure (0/2 major tasks) — **4h**
+- [~] **Phase 11:** VS Code Integration Architecture (13/40 tasks) — **18h total**
+- [~] **Phase 12:** EditorEngine API Enhancements (9/41 tasks) — **14h total**
+- [~] **Phase 13:** Performance & Incremental Compilation (17/32 tasks) — **15h total**
+- [ ] **Phase 14:** VS Code Extension Development (0/86 tasks) — **41h total**
+- [ ] **Phase 15:** PRD Validation & Gap Closure (0/37 tasks) — **4h total**
 
 ### By Priority (Phases 11-15 only)
-- **[P0] Critical:** 1 / 22 tasks complete (VSC-1)
-- **[P1] High:** 0 / 57 tasks
-- **[P2] Medium:** 0 / 8 tasks
+- **[P0] Critical:** 18 / 84 tasks complete
+- **[P1] High:** 9 / 86 tasks complete
+- **[P2] Medium:** 0 / 21 tasks complete
 
 ### By Track
 - **Track C (Editor Engine):** Phase 12, 13 — 29 hours ⏸️ Pending
-- **Track D (VS Code Extension):** Phase 11, 14, 15 — 53 hours (4h complete, 49h pending)
+- **Track D (VS Code Extension):** Phase 11, 14, 15 — 63 hours (12h complete, 51h pending)
 
 ---
 
@@ -719,13 +719,13 @@ Completed phases include:
 
 | Phase | Title | Duration | Status | Addresses |
 |-------|-------|----------|--------|-----------|
-| **Phase 11** | VS Code Extension Integration Architecture | 14h remaining | 🟢 In Progress (VSC-1 ✅) | 🔴 FFI Blocker |
+| **Phase 11** | VS Code Extension Integration Architecture | 18h total | 🟢 In Progress (VSC-1, VSC-2B ✅) | 🔴 FFI Blocker |
 | **Phase 12** | EditorEngine API Enhancements | 14h | ⏸️ Pending | 🟠 Critical APIs |
 | **Phase 13** | Performance & Incremental Compilation | 15h | ⏸️ Pending | 🔴 Performance Blocker |
-| **Phase 14** | VS Code Extension Development | 35h | ⏸️ Pending | ✅ PRD Implementation |
+| **Phase 14** | VS Code Extension Development | 41h | ⏸️ Pending | ✅ PRD Implementation |
 | **Phase 15** | PRD Validation & Gap Closure | 4h | ⏸️ Pending | ✅ Final Validation |
 
-**Next Task:** VSC-2B (CLI JSON-RPC Interface) — 8 hours
+**Next Task:** VSC-3 (Extension Scaffold) — 3 hours
 
 ---
 
