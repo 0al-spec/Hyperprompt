@@ -21,7 +21,7 @@ Validate incremental compilation performance against benchmarks and document res
 
 ## Mini TODO (Tracker)
 
-- [ ] A1: Re-run benchmark suite with incremental compilation
+- [x] A1: Re-run benchmark suite with incremental compilation
 - [ ] A2: Verify <200ms for medium project (second compile)
 - [ ] A3: Verify <200ms for PRD medium fixture in release build
 - [ ] A4: Verify <1s for large project (120 files)
