@@ -16,6 +16,28 @@ For example if there is an image subfolder under your extension project workspac
 
 If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 
+## Development Testing
+
+Run the extension in VS Code's Extension Development Host.
+
+### CLI launch (requires `code` on PATH)
+
+```bash
+cd Tools/VSCodeExtension
+npm run compile
+code --extensionDevelopmentPath=/Users/egor/Development/GitHub/0AL/Hyperprompt/Tools/VSCodeExtension
+```
+
+In the Extension Development Host:
+- Open any `.hc` file to trigger activation.
+- Use Command Palette and run `Hyperprompt: Compile` or `Hyperprompt: Show Preview`.
+
+### VS Code UI
+
+1. Open `Tools/VSCodeExtension` in VS Code.
+2. Press `F5` (Run Extension).
+3. In the dev host, open a `.hc` file and run commands from the Command Palette.
+
 ## Extension Settings
 
 Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
