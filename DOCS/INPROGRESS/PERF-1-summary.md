@@ -142,11 +142,13 @@ All acceptance criteria met:
 - Final output: 6682 lines (within ±20% tolerance)
 
 ### Challenge 3: Test API Compatibility
-**Problem:** Tests reference APIs that may not exist yet (Parser, Resolver, Emitter, CompilerDriver)
+**Problem:** Initial tests used incorrect APIs (Parser.parse(filePath:), wrong CompilerDriver signature)
 **Solution:**
-- Left test code as-is (will be validated when tests run)
-- Documented in PERFORMANCE.md that baseline metrics are TBD
-- Tests will be updated if API changes needed
+- Fixed tests to use correct CompilerDriver.compile(CompilerArguments) API
+- Replaced 5 broken tests with 5 working tests using actual Hyperprompt API
+- All 16 compilation errors resolved
+- Tests now compile and run successfully
+- Commits: 54e167a (Swift CI fix), ea1977d (test API fixes)
 
 ---
 
@@ -240,6 +242,7 @@ All acceptance criteria met:
 2. **Iterative Development:** Generator improvements made in response to actual output
 3. **Document Early:** PERFORMANCE.md structure defined before metrics available
 4. **Test Infrastructure:** Building robust test suite pays off for future work
+5. **Verify APIs First:** Always check actual API signatures before writing tests (learned the hard way)
 
 ---
 
@@ -251,6 +254,8 @@ All acceptance criteria met:
 - **Commits:**
   - `ece6d16` - Add INSTALL_SWIFT primitive command
   - `aae8f22` - Complete PERF-1: Performance Baseline & Benchmarks
+  - `54e167a` - Fix Swift installation in CI to avoid file conflicts
+  - `ea1977d` - Fix performance tests to use correct CompilerDriver API
 
 ---
 
