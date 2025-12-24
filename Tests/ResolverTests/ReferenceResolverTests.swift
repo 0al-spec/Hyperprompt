@@ -40,6 +40,11 @@ final class ReferenceResolverTests: XCTestCase {
         )
     }
 
+    private func makeProgram(_ literal: String, filePath: String) -> Program {
+        let node = makeNode(literal, filePath: filePath)
+        return Program(root: node, sourceFile: filePath)
+    }
+
     private func makeResolver(
         mode: ResolutionMode = .strict,
         tracker: DependencyTracker? = nil,
@@ -311,6 +316,35 @@ final class ReferenceResolverTests: XCTestCase {
         case .failure(let error):
             XCTFail("Expected success, got error: \(error.message)")
         }
+    }
+
+    func testMissingHypercodeInvalidatesCacheEntry() {
+        let cache = ParsedFileCache()
+        let cachedProgram = makeProgram("\"Cached\"", filePath: "/project/missing.hc")
+        cache.store(
+            path: "/project/missing.hc",
+            checksum: "cached-checksum",
+            program: cachedProgram,
+            dependencies: []
+        )
+
+        var resolver = makeResolver(
+            mode: .lenient,
+            parsedFileCache: cache,
+            currentFilePath: "/project/root.hc"
+        )
+        let node = makeNode("missing.hc", filePath: "root.hc")
+
+        let result = resolver.resolve(node: node)
+
+        switch result {
+        case .success(let kind):
+            XCTAssertEqual(kind, .inlineText)
+        case .failure(let error):
+            XCTFail("Expected inlineText, got error: \(error.message)")
+        }
+
+        XCTAssertEqual(cache.entryCount, 0)
     }
 
     func testNestedHypercodeFilePath() {
