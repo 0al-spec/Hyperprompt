@@ -26,7 +26,7 @@ Validate incremental compilation performance against benchmarks and document res
 - [x] A3: Verify <200ms for PRD medium fixture in release build
 - [x] A4: Verify <1s for large project (120 files)
 - [x] A5: Profile hot paths (Instruments or perf)
-- [ ] A6: Update DOCS/PERFORMANCE.md with findings
+- [x] A6: Update DOCS/PERFORMANCE.md with findings
 - [ ] A7: Add/update performance regression tests in CI
 
 ## Next Step
