@@ -18,6 +18,11 @@ This work plan focuses on the VS Code Extension implementation:
 - **Phase 14:** VS Code Extension Development — ⏸️ Pending
 - **Phase 15:** PRD Validation & Gap Closure — ⏸️ Pending
 
+Parallelizable tasks to start while EditorEngine work continues:
+- VSC-3 (extension scaffold + language assets)
+- VSC-4C (platform guard + engine discovery)
+- VSC-8 (extension settings + configuration schema)
+
 **Total Estimated Effort (Phases 11-15):** ~82 hours remaining (VSC-1 complete: 4h)
 
 ### 📁 Completed Work Archive
@@ -279,7 +284,7 @@ Completed phases include:
 
 ## Phase 13: Performance & Incremental Compilation
 
-**Goal:** Achieve <200ms compile time for medium projects (50 files, 5000 lines)
+**Goal:** Achieve <200ms compile time for PRD medium fixture and internal benchmark (50 files, 5000 lines)
 **Estimated Duration:** 15 hours (2 weeks)
 **Track:** C (Editor Engine — Performance)
 **Status:** ⏸️ **PENDING** — Requires Phase 12 completion
@@ -292,6 +297,7 @@ Completed phases include:
 **Status:** ✅ **Completed on 2025-12-24**
 
 - [x] **[P0, depends: EE8]** Define "medium project" benchmark (50 files, 5000 lines total)
+- [ ] **[P0, depends: EE8]** Define PRD medium fixture (20 `.hc`, 5 `.md`, ~200 nodes, depth 6)
 - [x] **[P0, depends: EE8]** Create synthetic benchmark corpus (auto-generated .hc files)
 - [x] **[P0, depends: EE8]** Implement performance test suite (XCTest with XCTMeasure)
 - [x] **[P0, depends: EE8]** Baseline current performance:
@@ -357,6 +363,7 @@ Completed phases include:
 
 - [ ] **[P0, depends: PERF-3]** Re-run benchmark suite with incremental compilation
 - [ ] **[P0, depends: PERF-3]** Verify <200ms for medium project (second compile)
+- [ ] **[P0, depends: PERF-3]** Verify <200ms for PRD medium fixture in release build
 - [ ] **[P0, depends: PERF-3]** Verify <1s for large project (120 files, 12000 lines)
 - [ ] **[P0, depends: PERF-3]** Profile hot paths (Instruments or perf)
 - [ ] **[P1, depends: PERF-3]** Document performance characteristics in DOCS/PERFORMANCE.md
@@ -373,7 +380,7 @@ Completed phases include:
 **Goal:** Implement VS Code extension per PRD_VSCode_Extension.md
 **Estimated Duration:** 35 hours (4-5 weeks)
 **Track:** D (VS Code Extension — Client Implementation)
-**Status:** ⏸️ **PENDING** — Requires Phase 11, 12, 13 completion
+**Status:** ⏸️ **PENDING** — Requires Phase 11; VSC-3/VSC-4C/VSC-8 can run in parallel with Phases 12-13
 
 **Context:** With FFI layer, enhanced APIs, and performance optimizations in place, implement the TypeScript extension.
 
@@ -389,7 +396,7 @@ Completed phases include:
   - [ ] Repository URL
   - [ ] License (match Hyperprompt project)
 - [ ] **[P0, depends: VSC-2*]** Register `.hc` file association
-- [ ] **[P0, depends: VSC-2*]** Configure activation events (`onLanguage:hypercode`)
+- [ ] **[P0, depends: VSC-2*]** Configure activation events (`onLanguage:hypercode`, `onCommand:hyperprompt.compile`, `onCommand:hyperprompt.showPreview`)
 - [ ] **[P1, depends: VSC-2*]** Add TextMate grammar for syntax highlighting (`.tmLanguage.json`)
 - [ ] **[P1, depends: VSC-2*]** Configure extension icon and colors
 - [ ] **[P1, depends: VSC-2*]** Verify extension loads in VS Code dev mode
@@ -420,6 +427,23 @@ Completed phases include:
 
 ---
 
+### VSC-4C: Engine Discovery & Platform Guard **[P0]**
+**Dependencies:** VSC-3, VSC-8
+**Estimated:** 3 hours
+**Status:** ⏸️ Pending
+
+- [ ] **[P0, depends: VSC-3, VSC-8]** Detect unsupported platforms (Windows) and show a clear user-facing message, disable features
+- [ ] **[P0, depends: VSC-3, VSC-8]** Resolve EditorEngine binary in order: `hyperprompt.enginePath` setting → bundled binary → PATH fallback
+- [ ] **[P1, depends: VSC-3, VSC-8]** Validate engine binary is executable and compatible (Editor trait enabled)
+- [ ] **[P1, depends: VSC-3, VSC-8]** Surface "trait disabled" remediation guidance in UI
+- [ ] **[P1, depends: VSC-3, VSC-8]** Add discovery tests (missing binary, bad path, unsupported OS)
+
+**Acceptance Criteria:** Engine discovery follows PRD order, unsupported OS is blocked with guidance
+
+**Resolution Status:** ✅ Addresses PRD FR-8/FR-9
+
+---
+
 ### VSC-5: Navigation Features **[P0]**
 **Dependencies:** VSC-4*, EE-EXT-1
 **Estimated:** 5 hours
@@ -434,7 +458,7 @@ Completed phases include:
 - [ ] **[P1, depends: VSC-4*, EE-EXT-1]** Handle unresolved links (show inline text message)
 - [ ] **[P1, depends: VSC-4*, EE-EXT-1]** Write extension tests (integration)
 
-**Acceptance Criteria:** Go-to-definition works on all file references, hover shows resolved path
+**Acceptance Criteria:** Go-to-definition/peek works on all file references, hover shows resolved path
 
 **Blocks:** None (core feature)
 
@@ -450,6 +474,7 @@ Completed phases include:
 - [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Implement `DiagnosticCollection` for Problems panel
 - [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Call `EditorEngine.validateWorkspace()` on file save
 - [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Map `Diagnostic[]` to VS Code diagnostics
+- [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Map 0-based line/column offsets to VS Code ranges correctly
 - [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Set severity (error, warning, info, hint)
 - [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Set source ("Hyperprompt")
 - [ ] **[P1, depends: VSC-4*, EE-EXT-2]** Implement incremental diagnostic updates (only changed files)
@@ -464,13 +489,29 @@ Completed phases include:
 
 ---
 
+### VSC-7A: Compile on Demand Command **[P0]**
+**Dependencies:** VSC-2B, VSC-4*
+**Estimated:** 3 hours
+**Status:** ⏸️ Pending
+
+- [ ] **[P0, depends: VSC-2B, VSC-4*]** Register `hyperprompt.compile` command
+- [ ] **[P0, depends: VSC-2B, VSC-4*]** Call `editor.compile` RPC and select entry file from active editor
+- [ ] **[P0, depends: VSC-2B, VSC-4*]** Surface compiled Markdown output (output channel or temporary document)
+- [ ] **[P1, depends: VSC-2B, VSC-4*]** Add compile command tests (CLI parity fixtures)
+
+**Acceptance Criteria:** Compile command produces output identical to CLI for fixtures
+
+**Resolution Status:** ✅ Addresses PRD Phase 2.2.1 (Compile on Demand)
+
+---
+
 ### VSC-7: Live Preview Panel **[P0]**
 **Dependencies:** VSC-4*, PERF-4
 **Estimated:** 6 hours
 **Status:** ⏸️ Pending
 
 - [ ] **[P0, depends: VSC-4*, PERF-4]** Create Webview panel for Markdown preview
-- [ ] **[P0, depends: VSC-4*, PERF-4]** Register `hyperprompt.preview` command
+- [ ] **[P0, depends: VSC-4*, PERF-4]** Register `hyperprompt.showPreview` command (alias `hyperprompt.preview` if needed)
 - [ ] **[P0, depends: VSC-4*, PERF-4]** Call `EditorCompiler.compile()` on file save
 - [ ] **[P0, depends: VSC-4*, PERF-4]** Render Markdown output in Webview
 - [ ] **[P1, depends: VSC-4*, PERF-4]** Use incremental compilation for <200ms update
@@ -496,7 +537,7 @@ Completed phases include:
 - [ ] **[P1, depends: VSC-4*]** Add `hyperprompt.resolutionMode` setting (strict/lenient)
 - [ ] **[P1, depends: VSC-4*]** Add `hyperprompt.previewAutoUpdate` setting (boolean)
 - [ ] **[P1, depends: VSC-4*]** Add `hyperprompt.diagnosticsEnabled` setting (boolean)
-- [ ] **[P2, depends: VSC-4*]** Add `hyperprompt.server.path` setting (LSP/CLI executable path)
+- [ ] **[P2, depends: VSC-4*]** Add `hyperprompt.enginePath` setting (EditorEngine CLI path)
 - [ ] **[P2, depends: VSC-4*]** Add `hyperprompt.server.logLevel` setting (error/warn/info/debug)
 - [ ] **[P1, depends: VSC-4*]** Implement settings change handler (restart server if needed)
 - [ ] **[P1, depends: VSC-4*]** Document settings in README
@@ -608,10 +649,14 @@ Completed phases include:
   - [ ] Works without modifying CLI
 - [ ] **[P0, depends: VSC-12]** Verify all functional requirements (Section 4.2):
   - [ ] FR-1: Recognize .hc files
-  - [ ] FR-2: Navigate file references
-  - [ ] FR-3: Compile via EditorEngine
-  - [ ] FR-4: Show Markdown preview
-  - [ ] FR-5: Surface diagnostics
+  - [ ] FR-2: Navigate file references (definition + peek)
+  - [ ] FR-3: Provide hover metadata for references
+  - [ ] FR-4: Compile via EditorEngine
+  - [ ] FR-5: Show Markdown preview
+  - [ ] FR-6: Surface diagnostics
+  - [ ] FR-7: Provide activation on .hc open and explicit command
+  - [ ] FR-8: Resolve EditorEngine binary (config/bundled/PATH)
+  - [ ] FR-9: Show unsupported-platform messaging on Windows
 - [ ] **[P0, depends: VSC-12]** Verify non-functional requirements (Section 4.3):
   - [ ] Performance: <200ms compile
   - [ ] Reliability: No crashes on invalid input
