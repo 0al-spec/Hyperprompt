@@ -140,6 +140,21 @@ var targets: [Target] = [
                 "Statistics",
             ]
         ),
+
+        // Performance tests
+        .testTarget(
+            name: "PerformanceTests",
+            dependencies: [
+                "CompilerDriver",
+                "Core",
+                "Parser",
+                "Resolver",
+                "Emitter",
+            ],
+            resources: [
+                .copy("Fixtures")
+            ]
+        ),
     ]
 
 if editorEnabled {
