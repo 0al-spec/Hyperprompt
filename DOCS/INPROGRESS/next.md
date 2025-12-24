@@ -10,6 +10,15 @@
 
 Validate incremental compilation performance against benchmarks and document results, including <200ms targets and regression checks.
 
+## Flow Steps (Tracker)
+
+- [x] SELECT
+- [x] PLAN
+- [x] INSTALL_SWIFT
+- [ ] EXECUTE
+- [ ] PROGRESS (optional)
+- [ ] ARCHIVE
+
 ## Mini TODO (Tracker)
 
 - [ ] A1: Re-run benchmark suite with incremental compilation
