@@ -22,6 +22,22 @@ public final class ParsedFileCache {
         entries.count
     }
 
+    public func dependencies(for path: String) -> Set<String> {
+        entries[path]?.dependencies ?? []
+    }
+
+    public func dependents(for path: String) -> Set<String> {
+        dependentsByPath[path] ?? []
+    }
+
+    public func dependencyGraph() -> [String: Set<String>] {
+        var graph: [String: Set<String>] = [:]
+        for (path, entry) in entries {
+            graph[path] = entry.dependencies
+        }
+        return graph
+    }
+
     public func cachedProgram(for path: String, checksum: String) -> Program? {
         guard let entry = entries[path] else {
             return nil
