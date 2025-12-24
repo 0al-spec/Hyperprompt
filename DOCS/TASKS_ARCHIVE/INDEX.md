@@ -176,6 +176,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** PERF-1
 - **Description:** Implement parsed file cache with checksum invalidation, cascading invalidation, and LRU eviction for incremental compilation.
 
+### PERF-3 — Incremental Compilation — Dependency Graph **[P0]** ✓ 2025-12-25
+- **PRD:** [PERF-3_Incremental_Compilation_Dependency_Graph.md](./PERF-3_Incremental_Compilation_Dependency_Graph.md)
+- **Summary:** [PERF-3-summary.md](./PERF-3-summary.md)
+- **Effort:** 4 hours
+- **Dependencies:** PERF-2
+- **Description:** Add dependency graph accessors, dirty propagation, and topological ordering to support incremental compilation.
+
 ---
 
 ## Phase 14: VS Code Extension Development
@@ -199,8 +206,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 22 items
-- **Total Effort:** 77 hours (tracked tasks only)
+- **Total Archived:** 23 items
+- **Total Effort:** 81 hours (tracked tasks only)
 - **Phases Represented:** 9 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14)
 
 ---
@@ -220,4 +227,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-24 (VSC-3 archived)
+**Last Updated:** 2025-12-25 (PERF-3 archived)

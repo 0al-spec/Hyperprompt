@@ -114,3 +114,6 @@ Incremental compilation requires awareness of dependencies between files so chan
 - Dirty file only recompiles affected subset.
 - Deleting a referenced file invalidates dependents and reports deterministic errors.
 - Unit tests cover dependency graph creation and dirty propagation.
+
+---
+**Archived:** 2025-12-25
