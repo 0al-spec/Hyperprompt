@@ -21,11 +21,12 @@ final class CompilerPerformanceTests: XCTestCase {
         // Locate benchmark corpus
         let fixturesURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
-            .appendingPathComponent("Fixtures")
-            .appendingPathComponent("MediumProject")
+            .deletingLastPathComponent()
+            .appendingPathComponent("TestCorpus")
+            .appendingPathComponent("Performance")
 
         corpusPath = fixturesURL.path
-        entryFilePath = fixturesURL.appendingPathComponent("entry.hc").path
+        entryFilePath = fixturesURL.appendingPathComponent("comprehensive_test.hc").path
 
         // Verify corpus exists
         guard FileManager.default.fileExists(atPath: entryFilePath) else {
@@ -66,7 +67,7 @@ final class CompilerPerformanceTests: XCTestCase {
 
         // Report metrics
         print("\n📊 Full Compilation Benchmark")
-        print("   Corpus: 50 files, ~6500 lines")
+        print("   Corpus: comprehensive_test.hc + large markdown files")
         print("   Target: <200ms (Phase 13 goal)")
     }
 
