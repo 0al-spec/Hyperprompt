@@ -91,7 +91,7 @@
    - Exit code 4: Internal Error (compiler bug)
    - Solutions for each error type
 
-7. **Example Files** (in `docs/examples/`)
+7. **Example Files** (in `DOCS/examples/`)
    - `hello.hc` — Single root node with inline text
    - `nested.hc` — Hierarchical structure with indentation
    - `with-markdown.hc` — References to `.md` files
@@ -133,7 +133,7 @@
 | 5 | Write ERROR_CODES.md with solutions | Medium | 0.5h | Exit code definitions, test error outputs | Map exit codes to scenarios, provide solutions | Error guide covers all 5 exit codes |
 | 6 | Write ARCHITECTURE.md with diagrams | Medium | 0.75h | Module structure, data flow | Describe modules, show relationships, explain flow | Architecture overview complete |
 | 7 | Write SPECS_INTEGRATION.md | Low | 0.5h | Specification implementations (Phase 3) | Explain how specs are used in lexer/resolver | Specs integration documented |
-| 8 | Create example files in docs/examples/ | Medium | 0.5h | Test fixtures (V01, V03, V08, etc.) | Copy/adapt test fixtures to examples/ | 5-7 runnable example files |
+| 8 | Create example files in DOCS/examples/ | Medium | 0.5h | Test fixtures (V01, V03, V08, etc.) | Copy/adapt test fixtures to examples/ | 5-7 runnable example files |
 | 9 | Generate API documentation | Low | 0.5h | Source code with doc comments | Extract/format API docs for public types | API reference available |
 | 10 | Write TROUBLESHOOTING.md | Low | 0.5h | Common issues from tests/errors | Collect FAQs, provide solutions | Troubleshooting guide for common issues |
 | 11 | Write FUTURE.md roadmap | Low | 0.25h | Workplan Phase 9 notes | Outline v0.2 features, contribution process | Future direction documented |
@@ -147,7 +147,7 @@
 - **LANGUAGE Complete:** Grammar defined with valid/invalid examples; syntax rules comprehensive
 - **ERROR_CODES Complete:** All 5 exit codes mapped to scenarios with solutions
 - **ARCHITECTURE Complete:** Module diagram, data flow, key interfaces described
-- **EXAMPLES Complete:** 5-7 runnable .hc files in docs/examples/
+- **EXAMPLES Complete:** 5-7 runnable .hc files in DOCS/examples/
 - **Cross-links:** All docs cross-referenced (README → USAGE, ERROR_CODES, etc.)
 - **No Typos/Grammar:** Documentation proofread for clarity
 
@@ -267,11 +267,11 @@ Invalid Hypercode syntax in source file.
 6. `ERROR_CODES.md` — Exit code reference
 7. `TROUBLESHOOTING.md` — FAQs and solutions
 8. `FUTURE.md` — Roadmap for v0.2+
-9. `docs/examples/hello.hc` — Basic example
-10. `docs/examples/nested.hc` — Hierarchical example
-11. `docs/examples/with-markdown.hc` — .md reference example
-12. `docs/examples/with-hypercode.hc` — .hc reference example
-13. `docs/examples/comments.hc` — Comment usage example
+9. `DOCS/examples/hello.hc` — Basic example
+10. `DOCS/examples/nested.hc` — Hierarchical example
+11. `DOCS/examples/with-markdown.hc` — .md reference example
+12. `DOCS/examples/with-hypercode.hc` — .hc reference example
+13. `DOCS/examples/comments.hc` — Comment usage example
 14. Update package docstrings for API docs
 
 ---
