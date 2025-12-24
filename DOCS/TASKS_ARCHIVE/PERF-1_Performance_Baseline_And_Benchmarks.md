@@ -722,3 +722,6 @@ MediumProject/
 ---
 
 **End of PRD**
+
+---
+**Archived:** 2025-12-24

@@ -160,6 +160,17 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Phase 13: Performance & Incremental Compilation
+
+### PERF-1 — Performance Baseline & Benchmarks **[P0]** ✓ 2025-12-24
+- **PRD:** [PERF-1_Performance_Baseline_And_Benchmarks.md](./PERF-1_Performance_Baseline_And_Benchmarks.md)
+- **Summary:** [PERF-1-summary.md](./PERF-1-summary.md)
+- **Effort:** 3 hours
+- **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
+- **Description:** Establish baseline performance measurements with a synthetic benchmark corpus, XCTest suite, documentation, and CI tracking.
+
+---
+
 ## Other Archives
 
 ### Build Issues Log ✓ 2025-12-21
@@ -170,9 +181,9 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 19 items
-- **Total Effort:** 65 hours (tracked tasks only)
-- **Phases Represented:** 7 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12)
+- **Total Archived:** 20 items
+- **Total Effort:** 68 hours (tracked tasks only)
+- **Phases Represented:** 8 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13)
 
 ---
 
@@ -191,4 +202,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-24 (EE-EXT-1 archived)
+**Last Updated:** 2025-12-24 (PERF-1 archived)
