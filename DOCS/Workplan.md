@@ -387,18 +387,18 @@ Completed phases include:
 ### VSC-3: Extension Scaffold **[P0]**
 **Dependencies:** VSC-2A or VSC-2B or VSC-2C (integration layer chosen)
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending
+**Status:** ✅ **COMPLETED** on 2025-12-24
 
-- [ ] **[P0, depends: VSC-2*]** Initialize extension with `yo code` (TypeScript)
-- [ ] **[P1, depends: VSC-2*]** Configure package.json metadata:
-  - [ ] Extension ID: `anthropic.hyperprompt`
-  - [ ] Publisher: `anthropic`
-  - [ ] Repository URL
-  - [ ] License (match Hyperprompt project)
-- [ ] **[P0, depends: VSC-2*]** Register `.hc` file association
-- [ ] **[P0, depends: VSC-2*]** Configure activation events (`onLanguage:hypercode`, `onCommand:hyperprompt.compile`, `onCommand:hyperprompt.showPreview`)
-- [ ] **[P1, depends: VSC-2*]** Add TextMate grammar for syntax highlighting (`.tmLanguage.json`)
-- [ ] **[P1, depends: VSC-2*]** Configure extension icon and colors
+- [x] **[P0, depends: VSC-2*]** Initialize extension with `yo code` (TypeScript)
+- [x] **[P1, depends: VSC-2*]** Configure package.json metadata:
+  - [x] Extension ID: `0al.hyperprompt`
+  - [x] Publisher: `0al`
+  - [x] Repository URL
+  - [x] License (match Hyperprompt project)
+- [x] **[P0, depends: VSC-2*]** Register `.hc` file association
+- [x] **[P0, depends: VSC-2*]** Configure activation events (`onLanguage:hypercode`, `onCommand:hyperprompt.compile`, `onCommand:hyperprompt.showPreview`)
+- [x] **[P1, depends: VSC-2*]** Add TextMate grammar for syntax highlighting (`.tmLanguage.json`)
+- [x] **[P1, depends: VSC-2*]** Configure extension icon and colors
 - [ ] **[P1, depends: VSC-2*]** Verify extension loads in VS Code dev mode
 
 **Acceptance Criteria:** Extension scaffold builds, activates on .hc files, syntax highlighting works

@@ -409,7 +409,7 @@ The PRD for the VS Code extension (`PRD_VSCode_Extension.md`) describes a JavaSc
 ### 4.5 Extension Metadata Missing
 
 **Issue:** PRD does not specify:
-- Extension ID (e.g., `anthropic.hyperprompt`)
+- Extension ID (e.g., `0al.hyperprompt`)
 - Publisher name
 - Repository URL
 - License

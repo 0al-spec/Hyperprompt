@@ -135,3 +135,6 @@ Introducing a parsed file cache reduces redundant parsing, which is a primary co
 
 - If a dependency graph exists (from PERF-3), use its data structures to determine cascading invalidation. If not available yet, derive dependencies from current parse results (e.g., referenced files list).
 - Keep cache interface internal to EditorEngine unless future requirements need exposure.
+
+---
+**Archived:** 2025-12-24
