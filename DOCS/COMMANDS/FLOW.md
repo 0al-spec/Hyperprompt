@@ -11,25 +11,29 @@ FLOW is the top-level orchestrator; each step is a dedicated command with its ow
 ## Workflow Cycle
 
 ```
-┌─────────┐
-│ SELECT  │  Choose highest priority task
-└────┬────┘  Updates: next.md, Workplan.md
-     ↓
-┌─────────┐
-│  PLAN   │  Generate detailed PRD
-└────┬────┘  Creates: DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md
-     ↓
-┌─────────┐
-│ EXECUTE │  Pre-flight → [YOU WORK] → Post-flight
-└────┬────┘  Validates, commits, pushes
-     ↓
-  [REPEAT] ←──────────┐
-     │                │
-     │  (periodically)│
-     ↓                │
-┌─────────┐           │
-│ ARCHIVE │  Clean workspace, move completed PRDs
-└─────────┘  To: DOCS/TASKS_ARCHIVE/
+┌──────────────┐
+│   SELECT     │  Choose highest priority task
+└──────┬───────┘  Updates: next.md, Workplan.md
+       ↓
+┌──────────────┐
+│    PLAN      │  Generate detailed PRD
+└──────┬───────┘  Creates: DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md
+       ↓
+┌──────────────┐
+│ INSTALL_SWIFT│  Install Swift toolchain (one-time setup)
+└──────┬───────┘  Required: Swift compiler for build/test
+       ↓
+┌──────────────┐
+│   EXECUTE    │  Pre-flight → [YOU WORK] → Post-flight
+└──────┬───────┘  Validates, commits, pushes
+       ↓
+    [REPEAT] ←──────────┐
+       │                │
+       │  (periodically)│
+       ↓                │
+┌──────────────┐        │
+│   ARCHIVE    │  Clean workspace, move completed PRDs
+└──────────────┘  To: DOCS/TASKS_ARCHIVE/
 ```
 
 ## Commands
@@ -50,7 +54,17 @@ Generate a detailed PRD at `DOCS/INPROGRESS/{TASK_ID}_{TASK_NAME}.md` from the s
 
 ---
 
-### 3. EXECUTE
+### 3. INSTALL_SWIFT
+
+See `DOCS/COMMANDS/PRIMITIVES/INSTALL_SWIFT.md` for details.
+
+Install Swift compiler and toolchain required for building and testing Hyperprompt. **One-time setup** per development environment.
+
+**Skip if:** Swift already installed (`swift --version` works)
+
+---
+
+### 4. EXECUTE
 
 See `DOCS/COMMANDS/EXECUTE.md` for details.
 
@@ -58,7 +72,7 @@ Run pre-flight checks, implement following XP/TDD, then validate like CI and upd
 
 ---
 
-### 4. PROGRESS (Optional)
+### 5. PROGRESS (Optional)
 
 See `DOCS/COMMANDS/PROGRESS.md` for details.
 
@@ -66,7 +80,7 @@ Update task checklists during execution (auto-called by EXECUTE).
 
 ---
 
-### 5. ARCHIVE
+### 6. ARCHIVE
 
 See `DOCS/COMMANDS/ARCHIVE.md` for details.
 

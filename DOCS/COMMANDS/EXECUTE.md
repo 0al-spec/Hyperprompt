@@ -15,7 +15,7 @@ Provide a **thin workflow wrapper** around task execution. This command:
 
 > **CRITICAL VALIDATION REQUIREMENT**
 >
-> - **Swift must be installed before starting EXECUTE.** If it's missing, install it first: **[Swift Installation Guide](../RULES/02_Swift_Installation.md)**
+> - **Swift must be installed before starting EXECUTE.** If it's missing, run INSTALL_SWIFT first: **[`PRIMITIVES/INSTALL_SWIFT.md`](./PRIMITIVES/INSTALL_SWIFT.md)**
 > - After code changes, validation MUST start with the Git LFS-backed cache restore command and then run tests (which also build):
 >   ```bash
 >   ./.github/scripts/restore-build-cache.sh
@@ -58,7 +58,7 @@ This ensures test-driven development, incremental delivery, and continuous main-
 **Purpose:** Ensure environment is ready for work
 
 1. **Ensure Swift is available (install if missing):**
-   - Follow **[Swift Installation Guide](../RULES/02_Swift_Installation.md)** before running any other steps
+   - Run **[INSTALL_SWIFT](./PRIMITIVES/INSTALL_SWIFT.md)** command if Swift not installed
    - Confirm installation: `swift --version`
 
 2. **Verify Git state:**
