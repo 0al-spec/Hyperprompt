@@ -1,4 +1,4 @@
-#if canImport(EditorEngine)
+#if SWIFT_PACKAGE_TRAIT_Editor
 import Foundation
 import ArgumentParser
 import EditorEngine
