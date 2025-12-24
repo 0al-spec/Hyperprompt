@@ -154,23 +154,23 @@ Completed phases include:
 
 **Context:** VS Code extension requires position-based queries, workspace diagnostics, and async APIs not present in current EditorEngine.
 
-### EE-EXT-1: Position-to-Link Query API **[P0]**
+### EE-EXT-1: Position-to-Link Query API **[P0]** ✅
 **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending
+**Status:** ✅ **COMPLETED** on 2025-12-24
 
-- [ ] **[P0, depends: EE8]** Add `EditorParser.linkAt(line:column:) -> LinkSpan?` method
-- [ ] **[P0, depends: EE8]** Implement binary search over sorted link spans (O(log n) lookup)
-- [ ] **[P0, depends: EE8]** Handle edge cases:
-  - [ ] Position before first link → return nil
-  - [ ] Position after last link → return nil
-  - [ ] Position between links → return nil
-  - [ ] Position at link boundary → return link
-  - [ ] Overlapping ranges → return first match
-- [ ] **[P1, depends: EE8]** Add `ParsedFile.linksAt(range:) -> [LinkSpan]` for range queries
-- [ ] **[P1, depends: EE8]** Write unit tests (10+ edge cases)
+- [x] **[P0, depends: EE8]** Add `EditorParser.linkAt(line:column:) -> LinkSpan?` method
+- [x] **[P0, depends: EE8]** Implement binary search over sorted link spans (O(log n) lookup)
+- [x] **[P0, depends: EE8]** Handle edge cases:
+  - [x] Position before first link → return nil
+  - [x] Position after last link → return nil
+  - [x] Position between links → return nil
+  - [x] Position at link boundary → return link
+  - [x] Overlapping ranges → return first match
+- [ ] **[P1, depends: EE8]** Add `ParsedFile.linksAt(range:) -> [LinkSpan]` for range queries (deferred to Phase 2)
+- [x] **[P1, depends: EE8]** Write unit tests (21 comprehensive test cases)
 
-**Acceptance Criteria:** Position queries return correct link or nil, O(log n) performance verified
+**Acceptance Criteria:** ✅ Position queries return correct link or nil, O(log n) performance verified
 
 **Code Location:** `Sources/EditorEngine/EditorParser.swift:1`
 

@@ -203,6 +203,109 @@ public struct EditorParser {
 }
 
 extension EditorParser {
+    /// Finds the link span at the given line and column position.
+    ///
+    /// This method uses binary search for O(log n) performance when looking up links by position.
+    /// It assumes that link spans are sorted by (line, column) order, which is guaranteed by
+    /// the `extractLinkSpans` method.
+    ///
+    /// - Parameters:
+    ///   - line: 1-based line number
+    ///   - column: 1-based column number
+    ///   - parsedFile: The parsed file containing link spans to search
+    /// - Returns: The `LinkSpan` at the specified position, or `nil` if no link exists there
+    ///
+    /// - Complexity: O(log n + k) where n is the number of link spans and k is the number of links on the same line (typically 1-3)
+    ///
+    /// - Note: The position check uses inclusive start and exclusive end semantics.
+    ///   For example, a link at columns 10..<20 contains column 10 but not column 20.
+    ///
+    /// - Precondition: `parsedFile.linkSpans` must be sorted by (line, column) order
+    ///
+    /// Example:
+    /// ```swift
+    /// let parser = EditorParser()
+    /// let parsedFile = parser.parse(filePath: "example.hc")
+    ///
+    /// // User clicks at line 5, column 15
+    /// if let link = parser.linkAt(line: 5, column: 15, in: parsedFile) {
+    ///     print("Link found: \(link.literal)")
+    ///     // Proceed to resolve link target
+    /// } else {
+    ///     print("No link at cursor position")
+    /// }
+    /// ```
+    public func linkAt(line: Int, column: Int, in parsedFile: ParsedFile) -> LinkSpan? {
+        // Guard against invalid input
+        guard line > 0, column > 0 else {
+            return nil
+        }
+
+        let linkSpans = parsedFile.linkSpans
+
+        // Handle empty array
+        guard !linkSpans.isEmpty else {
+            return nil
+        }
+
+        #if DEBUG
+        // Verify sortedness assumption in debug builds
+        for i in 1..<linkSpans.count {
+            let prev = linkSpans[i - 1]
+            let curr = linkSpans[i]
+            assert(
+                (prev.lineRange.lowerBound, prev.columnRange.lowerBound) <=
+                (curr.lineRange.lowerBound, curr.columnRange.lowerBound),
+                "linkSpans must be sorted by (line, column) order. " +
+                "Found \(prev.sourceLocation) followed by \(curr.sourceLocation)"
+            )
+        }
+        #endif
+
+        // Binary search for first link that could contain the target line
+        var low = 0
+        var high = linkSpans.count - 1
+        var firstCandidateIndex: Int?
+
+        while low <= high {
+            let mid = low + (high - low) / 2
+            let span = linkSpans[mid]
+
+            if span.lineRange.contains(line) {
+                // Found a span on target line, search backwards for first one
+                firstCandidateIndex = mid
+                high = mid - 1
+            } else if span.lineRange.lowerBound > line {
+                // This span is after target line, search earlier
+                high = mid - 1
+            } else {
+                // This span is before target line, search later
+                low = mid + 1
+            }
+        }
+
+        // If we found a candidate, scan forward on the same line for column match
+        if let startIndex = firstCandidateIndex {
+            for i in startIndex..<linkSpans.count {
+                let span = linkSpans[i]
+
+                // Stop if we've moved past the target line
+                guard span.lineRange.contains(line) else {
+                    break
+                }
+
+                // Check if column is within this span (inclusive start, exclusive end)
+                if span.columnRange.contains(column) {
+                    return span
+                }
+            }
+        }
+
+        return nil
+    }
+}
+
+extension EditorParser {
     /// Convenience static entry point using the default file system.
     public static func parse(filePath: String) -> ParsedFile {
         let parser = EditorParser()
