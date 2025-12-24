@@ -47,7 +47,7 @@ Create the initial VS Code extension scaffold for Hyperprompt using the TypeScri
 
 ### Phase B - Manifest and Language Assets
 4. **Configure package metadata**
-   - Update `package.json` with ID `anthropic.hyperprompt`, publisher `anthropic`, repository URL, and license.
+   - Update `package.json` with ID `0al.hyperprompt`, publisher `0al`, repository URL, and license.
 
 5. **Register language and file association**
    - Add language contribution for Hypercode.

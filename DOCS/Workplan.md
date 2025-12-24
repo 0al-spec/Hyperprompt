@@ -391,8 +391,8 @@ Completed phases include:
 
 - [x] **[P0, depends: VSC-2*]** Initialize extension with `yo code` (TypeScript)
 - [x] **[P1, depends: VSC-2*]** Configure package.json metadata:
-  - [x] Extension ID: `anthropic.hyperprompt`
-  - [x] Publisher: `anthropic`
+  - [x] Extension ID: `0al.hyperprompt`
+  - [x] Publisher: `0al`
   - [x] Repository URL
   - [x] License (match Hyperprompt project)
 - [x] **[P0, depends: VSC-2*]** Register `.hc` file association

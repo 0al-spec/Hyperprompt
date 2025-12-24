@@ -1,6 +1,7 @@
 import XCTest
 @testable import CompilerDriver
 @testable import Core
+import Statistics
 
 /// Performance tests for Hyperprompt compiler
 ///
@@ -75,6 +76,7 @@ final class CompilerPerformanceTests: XCTestCase {
 
     func testCompilationWithStatistics() throws {
         let driver = CompilerDriver()
+        var lastStats: CompilationStats?
 
         let args = CompilerArguments(
             input: entryFilePath,
@@ -94,17 +96,18 @@ final class CompilerPerformanceTests: XCTestCase {
 
                 // Verify statistics collected
                 XCTAssertNotNil(result.statistics, "Statistics should be collected")
-
-                if let stats = result.statistics {
-                    print("\n📊 Compilation Statistics")
-                    print("   Hypercode files: \(stats.numHypercodeFiles)")
-                    print("   Markdown files: \(stats.numMarkdownFiles)")
-                    print("   Total time: \(stats.durationMs)ms")
-                }
+                lastStats = result.statistics
 
             } catch {
                 XCTFail("Compilation with stats failed: \(error)")
             }
+        }
+
+        if let stats = lastStats {
+            print("\n📊 Compilation Statistics")
+            print("   Hypercode files: \(stats.numHypercodeFiles)")
+            print("   Markdown files: \(stats.numMarkdownFiles)")
+            print("   Total time: \(stats.durationMs)ms")
         }
     }
 

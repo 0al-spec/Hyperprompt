@@ -2,7 +2,7 @@
   "name": "hyperprompt",
   "displayName": "Hyperprompt",
   "description": "Hyperprompt language support",
-  "publisher": "anthropic",
+  "publisher": "0al",
   "license": "MIT",
   "repository": {
     "type": "git",
