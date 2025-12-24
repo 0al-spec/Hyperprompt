@@ -289,18 +289,18 @@ Completed phases include:
 ### PERF-1: Performance Baseline & Benchmarks **[P0]**
 **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending
+**Status:** ✅ **Completed on 2025-12-24**
 
-- [ ] **[P0, depends: EE8]** Define "medium project" benchmark (50 files, 5000 lines total)
-- [ ] **[P0, depends: EE8]** Create synthetic benchmark corpus (auto-generated .hc files)
-- [ ] **[P0, depends: EE8]** Implement performance test suite (XCTest with XCTMeasure)
-- [ ] **[P0, depends: EE8]** Baseline current performance:
-  - [ ] Full compilation time (entry file → output)
-  - [ ] Parse time per file
-  - [ ] Resolution time per link
-  - [ ] Emission time
-- [ ] **[P1, depends: EE8]** Add CI job to track performance over commits
-- [ ] **[P1, depends: EE8]** Document baseline in DOCS/PERFORMANCE.md
+- [x] **[P0, depends: EE8]** Define "medium project" benchmark (50 files, 5000 lines total)
+- [x] **[P0, depends: EE8]** Create synthetic benchmark corpus (auto-generated .hc files)
+- [x] **[P0, depends: EE8]** Implement performance test suite (XCTest with XCTMeasure)
+- [x] **[P0, depends: EE8]** Baseline current performance:
+  - [x] Full compilation time (entry file → output)
+  - [x] Parse time per file
+  - [x] Resolution time per link
+  - [x] Emission time
+- [x] **[P1, depends: EE8]** Add CI job to track performance over commits
+- [x] **[P1, depends: EE8]** Document baseline in DOCS/PERFORMANCE.md
 
 **Acceptance Criteria:** Benchmark suite runs, baseline documented, CI monitors regressions
 
@@ -315,13 +315,13 @@ Completed phases include:
 **Estimated:** 6 hours
 **Status:** ⏸️ Pending
 
-- [ ] **[P0, depends: PERF-1]** Implement `ParsedFileCache` (file path → (checksum, ParsedFile))
-- [ ] **[P0, depends: PERF-1]** Compute file checksums (SHA256 or faster hash)
-- [ ] **[P0, depends: PERF-1]** Skip parsing if file unchanged (checksum match)
-- [ ] **[P0, depends: PERF-1]** Invalidate cache on file change (checksum mismatch)
-- [ ] **[P0, depends: PERF-1]** Handle cascading invalidation (referenced files changed)
-- [ ] **[P1, depends: PERF-1]** Add cache eviction policy (LRU, max 1000 entries)
-- [ ] **[P1, depends: PERF-1]** Write unit tests (cache hit/miss scenarios)
+- [x] **[P0, depends: PERF-1]** Implement `ParsedFileCache` (file path → (checksum, ParsedFile))
+- [x] **[P0, depends: PERF-1]** Compute file checksums (SHA256 or faster hash)
+- [x] **[P0, depends: PERF-1]** Skip parsing if file unchanged (checksum match)
+- [x] **[P0, depends: PERF-1]** Invalidate cache on file change (checksum mismatch)
+- [x] **[P0, depends: PERF-1]** Handle cascading invalidation (referenced files changed)
+- [x] **[P1, depends: PERF-1]** Add cache eviction policy (LRU, max 1000 entries)
+- [x] **[P1, depends: PERF-1]** Write unit tests (cache hit/miss scenarios)
 
 **Acceptance Criteria:** Cache reduces parse time by >80% on second compile, invalidation works correctly
 

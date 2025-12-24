@@ -466,3 +466,6 @@ if let link = parser.linkAt(line: 5, column: 15, in: parsedFile) {
 ---
 
 **End of PRD**
+
+---
+**Archived:** 2025-12-24
