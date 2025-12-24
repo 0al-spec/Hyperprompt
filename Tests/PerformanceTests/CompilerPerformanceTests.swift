@@ -96,8 +96,9 @@ final class CompilerPerformanceTests: XCTestCase {
 
                 if let stats = result.statistics {
                     print("\n📊 Compilation Statistics")
-                    print("   Files processed: \(stats.filesProcessed)")
-                    print("   Total time: \(stats.totalTime)ms")
+                    print("   Hypercode files: \(stats.numHypercodeFiles)")
+                    print("   Markdown files: \(stats.numMarkdownFiles)")
+                    print("   Total time: \(stats.durationMs)ms")
                 }
 
             } catch {
