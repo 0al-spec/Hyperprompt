@@ -12,7 +12,7 @@ on:
 
 jobs:
   build-without-editor-trait:
-    name: Build and Test (default traits)
+    name: Cached Build - Default traits
     runs-on: ubuntu-latest
 
     steps:
@@ -66,7 +66,7 @@ jobs:
           ls -lh .build/checkouts/
 
   build-with-editor-trait:
-    name: Build and Test (Editor trait)
+    name: Cached Build - Editor trait
     runs-on: ubuntu-latest
 
     steps:
