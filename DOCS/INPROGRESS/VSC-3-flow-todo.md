@@ -7,3 +7,5 @@
 - [ ] EXECUTE pre-flight checks (git clean, dependencies satisfied, PRD exists)
 - [ ] EXECUTE ready prompt acknowledged before implementation
 - [ ] EXECUTE validation and finalization after implementation
+
+Note: EXECUTE pre-flight requires a clean git working tree; current flow outputs are uncommitted.
