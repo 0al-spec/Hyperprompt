@@ -27,7 +27,7 @@ Validate incremental compilation performance against benchmarks and document res
 - [x] A4: Verify <1s for large project (120 files)
 - [x] A5: Profile hot paths (Instruments or perf)
 - [x] A6: Update DOCS/PERFORMANCE.md with findings
-- [ ] A7: Add/update performance regression tests in CI
+- [x] A7: Add/update performance regression tests in CI
 
 ## Next Step
 

@@ -78,10 +78,30 @@ jobs:
 
       - name: Check for regressions
         run: |
-          # TODO: Compare with baseline stored in PERFORMANCE.md
-          # Fail if >20% slower than baseline
-          echo "Regression check: Not implemented yet (PERF-1 baseline)"
-          echo "Future: Compare with stored baseline and fail on >20% regression"
+          set -euo pipefail
+
+          avg=$(awk '/📊 Stress Test Results/{found=1} found && /Average:/{print $2; exit}' performance-results.txt | tr -d 'ms')
+          median=$(awk '/📊 Stress Test Results/{found=1} found && /Median:/{print $2; exit}' performance-results.txt | tr -d 'ms')
+
+          if [[ -z "${avg}" || -z "${median}" ]]; then
+            echo "Regression check: Failed to parse stress test metrics."
+            exit 1
+          fi
+
+          echo "Stress test average: ${avg}ms"
+          echo "Stress test median:  ${median}ms"
+
+          if awk "BEGIN {exit !(${avg} > 200)}"; then
+            echo "Regression check failed: average ${avg}ms exceeds 200ms"
+            exit 1
+          fi
+
+          if awk "BEGIN {exit !(${median} > 200)}"; then
+            echo "Regression check failed: median ${median}ms exceeds 200ms"
+            exit 1
+          fi
+
+          echo "Regression check: OK (<200ms thresholds)."
 
       - name: Comment PR with results
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
