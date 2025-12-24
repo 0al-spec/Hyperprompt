@@ -38,6 +38,27 @@ public final class ParsedFileCache {
         return graph
     }
 
+    public func dirtyClosure(for paths: Set<String>) -> Set<String> {
+        var queue = Array(paths)
+        var dirty: Set<String> = []
+
+        while let current = queue.first {
+            queue.removeFirst()
+
+            guard !dirty.contains(current) else {
+                continue
+            }
+
+            dirty.insert(current)
+
+            if let dependents = dependentsByPath[current] {
+                queue.append(contentsOf: dependents)
+            }
+        }
+
+        return dirty
+    }
+
     public func cachedProgram(for path: String, checksum: String) -> Program? {
         guard let entry = entries[path] else {
             return nil
