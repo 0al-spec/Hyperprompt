@@ -289,7 +289,7 @@ Completed phases include:
 ### PERF-1: Performance Baseline & Benchmarks **[P0]**
 **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 **IN PROGRESS**
 
 - [ ] **[P0, depends: EE8]** Define "medium project" benchmark (50 files, 5000 lines total)
 - [ ] **[P0, depends: EE8]** Create synthetic benchmark corpus (auto-generated .hc files)
