@@ -44,6 +44,7 @@ The extension is a **thin UI + integration layer** and must not reimplement comp
 - No language server protocol (LSP) in v1.
 - No LLM integration.
 - Extension must work on macOS and Linux.
+- Windows is **not supported**; the extension must show a clear unsupported-platform message.
 
 ---
 
@@ -102,7 +103,7 @@ Metadata:
 - Priority: High
 - Effort: Medium
 - Tools: VS Code DefinitionProvider
-- Acceptance: All file references navigable
+- Acceptance: All file references navigable via definition/peek
 
 ---
 
@@ -146,7 +147,7 @@ Metadata:
 - Priority: High
 - Effort: Medium
 - Tools: VS Code Webview
-- Acceptance: Preview updates on file save
+- Acceptance: Preview updates on file save and manual refresh
 
 ---
 
@@ -241,10 +242,14 @@ It focuses on:
 | ID | Requirement |
 |----|-------------|
 | FR-1 | Recognize `.hc` files |
-| FR-2 | Navigate file references |
-| FR-3 | Compile via EditorEngine |
-| FR-4 | Show Markdown preview |
-| FR-5 | Surface diagnostics |
+| FR-2 | Navigate file references (definition + peek) |
+| FR-3 | Provide hover metadata for references |
+| FR-4 | Compile via EditorEngine |
+| FR-5 | Show Markdown preview |
+| FR-6 | Surface diagnostics |
+| FR-7 | Provide activation on `.hc` open and explicit command |
+| FR-8 | Resolve EditorEngine binary via configurable path or bundled binary |
+| FR-9 | Show unsupported-platform messaging on Windows |
 
 ---
 
@@ -252,7 +257,7 @@ It focuses on:
 
 | Category | Requirement |
 |--------|-------------|
-| Performance | <200ms compile for medium projects |
+| Performance | <200ms compile for a medium project fixture (see §4.6) |
 | Reliability | No crashes on invalid input |
 | Isolation | No compiler logic in JS |
 | Portability | macOS + Linux |
@@ -282,6 +287,49 @@ Diagnostics + Preview
 | Trait disabled | Prompt user to rebuild |
 | Invalid syntax | Inline diagnostics |
 | Circular refs | Clear error message |
+| Unsupported OS | Show unsupported-platform error and disable features |
+
+---
+
+### 4.6 Operational Definitions & Acceptance Tests
+
+#### 4.6.1 Medium Project Fixture
+
+Define a canonical fixture for performance checks:
+- **Files:** 20 `.hc` files, 5 referenced `.md` files.
+- **Nodes:** ~200 total hypercode nodes.
+- **Depth:** max depth 6.
+
+Acceptance: compile time for this fixture must be **<200ms** on a modern laptop (baseline: 2023 MacBook Pro M2, release build).
+
+#### 4.6.2 Activation & Engine Discovery
+
+- Activation events: `onLanguage:hypercode`, `onCommand:hyperprompt.compile`, and `onCommand:hyperprompt.showPreview`.
+- Engine discovery order:
+  1. User-configured setting `hyperprompt.enginePath`
+  2. Bundled engine binary (extension package)
+  3. PATH lookup fallback
+
+Acceptance: when the engine is not found, show a user-facing error with remediation steps.
+
+#### 4.6.3 Diagnostics Mapping
+
+- Diagnostic ranges use **0-based** line/column offsets mapped from EditorEngine outputs.
+- Severity mapping:
+  - `error` → `DiagnosticSeverity.Error`
+  - `warning` → `DiagnosticSeverity.Warning`
+  - `info` → `DiagnosticSeverity.Information`
+
+Acceptance: diagnostics are reported per file and jump to the correct location.
+
+#### 4.6.4 Navigation & Preview Test Matrix (Minimum)
+
+| Scenario | Expected Result |
+|----------|-----------------|
+| Valid reference to `.hc` file | Go-to-definition opens target file at definition |
+| Missing file reference | Hover shows missing status; diagnostic emitted |
+| Circular reference | Diagnostic emitted with cycle path |
+| Save current file | Preview updates within 1 second |
 
 ---
 
@@ -303,4 +351,4 @@ Diagnostics + Preview
 
 **Status:** Draft  
 **Target Version:** Hyperprompt 0.2  
-**Last Updated:** 2025-12-20
+**Last Updated:** 2025-02-14
