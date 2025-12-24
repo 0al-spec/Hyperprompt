@@ -178,6 +178,17 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Phase 14: VS Code Extension Development
+
+### VSC-3 — Extension Scaffold **[P0]** ✓ 2025-12-24
+- **PRD:** [VSC-3_Extension_Scaffold.md](./VSC-3_Extension_Scaffold.md)
+- **Summary:** [VSC-3-summary.md](./VSC-3-summary.md)
+- **Effort:** 3 hours
+- **Dependencies:** VSC-2B (CLI JSON-RPC Interface)
+- **Description:** Create the VS Code extension scaffold with language registration, activation events, and base assets for `.hc` support.
+
+---
+
 ## Other Archives
 
 ### Build Issues Log ✓ 2025-12-21
@@ -188,9 +199,9 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 21 items
-- **Total Effort:** 74 hours (tracked tasks only)
-- **Phases Represented:** 8 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13)
+- **Total Archived:** 22 items
+- **Total Effort:** 77 hours (tracked tasks only)
+- **Phases Represented:** 9 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14)
 
 ---
 
@@ -209,4 +220,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-24 (PERF-1 archived)
+**Last Updated:** 2025-12-24 (VSC-3 archived)
