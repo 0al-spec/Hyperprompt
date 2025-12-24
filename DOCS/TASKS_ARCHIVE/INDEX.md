@@ -150,6 +150,16 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Phase 12: EditorEngine API Enhancements
+
+### EE-EXT-1 — Position-to-Link Query API **[P0]** ✓ 2025-12-24
+- **PRD:** [EE-EXT-1_Position-to-Link_Query_API.md](./EE-EXT-1_Position-to-Link_Query_API.md)
+- **Effort:** 3 hours
+- **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
+- **Description:** Add position-based query API to EditorParser with binary search for O(log n) lookup. Enables go-to-definition and hover features in VS Code extension.
+
+---
+
 ## Other Archives
 
 ### Build Issues Log ✓ 2025-12-21
@@ -160,9 +170,9 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 18 items
-- **Total Effort:** 62 hours (tracked tasks only)
-- **Phases Represented:** 6 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11)
+- **Total Archived:** 19 items
+- **Total Effort:** 65 hours (tracked tasks only)
+- **Phases Represented:** 7 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12)
 
 ---
 
@@ -181,4 +191,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-23 (VSC-2B archived)
+**Last Updated:** 2025-12-24 (EE-EXT-1 archived)
