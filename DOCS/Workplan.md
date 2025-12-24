@@ -387,7 +387,7 @@ Completed phases include:
 ### VSC-3: Extension Scaffold **[P0]**
 **Dependencies:** VSC-2A or VSC-2B or VSC-2C (integration layer chosen)
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 IN PROGRESS — **INPROGRESS**
 
 - [ ] **[P0, depends: VSC-2*]** Initialize extension with `yo code` (TypeScript)
 - [ ] **[P1, depends: VSC-2*]** Configure package.json metadata:
