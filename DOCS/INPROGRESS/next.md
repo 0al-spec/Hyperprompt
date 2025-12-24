@@ -4,13 +4,22 @@
 **Phase:** Phase 14: VS Code Extension Development
 **Effort:** 3 hours
 **Dependencies:** VSC-2B (CLI JSON-RPC Interface)
-**Status:** Selected
+**Status:** ✅ Completed on 2025-12-24
 
 ## Description
 
 Initialize the VS Code extension scaffold in TypeScript, register `.hc` language assets, and configure activation events and metadata so the extension loads in VS Code dev mode.
 
+## Flow Steps (Tracker)
+
+- [x] SELECT
+- [x] PLAN
+- [x] INSTALL_SWIFT
+- [x] EXECUTE
+- [ ] PROGRESS (optional)
+- [ ] ARCHIVE
+
 ## Next Step
 
-Run PLAN command to generate detailed PRD:
-$ claude "Выполни команду PLAN"
+Run SELECT to choose the next task:
+$ claude "Выполни команду SELECT"

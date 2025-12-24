@@ -1,0 +1,45 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Hypercode",
+  "scopeName": "source.hypercode",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#headings" },
+    { "include": "#links" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.hypercode",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.hypercode",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "headings": {
+      "patterns": [
+        {
+          "name": "markup.heading.hypercode",
+          "match": "^(#{1,6})\\s+.+$"
+        }
+      ]
+    },
+    "links": {
+      "patterns": [
+        {
+          "name": "markup.underline.link.hypercode",
+          "match": "\\[[^\\]]+\\]\\([^\\)]+\\)"
+        },
+        {
+          "name": "markup.underline.link.hypercode",
+          "match": "<[^>]+>"
+        }
+      ]
+    }
+  }
+}
