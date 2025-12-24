@@ -184,3 +184,113 @@ jobs:
           echo "Building Swift package without EditorEngine trait..."
           swift build --build-tests
           echo "Build completed successfully"
+
+  build-no-cache:
+    name: CI - Build without cache (from scratch)
+    # Validate that the project builds from scratch without cached dependencies.
+    # This ensures reproducible builds and catches cache-related issues.
+    # Only runs on pull requests when code, tests, or configuration changes.
+    # Complements the cached build job to ensure both scenarios work.
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Validate secrets
+        run: |
+          echo "Checking required secrets..."
+          # No required secrets at this stage
+          echo "✓ Secrets validation passed"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Swift 6.0.3
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: '6.0.3'
+
+      - name: Verify Swift version
+        run: |
+          swift --version
+          swift --version | grep -q "6.0.3"
+
+      # IMPORTANT: NO cache step - intentionally build from scratch
+      # This validates that Package.resolved is complete and reproducible
+
+      - name: Resolve dependencies (no cache)
+        run: |
+          echo "================================"
+          echo "Resolving dependencies from scratch"
+          echo "================================"
+          echo "Starting at: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          swift package resolve
+          echo "Dependencies resolved successfully"
+
+      - name: Build from scratch
+        run: |
+          echo "================================"
+          echo "Building from scratch (no cache)"
+          echo "================================"
+          echo "Starting build at: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          START_TIME=$(date +%s)
+
+          swift build --build-tests
+
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+          echo "Build completed in: ${DURATION}s"
+          echo "================================"
+
+      - name: Run tests (no cache)
+        run: |
+          echo "Running tests (no cache)..."
+          swift test --parallel
+          echo "Tests completed successfully"
+
+      - name: Verify build artifacts
+        if: always()
+        run: |
+          echo "================================"
+          echo "Build Artifacts Verification"
+          echo "================================"
+          echo "Build directory size:"
+          du -sh .build 2>/dev/null || echo "No .build directory"
+          echo ""
+          echo "SwiftPM checkout size:"
+          du -sh .build/checkouts 2>/dev/null || echo "No checkouts"
+          echo ""
+          echo "Executables:"
+          find .build -type f -executable -name "hyperprompt" 2>/dev/null || echo "No executables found"
+          echo ""
+          echo "Test bundles:"
+          find .build -type d -name "*.xctest" 2>/dev/null || echo "No test bundles found"
+          echo "================================"
+
+      - name: Build summary
+        if: always()
+        run: |
+          echo "================================"
+          echo "No-Cache Build Summary"
+          echo "================================"
+          if [ -d ".build/debug" ]; then
+            echo "✓ Build succeeded from scratch"
+            echo "Build artifacts:"
+            ls -lh .build/debug/ 2>/dev/null | head -20 || echo "No artifacts"
+          else
+            echo "✗ Build failed - no artifacts generated"
+          fi
+          echo "================================"
+
+      - name: Upload build artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: no-cache-build-failure-${{ github.run_id }}
+          path: |
+            .build/debug/*.xctest
+            .build/**/*.swiftmodule
+            .build/debug.yaml
+          retention-days: 7
+          if-no-files-found: warn
