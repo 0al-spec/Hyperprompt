@@ -16,7 +16,7 @@ Build a dependency graph for incremental compilation so only dirty files and the
 - [ ] A2: Capture dependencies during compile path (root + nested)
 - [x] B1: Dirty tracking and dependent propagation helpers
 - [x] B2: Topological order for compilation / reuse cached ASTs deterministically
-- [ ] B3: Handle deletion invalidation in resolver/cache
+- [x] B3: Handle deletion invalidation in resolver/cache
 - [ ] C1: Unit tests for graph, dirty propagation, deletion handling
 
 ## Next Step
