@@ -11,13 +11,8 @@
     "comments": {
       "patterns": [
         {
-          "name": "comment.line.double-slash.hypercode",
-          "match": "//.*$"
-        },
-        {
-          "name": "comment.block.hypercode",
-          "begin": "/\\*",
-          "end": "\\*/"
+          "name": "comment.line.number-sign.hypercode",
+          "match": "#.*$"
         }
       ]
     },
