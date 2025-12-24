@@ -42,13 +42,17 @@ final class ReferenceResolverTests: XCTestCase {
 
     private func makeResolver(
         mode: ResolutionMode = .strict,
-        tracker: DependencyTracker? = nil
+        tracker: DependencyTracker? = nil,
+        parsedFileCache: ParsedFileCache? = nil,
+        currentFilePath: String? = nil
     ) -> ReferenceResolver {
         ReferenceResolver(
             fileSystem: mockFS,
             rootPath: rootPath,
             mode: mode,
-            dependencyTracker: tracker
+            dependencyTracker: tracker,
+            parsedFileCache: parsedFileCache,
+            currentFilePath: currentFilePath
         )
     }
 
@@ -287,6 +291,25 @@ final class ReferenceResolverTests: XCTestCase {
             XCTAssertEqual(kind, .inlineText)
         case .failure:
             XCTFail("Expected inlineText")
+        }
+    }
+
+    func testDependenciesRecordedForHypercodeReference() {
+        mockFS.addFile(at: "/project/dep.hc", content: "\"Dep\"")
+        var resolver = makeResolver(
+            mode: .strict,
+            parsedFileCache: ParsedFileCache(),
+            currentFilePath: "/project/root.hc"
+        )
+        let node = makeNode("dep.hc", filePath: "root.hc")
+
+        let result = resolver.resolve(node: node)
+
+        switch result {
+        case .success:
+            XCTAssertTrue(resolver.dependencies.contains("/project/dep.hc"))
+        case .failure(let error):
+            XCTFail("Expected success, got error: \(error.message)")
         }
     }
 
