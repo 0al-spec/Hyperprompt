@@ -315,13 +315,13 @@ Completed phases include:
 **Estimated:** 6 hours
 **Status:** ⏸️ Pending
 
-- [ ] **[P0, depends: PERF-1]** Implement `ParsedFileCache` (file path → (checksum, ParsedFile))
-- [ ] **[P0, depends: PERF-1]** Compute file checksums (SHA256 or faster hash)
-- [ ] **[P0, depends: PERF-1]** Skip parsing if file unchanged (checksum match)
-- [ ] **[P0, depends: PERF-1]** Invalidate cache on file change (checksum mismatch)
-- [ ] **[P0, depends: PERF-1]** Handle cascading invalidation (referenced files changed)
-- [ ] **[P1, depends: PERF-1]** Add cache eviction policy (LRU, max 1000 entries)
-- [ ] **[P1, depends: PERF-1]** Write unit tests (cache hit/miss scenarios)
+- [x] **[P0, depends: PERF-1]** Implement `ParsedFileCache` (file path → (checksum, ParsedFile))
+- [x] **[P0, depends: PERF-1]** Compute file checksums (SHA256 or faster hash)
+- [x] **[P0, depends: PERF-1]** Skip parsing if file unchanged (checksum match)
+- [x] **[P0, depends: PERF-1]** Invalidate cache on file change (checksum mismatch)
+- [x] **[P0, depends: PERF-1]** Handle cascading invalidation (referenced files changed)
+- [x] **[P1, depends: PERF-1]** Add cache eviction policy (LRU, max 1000 entries)
+- [x] **[P1, depends: PERF-1]** Write unit tests (cache hit/miss scenarios)
 
 **Acceptance Criteria:** Cache reduces parse time by >80% on second compile, invalidation works correctly
 

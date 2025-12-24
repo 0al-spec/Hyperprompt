@@ -64,6 +64,9 @@ public final class CompilerDriver {
     /// Compiler version string
     private let version: String
 
+    /// Parsed file cache for incremental compilation
+    private let parsedFileCache: ParsedFileCache
+
     // MARK: - Initialization
 
     /// Initialize a new compiler driver.
@@ -73,10 +76,12 @@ public final class CompilerDriver {
     ///   - version: Compiler version string (default: "0.1.0")
     public init(
         fileSystem: FileSystem = LocalFileSystem(),
-        version: String = "0.1.0"
+        version: String = "0.1.0",
+        parsedFileCache: ParsedFileCache = ParsedFileCache()
     ) {
         self.fileSystem = fileSystem
         self.version = version
+        self.parsedFileCache = parsedFileCache
     }
 
     // MARK: - Main Compilation Entry Point
@@ -133,16 +138,60 @@ public final class CompilerDriver {
             logVerbose("[PHASE 2] Parse phase - constructing AST")
         }
 
-        let program = try parseInputFile(
-            path: validatedPaths.inputPath,
-            verbose: args.verbose,
-            statsCollector: statsCollector
+        let canonicalInputPath = canonicalPath(validatedPaths.inputPath)
+        let inputContent: String
+        do {
+            inputContent = try fileSystem.readFile(at: validatedPaths.inputPath)
+        } catch {
+            throw ConcreteCompilerError.ioError(
+                message: "Failed to read input file: \(validatedPaths.inputPath)",
+                location: nil
+            )
+        }
+        let inputChecksum = ContentHasher.sha256Hex(inputContent)
+        statsCollector.recordHypercodeFile(
+            path: canonicalInputPath,
+            bytes: inputContent.utf8.count
         )
+
+        let resolvedProgram: Program
+        if let cachedProgram = parsedFileCache.cachedProgram(
+            for: canonicalInputPath,
+            checksum: inputChecksum
+        ) {
+            if args.verbose {
+                logVerbose("  [CACHE] Reusing cached AST for \(validatedPaths.inputPath)")
+            }
+            resolvedProgram = cachedProgram
+        } else {
+            let program = try parseInputFile(
+                content: inputContent,
+                path: validatedPaths.inputPath,
+                verbose: args.verbose
+            )
+
+            let resolution = try resolveReferences(
+                program: program,
+                rootPath: validatedPaths.rootPath,
+                mode: args.mode,
+                verbose: args.verbose,
+                statsCollector: statsCollector,
+                currentFilePath: canonicalInputPath
+            )
+
+            resolvedProgram = resolution.program
+            parsedFileCache.store(
+                path: canonicalInputPath,
+                checksum: inputChecksum,
+                program: resolvedProgram,
+                dependencies: resolution.dependencies
+            )
+        }
 
         if args.verbose {
             logVerbose("  [✓] Parsed successfully")
-            logVerbose("  [✓] Root node: \"\(program.root.literal)\"")
-            logVerbose("  [✓] Tree depth: \(program.root.depth)")
+            logVerbose("  [✓] Root node: \"\(resolvedProgram.root.literal)\"")
+            logVerbose("  [✓] Tree depth: \(resolvedProgram.root.depth)")
             logVerbose("")
         }
 
@@ -150,15 +199,6 @@ public final class CompilerDriver {
         if args.verbose {
             logVerbose("[PHASE 3] Resolve phase - loading file references")
         }
-
-        let resolvedProgram = try resolveReferences(
-            program: program,
-            rootPath: validatedPaths.rootPath,
-            mode: args.mode,
-            verbose: args.verbose,
-            statsCollector: statsCollector
-        )
-
         if args.verbose {
             logVerbose("  [✓] Resolved successfully")
             logVerbose("")
@@ -297,23 +337,11 @@ public final class CompilerDriver {
 
     /// Parse input file into AST.
     private func parseInputFile(
+        content: String,
         path: String,
-        verbose: Bool,
-        statsCollector: StatsCollector?
+        verbose: Bool
     ) throws -> Program {
-        // Read file content
-        let content: String
-        do {
-            content = try fileSystem.readFile(at: path)
-        } catch {
-            throw ConcreteCompilerError.ioError(
-                message: "Failed to read input file: \(path)",
-                location: nil
-            )
-        }
-
-        let canonicalPath = (try? fileSystem.canonicalizePath(path)) ?? path
-        statsCollector?.recordHypercodeFile(path: canonicalPath, bytes: content.utf8.count)
+        let canonicalPath = canonicalPath(path)
 
         // Create lexer and tokenize
         let lexer = Lexer()
@@ -339,7 +367,7 @@ public final class CompilerDriver {
             if verbose {
                 logVerbose("  [PARSER] Built AST with root node")
             }
-            return program
+            return Program(root: program.root, sourceFile: canonicalPath)
         case .failure(let error):
             throw ConcreteCompilerError.syntaxError(
                 message: error.message,
@@ -354,8 +382,9 @@ public final class CompilerDriver {
         rootPath: String,
         mode: CompilerArguments.CompilationMode,
         verbose: Bool,
-        statsCollector: StatsCollector?
-    ) throws -> Program {
+        statsCollector: StatsCollector?,
+        currentFilePath: String
+    ) throws -> (program: Program, dependencies: Set<String>) {
         let resolutionMode: ResolutionMode = mode == .strict ? .strict : .lenient
 
         let dependencyTracker = DependencyTracker(fileSystem: fileSystem)
@@ -364,7 +393,9 @@ public final class CompilerDriver {
             rootPath: rootPath,
             mode: resolutionMode,
             dependencyTracker: dependencyTracker,
-            statsCollector: statsCollector
+            statsCollector: statsCollector,
+            parsedFileCache: parsedFileCache,
+            currentFilePath: currentFilePath
         )
 
         // Resolve root node
@@ -382,7 +413,7 @@ public final class CompilerDriver {
             )
         }
 
-        return Program(root: mutableRoot)
+        return (Program(root: mutableRoot, sourceFile: program.sourceFile), resolver.dependencies)
     }
 
     /// Emit Markdown from resolved AST.
@@ -458,6 +489,10 @@ public final class CompilerDriver {
     }
 
     // MARK: - Utility Methods
+
+    private func canonicalPath(_ path: String) -> String {
+        (try? fileSystem.canonicalizePath(path)) ?? path
+    }
 
     /// Log message to stderr when verbose mode enabled.
     private func logVerbose(_ message: String) {

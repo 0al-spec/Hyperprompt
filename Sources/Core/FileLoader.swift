@@ -146,14 +146,7 @@ public class FileLoader {
     /// Hash is computed on UTF-8 bytes of the content.
     /// Output matches `openssl sha256` (with normalized line endings).
     public func computeHash(_ content: String) -> String {
-        // Convert string to UTF-8 data
-        let data = Data(content.utf8)
-
-        // Compute SHA256 using swift-crypto
-        let hash = SHA256.hash(data: data)
-
-        // Convert to lowercase hex string
-        return hash.map { String(format: "%02x", $0) }.joined()
+        ContentHasher.sha256Hex(content)
     }
 
     /// Detect file type from extension.
