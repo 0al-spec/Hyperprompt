@@ -340,15 +340,15 @@ Completed phases include:
 ### PERF-3: Incremental Compilation — Dependency Graph **[P0]**
 **Dependencies:** PERF-2
 **Estimated:** 4 hours
-**Status:** 🟢 IN PROGRESS — **INPROGRESS**
+**Status:** ✅ **COMPLETED** on 2025-12-25
 
-- [ ] **[P0, depends: PERF-2]** Build dependency graph (file → [referenced files])
-- [ ] **[P0, depends: PERF-2]** Implement topological sort for compilation order
-- [ ] **[P0, depends: PERF-2]** Track "dirty" files (changed since last compile)
-- [ ] **[P0, depends: PERF-2]** Recompile only dirty files and their dependents
-- [ ] **[P0, depends: PERF-2]** Merge incremental results into existing AST
-- [ ] **[P1, depends: PERF-2]** Handle deletion of referenced files (invalidate cache)
-- [ ] **[P1, depends: PERF-2]** Write unit tests (incremental vs full compile equivalence)
+- [x] **[P0, depends: PERF-2]** Build dependency graph (file → [referenced files])
+- [x] **[P0, depends: PERF-2]** Implement topological sort for compilation order
+- [x] **[P0, depends: PERF-2]** Track "dirty" files (changed since last compile)
+- [x] **[P0, depends: PERF-2]** Recompile only dirty files and their dependents
+- [x] **[P0, depends: PERF-2]** Merge incremental results into existing AST
+- [x] **[P1, depends: PERF-2]** Handle deletion of referenced files (invalidate cache)
+- [x] **[P1, depends: PERF-2]** Write unit tests (incremental vs full compile equivalence)
 
 **Acceptance Criteria:** Incremental compile produces identical output to full compile, but faster
 

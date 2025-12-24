@@ -4,7 +4,7 @@
 **Phase:** Phase 13: Performance & Incremental Compilation
 **Effort:** 4 hours
 **Dependencies:** PERF-2
-**Status:** Selected
+**Status:** ✅ Completed on 2025-12-25
 
 ## Description
 
@@ -21,5 +21,5 @@ Build a dependency graph for incremental compilation so only dirty files and the
 
 ## Next Step
 
-Run PLAN command to generate detailed PRD:
-$ claude "Выполни команду PLAN"
+Run SELECT to choose the next task:
+$ claude "Выполни команду SELECT"
