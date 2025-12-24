@@ -45,6 +45,15 @@ public struct ReferenceResolver {
     /// Optional statistics collector for instrumentation.
     private let statsCollector: StatsCollector?
 
+    /// Optional parsed file cache for incremental compilation.
+    private let parsedFileCache: ParsedFileCache?
+
+    /// Current file path being resolved (used for dependency tracking).
+    private let currentFilePath: String?
+
+    /// Direct dependencies discovered while resolving the current file.
+    private var recordedDependencies: Set<String> = []
+
     /// Initialize a new reference resolver.
     ///
     /// - Parameters:
@@ -56,7 +65,9 @@ public struct ReferenceResolver {
         rootPath: String,
         mode: ResolutionMode,
         dependencyTracker: DependencyTracker? = nil,
-        statsCollector: StatsCollector? = nil
+        statsCollector: StatsCollector? = nil,
+        parsedFileCache: ParsedFileCache? = nil,
+        currentFilePath: String? = nil
     ) {
         self.fileSystem = fileSystem
         self.rootPath = rootPath
@@ -64,6 +75,13 @@ public struct ReferenceResolver {
         self.dependencyTracker = dependencyTracker
         self.pathDecision = PathTypeDecision(rootPath: rootPath)
         self.statsCollector = statsCollector
+        self.parsedFileCache = parsedFileCache
+        self.currentFilePath = currentFilePath
+    }
+
+    /// Direct hypercode file dependencies recorded during resolution.
+    public var dependencies: Set<String> {
+        recordedDependencies
     }
 
     // MARK: - Main Resolution API
@@ -397,6 +415,10 @@ public struct ReferenceResolver {
             }
         }
 
+        if currentFilePath != nil {
+            recordedDependencies.insert(canonicalPath(fullPath))
+        }
+
         var pushedToTracker = false
 
         // Perform cycle detection before attempting recursive compilation.
@@ -448,10 +470,19 @@ public struct ReferenceResolver {
     private mutating func compileHypercode(at fullPath: String) -> Result<Node, ResolutionError> {
         do {
             let content = try fileSystem.readFile(at: fullPath)
+            let canonicalFullPath = canonicalPath(fullPath)
+            let checksum = ContentHasher.sha256Hex(content)
             statsCollector?.recordHypercodeFile(
-                path: canonicalPath(fullPath),
+                path: canonicalFullPath,
                 bytes: content.utf8.count
             )
+
+            if let cachedProgram = parsedFileCache?.cachedProgram(
+                for: canonicalFullPath,
+                checksum: checksum
+            ) {
+                return .success(cachedProgram.root)
+            }
 
             // Parse the Hypercode file into an AST.
             let lexer = Lexer(fileSystem: fileSystem)
@@ -461,7 +492,7 @@ public struct ReferenceResolver {
             let program: Program
             switch parser.parse(tokens: tokens) {
             case .success(let parsedProgram):
-                program = Program(root: parsedProgram.root, sourceFile: fullPath)
+                program = Program(root: parsedProgram.root, sourceFile: canonicalFullPath)
             case .failure(let error):
                 return .failure(ResolutionError(message: error.message, location: error.location))
             }
@@ -472,12 +503,20 @@ public struct ReferenceResolver {
                 rootPath: rootPath,
                 mode: mode,
                 dependencyTracker: dependencyTracker,
-                statsCollector: statsCollector
+                statsCollector: statsCollector,
+                parsedFileCache: parsedFileCache,
+                currentFilePath: canonicalFullPath
             )
 
             switch childResolver.resolveTree(root: program.root) {
             case .success:
                 dependencyTracker = childResolver.dependencyTracker
+                parsedFileCache?.store(
+                    path: canonicalFullPath,
+                    checksum: checksum,
+                    program: program,
+                    dependencies: childResolver.dependencies
+                )
                 return .success(program.root)
             case .failure(let error):
                 dependencyTracker = childResolver.dependencyTracker
