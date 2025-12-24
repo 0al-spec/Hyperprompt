@@ -169,6 +169,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 - **Description:** Establish baseline performance measurements with a synthetic benchmark corpus, XCTest suite, documentation, and CI tracking.
 
+### PERF-2 — Incremental Compilation — File Caching **[P0]** ✓ 2025-12-24
+- **PRD:** [PERF-2_Incremental_Compilation_File_Caching.md](./PERF-2_Incremental_Compilation_File_Caching.md)
+- **Summary:** [PERF-2-summary.md](./PERF-2-summary.md)
+- **Effort:** 6 hours
+- **Dependencies:** PERF-1
+- **Description:** Implement parsed file cache with checksum invalidation, cascading invalidation, and LRU eviction for incremental compilation.
+
 ---
 
 ## Other Archives
@@ -181,8 +188,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 20 items
-- **Total Effort:** 68 hours (tracked tasks only)
+- **Total Archived:** 21 items
+- **Total Effort:** 74 hours (tracked tasks only)
 - **Phases Represented:** 8 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13)
 
 ---
