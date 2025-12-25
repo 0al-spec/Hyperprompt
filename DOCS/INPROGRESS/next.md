@@ -1,33 +1,30 @@
-# Next Task: VSC-4B — CLI RPC Client Integration
+# Next Task: VSC-3 — Extension Scaffold (Dev Host Validation)
 
 **Priority:** P0
-**Phase:** Phase 14: VS Code Extension Development
-**Effort:** 3 hours
-**Dependencies:** VSC-2B, VSC-3
-**Status:** ✅ Completed on 2025-12-25
+**Phase:** Phase 11: VS Code Extension Development
+**Effort:** 1 hour
+**Dependencies:** VSC-2A or VSC-2B or VSC-2C
+**Status:** In Progress
 
 ## Description
 
-Implement the JSON-RPC client that spawns the Hyperprompt editor process and handles request/response lifecycle for the VS Code extension.
+Validate the VS Code extension loads in the dev host and document the Editor RPC CLI setup.
 
 ## Flow Steps (Tracker)
 
 - [x] SELECT
 - [x] PLAN
 - [x] INSTALL_SWIFT
-- [x] EXECUTE
+- [ ] EXECUTE
 - [ ] PROGRESS (optional)
 - [ ] ARCHIVE
 
 ## Mini TODO (Tracker)
 
-- [x] A1: Add RPC client scaffolding and process lifecycle management
-- [x] A2: Implement request/response handling with timeouts
-- [x] A3: Wire activation to spawn editor process and graceful restart
-- [x] A4: Add basic RPC client tests/mocks
-- [x] A5: Update docs for RPC client usage
+- [ ] A1: Fix editor-rpc wiring for Editor trait builds
+- [ ] A2: Document dev-host + PATH requirements for RPC CLI; validate `swift build --traits Editor`
 
 ## Next Step
 
-Run SELECT to choose the next task:
-$ claude "Выполни команду SELECT"
+Run ARCHIVE to clean up completed tasks:
+$ claude "Выполни команду ARCHIVE"

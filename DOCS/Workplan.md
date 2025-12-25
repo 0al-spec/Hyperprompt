@@ -162,7 +162,7 @@ Completed phases include:
 ### EE-EXT-1: Position-to-Link Query API **[P0]** ✅
 **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 **Estimated:** 3 hours
-**Status:** ✅ **COMPLETED** on 2025-12-24
+**Status:** ✅ **COMPLETED** on 2025-12-25
 
 - [x] **[P0, depends: EE8]** Add `EditorParser.linkAt(line:column:) -> LinkSpan?` method
 - [x] **[P0, depends: EE8]** Implement binary search over sorted link spans (O(log n) lookup)
@@ -401,7 +401,7 @@ Completed phases include:
 - [x] **[P0, depends: VSC-2*]** Configure activation events (`onLanguage:hypercode`, `onCommand:hyperprompt.compile`, `onCommand:hyperprompt.showPreview`)
 - [x] **[P1, depends: VSC-2*]** Add TextMate grammar for syntax highlighting (`.tmLanguage.json`)
 - [x] **[P1, depends: VSC-2*]** Configure extension icon and colors
-- [ ] **[P1, depends: VSC-2*]** Verify extension loads in VS Code dev mode
+- [x] **[P1, depends: VSC-2*]** Verify extension loads in VS Code dev mode
 
 **Acceptance Criteria:** Extension scaffold builds, activates on .hc files, syntax highlighting works
 
