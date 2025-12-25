@@ -2,7 +2,7 @@
 
 ## Summary
 
-Validate the VS Code extension loads in a dev host and ensure the Editor RPC CLI entrypoint is usable.
+Validate the VS Code extension loads in a dev host, ensure the Editor RPC CLI entrypoint is usable, and document trait-gated EditorEngine behavior.
 
 ## Goals
 
