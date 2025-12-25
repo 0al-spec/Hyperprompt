@@ -183,6 +183,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** PERF-2
 - **Description:** Add dependency graph accessors, dirty propagation, and topological ordering to support incremental compilation.
 
+### PERF-4 — Performance Validation **[P0]** ✓ 2025-12-25
+- **PRD:** [PERF-4_Performance_Validation.md](./PERF-4_Performance_Validation.md)
+- **Summary:** [PERF-4-summary.md](./PERF-4-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** PERF-3
+- **Description:** Validate incremental compilation performance targets and document results with CI regression checks.
+
 ---
 
 ## Phase 14: VS Code Extension Development
@@ -206,8 +213,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 23 items
-- **Total Effort:** 81 hours (tracked tasks only)
+- **Total Archived:** 24 items
+- **Total Effort:** 83 hours (tracked tasks only)
 - **Phases Represented:** 9 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14)
 
 ---
@@ -227,4 +234,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-25 (PERF-3 archived)
+**Last Updated:** 2025-12-25 (PERF-4 archived)
