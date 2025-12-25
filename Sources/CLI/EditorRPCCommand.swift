@@ -1,4 +1,4 @@
-#if SWIFT_PACKAGE_TRAIT_Editor
+#if Editor
 import Foundation
 import ArgumentParser
 import EditorEngine
@@ -103,7 +103,7 @@ struct EditorRPCCommand: ParsableCommand {
     func handleCompile(_ request: JSONRPCRequest) throws -> JSONRPCResponse {
         let params = try decodeParams(CompileParams.self, from: request.params)
 
-        let mode: Core.CompilerArguments.CompilationMode = {
+        let mode: CompilerArguments.CompilationMode = {
             if let modeStr = params.mode?.lowercased() {
                 return modeStr == "lenient" ? .lenient : .strict
             }
@@ -147,7 +147,7 @@ struct EditorRPCCommand: ParsableCommand {
         if let link = link {
             return successResponse(id: request.id, result: link)
         } else {
-            return successResponse(id: request.id, result: AnyCodable(nil))
+            return successResponse(id: request.id, result: AnyCodable(Optional<String>.none))
         }
     }
 

@@ -21,7 +21,7 @@ Validate the VS Code extension loads in the dev host and document the Editor RPC
 
 ## Mini TODO (Tracker)
 
-- [ ] A1: Fix editor-rpc wiring for Editor trait builds
+- [x] A1: Fix editor-rpc wiring for Editor trait builds
 - [ ] A2: Document dev-host + PATH requirements for RPC CLI; validate `swift build --traits Editor`
 
 ## Next Step
