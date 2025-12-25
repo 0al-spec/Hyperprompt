@@ -13,7 +13,7 @@ Implement the JSON-RPC client that spawns the Hyperprompt editor process and han
 ## Flow Steps (Tracker)
 
 - [x] SELECT
-- [ ] PLAN
+- [x] PLAN
 - [ ] INSTALL_SWIFT
 - [ ] EXECUTE
 - [ ] PROGRESS (optional)
