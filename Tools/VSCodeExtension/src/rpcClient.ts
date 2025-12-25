@@ -4,6 +4,7 @@ export type RpcClientOptions = {
 	command: string;
 	args: string[];
 	onExit?: (code: number | null, signal: NodeJS.Signals | null) => void;
+	spawnFn?: (command: string, args: string[]) => ChildProcessWithoutNullStreams;
 };
 
 export type JsonRpcRequest = {
@@ -36,7 +37,11 @@ export class RpcClient {
 			return;
 		}
 
-		this.process = spawn(this.options.command, this.options.args, { stdio: 'pipe' });
+		const spawnFn = this.options.spawnFn ?? ((command: string, args: string[]) => {
+			return spawn(command, args, { stdio: 'pipe' });
+		});
+
+		this.process = spawnFn(this.options.command, this.options.args);
 		this.process.stdout.on('data', (data) => this.onData(data.toString()));
 		this.process.stderr.on('data', (data) => {
 			console.error(`[hyperprompt-rpc] ${data.toString().trim()}`);

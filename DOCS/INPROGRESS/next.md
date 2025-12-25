@@ -24,7 +24,7 @@ Implement the JSON-RPC client that spawns the Hyperprompt editor process and han
 - [x] A1: Add RPC client scaffolding and process lifecycle management
 - [x] A2: Implement request/response handling with timeouts
 - [x] A3: Wire activation to spawn editor process and graceful restart
-- [ ] A4: Add basic RPC client tests/mocks
+- [x] A4: Add basic RPC client tests/mocks
 - [ ] A5: Update docs for RPC client usage
 
 ## Next Step
