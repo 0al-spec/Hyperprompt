@@ -32,6 +32,16 @@ In the Extension Development Host:
 - Open any `.hc` file to trigger activation.
 - Use Command Palette and run `Hyperprompt: Compile` or `Hyperprompt: Show Preview`.
 
+### RPC Client Notes
+
+The extension spawns the Hyperprompt CLI in RPC mode on activation:
+
+```bash
+hyperprompt editor-rpc
+```
+
+If the CLI is missing from your PATH, install Hyperprompt and ensure `hyperprompt` is discoverable in your shell before launching the dev host.
+
 ### VS Code UI
 
 1. Open `Tools/VSCodeExtension` in VS Code.
