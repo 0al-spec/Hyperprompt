@@ -412,7 +412,7 @@ Completed phases include:
 ### VSC-4B: CLI RPC Client Integration (if CLI) **[P0]**
 **Dependencies:** VSC-2B, VSC-3
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending (conditional)
+**Status:** 🟢 IN PROGRESS — **INPROGRESS**
 
 - [ ] **[P0, depends: VSC-2B, VSC-3]** Implement JSON-RPC client (stdio transport)
 - [ ] **[P0, depends: VSC-2B, VSC-3]** Spawn `hyperprompt-editor` process on activation
