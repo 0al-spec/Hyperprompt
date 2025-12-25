@@ -1,3 +1,4 @@
+#if Editor
 import XCTest
 import Parser
 @testable import EditorEngine
@@ -53,3 +54,4 @@ final class LinkSpanTests: XCTestCase {
         XCTAssertNotNil(parsed.ast)
     }
 }
+#endif

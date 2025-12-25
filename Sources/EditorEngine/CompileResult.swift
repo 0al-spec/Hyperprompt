@@ -1,3 +1,4 @@
+#if Editor
 import Core
 import Statistics
 
@@ -32,3 +33,4 @@ public struct CompileResult {
         self.statistics = statistics
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if Editor
 /// Unit Tests for ProjectIndexer
 ///
 /// Tests the project indexing engine including:
@@ -143,3 +144,4 @@ final class ProjectIndexerTests: XCTestCase {
         XCTAssertTrue(true, "Error handling requires MockFileSystem")
     }
 }
+#endif

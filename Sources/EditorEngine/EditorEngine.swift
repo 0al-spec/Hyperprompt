@@ -1,3 +1,4 @@
+#if Editor
 /// EditorEngine Module Entry Point
 ///
 /// This module provides IDE/editor-oriented capabilities on top of the
@@ -90,3 +91,4 @@ public enum EditorEngine {
         return try indexer.index(workspaceRoot: workspaceRoot)
     }
 }
+#endif

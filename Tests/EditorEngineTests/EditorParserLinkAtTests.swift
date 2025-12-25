@@ -1,3 +1,4 @@
+#if Editor
 import XCTest
 import Core
 @testable import EditorEngine
@@ -357,3 +358,4 @@ final class EditorParserLinkAtTests: XCTestCase {
         XCTAssertNil(lastLine)
     }
 }
+#endif

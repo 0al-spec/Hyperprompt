@@ -1,3 +1,4 @@
+#if Editor
 import XCTest
 import Resolver
 @testable import EditorEngine
@@ -154,3 +155,4 @@ final class DecisionSpecsTests: XCTestCase {
         XCTAssertEqual(outputWrite.decide(.dryRun), false)
     }
 }
+#endif

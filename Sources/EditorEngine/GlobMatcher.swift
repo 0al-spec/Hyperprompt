@@ -1,3 +1,4 @@
+#if Editor
 /// GlobMatcher — Pattern Matching for .hyperpromptignore
 ///
 /// Implements glob-style pattern matching similar to .gitignore syntax.
@@ -176,3 +177,4 @@ extension Array where Element == String {
         return false
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if Editor
 import Core
 import Parser
 
@@ -33,3 +34,4 @@ public struct ParsedFile {
         self.sourceFile = sourceFile
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if Editor
 /// Unit Tests for GlobMatcher
 ///
 /// Tests glob pattern matching used in .hyperpromptignore file processing.
@@ -172,3 +173,4 @@ final class GlobMatcherTests: XCTestCase {
         XCTAssertFalse(matcher.matches(path: "file.txt", pattern: "File.txt"))
     }
 }
+#endif

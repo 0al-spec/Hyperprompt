@@ -1,3 +1,4 @@
+#if Editor
 import XCTest
 @testable import EditorEngine
 
@@ -14,3 +15,4 @@ final class EditorEngineTests: XCTestCase {
         XCTAssertEqual(EditorEngine.version, "0.2.0-experimental")
     }
 }
+#endif

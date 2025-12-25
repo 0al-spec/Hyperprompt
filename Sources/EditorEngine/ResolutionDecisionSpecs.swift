@@ -1,3 +1,4 @@
+#if Editor
 import HypercodeGrammar
 import Resolver
 import SpecificationCore
@@ -125,3 +126,4 @@ struct ResolutionOutcomeDecisionSpec: DecisionSpec {
         decision.decide(context)
     }
 }
+#endif

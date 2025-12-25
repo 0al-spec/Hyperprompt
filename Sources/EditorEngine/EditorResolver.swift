@@ -1,3 +1,4 @@
+#if Editor
 import Core
 import Foundation
 import HypercodeGrammar
@@ -192,3 +193,4 @@ public struct EditorResolver {
         return rootPath + "/" + relativePath
     }
 }
+#endif

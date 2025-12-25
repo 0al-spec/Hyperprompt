@@ -1,3 +1,4 @@
+#if Editor
 /// ProjectIndex — Data Model for Workspace Indexing
 ///
 /// Represents the result of scanning a workspace for Hypercode and Markdown files.
@@ -144,3 +145,4 @@ extension FileIndexEntry: CustomStringConvertible {
         "\(path) (\(type.rawValue), \(size) bytes)"
     }
 }
+#endif

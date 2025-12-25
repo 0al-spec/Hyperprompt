@@ -148,28 +148,32 @@ var targets: [Target] = [
                 .copy("Fixtures")
             ]
         ),
-        .target(
-            name: "EditorEngine",
-            dependencies: [
-                "CompilerDriver",
-                "Core",
-                "HypercodeGrammar",
-                "Parser",
-                "Resolver",
-                "Emitter",
-                "Statistics",
-                "SpecificationCore",
-            ]
-        ),
-        .testTarget(
-            name: "EditorEngineTests",
-            dependencies: [
-                "CompilerDriver",
-                "EditorEngine",
-            ]
-        ),
     ]
 
+targets.append(
+    .target(
+        name: "EditorEngine",
+        dependencies: [
+            "CompilerDriver",
+            "Core",
+            "HypercodeGrammar",
+            "Parser",
+            "Resolver",
+            "Emitter",
+            "Statistics",
+            "SpecificationCore",
+        ]
+    )
+)
+targets.append(
+    .testTarget(
+        name: "EditorEngineTests",
+        dependencies: [
+            "CompilerDriver",
+            "EditorEngine",
+        ]
+    )
+)
 products.append(
     .library(
         name: "EditorEngine",

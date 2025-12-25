@@ -1,3 +1,4 @@
+#if Editor
 import XCTest
 import Core
 @testable import EditorEngine
@@ -106,3 +107,4 @@ private func makeTempDir() throws -> URL {
     try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
     return tempDir
 }
+#endif

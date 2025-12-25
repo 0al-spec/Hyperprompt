@@ -1,3 +1,4 @@
+#if Editor
 import Core
 
 /// Compilation options for EditorEngine.
@@ -45,3 +46,4 @@ public struct CompileOptions: Sendable {
     /// Default options (strict, no disk writes, no stats).
     public static let `default` = CompileOptions()
 }
+#endif

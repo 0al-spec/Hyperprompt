@@ -1,3 +1,4 @@
+#if Editor
 import SpecificationCore
 
 // MARK: - File Type Decisions
@@ -31,3 +32,4 @@ struct TargetFileSpec: Specification {
         typeDecision.decide(path) != nil
     }
 }
+#endif

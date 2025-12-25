@@ -1,3 +1,4 @@
+#if Editor
 import XCTest
 import Core
 import Resolver
@@ -188,3 +189,4 @@ private struct MockFileSystemError: CompilerError {
     let message: String
     let location: SourceLocation? = nil
 }
+#endif
