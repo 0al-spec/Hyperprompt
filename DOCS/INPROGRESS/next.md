@@ -4,7 +4,7 @@
 **Phase:** Phase 14: VS Code Extension Development
 **Effort:** 3 hours
 **Dependencies:** VSC-2B, VSC-3
-**Status:** Selected
+**Status:** ✅ Completed on 2025-12-25
 
 ## Description
 
@@ -15,7 +15,7 @@ Implement the JSON-RPC client that spawns the Hyperprompt editor process and han
 - [x] SELECT
 - [x] PLAN
 - [x] INSTALL_SWIFT
-- [ ] EXECUTE
+- [x] EXECUTE
 - [ ] PROGRESS (optional)
 - [ ] ARCHIVE
 
@@ -29,5 +29,5 @@ Implement the JSON-RPC client that spawns the Hyperprompt editor process and han
 
 ## Next Step
 
-Run PLAN command to generate detailed PRD:
-$ claude "Выполни команду PLAN"
+Run SELECT to choose the next task:
+$ claude "Выполни команду SELECT"

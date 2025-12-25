@@ -412,14 +412,14 @@ Completed phases include:
 ### VSC-4B: CLI RPC Client Integration (if CLI) **[P0]**
 **Dependencies:** VSC-2B, VSC-3
 **Estimated:** 3 hours
-**Status:** 🟢 IN PROGRESS — **INPROGRESS**
+**Status:** ✅ **COMPLETED** on 2025-12-25
 
-- [ ] **[P0, depends: VSC-2B, VSC-3]** Implement JSON-RPC client (stdio transport)
-- [ ] **[P0, depends: VSC-2B, VSC-3]** Spawn `hyperprompt-editor` process on activation
-- [ ] **[P0, depends: VSC-2B, VSC-3]** Handle process lifecycle (restart on crash)
-- [ ] **[P1, depends: VSC-2B, VSC-3]** Implement request/response handling
-- [ ] **[P1, depends: VSC-2B, VSC-3]** Add request timeout (5s default)
-- [ ] **[P1, depends: VSC-2B, VSC-3]** Test RPC client (mock CLI)
+- [x] **[P0, depends: VSC-2B, VSC-3]** Implement JSON-RPC client (stdio transport)
+- [x] **[P0, depends: VSC-2B, VSC-3]** Spawn `hyperprompt-editor` process on activation
+- [x] **[P0, depends: VSC-2B, VSC-3]** Handle process lifecycle (restart on crash)
+- [x] **[P1, depends: VSC-2B, VSC-3]** Implement request/response handling
+- [x] **[P1, depends: VSC-2B, VSC-3]** Add request timeout (5s default)
+- [x] **[P1, depends: VSC-2B, VSC-3]** Test RPC client (mock CLI)
 
 **Acceptance Criteria:** RPC client sends requests, receives responses, handles errors
 
