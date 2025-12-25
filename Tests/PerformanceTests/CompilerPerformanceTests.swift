@@ -30,6 +30,10 @@ final class CompilerPerformanceTests: XCTestCase {
         entryFilePath = fixturesURL.appendingPathComponent("comprehensive_test.hc").path
 
         // Verify corpus exists
+        guard let entryFilePath = entryFilePath else {
+            XCTFail("Benchmark corpus path missing. Run BenchmarkGenerator first.")
+            return
+        }
         guard FileManager.default.fileExists(atPath: entryFilePath) else {
             XCTFail("Benchmark corpus not found at \(entryFilePath). Run BenchmarkGenerator first.")
             return
