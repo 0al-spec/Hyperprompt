@@ -14,7 +14,7 @@ Implement the JSON-RPC client that spawns the Hyperprompt editor process and han
 
 - [x] SELECT
 - [x] PLAN
-- [ ] INSTALL_SWIFT
+- [x] INSTALL_SWIFT
 - [ ] EXECUTE
 - [ ] PROGRESS (optional)
 - [ ] ARCHIVE
