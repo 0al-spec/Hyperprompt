@@ -40,15 +40,24 @@ final class ReferenceResolverTests: XCTestCase {
         )
     }
 
+    private func makeProgram(_ literal: String, filePath: String) -> Program {
+        let node = makeNode(literal, filePath: filePath)
+        return Program(root: node, sourceFile: filePath)
+    }
+
     private func makeResolver(
         mode: ResolutionMode = .strict,
-        tracker: DependencyTracker? = nil
+        tracker: DependencyTracker? = nil,
+        parsedFileCache: ParsedFileCache? = nil,
+        currentFilePath: String? = nil
     ) -> ReferenceResolver {
         ReferenceResolver(
             fileSystem: mockFS,
             rootPath: rootPath,
             mode: mode,
-            dependencyTracker: tracker
+            dependencyTracker: tracker,
+            parsedFileCache: parsedFileCache,
+            currentFilePath: currentFilePath
         )
     }
 
@@ -288,6 +297,54 @@ final class ReferenceResolverTests: XCTestCase {
         case .failure:
             XCTFail("Expected inlineText")
         }
+    }
+
+    func testDependenciesRecordedForHypercodeReference() {
+        mockFS.addFile(at: "/project/dep.hc", content: "\"Dep\"")
+        var resolver = makeResolver(
+            mode: .strict,
+            parsedFileCache: ParsedFileCache(),
+            currentFilePath: "/project/root.hc"
+        )
+        let node = makeNode("dep.hc", filePath: "root.hc")
+
+        let result = resolver.resolve(node: node)
+
+        switch result {
+        case .success:
+            XCTAssertTrue(resolver.dependencies.contains("/project/dep.hc"))
+        case .failure(let error):
+            XCTFail("Expected success, got error: \(error.message)")
+        }
+    }
+
+    func testMissingHypercodeInvalidatesCacheEntry() {
+        let cache = ParsedFileCache()
+        let cachedProgram = makeProgram("\"Cached\"", filePath: "/project/missing.hc")
+        cache.store(
+            path: "/project/missing.hc",
+            checksum: "cached-checksum",
+            program: cachedProgram,
+            dependencies: []
+        )
+
+        var resolver = makeResolver(
+            mode: .lenient,
+            parsedFileCache: cache,
+            currentFilePath: "/project/root.hc"
+        )
+        let node = makeNode("missing.hc", filePath: "root.hc")
+
+        let result = resolver.resolve(node: node)
+
+        switch result {
+        case .success(let kind):
+            XCTAssertEqual(kind, .inlineText)
+        case .failure(let error):
+            XCTFail("Expected inlineText, got error: \(error.message)")
+        }
+
+        XCTAssertEqual(cache.entryCount, 0)
     }
 
     func testNestedHypercodeFilePath() {

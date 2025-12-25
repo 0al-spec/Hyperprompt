@@ -407,6 +407,7 @@ public struct ReferenceResolver {
         }
 
         guard fileSystem.fileExists(at: fullPath) else {
+            parsedFileCache?.invalidate(path: canonicalPath(fullPath))
             switch mode {
             case .strict:
                 return .failure(.fileNotFound(path: path, location: node.location))

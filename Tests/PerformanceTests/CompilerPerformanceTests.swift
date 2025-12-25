@@ -30,6 +30,10 @@ final class CompilerPerformanceTests: XCTestCase {
         entryFilePath = fixturesURL.appendingPathComponent("comprehensive_test.hc").path
 
         // Verify corpus exists
+        guard let entryFilePath = entryFilePath else {
+            XCTFail("Benchmark corpus path missing. Run BenchmarkGenerator first.")
+            return
+        }
         guard FileManager.default.fileExists(atPath: entryFilePath) else {
             XCTFail("Benchmark corpus not found at \(entryFilePath). Run BenchmarkGenerator first.")
             return
@@ -188,7 +192,7 @@ final class CompilerPerformanceTests: XCTestCase {
         print("   Median:  \(String(format: "%.2f", median * 1000))ms")
         print("   Min:     \(String(format: "%.2f", min * 1000))ms")
         print("   Max:     \(String(format: "%.2f", max * 1000))ms")
-        print("   Target:  <200ms")
+        print("   Target:  <200ms local, <800ms CI")
 
         // Assert performance target (median < 1000ms for now, will tighten to 200ms later)
         // Note: Current implementation without caching may not meet <200ms target yet

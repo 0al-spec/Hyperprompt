@@ -128,3 +128,6 @@ A minimal but complete extension scaffold is required before integrating Hyperpr
 - Opening a `.hc` file in VS Code dev mode activates the extension.
 - Syntax highlighting appears on `.hc` content.
 - `package.json` metadata matches required ID, publisher, repository, and license.
+
+---
+**Archived:** 2025-12-25

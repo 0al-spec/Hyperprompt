@@ -22,6 +22,75 @@ public final class ParsedFileCache {
         entries.count
     }
 
+    public func dependencies(for path: String) -> Set<String> {
+        entries[path]?.dependencies ?? []
+    }
+
+    public func dependents(for path: String) -> Set<String> {
+        dependentsByPath[path] ?? []
+    }
+
+    public func dependencyGraph() -> [String: Set<String>] {
+        var graph: [String: Set<String>] = [:]
+        for (path, entry) in entries {
+            graph[path] = entry.dependencies
+        }
+        return graph
+    }
+
+    public func dirtyClosure(for paths: Set<String>) -> Set<String> {
+        var queue = Array(paths)
+        var dirty: Set<String> = []
+
+        while let current = queue.first {
+            queue.removeFirst()
+
+            guard !dirty.contains(current) else {
+                continue
+            }
+
+            dirty.insert(current)
+
+            if let dependents = dependentsByPath[current] {
+                queue.append(contentsOf: dependents)
+            }
+        }
+
+        return dirty
+    }
+
+    public func topologicalOrder(from roots: [String]) -> [String] {
+        var ordered: [String] = []
+        var visited: Set<String> = []
+        var visiting: Set<String> = []
+
+        func visit(_ path: String) {
+            guard !visited.contains(path) else {
+                return
+            }
+
+            if visiting.contains(path) {
+                return
+            }
+
+            visiting.insert(path)
+            let dependencies = self.dependencies(for: path).sorted()
+            for dependency in dependencies {
+                visit(dependency)
+            }
+            visiting.remove(path)
+
+            visited.insert(path)
+            ordered.append(path)
+        }
+
+        for root in roots {
+            visit(root)
+        }
+
+        return ordered
+    }
+
     public func cachedProgram(for path: String, checksum: String) -> Program? {
         guard let entry = entries[path] else {
             return nil

@@ -1,8 +1,8 @@
 # Hyperprompt Compiler Performance
 
 **Document Version:** 1.0.0
-**Last Updated:** 2025-12-24
-**Status:** Baseline Established (PERF-1)
+**Last Updated:** 2025-12-25
+**Status:** PERF-4 Validation Complete
 
 ---
 
@@ -79,6 +79,22 @@ swift run
 **Swift Version:** 6.2-dev (LLVM fa1f889407fc8ca, Swift 687e09da65c8813)
 **Build Configuration:** Debug (performance tests), Release (production benchmarks)
 **Date:** 2025-12-24
+
+### PERF-4 Validation Results (Local macOS arm64)
+
+**Hardware:** Apple Silicon (arm64), macOS 14.x
+**Swift Version:** 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)
+**Date:** 2025-12-25
+
+| Metric | Debug | Release | Target | Status |
+|--------|-------|---------|--------|--------|
+| **Full compile (avg)** | 93 ms | 76 ms | <200 ms | ✅ |
+| **Stress test (avg)** | 89.77 ms | 73.41 ms | <200 ms | ✅ |
+| **Stress test (median)** | 89.67 ms | 73.32 ms | <200 ms | ✅ |
+
+**Notes:**
+- Stress test uses `comprehensive_test.hc` corpus (50 files). A separate 120-file fixture is not available yet.
+- Profiling was not required because targets were met; use Instruments if regressions appear.
 
 ### Full Compilation
 
