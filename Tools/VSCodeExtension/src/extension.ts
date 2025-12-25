@@ -7,6 +7,7 @@ import { RpcClient } from './rpcClient';
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Hyperprompt extension activated.');
+	const indexTimeoutMs = 30000;
 
 	const rpcClient = new RpcClient({
 		command: 'hyperprompt',
@@ -28,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		try {
-			await rpcClient.request('editor.indexProject', { workspaceRoot });
+			await rpcClient.request('editor.indexProject', { workspaceRoot }, indexTimeoutMs);
 			vscode.window.showInformationMessage('Hyperprompt: index complete.');
 		} catch (error) {
 			vscode.window.showErrorMessage(`Hyperprompt: compile failed (${String(error)})`);
@@ -43,7 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		try {
-			await rpcClient.request('editor.indexProject', { workspaceRoot });
+			await rpcClient.request('editor.indexProject', { workspaceRoot }, indexTimeoutMs);
 			vscode.window.showInformationMessage('Hyperprompt: preview is not wired yet.');
 		} catch (error) {
 			vscode.window.showErrorMessage(`Hyperprompt: preview failed (${String(error)})`);

@@ -25,6 +25,7 @@ Validate the VS Code extension loads in the dev host and document the Editor RPC
 - [x] A2: Document dev-host + PATH requirements for RPC CLI; validate `swift build --traits Editor`
 - [x] A3: Update INPROGRESS summary with trait-gating context
 - [x] A4: Make default traits explicit and keep trait-off EditorEngine guard
+- [x] A5: Increase RPC indexProject timeout in extension commands
 
 ## Next Step
 
