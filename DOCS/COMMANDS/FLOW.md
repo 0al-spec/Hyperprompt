@@ -107,6 +107,7 @@ Clean workspace, move completed PRDs to `DOCS/TASKS_ARCHIVE/`, and update the ar
 2. **One task at a time**: Finish EXECUTE before running SELECT again.
 3. **Validate always**: Never skip EXECUTE validation, even for "simple" changes.
 4. **Archive regularly**: Keep `DOCS/INPROGRESS/` clean to avoid confusion.
+5. **Track subtasks in next.md**: Add a mini TODO list in `DOCS/INPROGRESS/next.md` for the active task. Mark each item complete and create a commit per subtask before moving to the next. Keep the list concise and aligned with the PRD.
 
 ## Exceptions
 

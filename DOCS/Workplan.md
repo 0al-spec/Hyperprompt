@@ -384,6 +384,8 @@ Completed phases include:
 
 **Context:** With FFI layer, enhanced APIs, and performance optimizations in place, implement the TypeScript extension.
 
+**Documentation Requirement (TypeScript tasks):** All VS Code extension tasks that modify TypeScript sources must update the relevant docs (README and/or DOCS/) so API usage, commands, settings, and architecture remain consistent and current.
+
 ### VSC-3: Extension Scaffold **[P0]**
 **Dependencies:** VSC-2A or VSC-2B or VSC-2C (integration layer chosen)
 **Estimated:** 3 hours
@@ -409,17 +411,34 @@ Completed phases include:
 
 ---
 
+### VSC-DOCS: TypeScript Project Documentation **[P1]**
+**Dependencies:** VSC-3
+**Estimated:** 2 hours
+**Status:** ⏸️ Pending
+
+- [ ] **[P1, depends: VSC-3]** Define documentation structure for the VS Code extension (README + docs/).
+- [ ] **[P1, depends: VSC-3]** Document development workflow (build, test, debug, release).
+- [ ] **[P1, depends: VSC-3]** Document configuration, commands, and expected behaviors.
+- [ ] **[P1, depends: VSC-3]** Add API reference notes for RPC client and error handling.
+- [ ] **[P1, depends: VSC-3]** Ensure docs match TypeScript implementation and update in future TS tasks.
+
+**Acceptance Criteria:** VS Code extension docs are complete, organized, and kept consistent with the TypeScript codebase.
+
+**Resolution Status:** ✅ Supports TS documentation consistency
+
+---
+
 ### VSC-4B: CLI RPC Client Integration (if CLI) **[P0]**
 **Dependencies:** VSC-2B, VSC-3
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending (conditional)
+**Status:** ✅ **COMPLETED** on 2025-12-25
 
-- [ ] **[P0, depends: VSC-2B, VSC-3]** Implement JSON-RPC client (stdio transport)
-- [ ] **[P0, depends: VSC-2B, VSC-3]** Spawn `hyperprompt-editor` process on activation
-- [ ] **[P0, depends: VSC-2B, VSC-3]** Handle process lifecycle (restart on crash)
-- [ ] **[P1, depends: VSC-2B, VSC-3]** Implement request/response handling
-- [ ] **[P1, depends: VSC-2B, VSC-3]** Add request timeout (5s default)
-- [ ] **[P1, depends: VSC-2B, VSC-3]** Test RPC client (mock CLI)
+- [x] **[P0, depends: VSC-2B, VSC-3]** Implement JSON-RPC client (stdio transport)
+- [x] **[P0, depends: VSC-2B, VSC-3]** Spawn `hyperprompt-editor` process on activation
+- [x] **[P0, depends: VSC-2B, VSC-3]** Handle process lifecycle (restart on crash)
+- [x] **[P1, depends: VSC-2B, VSC-3]** Implement request/response handling
+- [x] **[P1, depends: VSC-2B, VSC-3]** Add request timeout (5s default)
+- [x] **[P1, depends: VSC-2B, VSC-3]** Test RPC client (mock CLI)
 
 **Acceptance Criteria:** RPC client sends requests, receives responses, handles errors
 
