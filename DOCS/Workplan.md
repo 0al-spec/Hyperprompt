@@ -384,6 +384,8 @@ Completed phases include:
 
 **Context:** With FFI layer, enhanced APIs, and performance optimizations in place, implement the TypeScript extension.
 
+**Documentation Requirement (TypeScript tasks):** All VS Code extension tasks that modify TypeScript sources must update the relevant docs (README and/or DOCS/) so API usage, commands, settings, and architecture remain consistent and current.
+
 ### VSC-3: Extension Scaffold **[P0]**
 **Dependencies:** VSC-2A or VSC-2B or VSC-2C (integration layer chosen)
 **Estimated:** 3 hours
@@ -406,6 +408,23 @@ Completed phases include:
 **Blocks:** VSC-4 (client integration needs scaffold)
 
 **Resolution Status:** ✅ Addresses PRD Phase 0 (Project Setup)
+
+---
+
+### VSC-DOCS: TypeScript Project Documentation **[P1]**
+**Dependencies:** VSC-3
+**Estimated:** 2 hours
+**Status:** ⏸️ Pending
+
+- [ ] **[P1, depends: VSC-3]** Define documentation structure for the VS Code extension (README + docs/).
+- [ ] **[P1, depends: VSC-3]** Document development workflow (build, test, debug, release).
+- [ ] **[P1, depends: VSC-3]** Document configuration, commands, and expected behaviors.
+- [ ] **[P1, depends: VSC-3]** Add API reference notes for RPC client and error handling.
+- [ ] **[P1, depends: VSC-3]** Ensure docs match TypeScript implementation and update in future TS tasks.
+
+**Acceptance Criteria:** VS Code extension docs are complete, organized, and kept consistent with the TypeScript codebase.
+
+**Resolution Status:** ✅ Supports TS documentation consistency
 
 ---
 

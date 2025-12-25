@@ -78,6 +78,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- VS Code extension RPC client with stdio JSON-RPC transport, process lifecycle handling, and basic tests
+
+### Changed
+
+- VS Code extension commands now bootstrap RPC requests to the CLI for indexing
+- Performance CI regression check now enforces stress-test thresholds
+- Performance test log output clarifies local vs CI targets
+
 ### Planned for v0.1.1
 
 - Statistics reporter module completion (D4)
