@@ -187,7 +187,10 @@ let package = Package(
         .macOS(.v12)
     ],
     products: products,
-    traits: [editorTrait],
+    traits: [
+        .default(enabledTraits: []),
+        editorTrait,
+    ],
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-argument-parser",
