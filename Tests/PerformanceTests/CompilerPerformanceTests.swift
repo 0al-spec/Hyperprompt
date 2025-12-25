@@ -192,7 +192,7 @@ final class CompilerPerformanceTests: XCTestCase {
         print("   Median:  \(String(format: "%.2f", median * 1000))ms")
         print("   Min:     \(String(format: "%.2f", min * 1000))ms")
         print("   Max:     \(String(format: "%.2f", max * 1000))ms")
-        print("   Target:  <200ms")
+        print("   Target:  <200ms local, <800ms CI")
 
         // Assert performance target (median < 1000ms for now, will tighten to 200ms later)
         // Note: Current implementation without caching may not meet <200ms target yet
