@@ -31,3 +31,6 @@ Validate the VS Code extension loads in a dev host, ensure the Editor RPC CLI en
 
 - `swift build --traits Editor`
 - `hyperprompt editor-rpc` runs and waits for JSON-RPC input.
+
+---
+**Archived:** 2025-12-26
