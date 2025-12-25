@@ -25,18 +25,21 @@ Run the extension in VS Code's Extension Development Host.
 ```bash
 cd Tools/VSCodeExtension
 npm run compile
-code --extensionDevelopmentPath=/Users/egor/Development/GitHub/0AL/Hyperprompt/Tools/VSCodeExtension
+code --extensionDevelopmentPath="$PWD"
 ```
 
 In the Extension Development Host:
 - Open any `.hc` file to trigger activation.
 - Use Command Palette and run `Hyperprompt: Compile` or `Hyperprompt: Show Preview`.
 
+If `code` is not found, install it from VS Code: Command Palette → "Shell Command: Install 'code' command in PATH".
+
 ### RPC Client Notes
 
-The extension spawns the Hyperprompt CLI in RPC mode on activation:
+The extension spawns the Hyperprompt CLI in RPC mode on activation. Build with the Editor trait enabled:
 
 ```bash
+swift build --traits Editor
 hyperprompt editor-rpc
 ```
 
