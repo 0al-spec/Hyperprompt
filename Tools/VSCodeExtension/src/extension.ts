@@ -33,12 +33,12 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showWarningMessage('Hyperprompt: open a .hc file to compile.');
 			return;
 		}
-		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? path.dirname(entryFile);
 
 		try {
 			const result = await rpcClient.request(
 				'editor.compile',
-				{ entryFile, workspaceRoot },
+				{ entryFile, workspaceRoot, includeOutput: false },
 				compileTimeoutMs
 			);
 			const compileResult = result as { output?: string; diagnostics?: unknown[]; hasErrors?: boolean };
@@ -64,12 +64,12 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showWarningMessage('Hyperprompt: open a .hc file to show preview.');
 			return;
 		}
-		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? path.dirname(entryFile);
 
 		try {
 			await rpcClient.request(
 				'editor.compile',
-				{ entryFile, workspaceRoot },
+				{ entryFile, workspaceRoot, includeOutput: false },
 				compileTimeoutMs
 			);
 			vscode.window.showInformationMessage('Hyperprompt: preview is not wired yet.');

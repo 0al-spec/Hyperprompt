@@ -10,131 +10,131 @@ final class ArgumentParsingTests: XCTestCase {
         // Verify that missing input file fails
         // This is handled by ArgumentParser automatically
         // We test this by checking that Hyperprompt requires the argument
-        let command = try Hyperprompt.parseAsRoot(["test.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["test.hc"]) as! CompileCommand
         XCTAssertEqual(command.input, "test.hc")
     }
 
     func testInputArgumentAcceptsAbsolutePath() throws {
-        let command = try Hyperprompt.parseAsRoot(["/absolute/path/root.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["/absolute/path/root.hc"]) as! CompileCommand
         XCTAssertEqual(command.input, "/absolute/path/root.hc")
     }
 
     func testInputArgumentAcceptsRelativePath() throws {
-        let command = try Hyperprompt.parseAsRoot(["./relative/path.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["./relative/path.hc"]) as! CompileCommand
         XCTAssertEqual(command.input, "./relative/path.hc")
     }
 
     func testInputArgumentAcceptsSimpleFilename() throws {
-        let command = try Hyperprompt.parseAsRoot(["root.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["root.hc"]) as! CompileCommand
         XCTAssertEqual(command.input, "root.hc")
     }
 
     // MARK: - Output Option Tests
 
     func testOutputOptionShortForm() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "-o", "output.md"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "-o", "output.md"]) as! CompileCommand
         XCTAssertEqual(command.output, "output.md")
     }
 
     func testOutputOptionLongForm() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "--output", "output.md"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "--output", "output.md"]) as! CompileCommand
         XCTAssertEqual(command.output, "output.md")
     }
 
     func testOutputOptionDefaultIsNil() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! CompileCommand
         XCTAssertNil(command.output)
     }
 
     func testOutputOptionWithPath() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "-o", "/tmp/compiled.md"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "-o", "/tmp/compiled.md"]) as! CompileCommand
         XCTAssertEqual(command.output, "/tmp/compiled.md")
     }
 
     // MARK: - Manifest Option Tests
 
     func testManifestOptionShortForm() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "-m", "manifest.json"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "-m", "manifest.json"]) as! CompileCommand
         XCTAssertEqual(command.manifest, "manifest.json")
     }
 
     func testManifestOptionLongForm() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "--manifest", "meta.json"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "--manifest", "meta.json"]) as! CompileCommand
         XCTAssertEqual(command.manifest, "meta.json")
     }
 
     func testManifestOptionDefaultIsNil() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! CompileCommand
         XCTAssertNil(command.manifest)
     }
 
     // MARK: - Root Option Tests
 
     func testRootOptionShortForm() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "-r", "/project"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "-r", "/project"]) as! CompileCommand
         XCTAssertEqual(command.root, "/project")
     }
 
     func testRootOptionLongForm() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "--root", "."]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "--root", "."]) as! CompileCommand
         XCTAssertEqual(command.root, ".")
     }
 
     func testRootOptionDefaultIsNil() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! CompileCommand
         XCTAssertNil(command.root)
     }
 
     // MARK: - Lenient Flag Tests
 
     func testLenientFlagIsRecognized() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "--lenient"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "--lenient"]) as! CompileCommand
         XCTAssertTrue(command.lenient)
     }
 
     func testLenientFlagDefaultIsFalse() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! CompileCommand
         XCTAssertFalse(command.lenient)
     }
 
     // MARK: - Verbose Flag Tests
 
     func testVerboseFlagShortForm() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "-v"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "-v"]) as! CompileCommand
         XCTAssertTrue(command.verbose)
     }
 
     func testVerboseFlagLongForm() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "--verbose"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "--verbose"]) as! CompileCommand
         XCTAssertTrue(command.verbose)
     }
 
     func testVerboseFlagDefaultIsFalse() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! CompileCommand
         XCTAssertFalse(command.verbose)
     }
 
     // MARK: - Stats Flag Tests
 
     func testStatsFlagIsRecognized() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "--stats"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "--stats"]) as! CompileCommand
         XCTAssertTrue(command.stats)
     }
 
     func testStatsFlagDefaultIsFalse() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! CompileCommand
         XCTAssertFalse(command.stats)
     }
 
     // MARK: - Dry-Run Flag Tests
 
     func testDryRunFlagIsRecognized() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "--dry-run"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "--dry-run"]) as! CompileCommand
         XCTAssertTrue(command.dryRun)
     }
 
     func testDryRunFlagDefaultIsFalse() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! CompileCommand
         XCTAssertFalse(command.dryRun)
     }
 
@@ -150,7 +150,7 @@ final class ArgumentParsingTests: XCTestCase {
             "-v",
             "--stats",
             "--dry-run"
-        ]) as! Hyperprompt
+        ]) as! CompileCommand
 
         XCTAssertEqual(command.input, "root.hc")
         XCTAssertEqual(command.output, "output.md")
@@ -170,7 +170,7 @@ final class ArgumentParsingTests: XCTestCase {
             "-r", ".",
             "--lenient",
             "-v"
-        ]) as! Hyperprompt
+        ]) as! CompileCommand
 
         XCTAssertEqual(command.input, "input.hc")
         XCTAssertEqual(command.output, "out.md")
@@ -186,7 +186,7 @@ final class ArgumentParsingTests: XCTestCase {
             "--verbose",
             "--stats",
             "--dry-run"
-        ]) as! Hyperprompt
+        ]) as! CompileCommand
 
         XCTAssertTrue(command.verbose)
         XCTAssertTrue(command.stats)
@@ -220,7 +220,7 @@ final class ArgumentParsingTests: XCTestCase {
             "-r", "/project",
             "--lenient",
             "-v"
-        ]) as! Hyperprompt
+        ]) as! CompileCommand
 
         let outputPath = command.output ?? "out.md"
         let manifestPath = command.manifest ?? "manifest.json"
@@ -248,7 +248,7 @@ final class ArgumentParsingTests: XCTestCase {
     }
 
     func testCompilerArgumentsStrictMode() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! CompileCommand
 
         let args = CompilerArguments(
             input: command.input,
@@ -265,7 +265,7 @@ final class ArgumentParsingTests: XCTestCase {
     }
 
     func testCompilerArgumentsLenientMode() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc", "--lenient"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc", "--lenient"]) as! CompileCommand
 
         let args = CompilerArguments(
             input: command.input,
@@ -284,7 +284,7 @@ final class ArgumentParsingTests: XCTestCase {
     // MARK: - Default Values Tests
 
     func testDefaultValues() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! CompileCommand
 
         XCTAssertEqual(command.input, "input.hc")
         XCTAssertNil(command.output)
@@ -297,7 +297,7 @@ final class ArgumentParsingTests: XCTestCase {
     }
 
     func testDefaultValuesInCompilerArguments() throws {
-        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! CompileCommand
 
         let args = CompilerArguments(
             input: command.input,
@@ -325,17 +325,17 @@ final class ArgumentParsingTests: XCTestCase {
     func testEmptyPathForInput() throws {
         // Empty string is still technically a string, but semantically invalid
         // ArgumentParser doesn't validate path semantics, just types
-        let command = try Hyperprompt.parseAsRoot([""]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot([""]) as! CompileCommand
         XCTAssertEqual(command.input, "")
     }
 
     func testPathWithSpaces() throws {
-        let command = try Hyperprompt.parseAsRoot(["path with spaces.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["path with spaces.hc"]) as! CompileCommand
         XCTAssertEqual(command.input, "path with spaces.hc")
     }
 
     func testPathWithSpecialCharacters() throws {
-        let command = try Hyperprompt.parseAsRoot(["~/.config/project.hc"]) as! Hyperprompt
+        let command = try Hyperprompt.parseAsRoot(["~/.config/project.hc"]) as! CompileCommand
         XCTAssertEqual(command.input, "~/.config/project.hc")
     }
 
@@ -346,13 +346,13 @@ final class ArgumentParsingTests: XCTestCase {
             "input.hc",
             "-o", "out.md",
             "-m", "meta.json"
-        ]) as! Hyperprompt
+        ]) as! CompileCommand
 
         let command2 = try Hyperprompt.parseAsRoot([
             "-m", "meta.json",
             "input.hc",
             "-o", "out.md"
-        ]) as! Hyperprompt
+        ]) as! CompileCommand
 
         XCTAssertEqual(command1.input, command2.input)
         XCTAssertEqual(command1.output, command2.output)

@@ -124,8 +124,9 @@ struct EditorRPCCommand: ParsableCommand {
             DiagnosticMapper.map(error)
         }
 
+        let includeOutput = params.includeOutput ?? true
         let compileResponse = CompileResultResponse(
-            output: result.output,
+            output: includeOutput ? result.output : nil,
             diagnostics: diagnostics,
             hasErrors: result.hasErrors
         )

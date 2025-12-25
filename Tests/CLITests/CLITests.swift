@@ -15,8 +15,8 @@ final class CLITests: XCTestCase {
     }
 
     func testSignalExitCodes() {
-        XCTAssertEqual(Hyperprompt.interruptionExitCode(forSignal: SIGINT), 130)
-        XCTAssertEqual(Hyperprompt.interruptionExitCode(forSignal: SIGTERM), 143)
-        XCTAssertEqual(Hyperprompt.interruptionExitCode(forSignal: 0), 1)
+        XCTAssertEqual(CompileCommand.interruptionExitCode(forSignal: SIGINT), 130)
+        XCTAssertEqual(CompileCommand.interruptionExitCode(forSignal: SIGTERM), 143)
+        XCTAssertEqual(CompileCommand.interruptionExitCode(forSignal: 0), 1)
     }
 }

@@ -26,7 +26,7 @@ public struct CompilerArguments {
     public let dryRun: Bool
 
     /// Compilation mode determines how missing file references are handled
-    public enum CompilationMode: Sendable {
+    public enum CompilationMode: Sendable, Equatable {
         /// Strict mode: missing file references cause compilation failure (exit code 3)
         case strict
         /// Lenient mode: missing file references are treated as inline text
