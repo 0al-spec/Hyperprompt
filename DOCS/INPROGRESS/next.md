@@ -27,6 +27,7 @@ Validate the VS Code extension loads in the dev host and document the Editor RPC
 - [x] A4: Make default traits explicit and keep trait-off EditorEngine guard
 - [x] A5: Increase RPC indexProject timeout in extension commands
 - [x] A6: Switch compile/preview commands to editor.compile with active file
+- [x] A7: Add RPC smoke test script and document it
 
 ## Next Step
 

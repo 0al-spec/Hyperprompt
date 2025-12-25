@@ -45,6 +45,14 @@ hyperprompt editor-rpc
 
 If the CLI is missing from your PATH, install Hyperprompt and ensure `hyperprompt` is discoverable in your shell before launching the dev host.
 
+### RPC Smoke Test
+
+Use the helper script to validate the RPC CLI outside VS Code:
+
+```bash
+./Tools/VSCodeExtension/scripts/rpc-smoke.sh /path/to/file.hc /path/to/workspace
+```
+
 ### VS Code UI
 
 1. Open `Tools/VSCodeExtension` in VS Code.
