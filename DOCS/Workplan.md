@@ -449,7 +449,7 @@ Completed phases include:
 ### VSC-4C: Engine Discovery & Platform Guard **[P0]**
 **Dependencies:** VSC-3, VSC-8
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 **IN PROGRESS**
 
 - [ ] **[P0, depends: VSC-3, VSC-8]** Detect unsupported platforms (Windows) and show a clear user-facing message, disable features
 - [ ] **[P0, depends: VSC-3, VSC-8]** Resolve EditorEngine binary in order: `hyperprompt.enginePath` setting → bundled binary → PATH fallback
