@@ -262,19 +262,37 @@ export async function activate(context: vscode.ExtensionContext) {
 		return panel;
 	};
 
+	const updatePreviewOutput = async (entryFile: string) => {
+		if (!previewPanel) {
+			return;
+		}
+		const client = await ensureEngineReady();
+		if (!client) {
+			return;
+		}
+		const params = buildCompileParams(
+			entryFile,
+			resolveWorkspaceRootForPath(entryFile),
+			settings.resolutionMode,
+			true
+		);
+		const compileResult = await runCompileRequest(
+			client.request.bind(client),
+			params,
+			compileTimeoutMs
+		);
+		previewPanel.webview.html = buildPreviewHtml(compileResult.output ?? '');
+	};
+
 	const previewCommand = vscode.commands.registerCommand('hyperprompt.showPreview', async () => {
 		try {
 			const entryFile = getActiveEntryFile('preview');
 			if (!entryFile) {
 				return;
 			}
-			const compileResult = await runCompile(settings.resolutionMode, true);
-			if (!compileResult) {
-				return;
-			}
 			const panel = ensurePreviewPanel();
 			previewEntryFile = entryFile;
-			panel.webview.html = buildPreviewHtml(compileResult.output ?? '');
+			await updatePreviewOutput(entryFile);
 			panel.reveal();
 		} catch (error) {
 			vscode.window.showErrorMessage(`Hyperprompt: preview failed (${String(error)})`);
@@ -284,6 +302,12 @@ export async function activate(context: vscode.ExtensionContext) {
 	const resolveWorkspaceRoot = (document: vscode.TextDocument): string => {
 		const workspaceFolder = vscode.workspace.getWorkspaceFolder(document.uri);
 		return workspaceFolder?.uri.fsPath ?? path.dirname(document.uri.fsPath);
+	};
+
+	const resolveWorkspaceRootForPath = (filePath: string): string => {
+		const uri = vscode.Uri.file(filePath);
+		const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+		return workspaceFolder?.uri.fsPath ?? path.dirname(filePath);
 	};
 
 	const mapSeverity = (severity: string): vscode.DiagnosticSeverity => {
@@ -470,6 +494,19 @@ export async function activate(context: vscode.ExtensionContext) {
 		});
 	});
 
+	const previewWatcher = vscode.workspace.onDidSaveTextDocument((document) => {
+		if (!previewPanel || !settings.previewAutoUpdate || !previewEntryFile) {
+			return;
+		}
+		const ext = path.extname(document.uri.fsPath).toLowerCase();
+		if (ext !== '.hc' && ext !== '.md') {
+			return;
+		}
+		void updatePreviewOutput(previewEntryFile).catch((error) => {
+			console.error(`[hyperprompt] preview update failed: ${String(error)}`);
+		});
+	});
+
 	context.subscriptions.push(
 		compileCommand,
 		compileLenientCommand,
@@ -478,6 +515,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		hoverProvider,
 		configWatcher,
 		diagnosticsWatcher,
+		previewWatcher,
 		diagnosticCollection,
 		outputChannel,
 		{ dispose: () => stopRpcClient() }
