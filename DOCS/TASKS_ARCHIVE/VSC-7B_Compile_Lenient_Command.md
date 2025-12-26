@@ -44,3 +44,6 @@ Add a VS Code command that compiles the active Hypercode file in lenient mode to
 - `./.github/scripts/restore-build-cache.sh` (if available)
 - `swift test 2>&1`
 - `npm run compile` (Tools/VSCodeExtension)
+
+---
+**Archived:** 2025-12-26
