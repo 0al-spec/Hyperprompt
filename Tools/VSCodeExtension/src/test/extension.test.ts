@@ -102,7 +102,18 @@ suite('Extension Integration', () => {
 		);
 
 		assert.ok(hovers && hovers.length > 0);
-		const contents = hovers[0].contents.map((item) => item.value ?? String(item)).join('\n');
+		const contents = hovers[0].contents
+			.map((item) => {
+				if (typeof item === 'string') {
+					return item;
+				}
+				if (item instanceof vscode.MarkdownString) {
+					return item.value;
+				}
+				const marked = item as { value?: string };
+				return marked.value ?? '';
+			})
+			.join('\n');
 		assert.ok(contents.includes('Markdown file'));
 	});
 
