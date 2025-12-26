@@ -14,7 +14,9 @@ For example if there is an image subfolder under your extension project workspac
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- macOS or Linux (Windows is not supported yet).
+- Hyperprompt CLI built with the Editor trait (`swift build --traits Editor`).
+- `hyperprompt` available on PATH or configured via `hyperprompt.enginePath`.
 
 ## Development Testing
 
@@ -42,14 +44,20 @@ If `code` is not found, install it from VS Code: Command Palette → "Shell Comm
 
 ### RPC Client Notes
 
-The extension spawns the Hyperprompt CLI in RPC mode on activation. Build with the Editor trait enabled:
+The extension spawns the Hyperprompt CLI in RPC mode on activation. Engine resolution order is:
+
+1. `hyperprompt.enginePath` setting (absolute path)
+2. Bundled binary (`bin/hyperprompt` inside the extension, if present)
+3. `hyperprompt` on PATH
+
+Build with the Editor trait enabled:
 
 ```bash
 swift build --traits Editor
 hyperprompt editor-rpc
 ```
 
-If the CLI is missing from your PATH, install Hyperprompt and ensure `hyperprompt` is discoverable in your shell before launching the dev host.
+If the engine is missing, not executable, or built without the Editor trait, the extension shows a remediation message and skips RPC startup.
 
 ### RPC Smoke Test
 

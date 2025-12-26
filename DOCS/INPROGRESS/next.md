@@ -24,7 +24,7 @@ Implement engine discovery (settings → bundled → PATH) with platform guard a
 - [x] A1: Create engine discovery utilities (resolution order + probing)
 - [x] A2: Integrate platform guard and engine validation into activation/commands
 - [x] A3: Add discovery tests (missing binary, bad path, unsupported OS)
-- [ ] A4: Document engine discovery and remediation in extension README
+- [x] A4: Document engine discovery and remediation in extension README
 
 ## Next Step
 
