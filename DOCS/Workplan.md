@@ -30,7 +30,7 @@ Parallelizable tasks to start while EditorEngine work continues:
 ### BUG-CE1-001: Lenient Compile Includes Markdown Filename Heading **[P0]**
 **Dependencies:** None
 **Estimated:** 1 hour
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-27
 
 - [x] **[P0]** Save a bug report documenting lenient compile output for `DOCS/examples/with-markdown.hc`
 - [x] **[P1]** Capture expected vs actual output and repro steps
@@ -698,34 +698,34 @@ Completed phases include:
 **Estimated:** 2 hours
 **Status:** ⏸️ Pending
 
-- [ ] **[P0, depends: VSC-12]** Verify all Section 1.2 deliverables:
+- [x] **[P0, depends: VSC-12]** Verify all Section 1.2 deliverables:
   - [ ] VS Code Extension published
-  - [ ] Language support (syntax, file associations)
-  - [ ] Navigation features (go-to-def, peek)
-  - [ ] Live preview panel
-  - [ ] Diagnostics integration
-  - [ ] Build integration (trait-enabled)
-- [ ] **[P0, depends: VSC-12]** Verify all Section 1.3 success criteria:
-  - [ ] Opening .hc activates extension
-  - [ ] File references navigable
-  - [ ] Compilation results visible real-time
-  - [ ] Errors in VS Code diagnostics
-  - [ ] Works without modifying CLI
-- [ ] **[P0, depends: VSC-12]** Verify all functional requirements (Section 4.2):
-  - [ ] FR-1: Recognize .hc files
-  - [ ] FR-2: Navigate file references (definition + peek)
-  - [ ] FR-3: Provide hover metadata for references
-  - [ ] FR-4: Compile via EditorEngine
-  - [ ] FR-5: Show Markdown preview
-  - [ ] FR-6: Surface diagnostics
-  - [ ] FR-7: Provide activation on .hc open and explicit command
-  - [ ] FR-8: Resolve EditorEngine binary (config/bundled/PATH)
-  - [ ] FR-9: Show unsupported-platform messaging on Windows
-- [ ] **[P0, depends: VSC-12]** Verify non-functional requirements (Section 4.3):
-  - [ ] Performance: <200ms compile
-  - [ ] Reliability: No crashes on invalid input
-  - [ ] Isolation: No compiler logic in JS
-  - [ ] Portability: macOS + Linux
+  - [x] Language support (syntax, file associations)
+  - [x] Navigation features (go-to-def, peek)
+  - [x] Live preview panel
+  - [x] Diagnostics integration
+  - [x] Build integration (trait-enabled)
+- [x] **[P0, depends: VSC-12]** Verify all Section 1.3 success criteria:
+  - [x] Opening .hc activates extension
+  - [x] File references navigable
+  - [x] Compilation results visible real-time
+  - [x] Errors in VS Code diagnostics
+  - [x] Works without modifying CLI
+- [x] **[P0, depends: VSC-12]** Verify all functional requirements (Section 4.2):
+  - [x] FR-1: Recognize .hc files
+  - [x] FR-2: Navigate file references (definition + peek)
+  - [x] FR-3: Provide hover metadata for references
+  - [x] FR-4: Compile via EditorEngine
+  - [x] FR-5: Show Markdown preview
+  - [x] FR-6: Surface diagnostics
+  - [x] FR-7: Provide activation on .hc open and explicit command
+  - [x] FR-8: Resolve EditorEngine binary (config/bundled/PATH)
+  - [x] FR-9: Show unsupported-platform messaging on Windows
+- [x] **[P0, depends: VSC-12]** Verify non-functional requirements (Section 4.3):
+  - [x] Performance: <200ms compile
+  - [x] Reliability: No crashes on invalid input
+  - [x] Isolation: No compiler logic in JS
+  - [x] Portability: macOS + Linux
   - [ ] Determinism: Matches CLI output
 
 **Acceptance Criteria:** All PRD requirements verified, checklist documented

@@ -1,7 +1,7 @@
 # PRD Validation Summary: PRD-VAL-1 — PRD Requirements Checklist
 
 **Task ID:** PRD-VAL-1
-**Status:** In Progress
+**Status:** ✅ Completed
 **Date:** 2025-12-27
 
 ---
@@ -54,3 +54,32 @@
   - Evidence: `Tools/VSCodeExtension/src/engineDiscovery.ts`.
 - FR-9 Show unsupported-platform messaging on Windows: PASS
   - Evidence: `Tools/VSCodeExtension/src/engineDiscovery.ts`, `Tools/VSCodeExtension/src/test/engineDiscovery.test.ts`.
+
+## Section 4.3 Non-Functional Requirements
+
+- Performance (<200ms compile for medium fixture): PASS
+  - Evidence: `swift test` PerformanceTests output (average ~92ms).
+- Reliability (no crashes on invalid input): PASS
+  - Evidence: Parser and integration tests cover invalid input without crashes.
+- Isolation (no compiler logic in JS): PASS
+  - Evidence: `Tools/VSCodeExtension/src/rpcClient.ts`, compile requests via `editor.compile`.
+- Portability (macOS + Linux): PASS
+  - Evidence: `Tools/VSCodeExtension/src/engineDiscovery.ts`, `Tools/VSCodeExtension/README.md` requirements.
+- Determinism (matches CLI output): PARTIAL
+  - Evidence: Extension delegates to the same `hyperprompt` engine; no explicit output diff test captured.
+
+## Validation Commands
+
+- `./.github/scripts/restore-build-cache.sh`
+- `swift test 2>&1`
+
+## Validation Results (2025-12-27)
+
+- Build cache restore: cache missing (no `.build-cache` entries)
+- Swift tests: PASS (447 tests, 13 skipped)
+- Performance output: average 91.50ms, median 91.26ms
+
+## Open Gaps
+
+- VS Code Extension published: not packaged or published yet.
+- Determinism vs CLI output: no explicit diff test captured.
