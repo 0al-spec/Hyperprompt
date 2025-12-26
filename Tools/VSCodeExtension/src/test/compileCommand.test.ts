@@ -25,10 +25,12 @@ suite('Compile Command', () => {
 		const result = await runCompileRequest(request, params, 5000);
 
 		assert.strictEqual(capturedMethod, 'editor.compile');
-		assert.strictEqual(capturedParams?.entryFile, '/workspace/project/main.hc');
-		assert.strictEqual(capturedParams?.workspaceRoot, '/workspace');
-		assert.strictEqual(capturedParams?.includeOutput, true);
-		assert.strictEqual(capturedParams?.mode, 'lenient');
+		assert.ok(capturedParams);
+		const resolvedParams = capturedParams as CompileParams;
+		assert.strictEqual(resolvedParams.entryFile, '/workspace/project/main.hc');
+		assert.strictEqual(resolvedParams.workspaceRoot, '/workspace');
+		assert.strictEqual(resolvedParams.includeOutput, true);
+		assert.strictEqual(resolvedParams.mode, 'lenient');
 		assert.strictEqual(capturedTimeout, 5000);
 		assert.strictEqual(result.output, '# Title');
 	});
