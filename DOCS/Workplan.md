@@ -449,13 +449,13 @@ Completed phases include:
 ### VSC-4C: Engine Discovery & Platform Guard **[P0]**
 **Dependencies:** VSC-3, VSC-8
 **Estimated:** 3 hours
-**Status:** 🟢 **IN PROGRESS**
+**Status:** ✅ **COMPLETED** on 2025-12-26
 
-- [ ] **[P0, depends: VSC-3, VSC-8]** Detect unsupported platforms (Windows) and show a clear user-facing message, disable features
-- [ ] **[P0, depends: VSC-3, VSC-8]** Resolve EditorEngine binary in order: `hyperprompt.enginePath` setting → bundled binary → PATH fallback
-- [ ] **[P1, depends: VSC-3, VSC-8]** Validate engine binary is executable and compatible (Editor trait enabled)
-- [ ] **[P1, depends: VSC-3, VSC-8]** Surface "trait disabled" remediation guidance in UI
-- [ ] **[P1, depends: VSC-3, VSC-8]** Add discovery tests (missing binary, bad path, unsupported OS)
+- [x] **[P0, depends: VSC-3, VSC-8]** Detect unsupported platforms (Windows) and show a clear user-facing message, disable features
+- [x] **[P0, depends: VSC-3, VSC-8]** Resolve EditorEngine binary in order: `hyperprompt.enginePath` setting → bundled binary → PATH fallback
+- [x] **[P1, depends: VSC-3, VSC-8]** Validate engine binary is executable and compatible (Editor trait enabled)
+- [x] **[P1, depends: VSC-3, VSC-8]** Surface "trait disabled" remediation guidance in UI
+- [x] **[P1, depends: VSC-3, VSC-8]** Add discovery tests (missing binary, bad path, unsupported OS)
 
 **Acceptance Criteria:** Engine discovery follows PRD order, unsupported OS is blocked with guidance
 
