@@ -169,6 +169,16 @@ export async function activate(context: vscode.ExtensionContext) {
 		return entryFile;
 	};
 
+	const renderCompileOutput = (result: { output?: string }) => {
+		if (result.output && result.output.length > 0) {
+			outputChannel.clear();
+			outputChannel.appendLine(result.output);
+			outputChannel.show(true);
+			return;
+		}
+		vscode.window.showWarningMessage('Hyperprompt: compile produced no output.');
+	};
+
 	const runCompile = async (mode: ResolutionMode, includeOutput: boolean) => {
 		const entryFile = getActiveEntryFile('compile');
 		if (!entryFile) {
@@ -195,6 +205,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			} else {
 				vscode.window.showInformationMessage('Hyperprompt: compile complete.');
 			}
+			renderCompileOutput(compileResult);
 		} catch (error) {
 			vscode.window.showErrorMessage(`Hyperprompt: compile failed (${String(error)})`);
 		}
@@ -212,6 +223,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			} else {
 				vscode.window.showInformationMessage('Hyperprompt: compile complete.');
 			}
+			renderCompileOutput(compileResult);
 		} catch (error) {
 			vscode.window.showErrorMessage(`Hyperprompt: compile failed (${String(error)})`);
 		}

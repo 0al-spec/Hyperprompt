@@ -22,7 +22,7 @@ Add compile-on-demand output for the VS Code extension by calling editor.compile
 ## Mini TODO (Tracker)
 
 - [x] A1: Enable compile output payload and add output channel
-- [ ] A2: Implement compile output rendering in UI
+- [x] A2: Implement compile output rendering in UI
 - [ ] A3: Add compile command tests
 - [ ] A4: Update README with output behavior
 
