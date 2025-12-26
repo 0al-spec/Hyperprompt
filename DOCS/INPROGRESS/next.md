@@ -1,20 +1,20 @@
-# Next Task: PRD-VAL-1 — PRD Requirements Checklist
+# Next Task: PRD-VAL-2 — Validation Report Update
 
-**Priority:** P0
+**Priority:** P1
 **Phase:** Phase 15 — PRD Validation & Gap Closure
 **Effort:** 2 hours
-**Dependencies:** VSC-12
-**Status:** ✅ Completed on 2025-12-27
+**Dependencies:** PRD-VAL-1
+**Status:** Selected
 
 ## Description
 
-Verify all PRD_VSCode_Extension.md requirements and document the checklist results.
+Update the PRD validation report to reflect completed work, benchmarks, and resolved blockers.
 
 ## Subtasks
 
-- [x] Verify Section 1.2 deliverables and record results
-- [x] Verify Section 1.3 success criteria and functional requirements
-- [x] Verify non-functional requirements and capture validation notes
+- [ ] Update PRD validation report and architecture notes
+- [ ] Mark blockers/critical/major issues resolved with evidence
+- [ ] Add resolution summary and updated quality assessment
 
 ## Next Step
 

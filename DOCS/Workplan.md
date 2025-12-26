@@ -277,7 +277,7 @@ Completed phases include:
 ### EE-EXT-5: Async API Variants **[P1]**
 **Dependencies:** EE8
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 INPROGRESS
 
 - [ ] **[P1, depends: EE8]** Add `async` variants of blocking methods:
   - [ ] `EditorParser.parse(filePath:) async -> ParsedFile`
