@@ -7,6 +7,7 @@ import { resolveEngine, engineDiscoveryDefaults, EngineResolution } from './engi
 import {
 	buildLinkAtParams,
 	buildResolveParams,
+	describeResolvedTarget,
 	resolvedTargetPath,
 	runLinkAtRequest,
 	runResolveRequest
@@ -298,6 +299,50 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	const hoverProvider = vscode.languages.registerHoverProvider('hypercode', {
+		provideHover: async (document, position) => {
+			if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
+				return null;
+			}
+			try {
+				const client = await ensureEngineReady();
+				if (!client) {
+					return null;
+				}
+				const linkParams = buildLinkAtParams(
+					document.uri.fsPath,
+					position.line,
+					position.character
+				);
+				const linkSpan = await runLinkAtRequest(
+					client.request.bind(client),
+					linkParams,
+					compileTimeoutMs
+				);
+				if (!linkSpan) {
+					return null;
+				}
+				const resolveParams = buildResolveParams(
+					linkSpan.literal,
+					linkSpan.sourceFile,
+					resolveWorkspaceRoot(document)
+				);
+				const target = await runResolveRequest(
+					client.request.bind(client),
+					resolveParams,
+					compileTimeoutMs
+				);
+				const markdown = new vscode.MarkdownString(
+					[`**Hyperprompt**`, `Link: \`${linkSpan.literal}\``, describeResolvedTarget(target)].join('\n\n')
+				);
+				return new vscode.Hover(markdown);
+			} catch (error) {
+				console.error(`[hyperprompt] hover failed: ${String(error)}`);
+				return null;
+			}
+		}
+	});
+
 	const configWatcher = vscode.workspace.onDidChangeConfiguration((event) => {
 		if (!event.affectsConfiguration('hyperprompt')) {
 			return;
@@ -317,6 +362,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		compileLenientCommand,
 		previewCommand,
 		definitionProvider,
+		hoverProvider,
 		configWatcher,
 		outputChannel,
 		{ dispose: () => stopRpcClient() }
