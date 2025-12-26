@@ -12,7 +12,7 @@ Document the VS Code extension TypeScript project structure, workflows, and APIs
 
 ## Subtasks
 
-- [ ] Define docs structure and workflow coverage for TS extension
+- [x] Define docs structure and workflow coverage for TS extension
 - [ ] Document configuration, commands, and RPC API notes
 - [ ] Update tracking, summary, and validation notes
 

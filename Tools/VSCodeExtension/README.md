@@ -41,6 +41,24 @@ Hyperprompt language support for VS Code, backed by the Hyperprompt EditorEngine
 
 Preview output renders raw Markdown text in a styled panel (Markdown-to-HTML rendering is a future enhancement).
 
+## Project Structure
+
+- `src/extension.ts`: activation, command registration, and feature wiring.
+- `src/rpcClient.ts`: JSON-RPC transport for the `hyperprompt editor-rpc` process.
+- `src/engineDiscovery.ts`: engine discovery and platform guard logic.
+- `src/compileCommand.ts`: compile request helpers and params shaping.
+- `src/navigation.ts`: definition/hover utilities for references.
+- `src/diagnostics.ts`: diagnostics mapping into VS Code.
+- `src/preview.ts`: preview panel rendering and scroll sync.
+- `src/test/`: unit and integration coverage (includes mock engine).
+
+## RPC Integration Notes
+
+- Engine resolution order: `hyperprompt.enginePath` → bundled `bin/hyperprompt` → PATH.
+- Default request timeout is 5s; adjust only if builds are slow.
+- Unsupported platforms (Windows) are blocked with a user-facing error message.
+- RPC methods used: `editor.compile`, `editor.linkAt`, `editor.indexProject`.
+
 ## Development Testing
 
 From `Tools/VSCodeExtension`:
@@ -51,12 +69,27 @@ npm run compile
 code --extensionDevelopmentPath="$PWD"
 ```
 
+Use `npm run watch` while debugging to recompile on changes:
+
+```bash
+npm run watch
+code --extensionDevelopmentPath="$PWD"
+```
+
 In the Extension Development Host:
 - Open a `.hc` file to trigger activation.
 - Run commands from the Command Palette.
 - Watch the "Hyperprompt" output channel for compile output.
 
 If `code` is not found, install it from VS Code: Command Palette → "Shell Command: Install 'code' command in PATH".
+
+## Testing
+
+```bash
+npm test
+```
+
+The test runner downloads VS Code; slow networks may cause timeouts.
 
 ## Engine Setup
 
