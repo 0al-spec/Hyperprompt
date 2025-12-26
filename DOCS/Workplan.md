@@ -203,7 +203,7 @@ Completed phases include:
 ### EE-EXT-1B: Fix EditorParser linkAt Regression **[P0]**
 **Dependencies:** EE-EXT-1
 **Estimated:** 2 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 INPROGRESS
 
 - [ ] **[P0, depends: EE-EXT-1]** Restore link span extraction for EditorParser so linkAt tests pass
 - [ ] **[P0, depends: EE-EXT-1]** Validate byte/column ranges for @"..." and UTF-8 offsets

@@ -1,19 +1,20 @@
-# Next Task: BUG-CE1-001 — Lenient Compile Includes Markdown Filename Heading
+# Next Task: EE-EXT-1B — Fix EditorParser linkAt Regression
 
 **Priority:** P0
-**Phase:** Hotfixes & Bug Reports
-**Effort:** 1 hour
-**Dependencies:** None
-**Status:** ✅ Completed on 2025-12-27
+**Phase:** Phase 12 — EditorEngine API Enhancements
+**Effort:** 2 hours
+**Dependencies:** EE-EXT-1
+**Status:** Selected
 
 ## Description
 
-Document the lenient compilation bug where `DOCS/examples/with-markdown.hc` output incorrectly includes a `## prerequisites.md` heading.
+Restore link span extraction so EditorParser linkAt tests pass and ranges are correct for @"..." and UTF-8 offsets.
 
 ## Subtasks
 
-- [x] Save a bug report with repro steps and expected vs actual output
-- [x] Finalize task status and summary documentation
+- [ ] Fix link span extraction for EditorParser linkAt
+- [ ] Verify UTF-8 byte/column ranges for @"..." links
+- [ ] Run `swift test --traits Editor` and confirm EditorParserLinkAtTests pass
 
 ## Next Step
 
