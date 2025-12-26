@@ -26,6 +26,8 @@ Hyperprompt language support for VS Code, backed by the Hyperprompt EditorEngine
 - `hyperprompt.enginePath` (absolute path override, default: empty)
 - `hyperprompt.engineLogLevel` (`error` | `warn` | `info` | `debug`, default: `info`)
 
+Changing `hyperprompt.enginePath` or `hyperprompt.engineLogLevel` restarts the RPC process. Disabling diagnostics clears the Problems collection, and `previewAutoUpdate` controls on-save preview refreshes.
+
 ## Requirements
 
 - macOS or Linux (Windows is not supported yet).

@@ -13,7 +13,7 @@ Add and document extension settings, and ensure changes apply correctly.
 ## Subtasks
 
 - [x] Verify settings schema and handlers in package.json and extension code
-- [ ] Ensure README documents settings and behavior
+- [x] Ensure README documents settings and behavior
 - [ ] Update tracking, summary, and validation notes
 
 ## Next Step
