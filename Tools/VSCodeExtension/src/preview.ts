@@ -40,6 +40,19 @@ export const buildPreviewHtml = (markdown: string): string => {
 </head>
 <body>
 	<pre>${escaped}</pre>
+	<script>
+		(function() {
+			window.addEventListener('message', (event) => {
+				const message = event.data;
+				if (!message || message.type !== 'scroll') {
+					return;
+				}
+				const ratio = Math.max(0, Math.min(1, Number(message.ratio) || 0));
+				const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+				window.scrollTo({ top: maxScroll * ratio });
+			});
+		})();
+	</script>
 </body>
 </html>`;
 };

@@ -250,7 +250,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			'hyperpromptPreview',
 			'Hyperprompt Preview',
 			vscode.ViewColumn.Beside,
-			{ enableScripts: false, retainContextWhenHidden: true }
+			{ enableScripts: true, retainContextWhenHidden: true }
 		);
 		panel.onDidDispose(() => {
 			if (previewPanel === panel) {
@@ -282,6 +282,10 @@ export async function activate(context: vscode.ExtensionContext) {
 			compileTimeoutMs
 		);
 		previewPanel.webview.html = buildPreviewHtml(compileResult.output ?? '');
+		const activeEditor = vscode.window.activeTextEditor;
+		if (activeEditor && activeEditor.document.uri.fsPath === entryFile) {
+			sendPreviewScroll(activeEditor);
+		}
 	};
 
 	const previewCommand = vscode.commands.registerCommand('hyperprompt.showPreview', async () => {
@@ -298,6 +302,24 @@ export async function activate(context: vscode.ExtensionContext) {
 			vscode.window.showErrorMessage(`Hyperprompt: preview failed (${String(error)})`);
 		}
 	});
+
+	const computeScrollRatio = (editor: vscode.TextEditor): number => {
+		const visible = editor.visibleRanges[0];
+		const topLine = visible ? visible.start.line : 0;
+		const totalLines = Math.max(editor.document.lineCount - 1, 1);
+		return Math.min(1, Math.max(0, topLine / totalLines));
+	};
+
+	const sendPreviewScroll = (editor: vscode.TextEditor) => {
+		if (!previewPanel || !previewEntryFile) {
+			return;
+		}
+		if (editor.document.uri.fsPath !== previewEntryFile) {
+			return;
+		}
+		const ratio = computeScrollRatio(editor);
+		previewPanel.webview.postMessage({ type: 'scroll', ratio });
+	};
 
 	const resolveWorkspaceRoot = (document: vscode.TextDocument): string => {
 		const workspaceFolder = vscode.workspace.getWorkspaceFolder(document.uri);
@@ -507,6 +529,13 @@ export async function activate(context: vscode.ExtensionContext) {
 		});
 	});
 
+	const previewScrollWatcher = vscode.window.onDidChangeTextEditorVisibleRanges((event) => {
+		if (!previewPanel || !previewEntryFile) {
+			return;
+		}
+		sendPreviewScroll(event.textEditor);
+	});
+
 	context.subscriptions.push(
 		compileCommand,
 		compileLenientCommand,
@@ -516,6 +545,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		configWatcher,
 		diagnosticsWatcher,
 		previewWatcher,
+		previewScrollWatcher,
 		diagnosticCollection,
 		outputChannel,
 		{ dispose: () => stopRpcClient() }

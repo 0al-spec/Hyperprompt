@@ -15,5 +15,6 @@ suite('Preview', () => {
 		assert.ok(html.includes('# Title'));
 		assert.ok(html.includes('<pre>'));
 		assert.ok(html.includes('Hyperprompt Preview'));
+		assert.ok(html.includes('scroll'));
 	});
 });
