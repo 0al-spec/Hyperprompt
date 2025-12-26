@@ -203,11 +203,11 @@ Completed phases include:
 ### EE-EXT-1B: Fix EditorParser linkAt Regression **[P0]**
 **Dependencies:** EE-EXT-1
 **Estimated:** 2 hours
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-27
 
-- [ ] **[P0, depends: EE-EXT-1]** Restore link span extraction for EditorParser so linkAt tests pass
-- [ ] **[P0, depends: EE-EXT-1]** Validate byte/column ranges for @"..." and UTF-8 offsets
-- [ ] **[P1, depends: EE-EXT-1]** Run `swift test --traits Editor` and confirm EditorParserLinkAtTests pass
+- [x] **[P0, depends: EE-EXT-1]** Restore link span extraction for EditorParser so linkAt tests pass
+- [x] **[P0, depends: EE-EXT-1]** Validate byte/column ranges for @"..." and UTF-8 offsets
+- [x] **[P1, depends: EE-EXT-1]** Run `swift test --traits Editor` and confirm EditorParserLinkAtTests pass
 
 **Acceptance Criteria:** EditorParserLinkAtTests pass under Editor trait; link spans match cursor positions
 
