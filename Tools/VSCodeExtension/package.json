@@ -20,6 +20,7 @@
   "activationEvents": [
     "onLanguage:hypercode",
     "onCommand:hyperprompt.compile",
+    "onCommand:hyperprompt.compileLenient",
     "onCommand:hyperprompt.showPreview"
   ],
   "main": "./out/extension.js",
@@ -50,10 +51,54 @@
         "title": "Hyperprompt: Compile"
       },
       {
+        "command": "hyperprompt.compileLenient",
+        "title": "Hyperprompt: Compile (Lenient)"
+      },
+      {
         "command": "hyperprompt.showPreview",
         "title": "Hyperprompt: Show Preview"
       }
     ],
+    "configuration": {
+      "title": "Hyperprompt",
+      "properties": {
+        "hyperprompt.resolutionMode": {
+          "type": "string",
+          "enum": [
+            "strict",
+            "lenient"
+          ],
+          "default": "strict",
+          "description": "Default resolution mode for compile and preview commands."
+        },
+        "hyperprompt.previewAutoUpdate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically recompile and refresh preview on save."
+        },
+        "hyperprompt.diagnosticsEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable diagnostic reporting in the Problems panel."
+        },
+        "hyperprompt.enginePath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to the Hyperprompt engine binary. Leave empty to use PATH."
+        },
+        "hyperprompt.engineLogLevel": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warn",
+            "info",
+            "debug"
+          ],
+          "default": "info",
+          "description": "Log level passed to the Hyperprompt engine."
+        }
+      }
+    },
     "colors": [
       {
         "id": "hyperprompt.previewBackground",

@@ -162,7 +162,7 @@ Completed phases include:
 ### EE-EXT-1: Position-to-Link Query API **[P0]** ✅
 **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 **Estimated:** 3 hours
-**Status:** ✅ **COMPLETED** on 2025-12-24
+**Status:** ✅ **COMPLETED** on 2025-12-25
 
 - [x] **[P0, depends: EE8]** Add `EditorParser.linkAt(line:column:) -> LinkSpan?` method
 - [x] **[P0, depends: EE8]** Implement binary search over sorted link spans (O(log n) lookup)
@@ -188,7 +188,7 @@ Completed phases include:
 ### EE-EXT-2: Workspace-Level Diagnostics **[P1]**
 **Dependencies:** EE8
 **Estimated:** 4 hours
-**Status:** ⏸️ Pending
+**Status:** ✅ **COMPLETED** on 2025-12-24
 
 - [ ] **[P1, depends: EE8]** Add `EditorEngine.validateWorkspace(root:options:) -> [String: [Diagnostic]]` method
 - [ ] **[P1, depends: EE8]** Return diagnostics grouped by file path (dictionary)
@@ -208,7 +208,7 @@ Completed phases include:
 ### EE-EXT-3: Source Map Generation **[P2]**
 **Dependencies:** EE8
 **Estimated:** 5 hours
-**Status:** ⏸️ Pending
+**Status:** ✅ **COMPLETED** on 2025-12-26
 
 - [ ] **[P2, depends: EE8]** Define `SourceMap` struct (output line → source location mapping)
 - [ ] **[P2, depends: EE8]** Extend `Emitter` to track source ranges during compilation
@@ -389,7 +389,7 @@ Completed phases include:
 ### VSC-3: Extension Scaffold **[P0]**
 **Dependencies:** VSC-2A or VSC-2B or VSC-2C (integration layer chosen)
 **Estimated:** 3 hours
-**Status:** ✅ **COMPLETED** on 2025-12-24
+**Status:** ✅ **COMPLETED** on 2025-12-26
 
 - [x] **[P0, depends: VSC-2*]** Initialize extension with `yo code` (TypeScript)
 - [x] **[P1, depends: VSC-2*]** Configure package.json metadata:
@@ -401,7 +401,7 @@ Completed phases include:
 - [x] **[P0, depends: VSC-2*]** Configure activation events (`onLanguage:hypercode`, `onCommand:hyperprompt.compile`, `onCommand:hyperprompt.showPreview`)
 - [x] **[P1, depends: VSC-2*]** Add TextMate grammar for syntax highlighting (`.tmLanguage.json`)
 - [x] **[P1, depends: VSC-2*]** Configure extension icon and colors
-- [ ] **[P1, depends: VSC-2*]** Verify extension loads in VS Code dev mode
+- [x] **[P1, depends: VSC-2*]** Verify extension loads in VS Code dev mode
 
 **Acceptance Criteria:** Extension scaffold builds, activates on .hc files, syntax highlighting works
 
@@ -449,13 +449,13 @@ Completed phases include:
 ### VSC-4C: Engine Discovery & Platform Guard **[P0]**
 **Dependencies:** VSC-3, VSC-8
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending
+**Status:** ✅ **COMPLETED** on 2025-12-26
 
-- [ ] **[P0, depends: VSC-3, VSC-8]** Detect unsupported platforms (Windows) and show a clear user-facing message, disable features
-- [ ] **[P0, depends: VSC-3, VSC-8]** Resolve EditorEngine binary in order: `hyperprompt.enginePath` setting → bundled binary → PATH fallback
-- [ ] **[P1, depends: VSC-3, VSC-8]** Validate engine binary is executable and compatible (Editor trait enabled)
-- [ ] **[P1, depends: VSC-3, VSC-8]** Surface "trait disabled" remediation guidance in UI
-- [ ] **[P1, depends: VSC-3, VSC-8]** Add discovery tests (missing binary, bad path, unsupported OS)
+- [x] **[P0, depends: VSC-3, VSC-8]** Detect unsupported platforms (Windows) and show a clear user-facing message, disable features
+- [x] **[P0, depends: VSC-3, VSC-8]** Resolve EditorEngine binary in order: `hyperprompt.enginePath` setting → bundled binary → PATH fallback
+- [x] **[P1, depends: VSC-3, VSC-8]** Validate engine binary is executable and compatible (Editor trait enabled)
+- [x] **[P1, depends: VSC-3, VSC-8]** Surface "trait disabled" remediation guidance in UI
+- [x] **[P1, depends: VSC-3, VSC-8]** Add discovery tests (missing binary, bad path, unsupported OS)
 
 **Acceptance Criteria:** Engine discovery follows PRD order, unsupported OS is blocked with guidance
 
@@ -521,6 +521,21 @@ Completed phases include:
 **Acceptance Criteria:** Compile command produces output identical to CLI for fixtures
 
 **Resolution Status:** ✅ Addresses PRD Phase 2.2.1 (Compile on Demand)
+
+---
+
+### VSC-7B: Compile Lenient Command **[P1]**
+**Dependencies:** VSC-2B, VSC-4*
+**Estimated:** 1 hour
+**Status:** ✅ **COMPLETED** on 2025-12-26
+
+- [x] **[P1, depends: VSC-2B, VSC-4*]** Register `hyperprompt.compileLenient` command
+- [x] **[P1, depends: VSC-2B, VSC-4*]** Call `editor.compile` with `mode: "lenient"` from the active editor
+- [x] **[P1, depends: VSC-2B, VSC-4*]** Document lenient compile behavior in the extension README
+
+**Acceptance Criteria:** Lenient compile command runs without missing-file diagnostics; docs updated
+
+**Resolution Status:** ✅ Addresses resolution mode ambiguity (Issue 3.1)
 
 ---
 
@@ -744,7 +759,7 @@ Completed phases include:
 | **Phase 14** | VS Code Extension Development | 41h | ⏸️ Pending | ✅ PRD Implementation |
 | **Phase 15** | PRD Validation & Gap Closure | 4h | ⏸️ Pending | ✅ Final Validation |
 
-**Next Task:** VSC-3 (Extension Scaffold) — 3 hours
+**Next Task:** VSC-7B (Compile Lenient Command) — 1 hour
 
 ---
 

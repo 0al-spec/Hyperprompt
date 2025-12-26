@@ -105,3 +105,6 @@ The RPC client is required to connect the VS Code extension to the Hyperprompt E
 - RPC request round-trip succeeds.
 - Timeout path exercised.
 - Tests pass.
+
+---
+**Archived:** 2025-12-26

@@ -1,3 +1,4 @@
+#if Editor
 import Foundation
 import SpecificationCore
 
@@ -45,3 +46,4 @@ struct DirectoryDispositionDecisionSpec: DecisionSpec {
         decision.decide(context)
     }
 }
+#endif

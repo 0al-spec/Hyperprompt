@@ -1,3 +1,4 @@
+#if Editor
 import SpecificationCore
 
 // MARK: - Output Path Decisions
@@ -53,3 +54,4 @@ struct RootPathStrategyDecisionSpec: DecisionSpec {
         decision.decide(inputPath)
     }
 }
+#endif

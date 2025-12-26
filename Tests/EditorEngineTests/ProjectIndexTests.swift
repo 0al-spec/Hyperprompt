@@ -1,3 +1,4 @@
+#if Editor
 /// Unit Tests for ProjectIndex Data Structures
 ///
 /// Tests the core data model for project indexing including:
@@ -151,3 +152,4 @@ final class ProjectIndexTests: XCTestCase {
         XCTAssertEqual(decoded.totalFiles, original.totalFiles)
     }
 }
+#endif

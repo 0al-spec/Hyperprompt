@@ -14,7 +14,9 @@ For example if there is an image subfolder under your extension project workspac
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- macOS or Linux (Windows is not supported yet).
+- Hyperprompt CLI built with the Editor trait (`swift build --traits Editor`).
+- `hyperprompt` available on PATH or configured via `hyperprompt.enginePath`.
 
 ## Development Testing
 
@@ -25,22 +27,45 @@ Run the extension in VS Code's Extension Development Host.
 ```bash
 cd Tools/VSCodeExtension
 npm run compile
-code --extensionDevelopmentPath=/Users/egor/Development/GitHub/0AL/Hyperprompt/Tools/VSCodeExtension
+code --extensionDevelopmentPath="$PWD"
 ```
 
 In the Extension Development Host:
 - Open any `.hc` file to trigger activation.
-- Use Command Palette and run `Hyperprompt: Compile` or `Hyperprompt: Show Preview`.
+- Use Command Palette and run `Hyperprompt: Compile`, `Hyperprompt: Compile (Lenient)`, or `Hyperprompt: Show Preview`.
+
+### Commands
+
+- `Hyperprompt: Compile` — strict mode (missing references report diagnostics).
+- `Hyperprompt: Compile (Lenient)` — lenient mode (missing references treated as inline text).
+- `Hyperprompt: Show Preview` — placeholder until preview wiring is complete.
+
+If `code` is not found, install it from VS Code: Command Palette → "Shell Command: Install 'code' command in PATH".
 
 ### RPC Client Notes
 
-The extension spawns the Hyperprompt CLI in RPC mode on activation:
+The extension spawns the Hyperprompt CLI in RPC mode on activation. Engine resolution order is:
+
+1. `hyperprompt.enginePath` setting (absolute path)
+2. Bundled binary (`bin/hyperprompt` inside the extension, if present)
+3. `hyperprompt` on PATH
+
+Build with the Editor trait enabled:
 
 ```bash
+swift build --traits Editor
 hyperprompt editor-rpc
 ```
 
-If the CLI is missing from your PATH, install Hyperprompt and ensure `hyperprompt` is discoverable in your shell before launching the dev host.
+If the engine is missing, not executable, or built without the Editor trait, the extension shows a remediation message and skips RPC startup.
+
+### RPC Smoke Test
+
+Use the helper script to validate the RPC CLI outside VS Code:
+
+```bash
+./Tools/VSCodeExtension/scripts/rpc-smoke.sh /path/to/file.hc /path/to/workspace
+```
 
 ### VS Code UI
 
@@ -50,14 +75,13 @@ If the CLI is missing from your PATH, install Hyperprompt and ensure `hyperpromp
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+- `hyperprompt.resolutionMode` (`strict` | `lenient`, default: `strict`): Default resolution mode for compile/preview.
+- `hyperprompt.previewAutoUpdate` (default: `true`): Recompile on save when preview is wired.
+- `hyperprompt.diagnosticsEnabled` (default: `true`): Enable diagnostics when Problems integration is wired.
+- `hyperprompt.enginePath` (default: empty): Absolute path to the `hyperprompt` binary (overrides PATH).
+- `hyperprompt.engineLogLevel` (`error` | `warn` | `info` | `debug`, default: `info`): Log level passed to the engine process.
 
 ## Known Issues
 

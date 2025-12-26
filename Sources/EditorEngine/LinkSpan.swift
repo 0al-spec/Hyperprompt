@@ -1,3 +1,4 @@
+#if Editor
 import Core
 
 /// Represents a literal span in a source file with byte and line/column ranges.
@@ -89,3 +90,4 @@ extension LinkSpan: Codable {
         try container.encode(sourceFile, forKey: .sourceFile)
     }
 }
+#endif

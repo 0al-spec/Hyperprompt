@@ -1,3 +1,4 @@
+#if Editor
 import XCTest
 import CompilerDriver
 import Core
@@ -80,3 +81,4 @@ final class EditorCompilerIntegrationTests: XCTestCase {
         return "."
     }
 }
+#endif

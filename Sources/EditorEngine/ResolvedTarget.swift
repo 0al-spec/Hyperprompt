@@ -1,3 +1,4 @@
+#if Editor
 import Core
 
 /// Represents the resolution result for a link span.
@@ -76,3 +77,4 @@ public enum ResolvedTarget: Equatable, Sendable, Codable {
         }
     }
 }
+#endif

@@ -158,6 +158,25 @@ export PATH="$PWD/.build/release:$PATH"
 hyperprompt --help
 ```
 
+### "Hyperprompt: compile failed (Error: RPC process failed to start. Ensure hyperprompt is on PATH.)"
+
+**Cause:** The VS Code extension cannot find `hyperprompt`, or the CLI was built without the Editor trait.
+
+**Solutions:**
+
+```bash
+# Build with the Editor trait enabled
+swift build --traits Editor
+
+# Add the debug build to PATH for the current shell
+export PATH="$PWD/.build/debug:$PATH"
+
+# Verify the RPC subcommand is available
+hyperprompt editor-rpc
+```
+
+Restart VS Code after updating PATH so the Extension Host inherits it.
+
 ### "Missing required argument '<input>'"
 
 **Cause:** No input file specified

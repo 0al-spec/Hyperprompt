@@ -1,4 +1,11 @@
-#if SWIFT_PACKAGE_TRAIT_Editor
+#if Editor
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#else
+#error("Unsupported platform")
+#endif
 import Foundation
 import ArgumentParser
 import EditorEngine
@@ -11,25 +18,57 @@ struct EditorRPCCommand: ParsableCommand {
     )
 
     func run() throws {
-        // Read JSON-RPC requests from stdin, write responses to stdout
-        while let line = readLine() {
-            do {
-                guard let data = line.data(using: .utf8) else {
-                    printError(id: nil, code: .parseError, message: "Invalid UTF-8")
-                    continue
-                }
+        var buffer = Data()
+        var temp = [UInt8](repeating: 0, count: 4096)
 
-                let request = try JSONDecoder().decode(JSONRPCRequest.self, from: data)
-                let response = handleRequest(request)
-                let responseData = try JSONEncoder().encode(response)
-
-                if let json = String(data: responseData, encoding: .utf8) {
-                    print(json)
-                    try? FileHandle.standardOutput.synchronize()
-                }
-            } catch {
-                printError(id: nil, code: .parseError, message: "Invalid JSON-RPC request: \(error.localizedDescription)")
+        while true {
+            let bytesRead = read(STDIN_FILENO, &temp, temp.count)
+            if bytesRead > 0 {
+                buffer.append(contentsOf: temp[0..<bytesRead])
+                processBuffer(&buffer)
+            } else if bytesRead == 0 {
+                break
+            } else if errno == EINTR {
+                continue
+            } else {
+                printError(id: nil, code: .internalError, message: "Failed to read stdin.")
+                break
             }
+        }
+
+        if !buffer.isEmpty {
+            handleLineData(buffer)
+        }
+    }
+
+    private func processBuffer(_ buffer: inout Data) {
+        while let newlineIndex = buffer.firstIndex(of: 0x0A) {
+            let lineData = Data(buffer[..<newlineIndex])
+            buffer.removeSubrange(...newlineIndex)
+            handleLineData(lineData)
+        }
+    }
+
+    private func handleLineData(_ lineData: Data) {
+        var data = lineData
+        if data.last == 0x0D {
+            data.removeLast()
+        }
+
+        if data.isEmpty {
+            return
+        }
+
+        do {
+            let request = try JSONDecoder().decode(JSONRPCRequest.self, from: data)
+            let response = handleRequest(request)
+            let responseData = try JSONEncoder().encode(response)
+
+            if let json = String(data: responseData, encoding: .utf8) {
+                writeStdoutLine(json)
+            }
+        } catch {
+            printError(id: nil, code: .parseError, message: "Invalid JSON-RPC request: \(error.localizedDescription)")
         }
     }
 
@@ -103,7 +142,7 @@ struct EditorRPCCommand: ParsableCommand {
     func handleCompile(_ request: JSONRPCRequest) throws -> JSONRPCResponse {
         let params = try decodeParams(CompileParams.self, from: request.params)
 
-        let mode: Core.CompilerArguments.CompilationMode = {
+        let mode: CompilerArguments.CompilationMode = {
             if let modeStr = params.mode?.lowercased() {
                 return modeStr == "lenient" ? .lenient : .strict
             }
@@ -124,8 +163,9 @@ struct EditorRPCCommand: ParsableCommand {
             DiagnosticMapper.map(error)
         }
 
+        let includeOutput = params.includeOutput ?? true
         let compileResponse = CompileResultResponse(
-            output: result.output,
+            output: includeOutput ? result.output : nil,
             diagnostics: diagnostics,
             hasErrors: result.hasErrors
         )
@@ -147,7 +187,7 @@ struct EditorRPCCommand: ParsableCommand {
         if let link = link {
             return successResponse(id: request.id, result: link)
         } else {
-            return successResponse(id: request.id, result: AnyCodable(nil))
+            return successResponse(id: request.id, result: AnyCodable(Optional<String>.none))
         }
     }
 
@@ -177,8 +217,13 @@ struct EditorRPCCommand: ParsableCommand {
         let response = errorResponse(id: id, code: code, message: message)
         if let data = try? JSONEncoder().encode(response),
            let json = String(data: data, encoding: .utf8) {
-            print(json)
-            try? FileHandle.standardOutput.synchronize()
+            writeStdoutLine(json)
+        }
+    }
+
+    private func writeStdoutLine(_ message: String) {
+        if let data = (message + "\n").data(using: .utf8) {
+            FileHandle.standardOutput.write(data)
         }
     }
 }

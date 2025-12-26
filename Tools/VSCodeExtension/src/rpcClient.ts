@@ -3,6 +3,7 @@ import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 export type RpcClientOptions = {
 	command: string;
 	args: string[];
+	env?: NodeJS.ProcessEnv;
 	onExit?: (code: number | null, signal: NodeJS.Signals | null) => void;
 	spawnFn?: (command: string, args: string[]) => ChildProcessWithoutNullStreams;
 };
@@ -32,13 +33,13 @@ export class RpcClient {
 		this.options = options;
 	}
 
-	start(): void {
+	start(): boolean {
 		if (this.process) {
-			return;
+			return true;
 		}
 
 		const spawnFn = this.options.spawnFn ?? ((command: string, args: string[]) => {
-			return spawn(command, args, { stdio: 'pipe' });
+			return spawn(command, args, { stdio: 'pipe', env: this.options.env ?? process.env });
 		});
 
 		this.process = spawnFn(this.options.command, this.options.args);
@@ -46,11 +47,18 @@ export class RpcClient {
 		this.process.stderr.on('data', (data) => {
 			console.error(`[hyperprompt-rpc] ${data.toString().trim()}`);
 		});
+		this.process.on('error', (error) => {
+			console.error(`[hyperprompt-rpc] failed to start: ${error}`);
+			this.process = null;
+			this.failAllPending(new Error('RPC process failed to start. Ensure hyperprompt is on PATH.'));
+		});
 		this.process.on('exit', (code, signal) => {
 			this.process = null;
 			this.failAllPending(new Error('RPC process exited.'));
 			this.options.onExit?.(code, signal);
 		});
+
+		return true;
 	}
 
 	stop(): void {
@@ -69,7 +77,10 @@ export class RpcClient {
 
 	request(method: string, params?: unknown, timeoutMs = 5000): Promise<unknown> {
 		if (!this.process || !this.process.stdin.writable) {
-			return Promise.reject(new Error('RPC process is not running.'));
+			this.start();
+		}
+		if (!this.process || !this.process.stdin.writable) {
+			return Promise.reject(new Error('RPC process is not running. Ensure hyperprompt is on PATH.'));
 		}
 
 		const id = this.nextId++;

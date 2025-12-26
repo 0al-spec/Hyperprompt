@@ -1,3 +1,4 @@
+#if Editor
 import Foundation
 import HypercodeGrammar
 import SpecificationCore
@@ -85,3 +86,4 @@ struct LinkLiteralDecisionSpec: DecisionSpec {
         decision.decide(literal)
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if Editor
 import XCTest
 import Core
 @testable import EditorEngine
@@ -58,3 +59,4 @@ private struct TestFileSystemError: CompilerError {
     let message: String
     let location: SourceLocation? = nil
 }
+#endif

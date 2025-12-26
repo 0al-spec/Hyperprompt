@@ -194,12 +194,39 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Phase 14: VS Code Extension Development
 
-### VSC-3 — Extension Scaffold **[P0]** ✓ 2025-12-24
+### VSC-4B — CLI RPC Client Integration **[P0]** ✓ 2025-12-25
+- **PRD:** [VSC-4B_CLI_RPC_Client_Integration.md](./VSC-4B_CLI_RPC_Client_Integration.md)
+- **Summary:** [VSC-4B-summary.md](./VSC-4B-summary.md)
+- **Effort:** 3 hours
+- **Dependencies:** VSC-2B, VSC-3
+- **Description:** Implement a JSON-RPC client in the extension to spawn and communicate with the Hyperprompt editor process.
+
+### VSC-4C — Engine Discovery & Platform Guard **[P0]** ✓ 2025-12-26
+- **PRD:** [VSC-4C_Engine_Discovery_And_Platform_Guard.md](./VSC-4C_Engine_Discovery_And_Platform_Guard.md)
+- **Effort:** 3 hours
+- **Dependencies:** VSC-3, VSC-8
+- **Description:** Add engine discovery, platform gating, and Editor trait validation with remediation guidance.
+
+### VSC-3 — Extension Scaffold **[P0]** ✓ 2025-12-26
 - **PRD:** [VSC-3_Extension_Scaffold.md](./VSC-3_Extension_Scaffold.md)
-- **Summary:** [VSC-3-summary.md](./VSC-3-summary.md)
+- **PRD (Dev Host Validation):** [VSC-3_Extension_Scaffold_Dev_Host_Validation.md](./VSC-3_Extension_Scaffold_Dev_Host_Validation.md)
+- **Summary (2025-12-24):** [VSC-3-summary.md](./VSC-3-summary.md)
+- **Summary (2025-12-26):** [VSC-3-summary-2025-12-26.md](./VSC-3-summary-2025-12-26.md)
 - **Effort:** 3 hours
 - **Dependencies:** VSC-2B (CLI JSON-RPC Interface)
 - **Description:** Create the VS Code extension scaffold with language registration, activation events, and base assets for `.hc` support.
+
+### VSC-7B — Compile Lenient Command **[P1]** ✓ 2025-12-26
+- **PRD:** [VSC-7B_Compile_Lenient_Command.md](./VSC-7B_Compile_Lenient_Command.md)
+- **Effort:** 1 hour
+- **Dependencies:** VSC-2B, VSC-4*
+- **Description:** Add a lenient compile command in the VS Code extension for missing-reference-tolerant builds.
+
+### VSC-8 — Extension Settings **[P1]** ✓ 2025-12-26
+- **PRD:** [VSC-8_Extension_Settings.md](./VSC-8_Extension_Settings.md)
+- **Effort:** 2 hours
+- **Dependencies:** VSC-4*
+- **Description:** Add extension settings schema and runtime handling for resolution mode, preview auto-update, diagnostics, and engine configuration.
 
 ---
 
@@ -213,8 +240,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 24 items
-- **Total Effort:** 83 hours (tracked tasks only)
+- **Total Archived:** 28 items
+- **Total Effort:** 92 hours (tracked tasks only)
 - **Phases Represented:** 9 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14)
 
 ---

@@ -1,3 +1,4 @@
+#if Editor
 /// ProjectIndexer — Workspace File Discovery Engine
 ///
 /// Scans a workspace directory for Hypercode and Markdown files with
@@ -294,3 +295,4 @@ public struct ProjectIndexer {
         return base + "/" + component
     }
 }
+#endif

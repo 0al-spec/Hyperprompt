@@ -1,3 +1,4 @@
+#if Editor
 import Core
 import Foundation
 import HypercodeGrammar
@@ -318,3 +319,4 @@ extension EditorParser {
         return parser.parse(content: content, filePath: filePath)
     }
 }
+#endif

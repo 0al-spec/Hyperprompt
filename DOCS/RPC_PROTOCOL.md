@@ -2,7 +2,7 @@
 
 **Version:** 1.0.0 (JSON-RPC 2.0)
 **Status:** MVP Implementation
-**Last Updated:** 2025-12-23
+**Last Updated:** 2025-12-26
 
 ---
 
@@ -106,9 +106,9 @@ Indexes a workspace directory to discover all Hypercode (.hc) and Markdown (.md)
 
 ### `editor.parse`
 
-**Status:** 🚧 Not Yet Implemented (Phase 2 - deferred)
+**Status:** ✅ Implemented (CLI) — extension wiring in progress
 
-Parses a Hypercode file and returns AST with link spans.
+Parses a Hypercode file and returns link spans with a diagnostics flag.
 
 **Request:**
 ```json
@@ -142,7 +142,7 @@ Parses a Hypercode file and returns AST with link spans.
         "sourceFile": "/absolute/path/to/file.hc"
       }
     ],
-    "diagnostics": []
+    "hasDiagnostics": false
   }
 }
 ```
@@ -151,9 +151,9 @@ Parses a Hypercode file and returns AST with link spans.
 
 ### `editor.resolve`
 
-**Status:** 🚧 Not Yet Implemented (Phase 2 - deferred)
+**Status:** ✅ Implemented (CLI) — extension wiring in progress
 
-Resolves a link path to an absolute file path.
+Resolves a link path to a categorized target.
 
 **Request:**
 ```json
@@ -175,9 +175,8 @@ Resolves a link path to an absolute file path.
   "jsonrpc": "2.0",
   "id": 3,
   "result": {
-    "absolutePath": "/path/to/other.hc",
-    "exists": true,
-    "fileType": "hypercode"
+    "type": "hypercodeFile",
+    "path": "/path/to/other.hc"
   }
 }
 ```
@@ -186,9 +185,9 @@ Resolves a link path to an absolute file path.
 
 ### `editor.compile`
 
-**Status:** 🚧 Not Yet Implemented (Phase 2 - deferred)
+**Status:** ✅ Implemented (CLI) — extension wiring in progress
 
-Compiles a Hypercode entry file and returns output with diagnostics.
+Compiles a Hypercode entry file and returns diagnostics with optional output.
 
 **Request:**
 ```json
@@ -199,7 +198,8 @@ Compiles a Hypercode entry file and returns output with diagnostics.
   "params": {
     "entryFile": "/path/to/main.hc",
     "workspaceRoot": "/path/to",
-    "mode": "strict"
+    "mode": "strict",
+    "includeOutput": false
   }
 }
 ```
@@ -210,7 +210,6 @@ Compiles a Hypercode entry file and returns output with diagnostics.
   "jsonrpc": "2.0",
   "id": 4,
   "result": {
-    "output": "# Compiled Output\\n...",
     "diagnostics": [
       {
         "severity": "error",
@@ -221,16 +220,19 @@ Compiles a Hypercode entry file and returns output with diagnostics.
           "line": 5
         }
       }
-    ]
+    ],
+    "hasErrors": true
   }
 }
 ```
+
+When `includeOutput` is `false`, the `output` field is omitted.
 
 ---
 
 ### `editor.linkAt`
 
-**Status:** 🚧 Not Yet Implemented (Phase 2 - deferred)
+**Status:** ✅ Implemented (CLI) — extension wiring in progress
 
 Queries link span at a specific line/column position in a file.
 
@@ -309,12 +311,12 @@ Hyperprompt RPC uses standard JSON-RPC 2.0 error codes:
 | Method | Status | Implementation Date |
 |--------|--------|---------------------|
 | `editor.indexProject` | ✅ Implemented | 2025-12-23 |
-| `editor.parse` | 🚧 Deferred | TBD |
-| `editor.resolve` | 🚧 Deferred | TBD |
-| `editor.compile` | 🚧 Deferred | TBD |
-| `editor.linkAt` | 🚧 Deferred | TBD |
+| `editor.parse` | ✅ Implemented (CLI) | 2025-12-26 |
+| `editor.resolve` | ✅ Implemented (CLI) | 2025-12-26 |
+| `editor.compile` | ✅ Implemented (CLI) | 2025-12-26 |
+| `editor.linkAt` | ✅ Implemented (CLI) | 2025-12-26 |
 
-**Note:** This is an MVP implementation. Only `editor.indexProject` is fully functional. Other methods return "Method not yet implemented" errors and will be completed in Phase 2.
+**Note:** This is an MVP CLI implementation. Extension wiring is in progress for `editor.parse`, `editor.resolve`, and `editor.linkAt`.
 
 ---
 
@@ -365,4 +367,4 @@ Per ADR-001, this CLI RPC interface is the MVP implementation. Migration to Lang
 
 ---
 
-**Last Updated:** 2025-12-23 (VSC-2B MVP implementation)
+**Last Updated:** 2025-12-26 (VSC-2B MVP implementation)

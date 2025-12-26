@@ -34,11 +34,13 @@ public struct CompileParams: Codable {
     public let entryFile: String
     public let workspaceRoot: String
     public let mode: String?  // "strict" or "lenient"
+    public let includeOutput: Bool?
 
-    public init(entryFile: String, workspaceRoot: String, mode: String? = nil) {
+    public init(entryFile: String, workspaceRoot: String, mode: String? = nil, includeOutput: Bool? = nil) {
         self.entryFile = entryFile
         self.workspaceRoot = workspaceRoot
         self.mode = mode
+        self.includeOutput = includeOutput
     }
 }
 

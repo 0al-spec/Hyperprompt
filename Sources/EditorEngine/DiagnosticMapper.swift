@@ -1,3 +1,4 @@
+#if Editor
 import Core
 
 /// Maps compiler errors into editor diagnostics.
@@ -45,3 +46,4 @@ public enum DiagnosticMapper {
         return SourceRange(start: start, end: end)
     }
 }
+#endif

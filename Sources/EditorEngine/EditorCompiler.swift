@@ -1,3 +1,4 @@
+#if Editor
 import CompilerDriver
 import Core
 
@@ -103,3 +104,4 @@ public struct EditorCompiler {
         }
     }
 }
+#endif

@@ -130,6 +130,18 @@ swift build
 ./.build/debug/hyperprompt --help
 ```
 
+### VS Code Extension (RPC) PATH Setup
+
+The VS Code extension spawns the `hyperprompt` CLI by name and requires the Editor trait build:
+
+```bash
+swift build --traits Editor
+export PATH="$PWD/.build/debug:$PATH"
+hyperprompt editor-rpc
+```
+
+Restart VS Code after updating PATH so the Extension Host picks it up.
+
 ### Release Build
 ```bash
 swift build -c release

@@ -12,25 +12,34 @@ import ArgumentParser
 import CompilerDriver
 import Core
 
-/// Main command for the Hyperprompt compiler.
-/// Compiles Hypercode (.hc) sources into unified Markdown documents.
-
+/// Root command for the Hyperprompt CLI.
 struct Hyperprompt: ParsableCommand {
-    #if SWIFT_PACKAGE_TRAIT_Editor
+    #if Editor
     static let configuration = CommandConfiguration(
         commandName: "hyperprompt",
         abstract: "Compile Hypercode to Markdown with manifest generation",
         version: "0.1.0",
-        subcommands: [EditorRPCCommand.self],
-        defaultSubcommand: nil
+        subcommands: [CompileCommand.self, EditorRPCCommand.self],
+        defaultSubcommand: CompileCommand.self
     )
     #else
     static let configuration = CommandConfiguration(
         commandName: "hyperprompt",
         abstract: "Compile Hypercode to Markdown with manifest generation",
-        version: "0.1.0"
+        version: "0.1.0",
+        subcommands: [CompileCommand.self],
+        defaultSubcommand: CompileCommand.self
     )
     #endif
+}
+
+/// Compile Hypercode (.hc) sources into unified Markdown documents.
+struct CompileCommand: ParsableCommand {
+    static let configuration = CommandConfiguration(
+        commandName: "compile",
+        abstract: "Compile Hypercode to Markdown with manifest generation",
+        version: "0.1.0"
+    )
 
     // MARK: - Positional Arguments
 

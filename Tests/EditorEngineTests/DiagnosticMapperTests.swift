@@ -1,3 +1,4 @@
+#if Editor
 import XCTest
 import Core
 @testable import EditorEngine
@@ -66,3 +67,4 @@ final class DiagnosticMapperTests: XCTestCase {
         XCTAssertEqual(range?.end.column, 2)
     }
 }
+#endif

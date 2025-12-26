@@ -1,3 +1,4 @@
+#if Editor
 import SpecificationCore
 
 // MARK: - Compile Option Policies
@@ -76,3 +77,4 @@ struct OutputWritePolicyDecisionSpec: DecisionSpec {
         decision.decide(policy)
     }
 }
+#endif

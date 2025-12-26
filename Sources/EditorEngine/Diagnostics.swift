@@ -1,3 +1,4 @@
+#if Editor
 import Core
 
 /// Severity levels for editor diagnostics.
@@ -65,3 +66,4 @@ public struct Diagnostic: Equatable, Sendable, Codable {
         self.related = related
     }
 }
+#endif

@@ -7,14 +7,6 @@ let editorTrait = Trait(
     enabledTraits: []
 )
 
-let enabledTraits = Set(
-    (Context.environment["SWIFT_PACKAGE_TRAITS"] ?? "")
-        .split(separator: ",")
-        .map { String($0) }
-)
-let enableAllTraits = Context.environment["SWIFT_ENABLE_ALL_TRAITS"] == "1"
-let editorEnabled = enableAllTraits || enabledTraits.contains(editorTrait.name)
-
 var products: [Product] = [
     .executable(
         name: "hyperprompt",
@@ -91,7 +83,8 @@ var targets: [Target] = [
                 "Emitter",
                 "Statistics",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-            ] + (editorEnabled ? ["EditorEngine"] : [])
+                .target(name: "EditorEngine", condition: .when(traits: ["Editor"]))
+            ]
         ),
         .testTarget(
             name: "CLITests",
@@ -157,40 +150,36 @@ var targets: [Target] = [
         ),
     ]
 
-if editorEnabled {
-    products.append(
-        .library(
-            name: "EditorEngine",
-            targets: ["EditorEngine"]
-        )
+targets.append(
+    .target(
+        name: "EditorEngine",
+        dependencies: [
+            "CompilerDriver",
+            "Core",
+            "HypercodeGrammar",
+            "Parser",
+            "Resolver",
+            "Emitter",
+            "Statistics",
+            "SpecificationCore",
+        ]
     )
-
-    targets.append(
-        .target(
-            name: "EditorEngine",
-            dependencies: [
-                "CompilerDriver",
-                "Core",
-                "HypercodeGrammar",
-                "Parser",
-                "Resolver",
-                "Emitter",
-                "Statistics",
-                "SpecificationCore",
-            ]
-        )
+)
+targets.append(
+    .testTarget(
+        name: "EditorEngineTests",
+        dependencies: [
+            "CompilerDriver",
+            "EditorEngine",
+        ]
     )
-
-    targets.append(
-        .testTarget(
-            name: "EditorEngineTests",
-            dependencies: [
-                "CompilerDriver",
-                "EditorEngine",
-            ]
-        )
+)
+products.append(
+    .library(
+        name: "EditorEngine",
+        targets: ["EditorEngine"]
     )
-}
+)
 
 let package = Package(
     name: "Hyperprompt",
@@ -198,7 +187,10 @@ let package = Package(
         .macOS(.v12)
     ],
     products: products,
-    traits: [editorTrait],
+    traits: [
+        .default(enabledTraits: []),
+        editorTrait,
+    ],
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-argument-parser",
