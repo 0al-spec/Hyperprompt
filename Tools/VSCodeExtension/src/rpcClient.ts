@@ -3,6 +3,7 @@ import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 export type RpcClientOptions = {
 	command: string;
 	args: string[];
+	env?: NodeJS.ProcessEnv;
 	onExit?: (code: number | null, signal: NodeJS.Signals | null) => void;
 	spawnFn?: (command: string, args: string[]) => ChildProcessWithoutNullStreams;
 };
@@ -38,7 +39,7 @@ export class RpcClient {
 		}
 
 		const spawnFn = this.options.spawnFn ?? ((command: string, args: string[]) => {
-			return spawn(command, args, { stdio: 'pipe' });
+			return spawn(command, args, { stdio: 'pipe', env: this.options.env ?? process.env });
 		});
 
 		this.process = spawnFn(this.options.command, this.options.args);

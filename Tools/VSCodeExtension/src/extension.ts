@@ -4,21 +4,79 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { RpcClient } from './rpcClient';
 
+type ResolutionMode = 'strict' | 'lenient';
+type LogLevel = 'error' | 'warn' | 'info' | 'debug';
+
+type HyperpromptSettings = {
+	resolutionMode: ResolutionMode;
+	previewAutoUpdate: boolean;
+	diagnosticsEnabled: boolean;
+	enginePath: string;
+	engineLogLevel: LogLevel;
+};
+
+const resolutionModes = new Set<ResolutionMode>(['strict', 'lenient']);
+const logLevels = new Set<LogLevel>(['error', 'warn', 'info', 'debug']);
+
+const normalizeEnumSetting = <T extends string>(value: string | undefined, allowed: Set<T>, fallback: T): T => {
+	if (value && allowed.has(value as T)) {
+		return value as T;
+	}
+	return fallback;
+};
+
+const readSettings = (): HyperpromptSettings => {
+	const config = vscode.workspace.getConfiguration('hyperprompt');
+	const resolutionMode = normalizeEnumSetting(
+		config.get<string>('resolutionMode'),
+		resolutionModes,
+		'strict'
+	);
+	const previewAutoUpdate = config.get<boolean>('previewAutoUpdate', true);
+	const diagnosticsEnabled = config.get<boolean>('diagnosticsEnabled', true);
+	const enginePath = (config.get<string>('enginePath') ?? '').trim();
+	const engineLogLevel = normalizeEnumSetting(
+		config.get<string>('engineLogLevel'),
+		logLevels,
+		'info'
+	);
+
+	return {
+		resolutionMode,
+		previewAutoUpdate,
+		diagnosticsEnabled,
+		enginePath,
+		engineLogLevel
+	};
+};
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Hyperprompt extension activated.');
 	const compileTimeoutMs = 5000;
+	let settings = readSettings();
 
-	const rpcClient = new RpcClient({
-		command: 'hyperprompt',
-		args: ['editor-rpc'],
-		onExit: () => {
-			setTimeout(() => {
-				rpcClient.start();
-			}, 1000);
-		}
-	});
+	const buildRpcClient = (currentSettings: HyperpromptSettings): RpcClient => {
+		const command = currentSettings.enginePath.length > 0 ? currentSettings.enginePath : 'hyperprompt';
+		const env = {
+			...process.env,
+			HYPERPROMPT_LOG_LEVEL: currentSettings.engineLogLevel
+		};
+
+		return new RpcClient({
+			command,
+			args: ['editor-rpc'],
+			env,
+			onExit: () => {
+				setTimeout(() => {
+					rpcClient.start();
+				}, 1000);
+			}
+		});
+	};
+
+	let rpcClient = buildRpcClient(settings);
 
 	rpcClient.start();
 
@@ -36,13 +94,14 @@ export function activate(context: vscode.ExtensionContext) {
 		return entryFile;
 	};
 
-	const runCompile = async (mode?: 'strict' | 'lenient') => {
+	const runCompile = async (mode?: ResolutionMode) => {
 		const entryFile = getActiveEntryFile('compile');
 		if (!entryFile) {
 			return null;
 		}
 		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? path.dirname(entryFile);
-		const params = { entryFile, workspaceRoot, includeOutput: false, mode };
+		const resolvedMode = mode ?? settings.resolutionMode;
+		const params = { entryFile, workspaceRoot, includeOutput: false, mode: resolvedMode };
 
 		const result = await rpcClient.request('editor.compile', params, compileTimeoutMs);
 		return result as { output?: string; diagnostics?: unknown[]; hasErrors?: boolean };
@@ -83,18 +142,11 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	const previewCommand = vscode.commands.registerCommand('hyperprompt.showPreview', async () => {
-		const entryFile = getActiveEntryFile('show preview');
-		if (!entryFile) {
-			return;
-		}
-		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? path.dirname(entryFile);
-
 		try {
-			await rpcClient.request(
-				'editor.compile',
-				{ entryFile, workspaceRoot, includeOutput: false },
-				compileTimeoutMs
-			);
+			const compileResult = await runCompile(settings.resolutionMode);
+			if (!compileResult) {
+				return;
+			}
 			vscode.window.showInformationMessage('Hyperprompt: preview is not wired yet.');
 		} catch (error) {
 			vscode.window.showErrorMessage(`Hyperprompt: preview failed (${String(error)})`);

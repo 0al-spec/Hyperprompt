@@ -22,7 +22,7 @@ Add extension settings (resolution mode, preview auto-update, diagnostics, engin
 ## Mini TODO (Tracker)
 
 - [x] A1: Add configuration schema and settings entries in `package.json`
-- [ ] A2: Wire settings into extension runtime (resolution mode, engine path/log level)
+- [x] A2: Wire settings into extension runtime (resolution mode, engine path/log level)
 - [ ] A3: Add configuration change handling and README documentation
 
 ## Next Step
