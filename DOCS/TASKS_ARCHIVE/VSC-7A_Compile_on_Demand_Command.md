@@ -91,3 +91,6 @@ The compile command currently reports success without presenting the generated M
 - `npm run compile` in `Tools/VSCodeExtension` passes.
 - Compile command shows output in UI.
 - Compile command tests pass.
+
+---
+**Archived:** 2025-12-26

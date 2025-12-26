@@ -222,6 +222,11 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** VSC-2B, VSC-4*
 - **Description:** Add a lenient compile command in the VS Code extension for missing-reference-tolerant builds.
 
+### VSC-7A — Compile on Demand Command **[P0]** ✓ 2025-12-26
+- **PRD:** [VSC-7A_Compile_on_Demand_Command.md](./VSC-7A_Compile_on_Demand_Command.md)
+- **Effort:** 3 hours
+- **Dependencies:** VSC-2B, VSC-4*
+- **Description:** Surface compile output in the VS Code extension via output channel with tests.
 ### VSC-8 — Extension Settings **[P1]** ✓ 2025-12-26
 - **PRD:** [VSC-8_Extension_Settings.md](./VSC-8_Extension_Settings.md)
 - **Effort:** 2 hours
@@ -240,8 +245,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 28 items
-- **Total Effort:** 92 hours (tracked tasks only)
+- **Total Archived:** 29 items
+- **Total Effort:** 95 hours (tracked tasks only)
 - **Phases Represented:** 9 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14)
 
 ---
