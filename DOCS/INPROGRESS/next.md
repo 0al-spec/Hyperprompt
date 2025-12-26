@@ -13,7 +13,7 @@ Restore link span extraction so EditorParser linkAt tests pass and ranges are co
 ## Subtasks
 
 - [x] Fix link span extraction for EditorParser linkAt
-- [ ] Verify UTF-8 byte/column ranges for @"..." links
+- [x] Verify UTF-8 byte/column ranges for @"..." links
 - [ ] Run `swift test --traits Editor` and confirm EditorParserLinkAtTests pass
 
 ## Next Step
