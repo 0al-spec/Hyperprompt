@@ -14,7 +14,7 @@ Add VS Code extension integration tests, cover core features, and set up CI exec
 
 - [x] Add extension integration tests for core commands and providers
 - [x] Cover error handling and multi-root scenarios
-- [ ] Add CI job for extension tests
+- [x] Add CI job for extension tests
 
 ## Next Step
 

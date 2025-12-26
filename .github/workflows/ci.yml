@@ -10,6 +10,7 @@ on:
     paths:
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
+      - 'Tools/VSCodeExtension/**'
       - 'Package.swift'
       - 'Package.resolved'
       - '.github/workflows/**'
@@ -21,6 +22,7 @@ on:
     paths:
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
+      - 'Tools/VSCodeExtension/**'
       - 'Package.swift'
       - 'Package.resolved'
       - '.github/workflows/**'
@@ -227,6 +229,32 @@ jobs:
           echo "Running Swift tests with Editor trait..."
           swift test --traits Editor
           echo "Tests completed successfully"
+
+  vscode-extension-tests:
+    name: CI - VS Code Extension Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: Tools/VSCodeExtension
+        run: |
+          npm install
+
+      - name: Run extension tests
+        working-directory: Tools/VSCodeExtension
+        run: |
+          npm test
 
   build-no-cache:
     name: CI - Build without cache (from scratch)
