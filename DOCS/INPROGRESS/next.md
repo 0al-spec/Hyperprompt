@@ -1,20 +1,20 @@
-# Next Task: VSC-11 — Extension Testing & QA
+# Next Task: VSC-12 — Extension Documentation & Release
 
 **Priority:** P0
 **Phase:** Phase 14 — VS Code Extension Development
-**Effort:** 4 hours
-**Dependencies:** VSC-5, VSC-6, VSC-7
-**Status:** ✅ Completed on 2025-12-27
+**Effort:** 3 hours
+**Dependencies:** VSC-11
+**Status:** Selected
 
 ## Description
 
-Add VS Code extension integration tests, cover core features, and set up CI execution for the extension test suite.
+Complete extension README, release notes, packaging steps, and system requirements documentation.
 
 ## Subtasks
 
-- [x] Add extension integration tests for core commands and providers
-- [x] Cover error handling and multi-root scenarios
-- [x] Add CI job for extension tests
+- [ ] Update extension README with features and usage
+- [ ] Add release notes and packaging instructions
+- [ ] Document system requirements and installation steps
 
 ## Next Step
 

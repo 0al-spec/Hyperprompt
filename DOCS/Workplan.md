@@ -669,7 +669,7 @@ Completed phases include:
 ### VSC-12: Extension Documentation & Release **[P0]**
 **Dependencies:** VSC-11
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 INPROGRESS
 
 - [ ] **[P0, depends: VSC-11]** Write extension README (features, installation, usage)
 - [ ] **[P0, depends: VSC-11]** Add screenshots/GIFs demonstrating features
