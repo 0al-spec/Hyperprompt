@@ -4,13 +4,28 @@
 **Phase:** Phase 14: VS Code Extension Development
 **Effort:** 3 hours
 **Dependencies:** VSC-2B, VSC-4*
-**Status:** Selected
+**Status:** In Progress
 
 ## Description
 
 Add compile-on-demand output for the VS Code extension by calling editor.compile and surfacing the generated Markdown.
 
+## Flow Steps (Tracker)
+
+- [x] SELECT
+- [x] PLAN
+- [ ] INSTALL_SWIFT
+- [ ] EXECUTE
+- [ ] PROGRESS (optional)
+- [ ] ARCHIVE
+
+## Mini TODO (Tracker)
+
+- [ ] A1: Enable compile output payload and add output channel
+- [ ] A2: Implement compile output rendering in UI
+- [ ] A3: Add compile command tests
+- [ ] A4: Update README with output behavior
+
 ## Next Step
 
-Run PLAN command to generate detailed PRD:
-$ claude "Выполни команду PLAN"
+Run INSTALL_SWIFT if needed, then EXECUTE.
