@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { resolveEngine, engineDiscoveryDefaults, EngineResolution } from './engineDiscovery';
 import { RpcClient } from './rpcClient';
 
 type ResolutionMode = 'strict' | 'lenient';
@@ -52,39 +53,107 @@ const readSettings = (): HyperpromptSettings => {
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 	console.log('Hyperprompt extension activated.');
 	const compileTimeoutMs = 5000;
 	let settings = readSettings();
+	let rpcClient: RpcClient | null = null;
+	let engineResolution: EngineResolution | null = null;
+	let lastEngineErrorMessage: string | null = null;
+	let refreshInFlight: Promise<void> | null = null;
 
-	const buildRpcClient = (currentSettings: HyperpromptSettings): RpcClient => {
-		const command = currentSettings.enginePath.length > 0 ? currentSettings.enginePath : 'hyperprompt';
+	const stopRpcClient = () => {
+		if (!rpcClient) {
+			return;
+		}
+		const client = rpcClient;
+		rpcClient = null;
+		client.stop();
+	};
+
+	const notifyEngineError = (message: string) => {
+		if (message.length === 0 || message === lastEngineErrorMessage) {
+			return;
+		}
+		lastEngineErrorMessage = message;
+		vscode.window.showErrorMessage(message);
+	};
+
+	const buildRpcClient = (command: string, logLevel: LogLevel): RpcClient => {
 		const env = {
 			...process.env,
-			HYPERPROMPT_LOG_LEVEL: currentSettings.engineLogLevel
+			HYPERPROMPT_LOG_LEVEL: logLevel
 		};
-
-		return new RpcClient({
+		const client = new RpcClient({
 			command,
 			args: ['editor-rpc'],
 			env,
 			onExit: () => {
+				if (rpcClient !== client) {
+					return;
+				}
 				setTimeout(() => {
-					rpcClient.start();
+					if (rpcClient === client) {
+						client.start();
+					}
 				}, 1000);
 			}
 		});
+		return client;
 	};
 
-	let rpcClient = buildRpcClient(settings);
+	const refreshEngineState = async (showErrors: boolean) => {
+		if (refreshInFlight) {
+			await refreshInFlight;
+			return;
+		}
+		refreshInFlight = (async () => {
+			const env = {
+				...process.env,
+				HYPERPROMPT_LOG_LEVEL: settings.engineLogLevel
+			};
+			const resolution = await resolveEngine({
+				platform: process.platform,
+				enginePath: settings.enginePath,
+				extensionPath: context.extensionPath,
+				env,
+				bundledRelativePath: engineDiscoveryDefaults.bundledRelativePath
+			});
+			engineResolution = resolution;
 
-	const restartRpcClient = (nextSettings: HyperpromptSettings) => {
-		rpcClient.stop();
-		rpcClient = buildRpcClient(nextSettings);
-		rpcClient.start();
+			if (!resolution.ok) {
+				stopRpcClient();
+				if (showErrors) {
+					notifyEngineError(resolution.message);
+				}
+				return;
+			}
+
+			lastEngineErrorMessage = null;
+			stopRpcClient();
+			const client = buildRpcClient(resolution.command, settings.engineLogLevel);
+			rpcClient = client;
+			client.start();
+		})();
+		await refreshInFlight;
+		refreshInFlight = null;
 	};
 
-	rpcClient.start();
+	const ensureEngineReady = async (): Promise<RpcClient | null> => {
+		if (engineResolution?.ok && rpcClient) {
+			return rpcClient;
+		}
+		await refreshEngineState(true);
+		if (engineResolution?.ok && rpcClient) {
+			return rpcClient;
+		}
+		if (engineResolution && !engineResolution.ok) {
+			notifyEngineError(engineResolution.message);
+		}
+		return null;
+	};
+
+	void refreshEngineState(true);
 
 	const getActiveEntryFile = (actionLabel: string): string | null => {
 		const editor = vscode.window.activeTextEditor;
@@ -105,11 +174,15 @@ export function activate(context: vscode.ExtensionContext) {
 		if (!entryFile) {
 			return null;
 		}
+		const client = await ensureEngineReady();
+		if (!client) {
+			return null;
+		}
 		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? path.dirname(entryFile);
 		const resolvedMode = mode ?? settings.resolutionMode;
 		const params = { entryFile, workspaceRoot, includeOutput: false, mode: resolvedMode };
 
-		const result = await rpcClient.request('editor.compile', params, compileTimeoutMs);
+		const result = await client.request('editor.compile', params, compileTimeoutMs);
 		return result as { output?: string; diagnostics?: unknown[]; hasErrors?: boolean };
 	};
 
@@ -169,11 +242,17 @@ export function activate(context: vscode.ExtensionContext) {
 			nextSettings.engineLogLevel !== settings.engineLogLevel;
 		settings = nextSettings;
 		if (engineChanged) {
-			restartRpcClient(nextSettings);
+			void refreshEngineState(true);
 		}
 	});
 
-	context.subscriptions.push(compileCommand, compileLenientCommand, previewCommand, configWatcher, rpcClient);
+	context.subscriptions.push(
+		compileCommand,
+		compileLenientCommand,
+		previewCommand,
+		configWatcher,
+		{ dispose: () => stopRpcClient() }
+	);
 }
 
 // This method is called when your extension is deactivated
