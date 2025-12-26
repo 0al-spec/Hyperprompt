@@ -1,0 +1,1835 @@
+﻿2025-12-26T09:20:55.5259816Z Current runner version: '2.330.0'
+2025-12-26T09:20:55.5293900Z ##[group]Runner Image Provisioner
+2025-12-26T09:20:55.5295281Z Hosted Compute Agent
+2025-12-26T09:20:55.5296166Z Version: 20251211.462
+2025-12-26T09:20:55.5297233Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2025-12-26T09:20:55.5298736Z Build Date: 2025-12-11T16:28:49Z
+2025-12-26T09:20:55.5299829Z Worker ID: {d01581f4-fdd0-4670-89bf-a872a2d85d65}
+2025-12-26T09:20:55.5300915Z ##[endgroup]
+2025-12-26T09:20:55.5301826Z ##[group]Operating System
+2025-12-26T09:20:55.5302752Z Ubuntu
+2025-12-26T09:20:55.5303451Z 24.04.3
+2025-12-26T09:20:55.5304339Z LTS
+2025-12-26T09:20:55.5305048Z ##[endgroup]
+2025-12-26T09:20:55.5305897Z ##[group]Runner Image
+2025-12-26T09:20:55.5306885Z Image: ubuntu-24.04
+2025-12-26T09:20:55.5307731Z Version: 20251215.174.1
+2025-12-26T09:20:55.5309878Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+2025-12-26T09:20:55.5312771Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+2025-12-26T09:20:55.5314390Z ##[endgroup]
+2025-12-26T09:20:55.5316334Z ##[group]GITHUB_TOKEN Permissions
+2025-12-26T09:20:55.5319129Z Contents: read
+2025-12-26T09:20:55.5320133Z Metadata: read
+2025-12-26T09:20:55.5320891Z Packages: read
+2025-12-26T09:20:55.5321634Z ##[endgroup]
+2025-12-26T09:20:55.5324677Z Secret source: Actions
+2025-12-26T09:20:55.5325744Z Prepare workflow directory
+2025-12-26T09:20:55.5783278Z Prepare all required actions
+2025-12-26T09:20:55.5838035Z Getting action download info
+2025-12-26T09:20:55.8607301Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2025-12-26T09:20:55.9837843Z Download action repository 'actions/cache@v4' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+2025-12-26T09:20:56.1857240Z Complete job name: Cached Build - Editor trait
+2025-12-26T09:20:56.2538774Z ##[group]Run actions/checkout@v4
+2025-12-26T09:20:56.2539641Z with:
+2025-12-26T09:20:56.2540046Z   repository: 0al-spec/Hyperprompt
+2025-12-26T09:20:56.2540730Z   token: ***
+2025-12-26T09:20:56.2541109Z   ssh-strict: true
+2025-12-26T09:20:56.2541515Z   ssh-user: git
+2025-12-26T09:20:56.2541918Z   persist-credentials: true
+2025-12-26T09:20:56.2542354Z   clean: true
+2025-12-26T09:20:56.2542756Z   sparse-checkout-cone-mode: true
+2025-12-26T09:20:56.2543231Z   fetch-depth: 1
+2025-12-26T09:20:56.2543612Z   fetch-tags: false
+2025-12-26T09:20:56.2544006Z   show-progress: true
+2025-12-26T09:20:56.2544406Z   lfs: false
+2025-12-26T09:20:56.2544782Z   submodules: false
+2025-12-26T09:20:56.2545183Z   set-safe-directory: true
+2025-12-26T09:20:56.2545824Z ##[endgroup]
+2025-12-26T09:20:56.3651566Z Syncing repository: 0al-spec/Hyperprompt
+2025-12-26T09:20:56.3653642Z ##[group]Getting Git version info
+2025-12-26T09:20:56.3654395Z Working directory is '/home/runner/work/Hyperprompt/Hyperprompt'
+2025-12-26T09:20:56.3655544Z [command]/usr/bin/git version
+2025-12-26T09:20:56.3743090Z git version 2.52.0
+2025-12-26T09:20:56.3770448Z ##[endgroup]
+2025-12-26T09:20:56.3784550Z Temporarily overriding HOME='/home/runner/work/_temp/5724963c-adf5-4267-b616-a67aae5a5055' before making global git config changes
+2025-12-26T09:20:56.3789988Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-26T09:20:56.3791131Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Hyperprompt/Hyperprompt
+2025-12-26T09:20:56.3833190Z Deleting the contents of '/home/runner/work/Hyperprompt/Hyperprompt'
+2025-12-26T09:20:56.3836969Z ##[group]Initializing the repository
+2025-12-26T09:20:56.3841929Z [command]/usr/bin/git init /home/runner/work/Hyperprompt/Hyperprompt
+2025-12-26T09:20:56.3963058Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-12-26T09:20:56.3964601Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2025-12-26T09:20:56.3965549Z hint: to use in all of your new repositories, which will suppress this warning,
+2025-12-26T09:20:56.3967088Z hint: call:
+2025-12-26T09:20:56.3967457Z hint:
+2025-12-26T09:20:56.3968732Z hint: 	git config --global init.defaultBranch <name>
+2025-12-26T09:20:56.3969772Z hint:
+2025-12-26T09:20:56.3970760Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-12-26T09:20:56.3972362Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-12-26T09:20:56.3973632Z hint:
+2025-12-26T09:20:56.3974311Z hint: 	git branch -m <name>
+2025-12-26T09:20:56.3975025Z hint:
+2025-12-26T09:20:56.3975978Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-12-26T09:20:56.3977707Z Initialized empty Git repository in /home/runner/work/Hyperprompt/Hyperprompt/.git/
+2025-12-26T09:20:56.3980939Z [command]/usr/bin/git remote add origin https://github.com/0al-spec/Hyperprompt
+2025-12-26T09:20:56.4014741Z ##[endgroup]
+2025-12-26T09:20:56.4015937Z ##[group]Disabling automatic garbage collection
+2025-12-26T09:20:56.4019974Z [command]/usr/bin/git config --local gc.auto 0
+2025-12-26T09:20:56.4048120Z ##[endgroup]
+2025-12-26T09:20:56.4049513Z ##[group]Setting up auth
+2025-12-26T09:20:56.4056024Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-26T09:20:56.4085809Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-26T09:20:56.4447520Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-26T09:20:56.4477224Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-26T09:20:56.4694454Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-26T09:20:56.4733817Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-26T09:20:56.4956205Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-12-26T09:20:56.4994729Z ##[endgroup]
+2025-12-26T09:20:56.4996328Z ##[group]Fetching the repository
+2025-12-26T09:20:56.5006579Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +bf7fdf627bd1733b3672ce75717232e35adc96cb:refs/remotes/origin/main
+2025-12-26T09:20:56.9101509Z From https://github.com/0al-spec/Hyperprompt
+2025-12-26T09:20:56.9103399Z  * [new ref]         bf7fdf627bd1733b3672ce75717232e35adc96cb -> origin/main
+2025-12-26T09:20:56.9140101Z ##[endgroup]
+2025-12-26T09:20:56.9141558Z ##[group]Determining the checkout info
+2025-12-26T09:20:56.9143182Z ##[endgroup]
+2025-12-26T09:20:56.9148506Z [command]/usr/bin/git sparse-checkout disable
+2025-12-26T09:20:56.9194049Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-12-26T09:20:56.9225964Z ##[group]Checking out the ref
+2025-12-26T09:20:56.9230748Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-12-26T09:20:56.9891436Z Switched to a new branch 'main'
+2025-12-26T09:20:56.9892910Z branch 'main' set up to track 'origin/main'.
+2025-12-26T09:20:56.9905244Z ##[endgroup]
+2025-12-26T09:20:56.9944209Z [command]/usr/bin/git log -1 --format=%H
+2025-12-26T09:20:56.9967176Z bf7fdf627bd1733b3672ce75717232e35adc96cb
+2025-12-26T09:20:57.1814602Z ##[group]Run actions/cache@v4
+2025-12-26T09:20:57.1815669Z with:
+2025-12-26T09:20:57.1816525Z   path: .build
+~/.cache/org.swift.swiftpm
+
+2025-12-26T09:20:57.1819532Z   key: Linux-spm-8bf01bb210e9329164cdc9104655d5adde1986bcd78989eb8523e0e0441a2871-27402e3ce5996d06aedb09a19e6fbe39e0b5b89e8bcdf8963f35620320e3ea78-editor
+2025-12-26T09:20:57.1823210Z   restore-keys: Linux-spm-8bf01bb210e9329164cdc9104655d5adde1986bcd78989eb8523e0e0441a2871-
+Linux-spm-
+
+2025-12-26T09:20:57.1825145Z   enableCrossOsArchive: false
+2025-12-26T09:20:57.1826368Z   fail-on-cache-miss: false
+2025-12-26T09:20:57.1827322Z   lookup-only: false
+2025-12-26T09:20:57.1828395Z   save-always: false
+2025-12-26T09:20:57.1829353Z ##[endgroup]
+2025-12-26T09:20:57.4343595Z Cache hit for restore-key: Linux-spm-8bf01bb210e9329164cdc9104655d5adde1986bcd78989eb8523e0e0441a2871-a9a1a902729fbaf86bb7c63ff65569aa0066605ee0d9cf152d61c071e4717f28-editor
+2025-12-26T09:20:58.4917122Z Received 180355072 of 254881402 (70.8%), 172.0 MBs/sec
+2025-12-26T09:20:58.7881191Z Received 254881402 of 254881402 (100.0%), 187.6 MBs/sec
+2025-12-26T09:20:58.7884527Z Cache Size: ~243 MB (254881402 B)
+2025-12-26T09:20:58.7925771Z [command]/usr/bin/tar -xf /home/runner/work/_temp/2a0eebcf-4b1d-4def-bf71-46aaae61927c/cache.tzst -P -C /home/runner/work/Hyperprompt/Hyperprompt --use-compress-program unzstd
+2025-12-26T09:20:59.9779510Z Cache restored successfully
+2025-12-26T09:21:00.0411205Z Cache restored from key: Linux-spm-8bf01bb210e9329164cdc9104655d5adde1986bcd78989eb8523e0e0441a2871-a9a1a902729fbaf86bb7c63ff65569aa0066605ee0d9cf152d61c071e4717f28-editor
+2025-12-26T09:21:00.0567993Z ##[group]Run # Check if swift is already available
+2025-12-26T09:21:00.0568633Z [36;1m# Check if swift is already available[0m
+2025-12-26T09:21:00.0568959Z [36;1mif ! command -v swift &> /dev/null; then[0m
+2025-12-26T09:21:00.0569266Z [36;1m  echo "Installing Swift..."[0m
+2025-12-26T09:21:00.0569524Z [36;1m  cd /tmp[0m
+2025-12-26T09:21:00.0570254Z [36;1m  curl -L -o swift.tar.gz "https://download.swift.org/development/ubuntu2004/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04.tar.gz"[0m
+2025-12-26T09:21:00.0571044Z [36;1m  tar zxf swift.tar.gz[0m
+2025-12-26T09:21:00.0571430Z [36;1m  sudo cp -r swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04/usr/* /usr/[0m
+2025-12-26T09:21:00.0571814Z [36;1mfi[0m
+2025-12-26T09:21:00.0572024Z [36;1mswift --version[0m
+2025-12-26T09:21:00.0608864Z shell: /usr/bin/bash -e {0}
+2025-12-26T09:21:00.0609141Z ##[endgroup]
+2025-12-26T09:21:08.7120376Z Swift version 6.2.3 (swift-6.2.3-RELEASE)
+2025-12-26T09:21:08.7120831Z Target: x86_64-unknown-linux-gnu
+2025-12-26T09:21:08.7608423Z ##[group]Run if [ "false" == "true" ]; then
+2025-12-26T09:21:08.7608785Z [36;1mif [ "false" == "true" ]; then[0m
+2025-12-26T09:21:08.7609089Z [36;1m  echo "✓ Using cached dependencies"[0m
+2025-12-26T09:21:08.7609354Z [36;1melse[0m
+2025-12-26T09:21:08.7609565Z [36;1m  echo "Building from scratch (no cache)"[0m
+2025-12-26T09:21:08.7609831Z [36;1mfi[0m
+2025-12-26T09:21:08.7610039Z [36;1mtime swift build --traits Editor[0m
+2025-12-26T09:21:08.7644591Z shell: /usr/bin/bash -e {0}
+2025-12-26T09:21:08.7644854Z ##[endgroup]
+2025-12-26T09:21:08.7695806Z Building from scratch (no cache)
+2025-12-26T09:21:24.4846607Z [0/1] Planning build
+2025-12-26T09:21:25.5540510Z [1/1] Compiling plugin GenerateManual
+2025-12-26T09:21:26.1614481Z [2/2] Compiling plugin GenerateDoccReference
+2025-12-26T09:21:26.1615080Z Building for debugging...
+2025-12-26T09:21:26.2191578Z [2/29] Write sources
+2025-12-26T09:21:26.2715240Z [11/29] Write swift-version--1BFCD5C06E9F820A.txt
+2025-12-26T09:21:26.6242827Z [13/38] Compiling Core Delimiters.swift
+2025-12-26T09:21:26.6270571Z [14/38] Compiling Core ErrorCategory.swift
+2025-12-26T09:21:26.6298663Z [15/38] Compiling Core FileLoader.swift
+2025-12-26T09:21:26.6299473Z [16/38] Compiling Core FileSystem.swift
+2025-12-26T09:21:26.6300071Z [17/38] Compiling Core FileType.swift
+2025-12-26T09:21:26.6325726Z [18/42] Emitting module Core
+2025-12-26T09:21:26.6658005Z [19/42] Compiling Core Arguments.swift
+2025-12-26T09:21:26.6660961Z [20/42] Compiling Core CompilerError.swift
+2025-12-26T09:21:26.6662166Z [21/42] Compiling Core ConcreteErrors.swift
+2025-12-26T09:21:26.6665149Z [22/42] Compiling Core ContentHasher.swift
+2025-12-26T09:21:26.6671132Z [23/42] Compiling Core Core.swift
+2025-12-26T09:21:26.6674582Z [24/42] Compiling Core LineBreak.swift
+2025-12-26T09:21:26.6677152Z [25/42] Compiling Core LocalFileSystem.swift
+2025-12-26T09:21:26.6679150Z [26/42] Compiling Core ManifestBuilder.swift
+2025-12-26T09:21:26.6680669Z [27/42] Compiling Core ManifestEntry.swift
+2025-12-26T09:21:26.7353061Z [28/42] Compiling Core Placeholder.swift
+2025-12-26T09:21:26.7353656Z [29/42] Compiling Core QuoteDelimiter.swift
+2025-12-26T09:21:26.7354230Z [30/42] Compiling Core SourceLocation.swift
+2025-12-26T09:21:26.7354555Z [31/42] Compiling Core IndentationSpecs.swift
+2025-12-26T09:21:26.8164345Z [32/43] Wrapping AST for Core for debugging
+2025-12-26T09:21:27.1802127Z [34/56] Compiling HypercodeGrammar SecuritySpecs.swift
+2025-12-26T09:21:27.1806361Z [35/56] Compiling HypercodeGrammar LineSpecs.swift
+2025-12-26T09:21:27.2179122Z [36/58] Compiling Statistics CompilationStats.swift
+2025-12-26T09:21:27.2193292Z [37/58] Compiling Statistics StatsCollector.swift
+2025-12-26T09:21:27.2201052Z [38/58] Emitting module Statistics
+2025-12-26T09:21:27.2203642Z [39/58] Compiling Statistics StatsReporter.swift
+2025-12-26T09:21:27.2482667Z [40/59] Compiling HypercodeGrammar QuoteSpecs.swift
+2025-12-26T09:21:27.2485888Z [41/59] Compiling HypercodeGrammar WhitespaceSpecs.swift
+2025-12-26T09:21:27.2489976Z [42/59] Compiling HypercodeGrammar PathSpecs.swift
+2025-12-26T09:21:27.3865909Z [44/58] Compiling HypercodeGrammar NodeSpecs.swift
+2025-12-26T09:21:27.3866544Z [45/58] Compiling HypercodeGrammar ReferenceSpecs.swift
+2025-12-26T09:21:27.4188004Z [46/58] Emitting module HypercodeGrammar
+2025-12-26T09:21:27.4189235Z [47/58] Compiling HypercodeGrammar Decisions.swift
+2025-12-26T09:21:27.4189893Z [48/58] Compiling HypercodeGrammar DomainTypes.swift
+2025-12-26T09:21:27.4190476Z [49/58] Compiling HypercodeGrammar LineBreakSpecs.swift
+2025-12-26T09:21:27.8216914Z [51/65] Compiling Parser Node.swift
+2025-12-26T09:21:27.8217444Z [52/65] Compiling Parser Parser.swift
+2025-12-26T09:21:27.8217878Z [53/65] Compiling Parser Lexer.swift
+2025-12-26T09:21:27.8219414Z [54/65] Compiling Parser LexerError.swift
+2025-12-26T09:21:27.8219858Z [55/65] Emitting module Parser
+2025-12-26T09:21:27.8221689Z [56/65] Compiling Parser ParserError.swift
+2025-12-26T09:21:27.8222275Z [57/65] Compiling Parser ParserRecoveryResult.swift
+2025-12-26T09:21:27.9406541Z [58/67] Compiling Parser Program.swift
+2025-12-26T09:21:27.9407126Z [59/67] Compiling Parser Token.swift
+2025-12-26T09:21:28.2717280Z [61/76] Compiling Resolver ResolutionError.swift
+2025-12-26T09:21:28.4041189Z [62/77] Compiling Resolver ResolutionMode.swift
+2025-12-26T09:21:28.4121693Z [63/77] Compiling Emitter ManifestGenerator.swift
+2025-12-26T09:21:28.5268761Z [64/78] Emitting module Emitter
+2025-12-26T09:21:28.5274938Z [65/78] Compiling Emitter HeadingAdjuster.swift
+2025-12-26T09:21:28.5279315Z [66/78] Compiling Emitter Manifest.swift
+2025-12-26T09:21:28.5860063Z [67/78] Compiling Emitter MarkdownEmitter.swift
+2025-12-26T09:21:28.6589373Z [69/78] Emitting module Resolver
+2025-12-26T09:21:28.6589917Z [70/78] Compiling Resolver DependencyTracker.swift
+2025-12-26T09:21:28.6590496Z [71/78] Compiling Resolver ParsedFileCache.swift
+2025-12-26T09:21:28.6591013Z [72/78] Compiling Resolver ReferenceResolver.swift
+2025-12-26T09:21:28.7280045Z [73/79] Wrapping AST for Resolver for debugging
+2025-12-26T09:21:28.9643028Z [75/82] Compiling CompilerDriver DeterministicTimestampProvider.swift
+2025-12-26T09:21:28.9644170Z [76/82] Emitting module CompilerDriver
+2025-12-26T09:21:28.9644842Z [77/82] Compiling CompilerDriver CompilerDriver.swift
+2025-12-26T09:21:29.4151706Z [79/100] Emitting module EditorEngine
+2025-12-26T09:21:29.8188537Z [80/105] Compiling EditorEngine GlobMatcher.swift
+2025-12-26T09:21:29.8189204Z [81/105] Compiling EditorEngine IndexerPolicies.swift
+2025-12-26T09:21:29.8190711Z [82/105] Compiling EditorEngine LinkDecisionSpecs.swift
+2025-12-26T09:21:29.8195582Z [83/105] Compiling EditorEngine LinkSpan.swift
+2025-12-26T09:21:29.8204718Z [84/105] Compiling EditorEngine OutputPathDecisionSpecs.swift
+2025-12-26T09:21:29.8209488Z [85/105] Compiling EditorEngine EditorCompiler.swift
+2025-12-26T09:21:29.8214204Z [86/105] Compiling EditorEngine EditorEngine.swift
+2025-12-26T09:21:29.8219804Z [87/105] Compiling EditorEngine EditorEngineUnavailable.swift
+2025-12-26T09:21:29.8222734Z [88/105] Compiling EditorEngine EditorParser.swift
+2025-12-26T09:21:29.8227708Z [89/105] Compiling EditorEngine EditorResolver.swift
+2025-12-26T09:21:29.8228586Z [90/105] Compiling EditorEngine FileTypeDecisionSpecs.swift
+2025-12-26T09:21:29.8229219Z [91/105] Compiling EditorEngine CompileOptions.swift
+2025-12-26T09:21:29.8232297Z [92/105] Compiling EditorEngine CompilePolicyDecisionSpecs.swift
+2025-12-26T09:21:29.8232973Z [93/105] Compiling EditorEngine CompileResult.swift
+2025-12-26T09:21:29.8233553Z [94/105] Compiling EditorEngine DiagnosticMapper.swift
+2025-12-26T09:21:29.8234143Z [95/105] Compiling EditorEngine Diagnostics.swift
+2025-12-26T09:21:29.8234766Z [96/105] Compiling EditorEngine DirectoryDecisionSpecs.swift
+2025-12-26T09:21:30.1909441Z [97/105] Compiling EditorEngine ParsedFile.swift
+2025-12-26T09:21:30.1910130Z [98/105] Compiling EditorEngine ProjectIndex.swift
+2025-12-26T09:21:30.1910690Z [99/105] Compiling EditorEngine ProjectIndexer.swift
+2025-12-26T09:21:30.1911300Z [100/105] Compiling EditorEngine ResolutionDecisionSpecs.swift
+2025-12-26T09:21:30.1911807Z [101/105] Compiling EditorEngine ResolvedTarget.swift
+2025-12-26T09:21:30.2674145Z [102/106] Wrapping AST for EditorEngine for debugging
+2025-12-26T09:21:31.2291591Z [104/112] Compiling CLI RPCParams.swift
+2025-12-26T09:21:31.2292216Z [105/112] Compiling CLI DiagnosticPrinter.swift
+2025-12-26T09:21:31.2295624Z [106/112] Compiling CLI EditorRPCCommand.swift
+2025-12-26T09:21:31.2296136Z [107/112] Compiling CLI Hyperprompt.swift
+2025-12-26T09:21:31.2296638Z [108/112] Compiling CLI JSONRPCTypes.swift
+2025-12-26T09:21:31.2297136Z [109/112] Emitting module CLI
+2025-12-26T09:21:31.3234826Z [110/113] Compiling CLI main.swift
+2025-12-26T09:21:31.8001009Z [111/114] Wrapping AST for CLI for debugging
+2025-12-26T09:21:31.8011223Z [112/114] Write Objects.LinkFileList
+2025-12-26T09:21:32.2292519Z [113/114] Linking hyperprompt
+2025-12-26T09:21:32.2319191Z Build complete! (16.03s)
+2025-12-26T09:21:32.2389526Z 
+2025-12-26T09:21:32.2389704Z real	0m23.469s
+2025-12-26T09:21:32.2390300Z user	0m17.907s
+2025-12-26T09:21:32.2390601Z sys	0m3.595s
+2025-12-26T09:21:32.2420050Z ##[group]Run swift test --traits Editor
+2025-12-26T09:21:32.2420384Z [36;1mswift test --traits Editor[0m
+2025-12-26T09:21:32.2452899Z shell: /usr/bin/bash -e {0}
+2025-12-26T09:21:32.2453153Z ##[endgroup]
+2025-12-26T09:21:36.0880821Z [0/1] Planning build
+2025-12-26T09:21:36.7173499Z [1/1] Compiling plugin GenerateManual
+2025-12-26T09:21:37.3019439Z [2/2] Compiling plugin GenerateDoccReference
+2025-12-26T09:21:37.3019890Z Building for debugging...
+2025-12-26T09:21:37.3430818Z [2/45] Write sources
+2025-12-26T09:21:37.3504662Z [12/49] Copying Fixtures
+2025-12-26T09:21:37.3762003Z [14/49] Write swift-version--1BFCD5C06E9F820A.txt
+2025-12-26T09:21:37.8801098Z [16/44] Emitting module StatisticsTests
+2025-12-26T09:21:37.8875180Z [17/44] Compiling StatisticsTests StatisticsTests.swift
+2025-12-26T09:21:38.0387767Z [19/44] Compiling ResolverTests ParsedFileCacheTests.swift
+2025-12-26T09:21:38.0390141Z [20/44] Compiling ResolverTests DependencyTrackerTests.swift
+2025-12-26T09:21:38.0393406Z [21/44] Compiling ResolverTests MockFileSystem.swift
+2025-12-26T09:21:38.0395113Z [22/44] Emitting module ResolverTests
+2025-12-26T09:21:38.2737698Z [23/48] Emitting module PerformanceTests
+2025-12-26T09:21:38.2751464Z [24/48] Compiling ParserTests ParserTests.swift
+2025-12-26T09:21:38.2756646Z [25/48] Compiling PerformanceTests CompilerPerformanceTests.swift
+2025-12-26T09:21:38.3772995Z [27/49] Emitting module ParserTests
+2025-12-26T09:21:38.3822300Z [28/49] Compiling ParserTests LexerTests.swift
+2025-12-26T09:21:38.4735531Z [30/49] Compiling IntegrationTests LexerSpecificationsIntegrationTests.swift
+2025-12-26T09:21:38.5772181Z [31/55] Emitting module HypercodeGrammarTests
+2025-12-26T09:21:38.8033243Z [32/55] Emitting module EmitterTests
+2025-12-26T09:21:38.9252148Z [33/55] Compiling HypercodeGrammarTests HypercodeGrammarTests.swift
+2025-12-26T09:21:39.0215152Z [35/55] Compiling EmitterTests EmitterTests.swift
+2025-12-26T09:21:39.0219570Z [36/55] Compiling EmitterTests HeadingAdjusterTests.swift
+2025-12-26T09:21:39.0340841Z [37/55] Emitting module IntegrationTests
+2025-12-26T09:21:39.0346142Z [38/55] Compiling IntegrationTests CompilerDriverTests.swift
+2025-12-26T09:21:39.2124029Z [40/71] Compiling EmitterTests ManifestGeneratorTests.swift
+2025-12-26T09:21:39.5543330Z [42/73] Compiling ResolverTests ReferenceResolverTests.swift
+2025-12-26T09:21:39.8711872Z [43/78] Wrapping AST for PerformanceTests for debugging
+2025-12-26T09:21:39.9653441Z [44/78] Wrapping AST for ResolverTests for debugging
+2025-12-26T09:21:40.0124095Z [46/78] Compiling CLITests DeterministicTimestampProviderTests.swift
+2025-12-26T09:21:40.2381446Z [47/79] Compiling CoreTests FileSystemTests.swift
+2025-12-26T09:21:40.2419590Z [48/79] Compiling CoreTests ManifestBuilderTests.swift
+2025-12-26T09:21:40.2654739Z [49/81] Compiling CoreTests ErrorCategoryTests.swift
+2025-12-26T09:21:40.2661127Z [50/81] Compiling CoreTests FileLoaderTests.swift
+2025-12-26T09:21:40.2682691Z [51/81] Emitting module CoreTests
+2025-12-26T09:21:40.2731596Z [52/81] Compiling CoreTests CompilerErrorTests.swift
+2025-12-26T09:21:40.2736530Z [53/81] Compiling CoreTests CoreTests.swift
+2025-12-26T09:21:40.3384565Z [54/81] Compiling CLITests CLITests.swift
+2025-12-26T09:21:40.3396474Z [55/81] Emitting module CLITests
+2025-12-26T09:21:40.3403467Z [56/81] Compiling CLITests ArgumentParsingTests.swift
+2025-12-26T09:21:40.5160716Z [57/81] Emitting module EditorEngineTests
+2025-12-26T09:21:40.5175892Z [64/81] Compiling CoreTests MockFileSystem.swift
+2025-12-26T09:21:40.5181060Z [65/81] Compiling CoreTests SourceLocationTests.swift
+2025-12-26T09:21:40.5185395Z [66/81] Compiling EditorEngineTests EditorResolverTests.swift
+2025-12-26T09:21:40.5190944Z [67/81] Compiling EditorEngineTests GlobMatcherTests.swift
+2025-12-26T09:21:40.6383995Z [71/84] Compiling CLITests DiagnosticPrinterTests.swift
+2025-12-26T09:21:40.9166128Z [73/84] Compiling EditorEngineTests LinkSpanTests.swift
+2025-12-26T09:21:40.9166901Z [74/84] Compiling EditorEngineTests ProjectIndexTests.swift
+2025-12-26T09:21:40.9167792Z [75/84] Compiling EditorEngineTests ProjectIndexerTests.swift
+2025-12-26T09:21:40.9875240Z [76/85] Wrapping AST for EditorEngineTests for debugging
+2025-12-26T09:21:41.0289855Z [77/85] /home/runner/work/Hyperprompt/Hyperprompt/.build/x86_64-unknown-linux-gnu/debug/HyperpromptPackageDiscoveredTests.derived/all-discovered-tests.swift
+2025-12-26T09:21:41.0294117Z [78/85] Write sources
+2025-12-26T09:21:41.9191909Z [80/95] Compiling HyperpromptPackageDiscoveredTests ParserTests.swift
+2025-12-26T09:21:41.9226406Z [81/95] Compiling HyperpromptPackageDiscoveredTests PerformanceTests.swift
+2025-12-26T09:21:41.9227737Z [82/95] Compiling HyperpromptPackageDiscoveredTests ResolverTests.swift
+2025-12-26T09:21:41.9350498Z [83/97] Compiling HyperpromptPackageDiscoveredTests EmitterTests.swift
+2025-12-26T09:21:41.9357187Z [84/97] Compiling HyperpromptPackageDiscoveredTests HypercodeGrammarTests.swift
+2025-12-26T09:21:41.9363783Z [85/97] Compiling HyperpromptPackageDiscoveredTests IntegrationTests.swift
+2025-12-26T09:21:42.0933398Z [86/97] Emitting module HyperpromptPackageDiscoveredTests
+2025-12-26T09:21:42.0959922Z [87/97] Compiling HyperpromptPackageDiscoveredTests StatisticsTests.swift
+2025-12-26T09:21:42.0963366Z [88/97] Compiling HyperpromptPackageDiscoveredTests all-discovered-tests.swift
+2025-12-26T09:21:42.1002694Z [89/97] Compiling HyperpromptPackageDiscoveredTests CLITests.swift
+2025-12-26T09:21:42.1003490Z [90/97] Compiling HyperpromptPackageDiscoveredTests CoreTests.swift
+2025-12-26T09:21:42.1003992Z [91/97] Compiling HyperpromptPackageDiscoveredTests EditorEngineTests.swift
+2025-12-26T09:21:42.1459621Z [92/98] /home/runner/work/Hyperprompt/Hyperprompt/.build/x86_64-unknown-linux-gnu/debug/HyperpromptPackageTests.derived/runner.swift
+2025-12-26T09:21:42.1460795Z [93/98] Write sources
+2025-12-26T09:21:42.1759135Z [94/98] Wrapping AST for HyperpromptPackageDiscoveredTests for debugging
+2025-12-26T09:21:42.8826144Z [96/100] Emitting module HyperpromptPackageTests
+2025-12-26T09:21:42.9239338Z [97/100] Compiling HyperpromptPackageTests runner.swift
+2025-12-26T09:21:42.9240057Z [98/100] Write Objects.LinkFileList
+2025-12-26T09:21:43.4804448Z [99/100] Linking HyperpromptPackageTests.xctest
+2025-12-26T09:21:43.4830363Z Build complete! (10.77s)
+2025-12-26T09:21:44.2494165Z Test Suite 'All tests' started at 2025-12-26 09:21:43.559
+2025-12-26T09:21:44.2494752Z Test Suite 'debug.xctest' started at 2025-12-26 09:21:44.044
+2025-12-26T09:21:44.2495356Z Test Suite 'DomainTypesTests' started at 2025-12-26 09:21:44.044
+2025-12-26T09:21:44.2496170Z Test Case 'DomainTypesTests.testParsedLineCalculatesDepth' started at 2025-12-26 09:21:44.044
+2025-12-26T09:21:44.2497249Z Test Case 'DomainTypesTests.testParsedLineCalculatesDepth' passed (0.001 seconds)
+2025-12-26T09:21:44.2498586Z Test Case 'DomainTypesTests.testParsedLineSkippableForCommentAndBlank' started at 2025-12-26 09:21:44.045
+2025-12-26T09:21:44.2499920Z Test Case 'DomainTypesTests.testParsedLineSkippableForCommentAndBlank' passed (0.1 seconds)
+2025-12-26T09:21:44.2501181Z Test Case 'DomainTypesTests.testRawLineLocationBuildsFromFilePath' started at 2025-12-26 09:21:44.145
+2025-12-26T09:21:44.2502344Z Test Case 'DomainTypesTests.testRawLineLocationBuildsFromFilePath' passed (0.1 seconds)
+2025-12-26T09:21:44.2503308Z Test Suite 'DomainTypesTests' passed at 2025-12-26 09:21:44.246
+2025-12-26T09:21:44.2504239Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.202 (0.202) seconds
+2025-12-26T09:21:44.2505015Z Test Suite 'LexicalSpecsTests' started at 2025-12-26 09:21:44.246
+2025-12-26T09:21:44.2506087Z Test Case 'LexicalSpecsTests.testBlankLineDetectionIgnoresNewlines' started at 2025-12-26 09:21:44.246
+2025-12-26T09:21:44.2507376Z Test Case 'LexicalSpecsTests.testBlankLineDetectionIgnoresNewlines' passed (0.0 seconds)
+2025-12-26T09:21:44.2508713Z Test Case 'LexicalSpecsTests.testLineBreakDetection' started at 2025-12-26 09:21:44.246
+2025-12-26T09:21:44.2509766Z Test Case 'LexicalSpecsTests.testLineBreakDetection' passed (0.0 seconds)
+2025-12-26T09:21:44.2511221Z Test Case 'LexicalSpecsTests.testQuoteSpecsRecognizeBoundaries' started at 2025-12-26 09:21:44.246
+2025-12-26T09:21:44.2511922Z Test Case 'LexicalSpecsTests.testQuoteSpecsRecognizeBoundaries' passed (0.0 seconds)
+2025-12-26T09:21:44.2512700Z Test Case 'LexicalSpecsTests.testSingleLineContentSpec' started at 2025-12-26 09:21:44.246
+2025-12-26T09:21:44.2513315Z Test Case 'LexicalSpecsTests.testSingleLineContentSpec' passed (0.0 seconds)
+2025-12-26T09:21:44.2513865Z Test Suite 'LexicalSpecsTests' passed at 2025-12-26 09:21:44.247
+2025-12-26T09:21:44.2514297Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+2025-12-26T09:21:44.2514773Z Test Suite 'PathSpecsTests' started at 2025-12-26 09:21:44.247
+2025-12-26T09:21:44.2515500Z Test Case 'PathSpecsTests.testExtensionSpecifications' started at 2025-12-26 09:21:44.247
+2025-12-26T09:21:44.2516127Z Test Case 'PathSpecsTests.testExtensionSpecifications' passed (0.0 seconds)
+2025-12-26T09:21:44.2516694Z Test Case 'PathSpecsTests.testPathSafetySpecifications' started at 2025-12-26 09:21:44.247
+2025-12-26T09:21:44.2517281Z Test Case 'PathSpecsTests.testPathSafetySpecifications' passed (0.0 seconds)
+2025-12-26T09:21:44.2517884Z Test Case 'PathSpecsTests.testPathTypeDecisionClassifiesPaths' started at 2025-12-26 09:21:44.247
+2025-12-26T09:21:44.2518813Z Test Case 'PathSpecsTests.testPathTypeDecisionClassifiesPaths' passed (0.0 seconds)
+2025-12-26T09:21:44.2519318Z Test Suite 'PathSpecsTests' passed at 2025-12-26 09:21:44.248
+2025-12-26T09:21:44.2519729Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+2025-12-26T09:21:44.2520171Z Test Suite 'SyntacticSpecsTests' started at 2025-12-26 09:21:44.248
+2025-12-26T09:21:44.2520673Z Test Case 'SyntacticSpecsTests.testCommentRecognition' started at 2025-12-26 09:21:44.248
+2025-12-26T09:21:44.2521228Z Test Case 'SyntacticSpecsTests.testCommentRecognition' passed (0.0 seconds)
+2025-12-26T09:21:44.2521989Z Test Case 'SyntacticSpecsTests.testIndentAndDepthValidations' started at 2025-12-26 09:21:44.248
+2025-12-26T09:21:44.2522610Z Test Case 'SyntacticSpecsTests.testIndentAndDepthValidations' passed (0.0 seconds)
+2025-12-26T09:21:44.2523185Z Test Case 'SyntacticSpecsTests.testLineKindDecision' started at 2025-12-26 09:21:44.248
+2025-12-26T09:21:44.2523726Z Test Case 'SyntacticSpecsTests.testLineKindDecision' passed (0.0 seconds)
+2025-12-26T09:21:44.2524244Z Test Case 'SyntacticSpecsTests.testNodeRecognition' started at 2025-12-26 09:21:44.248
+2025-12-26T09:21:44.2524771Z Test Case 'SyntacticSpecsTests.testNodeRecognition' passed (0.0 seconds)
+2025-12-26T09:21:44.2525215Z Test Suite 'SyntacticSpecsTests' passed at 2025-12-26 09:21:44.248
+2025-12-26T09:21:44.2525634Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+2025-12-26T09:21:44.2526074Z Test Suite 'DependencyTrackerTests' started at 2025-12-26 09:21:44.248
+2025-12-26T09:21:44.2526803Z Test Case 'DependencyTrackerTests.testAcyclicPathPushesOnStack' started at 2025-12-26 09:21:44.248
+2025-12-26T09:21:44.2527714Z Test Case 'DependencyTrackerTests.testAcyclicPathPushesOnStack' passed (0.0 seconds)
+2025-12-26T09:21:44.2528696Z Test Case 'DependencyTrackerTests.testBuildsCyclePathForTransitiveCycle' started at 2025-12-26 09:21:44.249
+2025-12-26T09:21:44.2529925Z Test Case 'DependencyTrackerTests.testBuildsCyclePathForTransitiveCycle' passed (0.0 seconds)
+2025-12-26T09:21:44.2530994Z Test Case 'DependencyTrackerTests.testDetectsSelfReferenceCycle' started at 2025-12-26 09:21:44.249
+2025-12-26T09:21:44.2531994Z Test Case 'DependencyTrackerTests.testDetectsSelfReferenceCycle' passed (0.0 seconds)
+2025-12-26T09:21:44.2546202Z Test Case 'DependencyTrackerTests.testPopRemovesPathFromMemoizedIndex' started at 2025-12-26 09:21:44.249
+2025-12-26T09:21:44.2547487Z Test Case 'DependencyTrackerTests.testPopRemovesPathFromMemoizedIndex' passed (0.0 seconds)
+2025-12-26T09:21:44.2548656Z Test Suite 'DependencyTrackerTests' passed at 2025-12-26 09:21:44.250
+2025-12-26T09:21:44.2549542Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+2025-12-26T09:21:44.2550120Z Test Suite 'ParsedFileCacheTests' started at 2025-12-26 09:21:44.250
+2025-12-26T09:21:44.2550768Z Test Case 'ParsedFileCacheTests.testCacheHitReturnsProgram' started at 2025-12-26 09:21:44.250
+2025-12-26T09:21:44.2551586Z Test Case 'ParsedFileCacheTests.testCacheHitReturnsProgram' passed (0.0 seconds)
+2025-12-26T09:21:44.2552490Z Test Case 'ParsedFileCacheTests.testCascadingInvalidationRemovesDependents' started at 2025-12-26 09:21:44.250
+2025-12-26T09:21:44.2553443Z Test Case 'ParsedFileCacheTests.testCascadingInvalidationRemovesDependents' passed (0.0 seconds)
+2025-12-26T09:21:44.2554171Z Test Case 'ParsedFileCacheTests.testChecksumMismatchInvalidatesEntry' started at 2025-12-26 09:21:44.250
+2025-12-26T09:21:44.2554978Z Test Case 'ParsedFileCacheTests.testChecksumMismatchInvalidatesEntry' passed (0.0 seconds)
+2025-12-26T09:21:44.2555732Z Test Case 'ParsedFileCacheTests.testDependencyAccessorsExposeGraph' started at 2025-12-26 09:21:44.250
+2025-12-26T09:21:44.2556517Z Test Case 'ParsedFileCacheTests.testDependencyAccessorsExposeGraph' passed (0.0 seconds)
+2025-12-26T09:21:44.2557273Z Test Case 'ParsedFileCacheTests.testDirtyClosureIncludesDependents' started at 2025-12-26 09:21:44.250
+2025-12-26T09:21:44.2558057Z Test Case 'ParsedFileCacheTests.testDirtyClosureIncludesDependents' passed (0.0 seconds)
+2025-12-26T09:21:44.2558990Z Test Case 'ParsedFileCacheTests.testLRUEvictionRemovesLeastRecentlyUsed' started at 2025-12-26 09:21:44.251
+2025-12-26T09:21:44.2559901Z Test Case 'ParsedFileCacheTests.testLRUEvictionRemovesLeastRecentlyUsed' passed (0.0 seconds)
+2025-12-26T09:21:44.2560739Z Test Case 'ParsedFileCacheTests.testTopologicalOrderPlacesDependenciesFirst' started at 2025-12-26 09:21:44.251
+2025-12-26T09:21:44.2561728Z Test Case 'ParsedFileCacheTests.testTopologicalOrderPlacesDependenciesFirst' passed (0.0 seconds)
+2025-12-26T09:21:44.2562471Z Test Suite 'ParsedFileCacheTests' passed at 2025-12-26 09:21:44.251
+2025-12-26T09:21:44.2562959Z 	 Executed 7 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+2025-12-26T09:21:44.2563564Z Test Suite 'ReferenceResolverTests' started at 2025-12-26 09:21:44.251
+2025-12-26T09:21:44.2564178Z Test Case 'ReferenceResolverTests.testAbsolutePathOutsideRootIsRejected' started at 2025-12-26 09:21:44.251
+2025-12-26T09:21:44.2564890Z Test Case 'ReferenceResolverTests.testAbsolutePathOutsideRootIsRejected' passed (0.0 seconds)
+2025-12-26T09:21:44.2565579Z Test Case 'ReferenceResolverTests.testCaseInsensitiveExtensionHc' started at 2025-12-26 09:21:44.252
+2025-12-26T09:21:44.2566332Z Test Case 'ReferenceResolverTests.testCaseInsensitiveExtensionHc' passed (0.001 seconds)
+2025-12-26T09:21:44.2567099Z Test Case 'ReferenceResolverTests.testCaseInsensitiveExtensionMd' started at 2025-12-26 09:21:44.253
+2025-12-26T09:21:44.2567734Z Test Case 'ReferenceResolverTests.testCaseInsensitiveExtensionMd' passed (0.0 seconds)
+2025-12-26T09:21:44.2568501Z Test Case 'ReferenceResolverTests.testClearVisited' started at 2025-12-26 09:21:44.253
+2025-12-26T09:21:44.2569032Z Test Case 'ReferenceResolverTests.testClearVisited' passed (0.0 seconds)
+2025-12-26T09:21:44.2569640Z Test Case 'ReferenceResolverTests.testContainsPathTraversalNegative' started at 2025-12-26 09:21:44.253
+2025-12-26T09:21:44.2570752Z Test Case 'ReferenceResolverTests.testContainsPathTraversalNegative' passed (0.0 seconds)
+2025-12-26T09:21:44.2571450Z Test Case 'ReferenceResolverTests.testContainsPathTraversalPositive' started at 2025-12-26 09:21:44.253
+2025-12-26T09:21:44.2572567Z Test Case 'ReferenceResolverTests.testContainsPathTraversalPositive' passed (0.0 seconds)
+2025-12-26T09:21:44.2573386Z Test Case 'ReferenceResolverTests.testDependenciesRecordedForHypercodeReference' started at 2025-12-26 09:21:44.253
+2025-12-26T09:21:44.2574609Z Test Case 'ReferenceResolverTests.testDependenciesRecordedForHypercodeReference' passed (0.0 seconds)
+2025-12-26T09:21:44.2576260Z Test Case 'ReferenceResolverTests.testDependencyTrackerPushesAndPopsDuringHypercodeResolution' started at 2025-12-26 09:21:44.253
+2025-12-26T09:21:44.2577673Z Test Case 'ReferenceResolverTests.testDependencyTrackerPushesAndPopsDuringHypercodeResolution' passed (0.0 seconds)
+2025-12-26T09:21:44.2579122Z Test Case 'ReferenceResolverTests.testDiagnosticInfoIsReadable' started at 2025-12-26 09:21:44.254
+2025-12-26T09:21:44.2580238Z Test Case 'ReferenceResolverTests.testDiagnosticInfoIsReadable' passed (0.0 seconds)
+2025-12-26T09:21:44.2581404Z Test Case 'ReferenceResolverTests.testErrorIncludesCorrectLineNumber' started at 2025-12-26 09:21:44.254
+2025-12-26T09:21:44.2582610Z Test Case 'ReferenceResolverTests.testErrorIncludesCorrectLineNumber' passed (0.0 seconds)
+2025-12-26T09:21:44.2583604Z Test Case 'ReferenceResolverTests.testErrorIncludesFilePath' started at 2025-12-26 09:21:44.254
+2025-12-26T09:21:44.2584248Z Test Case 'ReferenceResolverTests.testErrorIncludesFilePath' passed (0.0 seconds)
+2025-12-26T09:21:44.2585047Z Test Case 'ReferenceResolverTests.testFileExistsFalse' started at 2025-12-26 09:21:44.254
+2025-12-26T09:21:44.2585620Z Test Case 'ReferenceResolverTests.testFileExistsFalse' passed (0.0 seconds)
+2025-12-26T09:21:44.2586239Z Test Case 'ReferenceResolverTests.testFileExistsTrue' started at 2025-12-26 09:21:44.255
+2025-12-26T09:21:44.2586903Z Test Case 'ReferenceResolverTests.testFileExistsTrue' passed (0.0 seconds)
+2025-12-26T09:21:44.2587479Z Test Case 'ReferenceResolverTests.testFileExtensionHidden' started at 2025-12-26 09:21:44.255
+2025-12-26T09:21:44.2588118Z Test Case 'ReferenceResolverTests.testFileExtensionHidden' passed (0.0 seconds)
+2025-12-26T09:21:44.2589124Z Test Case 'ReferenceResolverTests.testFileExtensionMultipleDots' started at 2025-12-26 09:21:44.255
+2025-12-26T09:21:44.2589772Z Test Case 'ReferenceResolverTests.testFileExtensionMultipleDots' passed (0.0 seconds)
+2025-12-26T09:21:44.2590504Z Test Case 'ReferenceResolverTests.testFileExtensionNone' started at 2025-12-26 09:21:44.255
+2025-12-26T09:21:44.2591406Z Test Case 'ReferenceResolverTests.testFileExtensionNone' passed (0.0 seconds)
+2025-12-26T09:21:44.2591983Z Test Case 'ReferenceResolverTests.testFileExtensionNormal' started at 2025-12-26 09:21:44.255
+2025-12-26T09:21:44.2592567Z Test Case 'ReferenceResolverTests.testFileExtensionNormal' passed (0.0 seconds)
+2025-12-26T09:21:44.2593172Z Test Case 'ReferenceResolverTests.testFileExtensionTrailingDot' started at 2025-12-26 09:21:44.255
+2025-12-26T09:21:44.2594088Z Test Case 'ReferenceResolverTests.testFileExtensionTrailingDot' passed (0.0 seconds)
+2025-12-26T09:21:44.2594932Z Test Case 'ReferenceResolverTests.testFileWithoutSlashNotFlaggedAsTraversal' started at 2025-12-26 09:21:44.255
+2025-12-26T09:21:44.2595824Z Test Case 'ReferenceResolverTests.testFileWithoutSlashNotFlaggedAsTraversal' passed (0.0 seconds)
+2025-12-26T09:21:44.2596646Z Test Case 'ReferenceResolverTests.testForbiddenExtensionJs' started at 2025-12-26 09:21:44.255
+2025-12-26T09:21:44.2597382Z Test Case 'ReferenceResolverTests.testForbiddenExtensionJs' passed (0.0 seconds)
+2025-12-26T09:21:44.2598118Z Test Case 'ReferenceResolverTests.testForbiddenExtensionJson' started at 2025-12-26 09:21:44.256
+2025-12-26T09:21:44.2599321Z Test Case 'ReferenceResolverTests.testForbiddenExtensionJson' passed (0.0 seconds)
+2025-12-26T09:21:44.2599965Z Test Case 'ReferenceResolverTests.testForbiddenExtensionPy' started at 2025-12-26 09:21:44.256
+2025-12-26T09:21:44.2600710Z Test Case 'ReferenceResolverTests.testForbiddenExtensionPy' passed (0.0 seconds)
+2025-12-26T09:21:44.2601454Z Test Case 'ReferenceResolverTests.testForbiddenExtensionTxt' started at 2025-12-26 09:21:44.256
+2025-12-26T09:21:44.2602183Z Test Case 'ReferenceResolverTests.testForbiddenExtensionTxt' passed (0.0 seconds)
+2025-12-26T09:21:44.2603013Z Test Case 'ReferenceResolverTests.testHypercodeCycleDetectedWithTracker' started at 2025-12-26 09:21:44.256
+2025-12-26T09:21:44.2603860Z Test Case 'ReferenceResolverTests.testHypercodeCycleDetectedWithTracker' passed (0.0 seconds)
+2025-12-26T09:21:44.2604887Z Test Case 'ReferenceResolverTests.testHypercodeFileExistsLenientMode' started at 2025-12-26 09:21:44.256
+2025-12-26T09:21:44.2605593Z Test Case 'ReferenceResolverTests.testHypercodeFileExistsLenientMode' passed (0.0 seconds)
+2025-12-26T09:21:44.2606274Z Test Case 'ReferenceResolverTests.testHypercodeFileExistsStrictMode' started at 2025-12-26 09:21:44.257
+2025-12-26T09:21:44.2606960Z Test Case 'ReferenceResolverTests.testHypercodeFileExistsStrictMode' passed (0.0 seconds)
+2025-12-26T09:21:44.2607649Z Test Case 'ReferenceResolverTests.testHypercodeFileMissingLenientMode' started at 2025-12-26 09:21:44.257
+2025-12-26T09:21:44.2608500Z Test Case 'ReferenceResolverTests.testHypercodeFileMissingLenientMode' passed (0.0 seconds)
+2025-12-26T09:21:44.2609194Z Test Case 'ReferenceResolverTests.testHypercodeFileMissingStrictMode' started at 2025-12-26 09:21:44.257
+2025-12-26T09:21:44.2609881Z Test Case 'ReferenceResolverTests.testHypercodeFileMissingStrictMode' passed (0.0 seconds)
+2025-12-26T09:21:44.2610544Z Test Case 'ReferenceResolverTests.testInlineTextWithSpacesOnly' started at 2025-12-26 09:21:44.257
+2025-12-26T09:21:44.2611182Z Test Case 'ReferenceResolverTests.testInlineTextWithSpacesOnly' passed (0.0 seconds)
+2025-12-26T09:21:44.2611846Z Test Case 'ReferenceResolverTests.testInlineTextWithoutSlashesOrDots' started at 2025-12-26 09:21:44.257
+2025-12-26T09:21:44.2612525Z Test Case 'ReferenceResolverTests.testInlineTextWithoutSlashesOrDots' passed (0.0 seconds)
+2025-12-26T09:21:44.2613189Z Test Case 'ReferenceResolverTests.testLooksLikeFilePathWithDot' started at 2025-12-26 09:21:44.258
+2025-12-26T09:21:44.2613820Z Test Case 'ReferenceResolverTests.testLooksLikeFilePathWithDot' passed (0.0 seconds)
+2025-12-26T09:21:44.2614467Z Test Case 'ReferenceResolverTests.testLooksLikeFilePathWithNeither' started at 2025-12-26 09:21:44.258
+2025-12-26T09:21:44.2615138Z Test Case 'ReferenceResolverTests.testLooksLikeFilePathWithNeither' passed (0.0 seconds)
+2025-12-26T09:21:44.2615912Z Test Case 'ReferenceResolverTests.testLooksLikeFilePathWithSlash' started at 2025-12-26 09:21:44.258
+2025-12-26T09:21:44.2616563Z Test Case 'ReferenceResolverTests.testLooksLikeFilePathWithSlash' passed (0.0 seconds)
+2025-12-26T09:21:44.2653493Z Test Case 'ReferenceResolverTests.testMarkdownFileExistsLenientMode' started at 2025-12-26 09:21:44.258
+2025-12-26T09:21:44.2654827Z Test Case 'ReferenceResolverTests.testMarkdownFileExistsLenientMode' passed (0.0 seconds)
+2025-12-26T09:21:44.2656108Z Test Case 'ReferenceResolverTests.testMarkdownFileExistsStrictMode' started at 2025-12-26 09:21:44.258
+2025-12-26T09:21:44.2657351Z Test Case 'ReferenceResolverTests.testMarkdownFileExistsStrictMode' passed (0.0 seconds)
+2025-12-26T09:21:44.2658868Z Test Case 'ReferenceResolverTests.testMarkdownFileMissingLenientMode' started at 2025-12-26 09:21:44.258
+2025-12-26T09:21:44.2660206Z Test Case 'ReferenceResolverTests.testMarkdownFileMissingLenientMode' passed (0.0 seconds)
+2025-12-26T09:21:44.2661534Z Test Case 'ReferenceResolverTests.testMarkdownFileMissingStrictMode' started at 2025-12-26 09:21:44.258
+2025-12-26T09:21:44.2662862Z Test Case 'ReferenceResolverTests.testMarkdownFileMissingStrictMode' passed (0.0 seconds)
+2025-12-26T09:21:44.2664176Z Test Case 'ReferenceResolverTests.testMarkdownFileWithSpacesInPath' started at 2025-12-26 09:21:44.259
+2025-12-26T09:21:44.2665419Z Test Case 'ReferenceResolverTests.testMarkdownFileWithSpacesInPath' passed (0.0 seconds)
+2025-12-26T09:21:44.2666672Z Test Case 'ReferenceResolverTests.testMissingHypercodeInvalidatesCacheEntry' started at 2025-12-26 09:21:44.259
+2025-12-26T09:21:44.2667941Z Test Case 'ReferenceResolverTests.testMissingHypercodeInvalidatesCacheEntry' passed (0.0 seconds)
+2025-12-26T09:21:44.2669446Z Test Case 'ReferenceResolverTests.testNestedHypercodeFilePath' started at 2025-12-26 09:21:44.259
+2025-12-26T09:21:44.2670603Z Test Case 'ReferenceResolverTests.testNestedHypercodeFilePath' passed (0.0 seconds)
+2025-12-26T09:21:44.2671743Z Test Case 'ReferenceResolverTests.testNoExtensionLooksLikeFile' started at 2025-12-26 09:21:44.259
+2025-12-26T09:21:44.2673181Z Test Case 'ReferenceResolverTests.testNoExtensionLooksLikeFile' passed (0.0 seconds)
+2025-12-26T09:21:44.2674262Z Test Case 'ReferenceResolverTests.testPathTraversalAtEnd' started at 2025-12-26 09:21:44.259
+2025-12-26T09:21:44.2675283Z Test Case 'ReferenceResolverTests.testPathTraversalAtEnd' passed (0.0 seconds)
+2025-12-26T09:21:44.2676323Z Test Case 'ReferenceResolverTests.testPathTraversalFromRoot' started at 2025-12-26 09:21:44.260
+2025-12-26T09:21:44.2677393Z Test Case 'ReferenceResolverTests.testPathTraversalFromRoot' passed (0.0 seconds)
+2025-12-26T09:21:44.2678658Z Test Case 'ReferenceResolverTests.testPathTraversalInMiddle' started at 2025-12-26 09:21:44.260
+2025-12-26T09:21:44.2679788Z Test Case 'ReferenceResolverTests.testPathTraversalInMiddle' passed (0.0 seconds)
+2025-12-26T09:21:44.2680956Z Test Case 'ReferenceResolverTests.testPathTraversalJustDotDot' started at 2025-12-26 09:21:44.260
+2025-12-26T09:21:44.2682125Z Test Case 'ReferenceResolverTests.testPathTraversalJustDotDot' passed (0.0 seconds)
+2025-12-26T09:21:44.2683286Z Test Case 'ReferenceResolverTests.testPathWithSlashNoExtension' started at 2025-12-26 09:21:44.260
+2025-12-26T09:21:44.2684433Z Test Case 'ReferenceResolverTests.testPathWithSlashNoExtension' passed (0.0 seconds)
+2025-12-26T09:21:44.2685706Z Test Case 'ReferenceResolverTests.testRecursiveCompilationEmbedsResolvedAst' started at 2025-12-26 09:21:44.260
+2025-12-26T09:21:44.2687121Z Test Case 'ReferenceResolverTests.testRecursiveCompilationEmbedsResolvedAst' passed (0.001 seconds)
+2025-12-26T09:21:44.2688858Z Test Case 'ReferenceResolverTests.testRecursiveCompilationMergesChildAstWithDepthOffsets' started at 2025-12-26 09:21:44.262
+2025-12-26T09:21:44.2690539Z Test Case 'ReferenceResolverTests.testRecursiveCompilationMergesChildAstWithDepthOffsets' passed (0.002 seconds)
+2025-12-26T09:21:44.2692117Z Test Case 'ReferenceResolverTests.testRecursiveCompilationPropagatesNestedErrors' started at 2025-12-26 09:21:44.264
+2025-12-26T09:21:44.2694076Z Test Case 'ReferenceResolverTests.testRecursiveCompilationPropagatesNestedErrors' passed (0.0 seconds)
+2025-12-26T09:21:44.2695454Z Test Case 'ReferenceResolverTests.testResolveTreeSetsResolutionKind' started at 2025-12-26 09:21:44.264
+2025-12-26T09:21:44.2696833Z Test Case 'ReferenceResolverTests.testResolveTreeSetsResolutionKind' passed (0.0 seconds)
+2025-12-26T09:21:44.2698045Z Test Case 'ReferenceResolverTests.testResolveTreeStopsOnFirstError' started at 2025-12-26 09:21:44.265
+2025-12-26T09:21:44.2699407Z Test Case 'ReferenceResolverTests.testResolveTreeStopsOnFirstError' passed (0.0 seconds)
+2025-12-26T09:21:44.2700631Z Test Case 'ReferenceResolverTests.testSameDirectoryReferenceAllowed' started at 2025-12-26 09:21:44.265
+2025-12-26T09:21:44.2701876Z Test Case 'ReferenceResolverTests.testSameDirectoryReferenceAllowed' passed (0.0 seconds)
+2025-12-26T09:21:44.2703182Z Test Case 'ReferenceResolverTests.testTextWithSentenceEndingDotLenientMode' started at 2025-12-26 09:21:44.265
+2025-12-26T09:21:44.2704580Z Test Case 'ReferenceResolverTests.testTextWithSentenceEndingDotLenientMode' passed (0.0 seconds)
+2025-12-26T09:21:44.2706056Z Test Case 'ReferenceResolverTests.testTextWithSentenceEndingDotTreatedAsPotentialPath' started at 2025-12-26 09:21:44.265
+2025-12-26T09:21:58.7452460Z Test Case 'ReferenceResolverTests.testTextWithSentenceEndingDotTreatedAsPotentialPath' passed (0.0 seconds)
+2025-12-26T09:21:58.7454383Z Test Case 'ReferenceResolverTests.testVisitationStackRestoredAfterNestedFailure' started at 2025-12-26 09:21:44.265
+2025-12-26T09:21:58.7455526Z Test Case 'ReferenceResolverTests.testVisitationStackRestoredAfterNestedFailure' passed (0.001 seconds)
+2025-12-26T09:21:58.7456195Z Test Suite 'ReferenceResolverTests' passed at 2025-12-26 09:21:44.266
+2025-12-26T09:21:58.7456671Z 	 Executed 55 tests, with 0 failures (0 unexpected) in 0.014 (0.014) seconds
+2025-12-26T09:21:58.7457120Z Test Suite 'StatisticsTests' started at 2025-12-26 09:21:44.266
+2025-12-26T09:21:58.7457748Z Test Case 'StatisticsTests.testCollectorRecordsUniqueFilesAndTiming' started at 2025-12-26 09:21:44.266
+2025-12-26T09:21:58.7459079Z Test Case 'StatisticsTests.testCollectorRecordsUniqueFilesAndTiming' passed (0.0 seconds)
+2025-12-26T09:21:58.7459773Z Test Case 'StatisticsTests.testDisabledCollectorReturnsNil' started at 2025-12-26 09:21:44.266
+2025-12-26T09:21:58.7460413Z Test Case 'StatisticsTests.testDisabledCollectorReturnsNil' passed (0.0 seconds)
+2025-12-26T09:21:58.7461098Z Test Case 'StatisticsTests.testReporterFormatsOutputDeterministically' started at 2025-12-26 09:21:44.266
+2025-12-26T09:21:58.7461857Z Test Case 'StatisticsTests.testReporterFormatsOutputDeterministically' passed (0.0 seconds)
+2025-12-26T09:21:58.7462420Z Test Suite 'StatisticsTests' passed at 2025-12-26 09:21:44.267
+2025-12-26T09:21:58.7462851Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+2025-12-26T09:21:58.7463327Z Test Suite 'CompilerPerformanceTests' started at 2025-12-26 09:21:44.267
+2025-12-26T09:21:58.7463972Z Test Case 'CompilerPerformanceTests.testCompilationWithStatistics' started at 2025-12-26 09:21:44.267
+2025-12-26T09:21:58.7464491Z Compilation Statistics
+2025-12-26T09:21:58.7464702Z ----------------------
+2025-12-26T09:21:58.7464960Z Source files: 4 (Hypercode: 1, Markdown: 3)
+2025-12-26T09:21:58.7465229Z Input bytes: 3.3 MB
+2025-12-26T09:21:58.7465429Z Output bytes: 3.3 MB
+2025-12-26T09:21:58.7465639Z Max depth: 10
+2025-12-26T09:21:58.7465831Z Duration: 878 ms
+2025-12-26T09:21:58.7466037Z Compilation Statistics
+2025-12-26T09:21:58.7466242Z ----------------------
+2025-12-26T09:21:58.7466470Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:21:58.7466739Z Input bytes: 2.7 KB
+2025-12-26T09:21:58.7466935Z Output bytes: 3.3 MB
+2025-12-26T09:21:58.7467134Z Max depth: 10
+2025-12-26T09:21:58.7467323Z Duration: 712 ms
+2025-12-26T09:21:58.7467517Z Compilation Statistics
+2025-12-26T09:21:58.7467722Z ----------------------
+2025-12-26T09:21:58.7468107Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:21:58.7468507Z Input bytes: 2.7 KB
+2025-12-26T09:21:58.7468704Z Output bytes: 3.3 MB
+2025-12-26T09:21:58.7468913Z Max depth: 10
+2025-12-26T09:21:58.7469092Z Duration: 715 ms
+2025-12-26T09:21:58.7469290Z Compilation Statistics
+2025-12-26T09:21:58.7469490Z ----------------------
+2025-12-26T09:21:58.7469705Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:21:58.7469965Z Input bytes: 2.7 KB
+2025-12-26T09:21:58.7470162Z Output bytes: 3.3 MB
+2025-12-26T09:21:58.7470350Z Max depth: 10
+2025-12-26T09:21:58.7470533Z Duration: 713 ms
+2025-12-26T09:21:58.7470733Z Compilation Statistics
+2025-12-26T09:21:58.7470929Z ----------------------
+2025-12-26T09:21:58.7471149Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:21:58.7471405Z Input bytes: 2.7 KB
+2025-12-26T09:21:58.7471599Z Output bytes: 3.3 MB
+2025-12-26T09:21:58.7471786Z Max depth: 10
+2025-12-26T09:21:58.7471968Z Duration: 709 ms
+2025-12-26T09:21:58.7472162Z Compilation Statistics
+2025-12-26T09:21:58.7472363Z ----------------------
+2025-12-26T09:21:58.7472582Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:21:58.7472838Z Input bytes: 2.7 KB
+2025-12-26T09:21:58.7473026Z Output bytes: 3.3 MB
+2025-12-26T09:21:58.7473220Z Max depth: 10
+2025-12-26T09:21:58.7473402Z Duration: 714 ms
+2025-12-26T09:21:58.7473591Z Compilation Statistics
+2025-12-26T09:21:58.7473793Z ----------------------
+2025-12-26T09:21:58.7474023Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:21:58.7474275Z Input bytes: 2.7 KB
+2025-12-26T09:21:58.7474475Z Output bytes: 3.3 MB
+2025-12-26T09:21:58.7474674Z Max depth: 10
+2025-12-26T09:21:58.7474852Z Duration: 712 ms
+2025-12-26T09:21:58.7475053Z Compilation Statistics
+2025-12-26T09:21:58.7475258Z ----------------------
+2025-12-26T09:21:58.7475477Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:21:58.7475729Z Input bytes: 2.7 KB
+2025-12-26T09:21:58.7475929Z Output bytes: 3.3 MB
+2025-12-26T09:21:58.7476120Z Max depth: 10
+2025-12-26T09:21:58.7476313Z Duration: 714 ms
+2025-12-26T09:21:58.7476515Z Compilation Statistics
+2025-12-26T09:21:58.7476713Z ----------------------
+2025-12-26T09:21:58.7477059Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:21:58.7477322Z Input bytes: 2.7 KB
+2025-12-26T09:21:58.7477519Z Output bytes: 3.3 MB
+2025-12-26T09:21:58.7477712Z Max depth: 10
+2025-12-26T09:21:58.7477895Z Duration: 711 ms
+2025-12-26T09:21:58.7478096Z Compilation Statistics
+2025-12-26T09:21:58.7478389Z ----------------------
+2025-12-26T09:21:58.7478620Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:21:58.7478877Z Input bytes: 2.7 KB
+2025-12-26T09:21:58.7479067Z Output bytes: 3.3 MB
+2025-12-26T09:21:58.7479262Z Max depth: 10
+2025-12-26T09:21:58.7479445Z Duration: 719 ms
+2025-12-26T09:21:58.7481146Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/PerformanceTests/CompilerPerformanceTests.swift:97: Test Case 'CompilerPerformanceTests.testCompilationWithStatistics' measured [Time, seconds] average: 0.731, relative standard deviation: 7.120%, values: [0.878728, 0.713506, 0.716329, 0.714078, 0.709757, 0.715424, 0.713156, 0.715172, 0.712184, 0.719989], performanceMetricID:org.swift.XCTPerformanceMetric_WallClockTime, maxPercentRelativeStandardDeviation: 10.000%, maxStandardDeviation: 0.100
+2025-12-26T09:21:58.7482822Z 
+2025-12-26T09:21:58.7483138Z 📊 Compilation Statistics
+2025-12-26T09:21:58.7483362Z    Hypercode files: 1
+2025-12-26T09:21:58.7483569Z    Markdown files: 0
+2025-12-26T09:21:58.7483769Z    Total time: 719ms
+2025-12-26T09:21:58.7484174Z Test Case 'CompilerPerformanceTests.testCompilationWithStatistics' passed (7.309 seconds)
+2025-12-26T09:21:58.7484868Z Test Case 'CompilerPerformanceTests.testFullCompilationPerformance' started at 2025-12-26 09:21:51.576
+2025-12-26T09:22:13.7784322Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/PerformanceTests/CompilerPerformanceTests.swift:49: Test Case 'CompilerPerformanceTests.testFullCompilationPerformance' measured [Time, seconds] average: 0.717, relative standard deviation: 0.579%, values: [0.722958, 0.714073, 0.711420, 0.720907, 0.721801, 0.715634, 0.715102, 0.720199, 0.712641, 0.714337], performanceMetricID:org.swift.XCTPerformanceMetric_WallClockTime, maxPercentRelativeStandardDeviation: 10.000%, maxStandardDeviation: 0.100
+2025-12-26T09:22:13.7786650Z 
+2025-12-26T09:22:13.7787079Z 📊 Full Compilation Benchmark
+2025-12-26T09:22:13.7787623Z    Corpus: comprehensive_test.hc + large markdown files
+2025-12-26T09:22:13.7788011Z    Target: <200ms (Phase 13 goal)
+2025-12-26T09:22:13.7788681Z Test Case 'CompilerPerformanceTests.testFullCompilationPerformance' passed (7.169 seconds)
+2025-12-26T09:22:13.7789443Z Test Case 'CompilerPerformanceTests.testLargeCorpusStressTest' started at 2025-12-26 09:21:58.745
+2025-12-26T09:22:13.7789912Z 
+2025-12-26T09:22:13.7790166Z 📊 Stress Test Results (10 runs)
+2025-12-26T09:22:13.7790426Z    Average: 713.90ms
+2025-12-26T09:22:13.7790722Z    Median:  713.50ms
+2025-12-26T09:22:13.7791079Z    Min:     710.61ms
+2025-12-26T09:22:13.7791379Z    Max:     717.87ms
+2025-12-26T09:22:13.7791612Z    Target:  <200ms local, <800ms CI
+2025-12-26T09:22:13.7792079Z Test Case 'CompilerPerformanceTests.testLargeCorpusStressTest' passed (7.15 seconds)
+2025-12-26T09:22:13.7792743Z Test Case 'CompilerPerformanceTests.testMemoryUsage' started at 2025-12-26 09:22:05.895
+2025-12-26T09:22:13.7793204Z Compilation Statistics
+2025-12-26T09:22:13.7793428Z ----------------------
+2025-12-26T09:22:13.7793677Z Source files: 4 (Hypercode: 1, Markdown: 3)
+2025-12-26T09:22:13.7793961Z Input bytes: 3.3 MB
+2025-12-26T09:22:13.7794177Z Output bytes: 3.3 MB
+2025-12-26T09:22:13.7794393Z Max depth: 10
+2025-12-26T09:22:13.7794587Z Duration: 719 ms
+2025-12-26T09:22:13.7794718Z 
+2025-12-26T09:22:13.7794835Z 📊 Memory Test
+2025-12-26T09:22:13.7795076Z    Status: Compilation completed successfully
+2025-12-26T09:22:13.7795446Z    Note: Use Instruments for detailed memory profiling
+2025-12-26T09:22:13.7796189Z Test Case 'CompilerPerformanceTests.testMemoryUsage' passed (0.721 seconds)
+2025-12-26T09:22:13.7796839Z Test Case 'CompilerPerformanceTests.testStrictModeCompilation' started at 2025-12-26 09:22:06.616
+2025-12-26T09:22:13.7799114Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/PerformanceTests/CompilerPerformanceTests.swift:134: Test Case 'CompilerPerformanceTests.testStrictModeCompilation' measured [Time, seconds] average: 0.716, relative standard deviation: 0.737%, values: [0.725586, 0.712328, 0.707638, 0.719154, 0.712292, 0.711745, 0.712398, 0.720215, 0.717291, 0.717443], performanceMetricID:org.swift.XCTPerformanceMetric_WallClockTime, maxPercentRelativeStandardDeviation: 10.000%, maxStandardDeviation: 0.100
+2025-12-26T09:22:13.7801038Z Test Case 'CompilerPerformanceTests.testStrictModeCompilation' passed (7.156 seconds)
+2025-12-26T09:22:13.7801570Z Test Suite 'CompilerPerformanceTests' passed at 2025-12-26 09:22:13.772
+2025-12-26T09:22:13.7802024Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 29.505 (29.505) seconds
+2025-12-26T09:22:13.7802458Z Test Suite 'CompilerDriverTests' started at 2025-12-26 09:22:13.772
+2025-12-26T09:22:13.7802937Z Test Case 'CompilerDriverTests.testDryRunMode' started at 2025-12-26 09:22:13.772
+2025-12-26T09:22:13.7803336Z Compilation Statistics
+2025-12-26T09:22:13.7803549Z ----------------------
+2025-12-26T09:22:13.7803778Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:22:13.7804035Z Input bytes: 12 bytes
+2025-12-26T09:22:13.7804242Z Output bytes: 201 bytes
+2025-12-26T09:22:13.7804446Z Max depth: 0
+2025-12-26T09:22:13.7804629Z Duration: 1 ms
+2025-12-26T09:22:13.7804937Z Test Case 'CompilerDriverTests.testDryRunMode' passed (0.001 seconds)
+2025-12-26T09:22:13.7805453Z Test Case 'CompilerDriverTests.testErrorCodeMapping' started at 2025-12-26 09:22:13.773
+2025-12-26T09:22:13.7806000Z Test Case 'CompilerDriverTests.testErrorCodeMapping' passed (0.0 seconds)
+2025-12-26T09:22:13.7806531Z Test Case 'CompilerDriverTests.testI01_TabIndentation' started at 2025-12-26 09:22:13.774
+2025-12-26T09:22:13.7807062Z Test Case 'CompilerDriverTests.testI01_TabIndentation' passed (0.001 seconds)
+2025-12-26T09:22:13.7807764Z Test Case 'CompilerDriverTests.testI02_MisalignedIndentation' started at 2025-12-26 09:22:13.774
+2025-12-26T09:22:13.7809180Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:434: CompilerDriverTests.testI02_MisalignedIndentation : Test skipped - Temporarily disabled - error message wording issue. Will fix in Integration-1 task.
+2025-12-26T09:22:13.7810528Z Test Case 'CompilerDriverTests.testI02_MisalignedIndentation' skipped (0.0 seconds)
+2025-12-26T09:22:13.7811088Z Test Case 'CompilerDriverTests.testI03_UnclosedQuote' started at 2025-12-26 09:22:13.775
+2025-12-26T09:22:13.7811608Z Test Case 'CompilerDriverTests.testI03_UnclosedQuote' passed (0.0 seconds)
+2025-12-26T09:22:13.7812152Z Test Case 'CompilerDriverTests.testI04_MissingFileStrictMode' started at 2025-12-26 09:22:13.775
+2025-12-26T09:22:13.7812731Z Test Case 'CompilerDriverTests.testI04_MissingFileStrictMode' passed (0.001 seconds)
+2025-12-26T09:22:13.7813332Z Test Case 'CompilerDriverTests.testI05_DirectCircularDependency' started at 2025-12-26 09:22:13.776
+2025-12-26T09:22:13.7813946Z Test Case 'CompilerDriverTests.testI05_DirectCircularDependency' passed (0.001 seconds)
+2025-12-26T09:22:13.7814560Z Test Case 'CompilerDriverTests.testI06_IndirectCircularDependency' started at 2025-12-26 09:22:13.777
+2025-12-26T09:22:13.7815189Z Test Case 'CompilerDriverTests.testI06_IndirectCircularDependency' passed (0.001 seconds)
+2025-12-26T09:22:13.7815808Z Test Case 'CompilerDriverTests.testI07_DepthExceeded' started at 2025-12-26 09:22:13.778
+2025-12-26T09:22:13.7891431Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:551: CompilerDriverTests.testI07_DepthExceeded : Test skipped - Temporarily disabled - depth validation not implemented in parser. Fix in follow-up task.
+2025-12-26T09:22:13.7893104Z Test Case 'CompilerDriverTests.testI07_DepthExceeded' skipped (0.0 seconds)
+2025-12-26T09:22:13.7894013Z Test Case 'CompilerDriverTests.testI08_PathTraversal' started at 2025-12-26 09:22:13.778
+2025-12-26T09:22:13.7894738Z Test Case 'CompilerDriverTests.testI08_PathTraversal' passed (0.001 seconds)
+2025-12-26T09:22:13.7895584Z Test Case 'CompilerDriverTests.testI09_UnreadableFile' started at 2025-12-26 09:22:13.779
+2025-12-26T09:22:13.7896779Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:599: CompilerDriverTests.testI09_UnreadableFile : Test skipped - Temporarily disabled - running as root bypasses permission checks. Needs test environment fix.
+2025-12-26T09:22:13.7898513Z Test Case 'CompilerDriverTests.testI09_UnreadableFile' skipped (0.0 seconds)
+2025-12-26T09:22:13.7899053Z Test Case 'CompilerDriverTests.testI10_MultipleRoots' started at 2025-12-26 09:22:13.779
+2025-12-26T09:22:13.7899581Z Test Case 'CompilerDriverTests.testI10_MultipleRoots' passed (0.0 seconds)
+2025-12-26T09:22:13.7900119Z Test Case 'CompilerDriverTests.testStatisticsCollection' started at 2025-12-26 09:22:13.780
+2025-12-26T09:22:13.7900563Z Compilation Statistics
+2025-12-26T09:22:13.7900775Z ----------------------
+2025-12-26T09:22:13.7901011Z Source files: 2 (Hypercode: 1, Markdown: 1)
+2025-12-26T09:22:13.7901276Z Input bytes: 78 bytes
+2025-12-26T09:22:13.7901493Z Output bytes: 267 bytes
+2025-12-26T09:22:13.7901703Z Max depth: 1
+2025-12-26T09:22:13.7901883Z Duration: 2 ms
+2025-12-26T09:22:13.7902231Z Test Case 'CompilerDriverTests.testStatisticsCollection' passed (0.003 seconds)
+2025-12-26T09:22:13.7902800Z Test Case 'CompilerDriverTests.testV01_SingleRootNode' started at 2025-12-26 09:22:13.782
+2025-12-26T09:22:13.7903221Z Compilation Statistics
+2025-12-26T09:22:13.7903433Z ----------------------
+2025-12-26T09:22:13.7922397Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:22:13.7922766Z Input bytes: 12 bytes
+2025-12-26T09:22:13.7923097Z Output bytes: 201 bytes
+2025-12-26T09:22:13.7923463Z Max depth: 0
+2025-12-26T09:22:13.7923773Z Duration: 2 ms
+2025-12-26T09:22:13.7924220Z Test Case 'CompilerDriverTests.testV01_SingleRootNode' passed (0.002 seconds)
+2025-12-26T09:22:13.7924985Z Test Case 'CompilerDriverTests.testV03_NestedHierarchy' started at 2025-12-26 09:22:13.785
+2025-12-26T09:22:13.7925413Z Compilation Statistics
+2025-12-26T09:22:13.7925632Z ----------------------
+2025-12-26T09:22:13.7925903Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:22:13.7926284Z Input bytes: 42 bytes
+2025-12-26T09:22:13.7926500Z Output bytes: 222 bytes
+2025-12-26T09:22:13.7926870Z Max depth: 2
+2025-12-26T09:22:13.7927166Z Duration: 2 ms
+2025-12-26T09:22:13.7927560Z Test Case 'CompilerDriverTests.testV03_NestedHierarchy' passed (0.003 seconds)
+2025-12-26T09:22:13.7928287Z Test Case 'CompilerDriverTests.testV04_SingleMarkdownReference' started at 2025-12-26 09:22:13.787
+2025-12-26T09:22:13.7929711Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:120: CompilerDriverTests.testV04_SingleMarkdownReference : Test skipped - Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.
+2025-12-26T09:22:13.7931338Z Test Case 'CompilerDriverTests.testV04_SingleMarkdownReference' skipped (0.0 seconds)
+2025-12-26T09:22:13.7931961Z Test Case 'CompilerDriverTests.testV05_NestedMarkdownReferences' started at 2025-12-26 09:22:13.788
+2025-12-26T09:22:13.7933449Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:138: CompilerDriverTests.testV05_NestedMarkdownReferences : Test skipped - Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.
+2025-12-26T09:22:13.7934971Z Test Case 'CompilerDriverTests.testV05_NestedMarkdownReferences' skipped (0.0 seconds)
+2025-12-26T09:22:13.7935578Z Test Case 'CompilerDriverTests.testV06_SingleHypercodeReference' started at 2025-12-26 09:22:13.788
+2025-12-26T09:22:13.7936853Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:157: CompilerDriverTests.testV06_SingleHypercodeReference : Test skipped - Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.
+2025-12-26T09:22:13.7938393Z Test Case 'CompilerDriverTests.testV06_SingleHypercodeReference' skipped (0.0 seconds)
+2025-12-26T09:22:13.7939080Z Test Case 'CompilerDriverTests.testV07_NestedHypercodeReferences' started at 2025-12-26 09:22:13.788
+2025-12-26T09:22:13.7940357Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:176: CompilerDriverTests.testV07_NestedHypercodeReferences : Test skipped - Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.
+2025-12-26T09:22:13.7941590Z Test Case 'CompilerDriverTests.testV07_NestedHypercodeReferences' skipped (0.0 seconds)
+2025-12-26T09:22:13.7942201Z Test Case 'CompilerDriverTests.testV08_MixedInlineAndReferences' started at 2025-12-26 09:22:13.789
+2025-12-26T09:22:13.7943465Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:196: CompilerDriverTests.testV08_MixedInlineAndReferences : Test skipped - Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.
+2025-12-26T09:22:13.8021230Z Test Case 'CompilerDriverTests.testV08_MixedInlineAndReferences' skipped (0.0 seconds)
+2025-12-26T09:22:13.8022284Z Test Case 'CompilerDriverTests.testV09_MarkdownHeadings' started at 2025-12-26 09:22:13.789
+2025-12-26T09:22:13.8023944Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:216: CompilerDriverTests.testV09_MarkdownHeadings : Test skipped - Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.
+2025-12-26T09:22:13.8025157Z Test Case 'CompilerDriverTests.testV09_MarkdownHeadings' skipped (0.0 seconds)
+2025-12-26T09:22:13.8025720Z Test Case 'CompilerDriverTests.testV10_SetextHeadings' started at 2025-12-26 09:22:13.789
+2025-12-26T09:22:13.8026923Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:233: CompilerDriverTests.testV10_SetextHeadings : Test skipped - Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.
+2025-12-26T09:22:13.8028663Z Test Case 'CompilerDriverTests.testV10_SetextHeadings' skipped (0.0 seconds)
+2025-12-26T09:22:13.8029230Z Test Case 'CompilerDriverTests.testV11_CommentLines' started at 2025-12-26 09:22:13.790
+2025-12-26T09:22:13.8029639Z Compilation Statistics
+2025-12-26T09:22:13.8029849Z ----------------------
+2025-12-26T09:22:13.8030071Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:22:13.8030340Z Input bytes: 76 bytes
+2025-12-26T09:22:13.8030553Z Output bytes: 208 bytes
+2025-12-26T09:22:13.8030753Z Max depth: 1
+2025-12-26T09:22:13.8031032Z Duration: 2 ms
+2025-12-26T09:22:13.8031526Z Test Case 'CompilerDriverTests.testV11_CommentLines' passed (0.003 seconds)
+2025-12-26T09:22:13.8032040Z Test Case 'CompilerDriverTests.testV12_BlankLines' started at 2025-12-26 09:22:13.792
+2025-12-26T09:22:13.8033304Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:269: CompilerDriverTests.testV12_BlankLines : Test skipped - Temporarily disabled - parser correctly rejects multiple roots. Needs design decision.
+2025-12-26T09:22:13.8034396Z Test Case 'CompilerDriverTests.testV12_BlankLines' skipped (0.0 seconds)
+2025-12-26T09:22:13.8034905Z Test Case 'CompilerDriverTests.testV13_MaximumDepth' started at 2025-12-26 09:22:13.793
+2025-12-26T09:22:13.8036187Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:292: CompilerDriverTests.testV13_MaximumDepth : Test skipped - Temporarily disabled - depth validation not implemented in parser. Fix in follow-up task.
+2025-12-26T09:22:13.8037307Z Test Case 'CompilerDriverTests.testV13_MaximumDepth' skipped (0.0 seconds)
+2025-12-26T09:22:13.8038002Z Test Case 'CompilerDriverTests.testV14_UnicodeContent' started at 2025-12-26 09:22:13.793
+2025-12-26T09:22:13.8039728Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/CompilerDriverTests.swift:312: CompilerDriverTests.testV14_UnicodeContent : Test skipped - Temporarily disabled - compiler incorrectly generates heading from filename. Fix in follow-up task.
+2025-12-26T09:22:13.8041102Z Test Case 'CompilerDriverTests.testV14_UnicodeContent' skipped (0.0 seconds)
+2025-12-26T09:22:13.8041715Z Test Case 'CompilerDriverTests.testV15_MultipleSiblingsAtDifferentLevels' started at 2025-12-26 09:22:13.793
+2025-12-26T09:22:13.8042202Z Compilation Statistics
+2025-12-26T09:22:13.8042411Z ----------------------
+2025-12-26T09:22:13.8042638Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:22:13.8042904Z Input bytes: 109 bytes
+2025-12-26T09:22:13.8043250Z Output bytes: 278 bytes
+2025-12-26T09:22:13.8043465Z Max depth: 2
+2025-12-26T09:22:13.8043723Z Duration: 2 ms
+2025-12-26T09:22:13.8044220Z Test Case 'CompilerDriverTests.testV15_MultipleSiblingsAtDifferentLevels' passed (0.003 seconds)
+2025-12-26T09:22:13.8044856Z Test Case 'CompilerDriverTests.testV16_ComplexMixedNesting' started at 2025-12-26 09:22:13.796
+2025-12-26T09:22:13.8045294Z Compilation Statistics
+2025-12-26T09:22:13.8045593Z ----------------------
+2025-12-26T09:22:13.8046007Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:22:13.8046426Z Input bytes: 337 bytes
+2025-12-26T09:22:13.8046651Z Output bytes: 435 bytes
+2025-12-26T09:22:13.8046853Z Max depth: 4
+2025-12-26T09:22:13.8047038Z Duration: 3 ms
+2025-12-26T09:22:13.8047378Z Test Case 'CompilerDriverTests.testV16_ComplexMixedNesting' passed (0.003 seconds)
+2025-12-26T09:22:13.8047959Z Test Case 'CompilerDriverTests.testV17_DeepNestingWithSiblings' started at 2025-12-26 09:22:13.799
+2025-12-26T09:22:13.8048870Z Compilation Statistics
+2025-12-26T09:22:13.8049102Z ----------------------
+2025-12-26T09:22:13.8049452Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:22:13.8049877Z Input bytes: 244 bytes
+2025-12-26T09:22:13.8050118Z Output bytes: 341 bytes
+2025-12-26T09:22:13.8050417Z Max depth: 6
+2025-12-26T09:22:13.8050669Z Duration: 2 ms
+2025-12-26T09:22:13.8051318Z Test Case 'CompilerDriverTests.testV17_DeepNestingWithSiblings' passed (0.003 seconds)
+2025-12-26T09:22:13.8051977Z Test Case 'CompilerDriverTests.testVerboseMode' started at 2025-12-26 09:22:13.802
+2025-12-26T09:22:13.8052836Z ╔════════════════════════════════════════════════════════════╗
+2025-12-26T09:22:13.8053182Z ║  Hyperprompt Compiler v0.1.0
+2025-12-26T09:22:13.8053525Z ╚════════════════════════════════════════════════════════════╝
+2025-12-26T09:22:13.8053771Z 
+2025-12-26T09:22:13.8053941Z [COMPILE] Starting compilation...
+2025-12-26T09:22:13.8066004Z [INPUT] /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/Fixtures/Valid/V01.hc
+2025-12-26T09:22:13.8066838Z [MODE] Strict
+2025-12-26T09:22:13.8067020Z 
+2025-12-26T09:22:13.8067222Z [PHASE 1] Path validation and canonicalization
+2025-12-26T09:22:13.8068338Z   [✓] Input file: /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/Fixtures/Valid/V01.hc
+2025-12-26T09:22:13.8069609Z   [✓] Root directory: /home/runner/work/Hyperprompt/Hyperprompt/Tests/IntegrationTests/Fixtures/Valid
+2025-12-26T09:22:13.8070521Z   [✓] Output file: /tmp/hyperprompt-tests-82080F9F-0B4C-46A8-82E3-E25FE952D69D/V01-verbose.md
+2025-12-26T09:22:13.8071636Z   [✓] Manifest file: /tmp/hyperprompt-tests-82080F9F-0B4C-46A8-82E3-E25FE952D69D/V01-verbose.json
+2025-12-26T09:22:13.8072088Z 
+2025-12-26T09:22:13.8072261Z [PHASE 2] Parse phase - constructing AST
+2025-12-26T09:22:13.8072723Z   [LEXER] Tokenized 1 tokens
+2025-12-26T09:22:13.8073042Z   [PARSER] Built AST with root node
+2025-12-26T09:22:13.8073461Z   [RESOLVER] All references resolved successfully
+2025-12-26T09:22:13.8073965Z   [✓] Parsed successfully
+2025-12-26T09:22:13.8074281Z   [✓] Root node: "Root Node"
+2025-12-26T09:22:13.8074715Z   [✓] Tree depth: 0
+2025-12-26T09:22:13.8074931Z 
+2025-12-26T09:22:13.8075061Z [PHASE 3] Resolve phase - loading file references
+2025-12-26T09:22:13.8075537Z   [✓] Resolved successfully
+2025-12-26T09:22:13.8075803Z 
+2025-12-26T09:22:13.8075968Z [PHASE 4] Emit phase - generating Markdown
+2025-12-26T09:22:13.8076268Z   [EMITTER] Generated Markdown output
+2025-12-26T09:22:13.8076754Z   [✓] Generated successfully
+2025-12-26T09:22:13.8077319Z   [✓] Output size: 12 bytes
+2025-12-26T09:22:13.8077563Z 
+2025-12-26T09:22:13.8077746Z [PHASE 5] Manifest phase - generating provenance JSON
+2025-12-26T09:22:13.8078400Z   [MANIFEST] Generated JSON (stub - no entries yet)
+2025-12-26T09:22:13.8078871Z   [✓] Generated successfully
+2025-12-26T09:22:13.8079245Z   [✓] Manifest size: 189 bytes
+2025-12-26T09:22:13.8079440Z 
+2025-12-26T09:22:13.8079616Z [PHASE 6] Output phase - writing files
+2025-12-26T09:22:13.8080372Z   [✓] Output written: /tmp/hyperprompt-tests-82080F9F-0B4C-46A8-82E3-E25FE952D69D/V01-verbose.md
+2025-12-26T09:22:13.8081390Z   [✓] Manifest written: /tmp/hyperprompt-tests-82080F9F-0B4C-46A8-82E3-E25FE952D69D/V01-verbose.json
+2025-12-26T09:22:13.8082021Z 
+2025-12-26T09:22:13.8082171Z Compilation Statistics
+2025-12-26T09:22:13.8082399Z ----------------------
+2025-12-26T09:22:13.8082639Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:22:13.8083062Z Input bytes: 12 bytes
+2025-12-26T09:22:13.8083390Z Output bytes: 201 bytes
+2025-12-26T09:22:13.8083643Z Max depth: 0
+2025-12-26T09:22:13.8083827Z Duration: 2 ms
+2025-12-26T09:22:13.8084055Z [COMPLETE] Compilation finished successfully
+2025-12-26T09:22:13.8084248Z 
+2025-12-26T09:22:13.8084562Z Test Case 'CompilerDriverTests.testVerboseMode' passed (0.003 seconds)
+2025-12-26T09:22:13.8085241Z Test Suite 'CompilerDriverTests' passed at 2025-12-26 09:22:13.805
+2025-12-26T09:22:13.8086052Z 	 Executed 30 tests, with 13 tests skipped and 0 failures (0 unexpected) in 0.032 (0.032) seconds
+2025-12-26T09:22:13.8086938Z Test Suite 'LexerSpecificationsIntegrationTests' started at 2025-12-26 09:22:13.805
+2025-12-26T09:22:13.8088317Z Test Case 'LexerSpecificationsIntegrationTests.testBlankLineSpecificationValidation' started at 2025-12-26 09:22:13.805
+2025-12-26T09:22:13.8089698Z Test Case 'LexerSpecificationsIntegrationTests.testBlankLineSpecificationValidation' passed (0.0 seconds)
+2025-12-26T09:22:13.8091578Z Test Case 'LexerSpecificationsIntegrationTests.testCommentLineSpecificationValidation' started at 2025-12-26 09:22:13.805
+2025-12-26T09:22:13.8092699Z Test Case 'LexerSpecificationsIntegrationTests.testCommentLineSpecificationValidation' passed (0.0 seconds)
+2025-12-26T09:22:13.8093558Z Test Case 'LexerSpecificationsIntegrationTests.testCompositeSpecifications' started at 2025-12-26 09:22:13.805
+2025-12-26T09:22:13.8094307Z Test Case 'LexerSpecificationsIntegrationTests.testCompositeSpecifications' passed (0.0 seconds)
+2025-12-26T09:22:13.8095074Z Test Case 'LexerSpecificationsIntegrationTests.testIndentationSpecifications' started at 2025-12-26 09:22:13.805
+2025-12-26T09:22:13.8095844Z Test Case 'LexerSpecificationsIntegrationTests.testIndentationSpecifications' passed (0.0 seconds)
+2025-12-26T09:22:13.8096677Z Test Case 'LexerSpecificationsIntegrationTests.testLexerEnforcesDepthLimitSpecification' started at 2025-12-26 09:22:13.805
+2025-12-26T09:22:13.8097563Z Test Case 'LexerSpecificationsIntegrationTests.testLexerEnforcesDepthLimitSpecification' passed (0.0 seconds)
+2025-12-26T09:22:13.8098566Z Test Case 'LexerSpecificationsIntegrationTests.testLexerEnforcesIndentationSpecifications' started at 2025-12-26 09:22:13.805
+2025-12-26T09:22:13.8099470Z Test Case 'LexerSpecificationsIntegrationTests.testLexerEnforcesIndentationSpecifications' passed (0.0 seconds)
+2025-12-26T09:22:13.8100263Z Test Case 'LexerSpecificationsIntegrationTests.testLexerRejectsTabs' started at 2025-12-26 09:22:13.806
+2025-12-26T09:22:13.8100935Z Test Case 'LexerSpecificationsIntegrationTests.testLexerRejectsTabs' passed (0.0 seconds)
+2025-12-26T09:22:13.8101712Z Test Case 'LexerSpecificationsIntegrationTests.testLexerTokenizationUsesSpecifications' started at 2025-12-26 09:22:13.806
+2025-12-26T09:22:13.8102581Z Test Case 'LexerSpecificationsIntegrationTests.testLexerTokenizationUsesSpecifications' passed (0.0 seconds)
+2025-12-26T09:22:13.8103459Z Test Case 'LexerSpecificationsIntegrationTests.testLineKindDecisionUsedForClassification' started at 2025-12-26 09:22:13.806
+2025-12-26T09:22:13.8104511Z Test Case 'LexerSpecificationsIntegrationTests.testLineKindDecisionUsedForClassification' passed (0.0 seconds)
+2025-12-26T09:22:13.8105356Z Test Case 'LexerSpecificationsIntegrationTests.testValidNodeLineSpecification' started at 2025-12-26 09:22:13.806
+2025-12-26T09:22:13.8106160Z Test Case 'LexerSpecificationsIntegrationTests.testValidNodeLineSpecification' passed (0.0 seconds)
+2025-12-26T09:22:13.8106933Z Test Case 'LexerSpecificationsIntegrationTests.testValidQuotesSpecification' started at 2025-12-26 09:22:13.806
+2025-12-26T09:22:13.8107692Z Test Case 'LexerSpecificationsIntegrationTests.testValidQuotesSpecification' passed (0.0 seconds)
+2025-12-26T09:22:13.8108422Z Test Suite 'LexerSpecificationsIntegrationTests' passed at 2025-12-26 09:22:13.807
+2025-12-26T09:22:13.8108922Z 	 Executed 11 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+2025-12-26T09:22:13.8109335Z Test Suite 'EmitterTests' started at 2025-12-26 09:22:13.807
+2025-12-26T09:22:13.8109852Z Test Case 'EmitterTests.testHeadingAdjusterBasicFunctionality' started at 2025-12-26 09:22:13.807
+2025-12-26T09:22:13.8110478Z Test Case 'EmitterTests.testHeadingAdjusterBasicFunctionality' passed (0.0 seconds)
+2025-12-26T09:22:13.8111046Z Test Case 'EmitterTests.testHeadingAdjusterExists' started at 2025-12-26 09:22:13.807
+2025-12-26T09:22:13.8111563Z Test Case 'EmitterTests.testHeadingAdjusterExists' passed (0.0 seconds)
+2025-12-26T09:22:13.8111978Z Test Suite 'EmitterTests' passed at 2025-12-26 09:22:13.807
+2025-12-26T09:22:13.8112365Z 	 Executed 2 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+2025-12-26T09:22:13.8112787Z Test Suite 'HeadingAdjusterTests' started at 2025-12-26 09:22:13.807
+2025-12-26T09:22:13.8113323Z Test Case 'HeadingAdjusterTests.testATXHeadingAllLevelsOffset1' started at 2025-12-26 09:22:13.807
+2025-12-26T09:22:13.8113960Z Test Case 'HeadingAdjusterTests.testATXHeadingAllLevelsOffset1' passed (0.0 seconds)
+2025-12-26T09:22:13.8114770Z Test Case 'HeadingAdjusterTests.testATXHeadingExactlyH6' started at 2025-12-26 09:22:13.807
+2025-12-26T09:22:13.8115339Z Test Case 'HeadingAdjusterTests.testATXHeadingExactlyH6' passed (0.0 seconds)
+2025-12-26T09:22:13.8115897Z Test Case 'HeadingAdjusterTests.testATXHeadingH2Offset3' started at 2025-12-26 09:22:13.807
+2025-12-26T09:22:13.8116465Z Test Case 'HeadingAdjusterTests.testATXHeadingH2Offset3' passed (0.0 seconds)
+2025-12-26T09:22:13.8117021Z Test Case 'HeadingAdjusterTests.testATXHeadingOffset1' started at 2025-12-26 09:22:13.807
+2025-12-26T09:22:13.8117571Z Test Case 'HeadingAdjusterTests.testATXHeadingOffset1' passed (0.0 seconds)
+2025-12-26T09:22:13.8118108Z Test Case 'HeadingAdjusterTests.testATXHeadingOffset2' started at 2025-12-26 09:22:13.807
+2025-12-26T09:22:13.8118784Z Test Case 'HeadingAdjusterTests.testATXHeadingOffset2' passed (0.0 seconds)
+2025-12-26T09:22:13.8119334Z Test Case 'HeadingAdjusterTests.testATXOverflowH1Plus6' started at 2025-12-26 09:22:13.808
+2025-12-26T09:22:13.8119884Z Test Case 'HeadingAdjusterTests.testATXOverflowH1Plus6' passed (0.0 seconds)
+2025-12-26T09:22:13.8120436Z Test Case 'HeadingAdjusterTests.testATXOverflowH5Plus2' started at 2025-12-26 09:22:13.808
+2025-12-26T09:22:13.8120985Z Test Case 'HeadingAdjusterTests.testATXOverflowH5Plus2' passed (0.0 seconds)
+2025-12-26T09:22:13.8121534Z Test Case 'HeadingAdjusterTests.testATXOverflowH6Plus1' started at 2025-12-26 09:22:13.808
+2025-12-26T09:22:13.8122073Z Test Case 'HeadingAdjusterTests.testATXOverflowH6Plus1' passed (0.0 seconds)
+2025-12-26T09:22:13.8122642Z Test Case 'HeadingAdjusterTests.testATXOverflowHighOffset' started at 2025-12-26 09:22:13.808
+2025-12-26T09:22:13.8123225Z Test Case 'HeadingAdjusterTests.testATXOverflowHighOffset' passed (0.0 seconds)
+2025-12-26T09:22:13.8123846Z Test Case 'HeadingAdjusterTests.testATXOverflowPreservesFormatting' started at 2025-12-26 09:22:13.808
+2025-12-26T09:22:13.8124516Z Test Case 'HeadingAdjusterTests.testATXOverflowPreservesFormatting' passed (0.0 seconds)
+2025-12-26T09:22:13.8125123Z Test Case 'HeadingAdjusterTests.testCodeBlockPreserved' started at 2025-12-26 09:22:13.808
+2025-12-26T09:22:13.8125794Z Test Case 'HeadingAdjusterTests.testCodeBlockPreserved' passed (0.0 seconds)
+2025-12-26T09:22:13.8126349Z Test Case 'HeadingAdjusterTests.testDeterministicOutput' started at 2025-12-26 09:22:13.808
+2025-12-26T09:22:13.8126910Z Test Case 'HeadingAdjusterTests.testDeterministicOutput' passed (0.0 seconds)
+2025-12-26T09:22:13.8127437Z Test Case 'HeadingAdjusterTests.testEmptyInput' started at 2025-12-26 09:22:13.808
+2025-12-26T09:22:13.8127930Z Test Case 'HeadingAdjusterTests.testEmptyInput' passed (0.0 seconds)
+2025-12-26T09:22:13.8128531Z Test Case 'HeadingAdjusterTests.testExtractATXLevelH1' started at 2025-12-26 09:22:13.809
+2025-12-26T09:22:13.8129077Z Test Case 'HeadingAdjusterTests.testExtractATXLevelH1' passed (0.0 seconds)
+2025-12-26T09:22:13.8129617Z Test Case 'HeadingAdjusterTests.testExtractATXLevelH3' started at 2025-12-26 09:22:13.809
+2025-12-26T09:22:13.8130155Z Test Case 'HeadingAdjusterTests.testExtractATXLevelH3' passed (0.0 seconds)
+2025-12-26T09:22:13.8130698Z Test Case 'HeadingAdjusterTests.testExtractATXLevelH6' started at 2025-12-26 09:22:13.809
+2025-12-26T09:22:13.8131234Z Test Case 'HeadingAdjusterTests.testExtractATXLevelH6' passed (0.0 seconds)
+2025-12-26T09:22:13.8131849Z Test Case 'HeadingAdjusterTests.testExtractATXLevelWithLeadingSpaces' started at 2025-12-26 09:22:13.809
+2025-12-26T09:22:13.8132527Z Test Case 'HeadingAdjusterTests.testExtractATXLevelWithLeadingSpaces' passed (0.0 seconds)
+2025-12-26T09:22:13.8133176Z Test Case 'HeadingAdjusterTests.testExtractATXTextEmpty' started at 2025-12-26 09:22:13.809
+2025-12-26T09:22:13.8133738Z Test Case 'HeadingAdjusterTests.testExtractATXTextEmpty' passed (0.0 seconds)
+2025-12-26T09:22:13.9125359Z Test Case 'HeadingAdjusterTests.testExtractATXTextSimple' started at 2025-12-26 09:22:13.809
+2025-12-26T09:22:13.9126481Z Test Case 'HeadingAdjusterTests.testExtractATXTextSimple' passed (0.0 seconds)
+2025-12-26T09:22:13.9127630Z Test Case 'HeadingAdjusterTests.testExtractATXTextWithClosingHashes' started at 2025-12-26 09:22:13.809
+2025-12-26T09:22:13.9128528Z Test Case 'HeadingAdjusterTests.testExtractATXTextWithClosingHashes' passed (0.1 seconds)
+2025-12-26T09:22:13.9129495Z Test Case 'HeadingAdjusterTests.testExtractATXTextWithExtraSpaces' started at 2025-12-26 09:22:13.909
+2025-12-26T09:22:13.9130341Z Test Case 'HeadingAdjusterTests.testExtractATXTextWithExtraSpaces' passed (0.0 seconds)
+2025-12-26T09:22:13.9131402Z Test Case 'HeadingAdjusterTests.testExtractATXTextWithInlineFormatting' started at 2025-12-26 09:22:13.910
+2025-12-26T09:22:13.9132417Z Test Case 'HeadingAdjusterTests.testExtractATXTextWithInlineFormatting' passed (0.0 seconds)
+2025-12-26T09:22:13.9133430Z Test Case 'HeadingAdjusterTests.testHeadingWithCode' started at 2025-12-26 09:22:13.910
+2025-12-26T09:22:13.9134292Z Test Case 'HeadingAdjusterTests.testHeadingWithCode' passed (0.0 seconds)
+2025-12-26T09:22:13.9135206Z Test Case 'HeadingAdjusterTests.testHeadingWithEmoji' started at 2025-12-26 09:22:13.910
+2025-12-26T09:22:13.9136138Z Test Case 'HeadingAdjusterTests.testHeadingWithEmoji' passed (0.0 seconds)
+2025-12-26T09:22:13.9136975Z Test Case 'HeadingAdjusterTests.testHeadingWithLinks' started at 2025-12-26 09:22:13.910
+2025-12-26T09:22:13.9137958Z Test Case 'HeadingAdjusterTests.testHeadingWithLinks' passed (0.0 seconds)
+2025-12-26T09:22:13.9139034Z Test Case 'HeadingAdjusterTests.testHeadingWithUnicode' started at 2025-12-26 09:22:13.910
+2025-12-26T09:22:13.9139788Z Test Case 'HeadingAdjusterTests.testHeadingWithUnicode' passed (0.0 seconds)
+2025-12-26T09:22:13.9140681Z Test Case 'HeadingAdjusterTests.testHorizontalRuleNotTreatedAsSetext' started at 2025-12-26 09:22:13.910
+2025-12-26T09:22:13.9141725Z Test Case 'HeadingAdjusterTests.testHorizontalRuleNotTreatedAsSetext' passed (0.0 seconds)
+2025-12-26T09:22:13.9142798Z Test Case 'HeadingAdjusterTests.testInputWithMultipleTrailingNewlines' started at 2025-12-26 09:22:13.911
+2025-12-26T09:22:13.9143878Z Test Case 'HeadingAdjusterTests.testInputWithMultipleTrailingNewlines' passed (0.0 seconds)
+2025-12-26T09:22:13.9145018Z Test Case 'HeadingAdjusterTests.testInputWithNoTrailingNewline' started at 2025-12-26 09:22:13.911
+2025-12-26T09:22:13.9146026Z Test Case 'HeadingAdjusterTests.testInputWithNoTrailingNewline' passed (0.0 seconds)
+2025-12-26T09:22:13.9146962Z Test Case 'HeadingAdjusterTests.testIsATXHeadingBareHashes' started at 2025-12-26 09:22:13.911
+2025-12-26T09:22:13.9147938Z Test Case 'HeadingAdjusterTests.testIsATXHeadingBareHashes' passed (0.0 seconds)
+2025-12-26T09:22:13.9149050Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH1' started at 2025-12-26 09:22:13.911
+2025-12-26T09:22:13.9149949Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH1' passed (0.0 seconds)
+2025-12-26T09:22:13.9150776Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH2' started at 2025-12-26 09:22:13.911
+2025-12-26T09:22:13.9151726Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH2' passed (0.0 seconds)
+2025-12-26T09:22:13.9152721Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH3' started at 2025-12-26 09:22:13.911
+2025-12-26T09:22:13.9153555Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH3' passed (0.0 seconds)
+2025-12-26T09:22:13.9154368Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH4' started at 2025-12-26 09:22:13.911
+2025-12-26T09:22:13.9155055Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH4' passed (0.0 seconds)
+2025-12-26T09:22:13.9155883Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH5' started at 2025-12-26 09:22:13.911
+2025-12-26T09:22:13.9156787Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH5' passed (0.0 seconds)
+2025-12-26T09:22:13.9157331Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH6' started at 2025-12-26 09:22:13.911
+2025-12-26T09:22:13.9157871Z Test Case 'HeadingAdjusterTests.testIsATXHeadingH6' passed (0.0 seconds)
+2025-12-26T09:22:13.9158620Z Test Case 'HeadingAdjusterTests.testIsATXHeadingWithLeadingSpaces' started at 2025-12-26 09:22:13.912
+2025-12-26T09:22:13.9159446Z Test Case 'HeadingAdjusterTests.testIsATXHeadingWithLeadingSpaces' passed (0.0 seconds)
+2025-12-26T09:22:13.9160085Z Test Case 'HeadingAdjusterTests.testListItemNotTreatedAsSetext' started at 2025-12-26 09:22:13.912
+2025-12-26T09:22:13.9160712Z Test Case 'HeadingAdjusterTests.testListItemNotTreatedAsSetext' passed (0.0 seconds)
+2025-12-26T09:22:13.9161301Z Test Case 'HeadingAdjusterTests.testMixedATXAndSetext' started at 2025-12-26 09:22:13.912
+2025-12-26T09:22:13.9161850Z Test Case 'HeadingAdjusterTests.testMixedATXAndSetext' passed (0.0 seconds)
+2025-12-26T09:22:13.9162408Z Test Case 'HeadingAdjusterTests.testMixedWithRegularText' started at 2025-12-26 09:22:13.912
+2025-12-26T09:22:13.9162981Z Test Case 'HeadingAdjusterTests.testMixedWithRegularText' passed (0.0 seconds)
+2025-12-26T09:22:13.9163619Z Test Case 'HeadingAdjusterTests.testNegativeOffsetTreatedAsZero' started at 2025-12-26 09:22:13.912
+2025-12-26T09:22:13.9164264Z Test Case 'HeadingAdjusterTests.testNegativeOffsetTreatedAsZero' passed (0.0 seconds)
+2025-12-26T09:22:13.9164892Z Test Case 'HeadingAdjusterTests.testNoHeadingsInput' started at 2025-12-26 09:22:13.912
+2025-12-26T09:22:13.9165435Z Test Case 'HeadingAdjusterTests.testNoHeadingsInput' passed (0.0 seconds)
+2025-12-26T09:22:13.9165956Z Test Case 'HeadingAdjusterTests.testNormalizeCR' started at 2025-12-26 09:22:13.913
+2025-12-26T09:22:13.9166465Z Test Case 'HeadingAdjusterTests.testNormalizeCR' passed (0.0 seconds)
+2025-12-26T09:22:13.9166967Z Test Case 'HeadingAdjusterTests.testNormalizeCRLF' started at 2025-12-26 09:22:13.913
+2025-12-26T09:22:13.9167482Z Test Case 'HeadingAdjusterTests.testNormalizeCRLF' passed (0.0 seconds)
+2025-12-26T09:22:13.9168049Z Test Case 'HeadingAdjusterTests.testNormalizeMixedLineEndings' started at 2025-12-26 09:22:13.913
+2025-12-26T09:22:13.9168775Z Test Case 'HeadingAdjusterTests.testNormalizeMixedLineEndings' passed (0.0 seconds)
+2025-12-26T09:22:13.9169388Z Test Case 'HeadingAdjusterTests.testNotATXHeadingHashInMiddle' started at 2025-12-26 09:22:13.913
+2025-12-26T09:22:13.9170002Z Test Case 'HeadingAdjusterTests.testNotATXHeadingHashInMiddle' passed (0.0 seconds)
+2025-12-26T09:22:13.9170714Z Test Case 'HeadingAdjusterTests.testNotATXHeadingNoSpace' started at 2025-12-26 09:22:13.913
+2025-12-26T09:22:13.9171292Z Test Case 'HeadingAdjusterTests.testNotATXHeadingNoSpace' passed (0.0 seconds)
+2025-12-26T09:22:13.9171878Z Test Case 'HeadingAdjusterTests.testNotATXHeadingPlainText' started at 2025-12-26 09:22:13.913
+2025-12-26T09:22:13.9172465Z Test Case 'HeadingAdjusterTests.testNotATXHeadingPlainText' passed (0.0 seconds)
+2025-12-26T09:22:13.9173062Z Test Case 'HeadingAdjusterTests.testNotATXHeadingSevenHashes' started at 2025-12-26 09:22:13.913
+2025-12-26T09:22:13.9173670Z Test Case 'HeadingAdjusterTests.testNotATXHeadingSevenHashes' passed (0.0 seconds)
+2025-12-26T09:22:13.9174270Z Test Case 'HeadingAdjusterTests.testNotSetextUnderlineEmpty' started at 2025-12-26 09:22:13.914
+2025-12-26T09:22:13.9174870Z Test Case 'HeadingAdjusterTests.testNotSetextUnderlineEmpty' passed (0.0 seconds)
+2025-12-26T09:22:13.9175482Z Test Case 'HeadingAdjusterTests.testNotSetextUnderlineMixed' started at 2025-12-26 09:22:13.914
+2025-12-26T09:22:13.9176077Z Test Case 'HeadingAdjusterTests.testNotSetextUnderlineMixed' passed (0.0 seconds)
+2025-12-26T09:22:13.9176672Z Test Case 'HeadingAdjusterTests.testNotSetextUnderlineText' started at 2025-12-26 09:22:13.914
+2025-12-26T09:22:13.9177254Z Test Case 'HeadingAdjusterTests.testNotSetextUnderlineText' passed (0.0 seconds)
+2025-12-26T09:22:13.9177868Z Test Case 'HeadingAdjusterTests.testOutputEndsWithSingleNewline' started at 2025-12-26 09:22:13.914
+2025-12-26T09:22:13.9178619Z Test Case 'HeadingAdjusterTests.testOutputEndsWithSingleNewline' passed (0.0 seconds)
+2025-12-26T09:22:13.9179227Z Test Case 'HeadingAdjusterTests.testPRDExampleOffset2' started at 2025-12-26 09:22:13.914
+2025-12-26T09:22:13.9179774Z Test Case 'HeadingAdjusterTests.testPRDExampleOffset2' passed (0.0 seconds)
+2025-12-26T09:22:13.9180494Z Test Case 'HeadingAdjusterTests.testPRDExampleOffset5ExactlyH6' started at 2025-12-26 09:22:13.914
+2025-12-26T09:22:13.9181127Z Test Case 'HeadingAdjusterTests.testPRDExampleOffset5ExactlyH6' passed (0.0 seconds)
+2025-12-26T09:22:13.9181713Z Test Case 'HeadingAdjusterTests.testPRDExampleOffset6' started at 2025-12-26 09:22:13.914
+2025-12-26T09:22:13.9182263Z Test Case 'HeadingAdjusterTests.testPRDExampleOffset6' passed (0.0 seconds)
+2025-12-26T09:22:13.9182804Z Test Case 'HeadingAdjusterTests.testPRDSetextExample' started at 2025-12-26 09:22:13.914
+2025-12-26T09:22:13.9183341Z Test Case 'HeadingAdjusterTests.testPRDSetextExample' passed (0.0 seconds)
+2025-12-26T09:22:13.9183919Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineDashes' started at 2025-12-26 09:22:13.914
+2025-12-26T09:22:13.9184548Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineDashes' passed (0.0 seconds)
+2025-12-26T09:22:13.9185172Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineEquals' started at 2025-12-26 09:22:13.915
+2025-12-26T09:22:13.9185792Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineEquals' passed (0.0 seconds)
+2025-12-26T09:22:13.9186444Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineLongDashes' started at 2025-12-26 09:22:13.915
+2025-12-26T09:22:13.9187107Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineLongDashes' passed (0.0 seconds)
+2025-12-26T09:22:13.9187772Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineLongEquals' started at 2025-12-26 09:22:13.915
+2025-12-26T09:22:13.9188527Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineLongEquals' passed (0.0 seconds)
+2025-12-26T09:22:13.9189186Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineSingleDash' started at 2025-12-26 09:22:13.915
+2025-12-26T09:22:13.9189839Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineSingleDash' passed (0.0 seconds)
+2025-12-26T09:22:13.9190509Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineSingleEquals' started at 2025-12-26 09:22:13.915
+2025-12-26T09:22:13.9191189Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineSingleEquals' passed (0.0 seconds)
+2025-12-26T09:22:13.9191975Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineWithSpaces' started at 2025-12-26 09:22:13.915
+2025-12-26T09:22:13.9192634Z Test Case 'HeadingAdjusterTests.testParseSetextUnderlineWithSpaces' passed (0.0 seconds)
+2025-12-26T09:22:14.0400152Z Test Case 'HeadingAdjusterTests.testSetextH1Offset1' started at 2025-12-26 09:22:13.915
+2025-12-26T09:22:14.0401227Z Test Case 'HeadingAdjusterTests.testSetextH1Offset1' passed (0.0 seconds)
+2025-12-26T09:22:14.0402200Z Test Case 'HeadingAdjusterTests.testSetextH1Offset3' started at 2025-12-26 09:22:13.915
+2025-12-26T09:22:14.0403169Z Test Case 'HeadingAdjusterTests.testSetextH1Offset3' passed (0.0 seconds)
+2025-12-26T09:22:14.0404140Z Test Case 'HeadingAdjusterTests.testSetextH2Offset1' started at 2025-12-26 09:22:13.915
+2025-12-26T09:22:14.0405111Z Test Case 'HeadingAdjusterTests.testSetextH2Offset1' passed (0.0 seconds)
+2025-12-26T09:22:14.0406124Z Test Case 'HeadingAdjusterTests.testSetextH2Offset4' started at 2025-12-26 09:22:13.916
+2025-12-26T09:22:14.0407149Z Test Case 'HeadingAdjusterTests.testSetextH2Offset4' passed (0.0 seconds)
+2025-12-26T09:22:14.0408452Z Test Case 'HeadingAdjusterTests.testSetextMultipleHeadings' started at 2025-12-26 09:22:13.916
+2025-12-26T09:22:14.0409613Z Test Case 'HeadingAdjusterTests.testSetextMultipleHeadings' passed (0.1 seconds)
+2025-12-26T09:22:14.0410735Z Test Case 'HeadingAdjusterTests.testSetextOverflowH1Plus6' started at 2025-12-26 09:22:14.016
+2025-12-26T09:22:14.0411862Z Test Case 'HeadingAdjusterTests.testSetextOverflowH1Plus6' passed (0.0 seconds)
+2025-12-26T09:22:14.0412942Z Test Case 'HeadingAdjusterTests.testSetextOverflowH2Plus5' started at 2025-12-26 09:22:14.016
+2025-12-26T09:22:14.0414028Z Test Case 'HeadingAdjusterTests.testSetextOverflowH2Plus5' passed (0.0 seconds)
+2025-12-26T09:22:14.0415164Z Test Case 'HeadingAdjusterTests.testWhitespaceOnlyInput' started at 2025-12-26 09:22:14.016
+2025-12-26T09:22:14.0416555Z Test Case 'HeadingAdjusterTests.testWhitespaceOnlyInput' passed (0.0 seconds)
+2025-12-26T09:22:14.0417113Z Test Case 'HeadingAdjusterTests.testZeroOffset' started at 2025-12-26 09:22:14.016
+2025-12-26T09:22:14.0417594Z Test Case 'HeadingAdjusterTests.testZeroOffset' passed (0.0 seconds)
+2025-12-26T09:22:14.0418014Z Test Suite 'HeadingAdjusterTests' passed at 2025-12-26 09:22:14.017
+2025-12-26T09:22:14.0418656Z 	 Executed 73 tests, with 0 failures (0 unexpected) in 0.209 (0.209) seconds
+2025-12-26T09:22:14.0419084Z Test Suite 'ManifestGeneratorTests' started at 2025-12-26 09:22:14.017
+2025-12-26T09:22:14.0419613Z Test Case 'ManifestGeneratorTests.testGenerateEmptyManifest' started at 2025-12-26 09:22:14.017
+2025-12-26T09:22:14.0420204Z Test Case 'ManifestGeneratorTests.testGenerateEmptyManifest' passed (0.0 seconds)
+2025-12-26T09:22:14.0421013Z Test Case 'ManifestGeneratorTests.testGenerateManifestDeterministicOrdering' started at 2025-12-26 09:22:14.017
+2025-12-26T09:22:14.0421776Z Test Case 'ManifestGeneratorTests.testGenerateManifestDeterministicOrdering' passed (0.0 seconds)
+2025-12-26T09:22:14.0422523Z Test Case 'ManifestGeneratorTests.testGenerateManifestWithMultipleEntries' started at 2025-12-26 09:22:14.018
+2025-12-26T09:22:14.0423245Z Test Case 'ManifestGeneratorTests.testGenerateManifestWithMultipleEntries' passed (0.0 seconds)
+2025-12-26T09:22:14.0423944Z Test Case 'ManifestGeneratorTests.testGenerateManifestWithSingleEntry' started at 2025-12-26 09:22:14.018
+2025-12-26T09:22:14.0424641Z Test Case 'ManifestGeneratorTests.testGenerateManifestWithSingleEntry' passed (0.0 seconds)
+2025-12-26T09:22:14.0425236Z Test Case 'ManifestGeneratorTests.testLargeManifest' started at 2025-12-26 09:22:14.018
+2025-12-26T09:22:14.0425766Z Test Case 'ManifestGeneratorTests.testLargeManifest' passed (0.018 seconds)
+2025-12-26T09:22:14.0426316Z Test Case 'ManifestGeneratorTests.testManifestWithLongPaths' started at 2025-12-26 09:22:14.036
+2025-12-26T09:22:14.0426893Z Test Case 'ManifestGeneratorTests.testManifestWithLongPaths' passed (0.0 seconds)
+2025-12-26T09:22:14.0427699Z Test Case 'ManifestGeneratorTests.testTimestampDefaultToCurrentTime' started at 2025-12-26 09:22:14.037
+2025-12-26T09:22:14.0428487Z Test Case 'ManifestGeneratorTests.testTimestampDefaultToCurrentTime' passed (0.001 seconds)
+2025-12-26T09:22:14.0429119Z Test Case 'ManifestGeneratorTests.testTimestampFormatISO8601' started at 2025-12-26 09:22:14.038
+2025-12-26T09:22:14.0429709Z Test Case 'ManifestGeneratorTests.testTimestampFormatISO8601' passed (0.0 seconds)
+2025-12-26T09:22:14.0430287Z Test Case 'ManifestGeneratorTests.testTimestampUTCTimezone' started at 2025-12-26 09:22:14.039
+2025-12-26T09:22:14.0430869Z Test Case 'ManifestGeneratorTests.testTimestampUTCTimezone' passed (0.001 seconds)
+2025-12-26T09:22:14.0431483Z Test Case 'ManifestGeneratorTests.testToJSONAlphabeticalKeyOrdering' started at 2025-12-26 09:22:14.039
+2025-12-26T09:22:14.0432139Z Test Case 'ManifestGeneratorTests.testToJSONAlphabeticalKeyOrdering' passed (0.0 seconds)
+2025-12-26T09:22:14.0432787Z Test Case 'ManifestGeneratorTests.testToJSONDeterministicOutput' started at 2025-12-26 09:22:14.039
+2025-12-26T09:22:14.0433417Z Test Case 'ManifestGeneratorTests.testToJSONDeterministicOutput' passed (0.0 seconds)
+2025-12-26T09:22:14.0434003Z Test Case 'ManifestGeneratorTests.testToJSONEmptyManifest' started at 2025-12-26 09:22:14.039
+2025-12-26T09:22:14.0434568Z Test Case 'ManifestGeneratorTests.testToJSONEmptyManifest' passed (0.0 seconds)
+2025-12-26T09:22:14.0435184Z Test Case 'ManifestGeneratorTests.testToJSONSpecialCharactersInPaths' started at 2025-12-26 09:22:14.040
+2025-12-26T09:22:14.0435843Z Test Case 'ManifestGeneratorTests.testToJSONSpecialCharactersInPaths' passed (0.0 seconds)
+2025-12-26T09:22:14.1442088Z Test Case 'ManifestGeneratorTests.testToJSONValidJSONFormat' started at 2025-12-26 09:22:14.040
+2025-12-26T09:22:14.1443323Z Test Case 'ManifestGeneratorTests.testToJSONValidJSONFormat' passed (0.0 seconds)
+2025-12-26T09:22:14.1444429Z Test Case 'ManifestGeneratorTests.testToJSONWithEntry' started at 2025-12-26 09:22:14.040
+2025-12-26T09:22:14.1445414Z Test Case 'ManifestGeneratorTests.testToJSONWithEntry' passed (0.0 seconds)
+2025-12-26T09:22:14.1445911Z Test Suite 'ManifestGeneratorTests' passed at 2025-12-26 09:22:14.040
+2025-12-26T09:22:14.1446355Z 	 Executed 15 tests, with 0 failures (0 unexpected) in 0.023 (0.023) seconds
+2025-12-26T09:22:14.1446779Z Test Suite 'CompilerErrorTests' started at 2025-12-26 09:22:14.040
+2025-12-26T09:22:14.1447290Z Test Case 'CompilerErrorTests.testAllCategoriesInDiagnostics' started at 2025-12-26 09:22:14.040
+2025-12-26T09:22:14.1447886Z Test Case 'CompilerErrorTests.testAllCategoriesInDiagnostics' passed (0.0 seconds)
+2025-12-26T09:22:14.1448697Z Test Case 'CompilerErrorTests.testDiagnosticFormat' started at 2025-12-26 09:22:14.040
+2025-12-26T09:22:14.1449217Z Test Case 'CompilerErrorTests.testDiagnosticFormat' passed (0.0 seconds)
+2025-12-26T09:22:14.1449726Z Test Case 'CompilerErrorTests.testErrorWithLocation' started at 2025-12-26 09:22:14.041
+2025-12-26T09:22:14.1450272Z Test Case 'CompilerErrorTests.testErrorWithLocation' passed (0.0 seconds)
+2025-12-26T09:22:14.1450800Z Test Case 'CompilerErrorTests.testErrorWithoutLocation' started at 2025-12-26 09:22:14.041
+2025-12-26T09:22:14.1451339Z Test Case 'CompilerErrorTests.testErrorWithoutLocation' passed (0.0 seconds)
+2025-12-26T09:22:14.1451863Z Test Case 'CompilerErrorTests.testExitCodeDelegation' started at 2025-12-26 09:22:14.041
+2025-12-26T09:22:14.1452408Z Test Case 'CompilerErrorTests.testExitCodeDelegation' passed (0.0 seconds)
+2025-12-26T09:22:14.1452934Z Test Case 'CompilerErrorTests.testLocationIsOptional' started at 2025-12-26 09:22:14.041
+2025-12-26T09:22:14.1453465Z Test Case 'CompilerErrorTests.testLocationIsOptional' passed (0.0 seconds)
+2025-12-26T09:22:14.1453979Z Test Case 'CompilerErrorTests.testMultilineMessage' started at 2025-12-26 09:22:14.041
+2025-12-26T09:22:14.1454490Z Test Case 'CompilerErrorTests.testMultilineMessage' passed (0.0 seconds)
+2025-12-26T09:22:14.1454926Z Test Suite 'CompilerErrorTests' passed at 2025-12-26 09:22:14.041
+2025-12-26T09:22:14.1455509Z 	 Executed 7 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+2025-12-26T09:22:14.1455921Z Test Suite 'ErrorCategoryTests' started at 2025-12-26 09:22:14.041
+2025-12-26T09:22:14.1456376Z Test Case 'ErrorCategoryTests.testAllCasesExist' started at 2025-12-26 09:22:14.041
+2025-12-26T09:22:14.1456860Z Test Case 'ErrorCategoryTests.testAllCasesExist' passed (0.0 seconds)
+2025-12-26T09:22:14.1457329Z Test Case 'ErrorCategoryTests.testCaseIterable' started at 2025-12-26 09:22:14.041
+2025-12-26T09:22:14.1457800Z Test Case 'ErrorCategoryTests.testCaseIterable' passed (0.0 seconds)
+2025-12-26T09:22:14.1458362Z Test Case 'ErrorCategoryTests.testExitCodes' started at 2025-12-26 09:22:14.042
+2025-12-26T09:22:14.1458811Z Test Case 'ErrorCategoryTests.testExitCodes' passed (0.1 seconds)
+2025-12-26T09:22:14.1459241Z Test Case 'ErrorCategoryTests.testRawValues' started at 2025-12-26 09:22:14.142
+2025-12-26T09:22:14.1459682Z Test Case 'ErrorCategoryTests.testRawValues' passed (0.0 seconds)
+2025-12-26T09:22:14.1460172Z Test Case 'ErrorCategoryTests.testStringRepresentation' started at 2025-12-26 09:22:14.142
+2025-12-26T09:22:14.1460705Z Test Case 'ErrorCategoryTests.testStringRepresentation' passed (0.0 seconds)
+2025-12-26T09:22:14.1461218Z Test Case 'ErrorCategoryTests.testUniqueExitCodes' started at 2025-12-26 09:22:14.142
+2025-12-26T09:22:14.1461716Z Test Case 'ErrorCategoryTests.testUniqueExitCodes' passed (0.0 seconds)
+2025-12-26T09:22:14.1462130Z Test Suite 'ErrorCategoryTests' passed at 2025-12-26 09:22:14.142
+2025-12-26T09:22:14.1462515Z 	 Executed 6 tests, with 0 failures (0 unexpected) in 0.101 (0.101) seconds
+2025-12-26T09:22:14.1462914Z Test Suite 'FileLoaderTests' started at 2025-12-26 09:22:14.142
+2025-12-26T09:22:14.1463323Z Test Case 'FileLoaderTests.testCacheHit' started at 2025-12-26 09:22:14.142
+2025-12-26T09:22:14.1463732Z Test Case 'FileLoaderTests.testCacheHit' passed (0.0 seconds)
+2025-12-26T09:22:14.1464315Z Test Case 'FileLoaderTests.testCacheSeparateFiles' started at 2025-12-26 09:22:14.143
+2025-12-26T09:22:14.1464825Z Test Case 'FileLoaderTests.testCacheSeparateFiles' passed (0.0 seconds)
+2025-12-26T09:22:14.1465291Z Test Case 'FileLoaderTests.testClearCache' started at 2025-12-26 09:22:14.143
+2025-12-26T09:22:14.1465718Z Test Case 'FileLoaderTests.testClearCache' passed (0.0 seconds)
+2025-12-26T09:22:14.1466198Z Test Case 'FileLoaderTests.testComputeHashDeterminism' started at 2025-12-26 09:22:14.143
+2025-12-26T09:22:14.1466728Z Test Case 'FileLoaderTests.testComputeHashDeterminism' passed (0.0 seconds)
+2025-12-26T09:22:14.1467275Z Test Case 'FileLoaderTests.testComputeHashDifferentContent' started at 2025-12-26 09:22:14.143
+2025-12-26T09:22:14.1467853Z Test Case 'FileLoaderTests.testComputeHashDifferentContent' passed (0.0 seconds)
+2025-12-26T09:22:14.1468500Z Test Case 'FileLoaderTests.testComputeHashEmptyString' started at 2025-12-26 09:22:14.144
+2025-12-26T09:22:14.1469032Z Test Case 'FileLoaderTests.testComputeHashEmptyString' passed (0.0 seconds)
+2025-12-26T09:22:14.1469548Z Test Case 'FileLoaderTests.testComputeHashMultiline' started at 2025-12-26 09:22:14.144
+2025-12-26T09:22:14.3954459Z Test Case 'FileLoaderTests.testComputeHashMultiline' passed (0.0 seconds)
+2025-12-26T09:22:14.3955603Z Test Case 'FileLoaderTests.testComputeHashSingleLine' started at 2025-12-26 09:22:14.144
+2025-12-26T09:22:14.3956619Z Test Case 'FileLoaderTests.testComputeHashSingleLine' passed (0.0 seconds)
+2025-12-26T09:22:14.3957597Z Test Case 'FileLoaderTests.testDetectFileTypeHypercode' started at 2025-12-26 09:22:14.144
+2025-12-26T09:22:14.3958779Z Test Case 'FileLoaderTests.testDetectFileTypeHypercode' passed (0.0 seconds)
+2025-12-26T09:22:14.3959714Z Test Case 'FileLoaderTests.testDetectFileTypeInvalidExtension' started at 2025-12-26 09:22:14.144
+2025-12-26T09:22:14.3960844Z Test Case 'FileLoaderTests.testDetectFileTypeInvalidExtension' passed (0.101 seconds)
+2025-12-26T09:22:14.3961950Z Test Case 'FileLoaderTests.testDetectFileTypeMarkdown' started at 2025-12-26 09:22:14.245
+2025-12-26T09:22:14.3963380Z Test Case 'FileLoaderTests.testDetectFileTypeMarkdown' passed (0.0 seconds)
+2025-12-26T09:22:14.3964042Z Test Case 'FileLoaderTests.testDetectFileTypeMarkdownUppercase' started at 2025-12-26 09:22:14.245
+2025-12-26T09:22:14.3964678Z Test Case 'FileLoaderTests.testDetectFileTypeMarkdownUppercase' passed (0.0 seconds)
+2025-12-26T09:22:14.3965302Z Test Case 'FileLoaderTests.testHashComputedOnNormalizedContent' started at 2025-12-26 09:22:14.245
+2025-12-26T09:22:14.3965925Z Test Case 'FileLoaderTests.testHashComputedOnNormalizedContent' passed (0.0 seconds)
+2025-12-26T09:22:14.3966476Z Test Case 'FileLoaderTests.testLoadEmptyFile' started at 2025-12-26 09:22:14.246
+2025-12-26T09:22:14.3966937Z Test Case 'FileLoaderTests.testLoadEmptyFile' passed (0.0 seconds)
+2025-12-26T09:22:14.3967410Z Test Case 'FileLoaderTests.testLoadFileNotFound' started at 2025-12-26 09:22:14.246
+2025-12-26T09:22:14.3967895Z Test Case 'FileLoaderTests.testLoadFileNotFound' passed (0.0 seconds)
+2025-12-26T09:22:14.3968610Z Test Case 'FileLoaderTests.testLoadFileWithEmoji' started at 2025-12-26 09:22:14.246
+2025-12-26T09:22:14.3969104Z Test Case 'FileLoaderTests.testLoadFileWithEmoji' passed (0.0 seconds)
+2025-12-26T09:22:14.3969647Z Test Case 'FileLoaderTests.testLoadFileWithTrailingWhitespace' started at 2025-12-26 09:22:14.246
+2025-12-26T09:22:14.3970251Z Test Case 'FileLoaderTests.testLoadFileWithTrailingWhitespace' passed (0.0 seconds)
+2025-12-26T09:22:14.3970848Z Test Case 'FileLoaderTests.testLoadFileWithUnicodeContent' started at 2025-12-26 09:22:14.246
+2025-12-26T09:22:14.3971418Z Test Case 'FileLoaderTests.testLoadFileWithUnicodeContent' passed (0.011 seconds)
+2025-12-26T09:22:14.3971931Z Test Case 'FileLoaderTests.testLoadLargeFile' started at 2025-12-26 09:22:14.257
+2025-12-26T09:22:14.3972395Z Test Case 'FileLoaderTests.testLoadLargeFile' passed (0.137 seconds)
+2025-12-26T09:22:14.3972866Z Test Case 'FileLoaderTests.testLoadValidUTF8File' started at 2025-12-26 09:22:14.394
+2025-12-26T09:22:14.3973528Z Test Case 'FileLoaderTests.testLoadValidUTF8File' passed (0.0 seconds)
+2025-12-26T09:22:14.3974032Z Test Case 'FileLoaderTests.testManifestEntryCreation' started at 2025-12-26 09:22:14.394
+2025-12-26T09:22:14.3974557Z Test Case 'FileLoaderTests.testManifestEntryCreation' passed (0.0 seconds)
+2025-12-26T09:22:14.3975096Z Test Case 'FileLoaderTests.testManifestEntryHypercodeFile' started at 2025-12-26 09:22:14.394
+2025-12-26T09:22:14.3975660Z Test Case 'FileLoaderTests.testManifestEntryHypercodeFile' passed (0.0 seconds)
+2025-12-26T09:22:14.3976271Z Test Case 'FileLoaderTests.testManifestEntrySizeBeforeNormalization' started at 2025-12-26 09:22:14.394
+2025-12-26T09:22:14.3976923Z Test Case 'FileLoaderTests.testManifestEntrySizeBeforeNormalization' passed (0.0 seconds)
+2025-12-26T09:22:14.3977510Z Test Case 'FileLoaderTests.testNormalizeLineEndingsCR' started at 2025-12-26 09:22:14.394
+2025-12-26T09:22:14.3978034Z Test Case 'FileLoaderTests.testNormalizeLineEndingsCR' passed (0.0 seconds)
+2025-12-26T09:22:14.3978686Z Test Case 'FileLoaderTests.testNormalizeLineEndingsCRLF' started at 2025-12-26 09:22:14.395
+2025-12-26T09:22:14.3979233Z Test Case 'FileLoaderTests.testNormalizeLineEndingsCRLF' passed (0.0 seconds)
+2025-12-26T09:22:14.3979767Z Test Case 'FileLoaderTests.testNormalizeLineEndingsLF' started at 2025-12-26 09:22:14.395
+2025-12-26T09:22:14.3980286Z Test Case 'FileLoaderTests.testNormalizeLineEndingsLF' passed (0.0 seconds)
+2025-12-26T09:22:14.3980826Z Test Case 'FileLoaderTests.testNormalizeLineEndingsMixed' started at 2025-12-26 09:22:14.395
+2025-12-26T09:22:14.3981370Z Test Case 'FileLoaderTests.testNormalizeLineEndingsMixed' passed (0.0 seconds)
+2025-12-26T09:22:14.3981963Z Test Case 'FileLoaderTests.testNormalizeLineEndingsTrailingNewline' started at 2025-12-26 09:22:14.395
+2025-12-26T09:22:14.3982605Z Test Case 'FileLoaderTests.testNormalizeLineEndingsTrailingNewline' passed (0.0 seconds)
+2025-12-26T09:22:14.3983087Z Test Suite 'FileLoaderTests' passed at 2025-12-26 09:22:14.395
+2025-12-26T09:22:14.3983493Z 	 Executed 28 tests, with 0 failures (0 unexpected) in 0.252 (0.252) seconds
+2025-12-26T09:22:14.3984010Z Test Suite 'FileSystemTests' started at 2025-12-26 09:22:14.395
+2025-12-26T09:22:14.3984565Z Test Case 'FileSystemTests.testLocalFileSystemCanonicalizeRelativePath' started at 2025-12-26 09:22:14.395
+2025-12-26T09:22:14.3985247Z Test Case 'FileSystemTests.testLocalFileSystemCanonicalizeRelativePath' passed (0.0 seconds)
+2025-12-26T09:22:14.6988648Z Test Case 'FileSystemTests.testLocalFileSystemCurrentDirectory' started at 2025-12-26 09:22:14.395
+2025-12-26T09:22:14.6990008Z Test Case 'FileSystemTests.testLocalFileSystemCurrentDirectory' passed (0.0 seconds)
+2025-12-26T09:22:14.6991373Z Test Case 'FileSystemTests.testLocalFileSystemFileExistsForKnownFile' started at 2025-12-26 09:22:14.395
+2025-12-26T09:22:14.6992844Z Test Case 'FileSystemTests.testLocalFileSystemFileExistsForKnownFile' passed (0.0 seconds)
+2025-12-26T09:22:14.6994431Z Test Case 'FileSystemTests.testLocalFileSystemFileNotExists' started at 2025-12-26 09:22:14.395
+2025-12-26T09:22:14.6995551Z Test Case 'FileSystemTests.testLocalFileSystemFileNotExists' passed (0.0 seconds)
+2025-12-26T09:22:14.6996647Z Test Case 'FileSystemTests.testLocalFileSystemReadKnownFile' started at 2025-12-26 09:22:14.396
+2025-12-26T09:22:14.6998007Z Test Case 'FileSystemTests.testLocalFileSystemReadKnownFile' passed (0.0 seconds)
+2025-12-26T09:22:14.6999382Z Test Case 'FileSystemTests.testLocalFileSystemReadNonExistentFile' started at 2025-12-26 09:22:14.396
+2025-12-26T09:22:14.7000627Z Test Case 'FileSystemTests.testLocalFileSystemReadNonExistentFile' passed (0.0 seconds)
+2025-12-26T09:22:14.7001946Z Test Case 'FileSystemTests.testMockFileSystemCanonicalizeAbsolutePath' started at 2025-12-26 09:22:14.396
+2025-12-26T09:22:14.7003287Z Test Case 'FileSystemTests.testMockFileSystemCanonicalizeAbsolutePath' passed (0.0 seconds)
+2025-12-26T09:22:14.7004635Z Test Case 'FileSystemTests.testMockFileSystemCanonicalizeRelativePath' started at 2025-12-26 09:22:14.396
+2025-12-26T09:22:14.7006499Z Test Case 'FileSystemTests.testMockFileSystemCanonicalizeRelativePath' passed (0.1 seconds)
+2025-12-26T09:22:14.7007682Z Test Case 'FileSystemTests.testMockFileSystemClear' started at 2025-12-26 09:22:14.497
+2025-12-26T09:22:14.7008811Z Test Case 'FileSystemTests.testMockFileSystemClear' passed (0.1 seconds)
+2025-12-26T09:22:14.7009662Z Test Case 'FileSystemTests.testMockFileSystemCurrentDirectory' started at 2025-12-26 09:22:14.597
+2025-12-26T09:22:14.7010318Z Test Case 'FileSystemTests.testMockFileSystemCurrentDirectory' passed (0.1 seconds)
+2025-12-26T09:22:14.7010935Z Test Case 'FileSystemTests.testMockFileSystemFileExists' started at 2025-12-26 09:22:14.697
+2025-12-26T09:22:14.7011507Z Test Case 'FileSystemTests.testMockFileSystemFileExists' passed (0.0 seconds)
+2025-12-26T09:22:14.7012093Z Test Case 'FileSystemTests.testMockFileSystemFileNotExists' started at 2025-12-26 09:22:14.697
+2025-12-26T09:22:14.7012704Z Test Case 'FileSystemTests.testMockFileSystemFileNotExists' passed (0.0 seconds)
+2025-12-26T09:22:14.7013320Z Test Case 'FileSystemTests.testMockFileSystemMultipleFiles' started at 2025-12-26 09:22:14.697
+2025-12-26T09:22:14.7013911Z Test Case 'FileSystemTests.testMockFileSystemMultipleFiles' passed (0.0 seconds)
+2025-12-26T09:22:14.7014492Z Test Case 'FileSystemTests.testMockFileSystemReadFailure' started at 2025-12-26 09:22:14.697
+2025-12-26T09:22:14.7015083Z Test Case 'FileSystemTests.testMockFileSystemReadFailure' passed (0.0 seconds)
+2025-12-26T09:22:14.7015649Z Test Case 'FileSystemTests.testMockFileSystemReadSuccess' started at 2025-12-26 09:22:14.698
+2025-12-26T09:22:14.7016241Z Test Case 'FileSystemTests.testMockFileSystemReadSuccess' passed (0.0 seconds)
+2025-12-26T09:22:14.7016800Z Test Case 'FileSystemTests.testMockFileSystemRemoveFile' started at 2025-12-26 09:22:14.698
+2025-12-26T09:22:14.7017364Z Test Case 'FileSystemTests.testMockFileSystemRemoveFile' passed (0.0 seconds)
+2025-12-26T09:22:14.7017973Z Test Case 'FileSystemTests.testMockFileSystemSetCurrentDirectory' started at 2025-12-26 09:22:14.698
+2025-12-26T09:22:14.7018970Z Test Case 'FileSystemTests.testMockFileSystemSetCurrentDirectory' passed (0.0 seconds)
+2025-12-26T09:22:14.7019598Z Test Case 'FileSystemTests.testMockFileSystemSimulatedError' started at 2025-12-26 09:22:14.698
+2025-12-26T09:22:14.7020195Z Test Case 'FileSystemTests.testMockFileSystemSimulatedError' passed (0.0 seconds)
+2025-12-26T09:22:14.7020848Z Test Case 'FileSystemTests.testMockFileSystemSimulatedErrorOverridesFile' started at 2025-12-26 09:22:14.698
+2025-12-26T09:22:14.7021567Z Test Case 'FileSystemTests.testMockFileSystemSimulatedErrorOverridesFile' passed (0.0 seconds)
+2025-12-26T09:22:14.7022100Z Test Suite 'FileSystemTests' passed at 2025-12-26 09:22:14.698
+2025-12-26T09:22:14.7022504Z 	 Executed 19 tests, with 0 failures (0 unexpected) in 0.303 (0.303) seconds
+2025-12-26T09:22:14.7022947Z Test Suite 'ManifestBuilderTests' started at 2025-12-26 09:22:14.698
+2025-12-26T09:22:14.7023476Z Test Case 'ManifestBuilderTests.testAddMultipleEntries' started at 2025-12-26 09:22:14.698
+2025-12-26T09:22:14.7024048Z Test Case 'ManifestBuilderTests.testAddMultipleEntries' passed (0.0 seconds)
+2025-12-26T09:22:14.7024579Z Test Case 'ManifestBuilderTests.testAddSingleEntry' started at 2025-12-26 09:22:14.698
+2025-12-26T09:22:14.7025101Z Test Case 'ManifestBuilderTests.testAddSingleEntry' passed (0.0 seconds)
+2025-12-26T09:22:14.7025586Z Test Case 'ManifestBuilderTests.testClear' started at 2025-12-26 09:22:14.698
+2025-12-26T09:22:14.7026030Z Test Case 'ManifestBuilderTests.testClear' passed (0.0 seconds)
+2025-12-26T09:22:14.7026525Z Test Case 'ManifestBuilderTests.testClearThenAddAgain' started at 2025-12-26 09:22:14.699
+2025-12-26T09:22:14.7027067Z Test Case 'ManifestBuilderTests.testClearThenAddAgain' passed (0.0 seconds)
+2025-12-26T09:22:14.8031641Z Test Case 'ManifestBuilderTests.testDuplicatePathsAllowed' started at 2025-12-26 09:22:14.699
+2025-12-26T09:22:14.8033345Z Test Case 'ManifestBuilderTests.testDuplicatePathsAllowed' passed (0.0 seconds)
+2025-12-26T09:22:14.8034602Z Test Case 'ManifestBuilderTests.testGetEntriesReturnsIndependentCopy' started at 2025-12-26 09:22:14.699
+2025-12-26T09:22:14.8035986Z Test Case 'ManifestBuilderTests.testGetEntriesReturnsIndependentCopy' passed (0.0 seconds)
+2025-12-26T09:22:14.8037150Z Test Case 'ManifestBuilderTests.testInitiallyEmpty' started at 2025-12-26 09:22:14.699
+2025-12-26T09:22:14.8038142Z Test Case 'ManifestBuilderTests.testInitiallyEmpty' passed (0.0 seconds)
+2025-12-26T09:22:14.8039450Z Test Case 'ManifestBuilderTests.testInsertionOrderPreserved' started at 2025-12-26 09:22:14.699
+2025-12-26T09:22:14.8040585Z Test Case 'ManifestBuilderTests.testInsertionOrderPreserved' passed (0.0 seconds)
+2025-12-26T09:22:14.8041609Z Test Case 'ManifestBuilderTests.testLargeNumberOfEntries' started at 2025-12-26 09:22:14.699
+2025-12-26T09:22:14.8042711Z Test Case 'ManifestBuilderTests.testLargeNumberOfEntries' passed (0.001 seconds)
+2025-12-26T09:22:14.8043663Z Test Suite 'ManifestBuilderTests' passed at 2025-12-26 09:22:14.700
+2025-12-26T09:22:14.8044465Z 	 Executed 9 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+2025-12-26T09:22:14.8045269Z Test Suite 'SourceLocationTests' started at 2025-12-26 09:22:14.700
+2025-12-26T09:22:14.8046196Z Test Case 'SourceLocationTests.testDescriptionFormat' started at 2025-12-26 09:22:14.700
+2025-12-26T09:22:14.8047223Z Test Case 'SourceLocationTests.testDescriptionFormat' passed (0.0 seconds)
+2025-12-26T09:22:14.8048505Z Test Case 'SourceLocationTests.testDescriptionWithAbsolutePath' started at 2025-12-26 09:22:14.700
+2025-12-26T09:22:14.8049685Z Test Case 'SourceLocationTests.testDescriptionWithAbsolutePath' passed (0.0 seconds)
+2025-12-26T09:22:14.8050286Z Test Case 'SourceLocationTests.testEmptyFilePath' started at 2025-12-26 09:22:14.700
+2025-12-26T09:22:14.8050820Z Test Case 'SourceLocationTests.testEmptyFilePath' passed (0.0 seconds)
+2025-12-26T09:22:14.8051312Z Test Case 'SourceLocationTests.testEquality' started at 2025-12-26 09:22:14.700
+2025-12-26T09:22:14.8051794Z Test Case 'SourceLocationTests.testEquality' passed (0.0 seconds)
+2025-12-26T09:22:14.8052511Z Test Case 'SourceLocationTests.testInequalityDifferentLine' started at 2025-12-26 09:22:14.701
+2025-12-26T09:22:14.8053118Z Test Case 'SourceLocationTests.testInequalityDifferentLine' passed (0.0 seconds)
+2025-12-26T09:22:14.8053710Z Test Case 'SourceLocationTests.testInequalityDifferentPath' started at 2025-12-26 09:22:14.701
+2025-12-26T09:22:14.8054297Z Test Case 'SourceLocationTests.testInequalityDifferentPath' passed (0.0 seconds)
+2025-12-26T09:22:14.8054850Z Test Case 'SourceLocationTests.testInitialization' started at 2025-12-26 09:22:14.701
+2025-12-26T09:22:14.8055370Z Test Case 'SourceLocationTests.testInitialization' passed (0.1 seconds)
+2025-12-26T09:22:14.8055882Z Test Case 'SourceLocationTests.testLargeLineNumber' started at 2025-12-26 09:22:14.801
+2025-12-26T09:22:14.8056432Z Test Case 'SourceLocationTests.testLargeLineNumber' passed (0.001 seconds)
+2025-12-26T09:22:14.8057045Z Test Case 'SourceLocationTests.testLineNumberZeroTriggersFailure' started at 2025-12-26 09:22:14.802
+2025-12-26T09:22:14.8057712Z Test Case 'SourceLocationTests.testLineNumberZeroTriggersFailure' passed (0.0 seconds)
+2025-12-26T09:22:14.8058494Z Test Case 'SourceLocationTests.testMinimumLineNumber' started at 2025-12-26 09:22:14.802
+2025-12-26T09:22:14.8059042Z Test Case 'SourceLocationTests.testMinimumLineNumber' passed (0.0 seconds)
+2025-12-26T09:22:14.8059663Z Test Case 'SourceLocationTests.testNegativeLineNumberTriggersFailure' started at 2025-12-26 09:22:14.802
+2025-12-26T09:22:14.8060349Z Test Case 'SourceLocationTests.testNegativeLineNumberTriggersFailure' passed (0.0 seconds)
+2025-12-26T09:22:14.8060891Z Test Suite 'SourceLocationTests' passed at 2025-12-26 09:22:14.802
+2025-12-26T09:22:14.8061331Z 	 Executed 11 tests, with 0 failures (0 unexpected) in 0.102 (0.102) seconds
+2025-12-26T09:22:14.8061765Z Test Suite 'DecisionSpecsTests' started at 2025-12-26 09:22:14.802
+2025-12-26T09:22:14.8062531Z Test Case 'DecisionSpecsTests.testCandidateResolutionDecisionSpecEvaluatesExistence' started at 2025-12-26 09:22:14.802
+2025-12-26T09:22:14.8063382Z Test Case 'DecisionSpecsTests.testCandidateResolutionDecisionSpecEvaluatesExistence' passed (0.0 seconds)
+2025-12-26T09:22:14.8064218Z Test Case 'DecisionSpecsTests.testCompilePolicyDecisionSpecsReturnExpectedFlags' started at 2025-12-26 09:22:14.802
+2025-12-26T09:22:14.8065023Z Test Case 'DecisionSpecsTests.testCompilePolicyDecisionSpecsReturnExpectedFlags' passed (0.0 seconds)
+2025-12-26T09:22:14.8065914Z Test Case 'DecisionSpecsTests.testDirectoryDispositionDecisionSpecSkipsHiddenAndIgnoredDirectories' started at 2025-12-26 09:22:14.803
+2025-12-26T09:22:14.8066914Z Test Case 'DecisionSpecsTests.testDirectoryDispositionDecisionSpecSkipsHiddenAndIgnoredDirectories' passed (0.0 seconds)
+2025-12-26T09:22:14.8067828Z Test Case 'DecisionSpecsTests.testFileTypeDecisionSpecDetectsMarkdownAndHypercode' started at 2025-12-26 09:22:14.803
+2025-12-26T09:22:14.8068763Z Test Case 'DecisionSpecsTests.testFileTypeDecisionSpecDetectsMarkdownAndHypercode' passed (0.0 seconds)
+2025-12-26T09:22:15.0151274Z Test Case 'DecisionSpecsTests.testLinkLiteralDecisionSpecClassifiesLiterals' started at 2025-12-26 09:22:14.803
+2025-12-26T09:22:15.0152849Z Test Case 'DecisionSpecsTests.testLinkLiteralDecisionSpecClassifiesLiterals' passed (0.0 seconds)
+2025-12-26T09:22:15.0154450Z Test Case 'DecisionSpecsTests.testLinkReferenceHintDecisionSpecClassifiesFileReferences' started at 2025-12-26 09:22:14.803
+2025-12-26T09:22:15.0155531Z Test Case 'DecisionSpecsTests.testLinkReferenceHintDecisionSpecClassifiesFileReferences' passed (0.0 seconds)
+2025-12-26T09:22:15.0156489Z Test Case 'DecisionSpecsTests.testOutputPathStrategyDecisionSpecSelectsStrategy' started at 2025-12-26 09:22:14.803
+2025-12-26T09:22:15.0157312Z Test Case 'DecisionSpecsTests.testOutputPathStrategyDecisionSpecSelectsStrategy' passed (0.0 seconds)
+2025-12-26T09:22:15.0158503Z Test Case 'DecisionSpecsTests.testResolutionOutcomeDecisionSpecClassifiesCandidateCounts' started at 2025-12-26 09:22:14.804
+2025-12-26T09:22:15.0159725Z Test Case 'DecisionSpecsTests.testResolutionOutcomeDecisionSpecClassifiesCandidateCounts' passed (0.0 seconds)
+2025-12-26T09:22:15.0160614Z Test Case 'DecisionSpecsTests.testRootEligibilityDecisionSpecRespectsResolutionMode' started at 2025-12-26 09:22:14.804
+2025-12-26T09:22:15.0161460Z Test Case 'DecisionSpecsTests.testRootEligibilityDecisionSpecRespectsResolutionMode' passed (0.0 seconds)
+2025-12-26T09:22:15.0162261Z Test Case 'DecisionSpecsTests.testRootPathStrategyDecisionSpecUsesSeparator' started at 2025-12-26 09:22:14.804
+2025-12-26T09:22:15.0163291Z Test Case 'DecisionSpecsTests.testRootPathStrategyDecisionSpecUsesSeparator' passed (0.0 seconds)
+2025-12-26T09:22:15.0164724Z Test Case 'DecisionSpecsTests.testTargetFileSpecRequiresKnownExtensions' started at 2025-12-26 09:22:14.804
+2025-12-26T09:22:15.0166093Z Test Case 'DecisionSpecsTests.testTargetFileSpecRequiresKnownExtensions' passed (0.0 seconds)
+2025-12-26T09:22:15.0167115Z Test Suite 'DecisionSpecsTests' passed at 2025-12-26 09:22:14.805
+2025-12-26T09:22:15.0167859Z 	 Executed 11 tests, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+2025-12-26T09:22:15.0168889Z Test Suite 'DiagnosticMapperTests' started at 2025-12-26 09:22:14.805
+2025-12-26T09:22:15.0169990Z Test Case 'DiagnosticMapperTests.testInternalErrorMapsToInternalCode' started at 2025-12-26 09:22:14.805
+2025-12-26T09:22:15.0171337Z Test Case 'DiagnosticMapperTests.testInternalErrorMapsToInternalCode' passed (0.0 seconds)
+2025-12-26T09:22:15.0172576Z Test Case 'DiagnosticMapperTests.testIoErrorMapsToIoCode' started at 2025-12-26 09:22:14.805
+2025-12-26T09:22:15.0173705Z Test Case 'DiagnosticMapperTests.testIoErrorMapsToIoCode' passed (0.0 seconds)
+2025-12-26T09:22:15.0174978Z Test Case 'DiagnosticMapperTests.testRangeDefaultsToLineWithColumnOne' started at 2025-12-26 09:22:14.805
+2025-12-26T09:22:15.0176325Z Test Case 'DiagnosticMapperTests.testRangeDefaultsToLineWithColumnOne' passed (0.1 seconds)
+2025-12-26T09:22:15.0177489Z Test Case 'DiagnosticMapperTests.testResolutionErrorMapsToResolutionCode' started at 2025-12-26 09:22:14.905
+2025-12-26T09:22:15.0178628Z Test Case 'DiagnosticMapperTests.testResolutionErrorMapsToResolutionCode' passed (0.0 seconds)
+2025-12-26T09:22:15.0179380Z Test Case 'DiagnosticMapperTests.testSyntaxErrorMapsToSyntaxCode' started at 2025-12-26 09:22:14.905
+2025-12-26T09:22:15.0180056Z Test Case 'DiagnosticMapperTests.testSyntaxErrorMapsToSyntaxCode' passed (0.0 seconds)
+2025-12-26T09:22:15.0180590Z Test Suite 'DiagnosticMapperTests' passed at 2025-12-26 09:22:14.906
+2025-12-26T09:22:15.0181307Z 	 Executed 5 tests, with 0 failures (0 unexpected) in 0.101 (0.101) seconds
+2025-12-26T09:22:15.0181780Z Test Suite 'EditorCompilerIntegrationTests' started at 2025-12-26 09:22:14.906
+2025-12-26T09:22:15.0182420Z Test Case 'EditorCompilerIntegrationTests.testEditorCompilerMatchesCLI_V01' started at 2025-12-26 09:22:14.906
+2025-12-26T09:22:15.0183172Z Test Case 'EditorCompilerIntegrationTests.testEditorCompilerMatchesCLI_V01' passed (0.002 seconds)
+2025-12-26T09:22:15.0184054Z Test Case 'EditorCompilerIntegrationTests.testEditorCompilerMatchesCLI_V03' started at 2025-12-26 09:22:14.907
+2025-12-26T09:22:15.0184940Z Test Case 'EditorCompilerIntegrationTests.testEditorCompilerMatchesCLI_V03' passed (0.102 seconds)
+2025-12-26T09:22:15.0185684Z Test Case 'EditorCompilerIntegrationTests.testEditorCompilerMatchesCLI_V11' started at 2025-12-26 09:22:15.010
+2025-12-26T09:22:15.0186421Z Test Case 'EditorCompilerIntegrationTests.testEditorCompilerMatchesCLI_V11' passed (0.002 seconds)
+2025-12-26T09:22:15.0187151Z Test Case 'EditorCompilerIntegrationTests.testEditorCompilerMatchesCLI_V15' started at 2025-12-26 09:22:15.011
+2025-12-26T09:22:15.0187874Z Test Case 'EditorCompilerIntegrationTests.testEditorCompilerMatchesCLI_V15' passed (0.002 seconds)
+2025-12-26T09:22:15.0188784Z Test Suite 'EditorCompilerIntegrationTests' passed at 2025-12-26 09:22:15.013
+2025-12-26T09:22:15.0189263Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.107 (0.107) seconds
+2025-12-26T09:22:15.0189863Z Test Suite 'EditorCompilerTests' started at 2025-12-26 09:22:15.013
+2025-12-26T09:22:15.0190424Z Test Case 'EditorCompilerTests.testCollectStatsReturnsStatistics' started at 2025-12-26 09:22:15.013
+2025-12-26T09:22:15.0190904Z Compilation Statistics
+2025-12-26T09:22:15.0191119Z ----------------------
+2025-12-26T09:22:15.1564348Z Source files: 1 (Hypercode: 1, Markdown: 0)
+2025-12-26T09:22:15.1565009Z Input bytes: 7 bytes
+2025-12-26T09:22:15.1565429Z Output bytes: 184 bytes
+2025-12-26T09:22:15.1565848Z Max depth: 0
+2025-12-26T09:22:15.1566212Z Duration: 1 ms
+2025-12-26T09:22:15.1567033Z Test Case 'EditorCompilerTests.testCollectStatsReturnsStatistics' passed (0.002 seconds)
+2025-12-26T09:22:15.1568609Z Test Case 'EditorCompilerTests.testCompileMissingFileReturnsDiagnostics' started at 2025-12-26 09:22:15.015
+2025-12-26T09:22:15.1569860Z Test Case 'EditorCompilerTests.testCompileMissingFileReturnsDiagnostics' passed (0.0 seconds)
+2025-12-26T09:22:15.1570933Z Test Case 'EditorCompilerTests.testCompileReturnsOutput' started at 2025-12-26 09:22:15.015
+2025-12-26T09:22:15.1572162Z Test Case 'EditorCompilerTests.testCompileReturnsOutput' passed (0.002 seconds)
+2025-12-26T09:22:15.1572923Z Test Case 'EditorCompilerTests.testEmitManifestToggle' started at 2025-12-26 09:22:15.017
+2025-12-26T09:22:15.1573664Z Test Case 'EditorCompilerTests.testEmitManifestToggle' passed (0.002 seconds)
+2025-12-26T09:22:15.1574619Z Test Case 'EditorCompilerTests.testLenientModeAllowsMissingReference' started at 2025-12-26 09:22:15.019
+2025-12-26T09:22:15.1575703Z Test Case 'EditorCompilerTests.testLenientModeAllowsMissingReference' passed (0.002 seconds)
+2025-12-26T09:22:15.1576981Z Test Case 'EditorCompilerTests.testStrictModeReportsMissingReference' started at 2025-12-26 09:22:15.021
+2025-12-26T09:22:15.1578132Z Test Case 'EditorCompilerTests.testStrictModeReportsMissingReference' passed (0.001 seconds)
+2025-12-26T09:22:15.1580002Z Test Case 'EditorCompilerTests.testWriteOutputWritesFiles' started at 2025-12-26 09:22:15.022
+2025-12-26T09:22:15.1581195Z Test Case 'EditorCompilerTests.testWriteOutputWritesFiles' passed (0.003 seconds)
+2025-12-26T09:22:15.1582216Z Test Suite 'EditorCompilerTests' passed at 2025-12-26 09:22:15.025
+2025-12-26T09:22:15.1583019Z 	 Executed 7 tests, with 0 failures (0 unexpected) in 0.011 (0.011) seconds
+2025-12-26T09:22:15.1583692Z Test Suite 'EditorEngineCorpusTests' started at 2025-12-26 09:22:15.025
+2025-12-26T09:22:15.1584360Z Test Case 'EditorEngineCorpusTests.testInvalidCorpusI09Skipped' started at 2025-12-26 09:22:15.025
+2025-12-26T09:22:15.1586252Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorEngineCorpusTests.swift:39: EditorEngineCorpusTests.testInvalidCorpusI09Skipped : Test skipped - Temporarily disabled - running as root bypasses permission checks. Needs test environment fix.
+2025-12-26T09:22:15.1587922Z Test Case 'EditorEngineCorpusTests.testInvalidCorpusI09Skipped' skipped (0.0 seconds)
+2025-12-26T09:22:15.1589077Z Test Case 'EditorEngineCorpusTests.testInvalidCorpusParityI01ToI10' started at 2025-12-26 09:22:15.025
+2025-12-26T09:22:15.1589874Z Test Case 'EditorEngineCorpusTests.testInvalidCorpusParityI01ToI10' passed (0.008 seconds)
+2025-12-26T09:22:15.1590907Z Test Case 'EditorEngineCorpusTests.testValidCorpusParityV01ToV14' started at 2025-12-26 09:22:15.033
+2025-12-26T09:22:15.1591617Z Test Case 'EditorEngineCorpusTests.testValidCorpusParityV01ToV14' passed (0.018 seconds)
+2025-12-26T09:22:15.1592573Z Test Case 'EditorEngineCorpusTests.testValidCorpusV07Skipped' started at 2025-12-26 09:22:15.051
+2025-12-26T09:22:15.1594247Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorEngineCorpusTests.swift:20: EditorEngineCorpusTests.testValidCorpusV07Skipped : Test skipped - Temporarily disabled - fixture references level1.hc with invalid line format under current parser.
+2025-12-26T09:22:15.1595891Z Test Case 'EditorEngineCorpusTests.testValidCorpusV07Skipped' skipped (0.1 seconds)
+2025-12-26T09:22:15.1597098Z Test Case 'EditorEngineCorpusTests.testValidCorpusV12Skipped' started at 2025-12-26 09:22:15.152
+2025-12-26T09:22:15.1598850Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorEngineCorpusTests.swift:24: EditorEngineCorpusTests.testValidCorpusV12Skipped : Test skipped - Temporarily disabled - fixture triggers multiple roots under current parser behavior.
+2025-12-26T09:22:15.1600566Z Test Case 'EditorEngineCorpusTests.testValidCorpusV12Skipped' skipped (0.0 seconds)
+2025-12-26T09:22:15.1601259Z Test Suite 'EditorEngineCorpusTests' passed at 2025-12-26 09:22:15.152
+2025-12-26T09:22:15.1601958Z 	 Executed 5 tests, with 3 tests skipped and 0 failures (0 unexpected) in 0.127 (0.127) seconds
+2025-12-26T09:22:15.1602567Z Test Suite 'EditorEngineTests' started at 2025-12-26 09:22:15.152
+2025-12-26T09:22:15.1603308Z Test Case 'EditorEngineTests.testModuleAvailable' started at 2025-12-26 09:22:15.152
+2025-12-26T09:22:15.1604068Z Test Case 'EditorEngineTests.testModuleAvailable' passed (0.0 seconds)
+2025-12-26T09:22:15.1604550Z Test Case 'EditorEngineTests.testVersion' started at 2025-12-26 09:22:15.152
+2025-12-26T09:22:15.1604995Z Test Case 'EditorEngineTests.testVersion' passed (0.0 seconds)
+2025-12-26T09:22:15.1605403Z Test Suite 'EditorEngineTests' passed at 2025-12-26 09:22:15.152
+2025-12-26T09:22:15.1606132Z 	 Executed 2 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+2025-12-26T09:22:15.1606725Z Test Suite 'EditorParserLinkAtTests' started at 2025-12-26 09:22:15.152
+2025-12-26T09:22:15.1607413Z Test Case 'EditorParserLinkAtTests.testLinkAtPerformanceWithManyLinks' started at 2025-12-26 09:22:15.152
+2025-12-26T09:22:15.1609900Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:302: error: EditorParserLinkAtTests.testLinkAtPerformanceWithManyLinks : XCTAssertEqual failed: ("0") is not equal to ("1000") - 
+2025-12-26T09:22:15.1613607Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:305: Test Case 'EditorParserLinkAtTests.testLinkAtPerformanceWithManyLinks' measured [Time, seconds] average: 0.000, relative standard deviation: 28.764%, values: [0.000030, 0.000014, 0.000015, 0.000015, 0.000015, 0.000017, 0.000015, 0.000015, 0.000016, 0.000016], performanceMetricID:org.swift.XCTPerformanceMetric_WallClockTime, maxPercentRelativeStandardDeviation: 10.000%, maxStandardDeviation: 0.100
+2025-12-26T09:22:15.1616105Z Test Case 'EditorParserLinkAtTests.testLinkAtPerformanceWithManyLinks' failed (0.004 seconds)
+2025-12-26T09:22:15.1617214Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsFirstLinkWhenMultipleLinksExist' started at 2025-12-26 09:22:15.157
+2025-12-26T09:22:15.1618757Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:35: error: EditorParserLinkAtTests.testLinkAtReturnsFirstLinkWhenMultipleLinksExist : XCTAssertNotNil failed - 
+2025-12-26T09:22:15.1620559Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:36: error: EditorParserLinkAtTests.testLinkAtReturnsFirstLinkWhenMultipleLinksExist : XCTAssertEqual failed: ("nil") is not equal to ("Optional("first.md")") - 
+2025-12-26T09:22:15.1621929Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsFirstLinkWhenMultipleLinksExist' failed (0.0 seconds)
+2025-12-26T09:22:15.1622716Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsLinkAtStartBoundary' started at 2025-12-26 09:22:15.157
+2025-12-26T09:22:15.1623855Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:177: error: EditorParserLinkAtTests.testLinkAtReturnsLinkAtStartBoundary : XCTAssertNotNil failed - 
+2025-12-26T09:22:15.1625516Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:178: error: EditorParserLinkAtTests.testLinkAtReturnsLinkAtStartBoundary : XCTAssertEqual failed: ("nil") is not equal to ("Optional("file.md")") - 
+2025-12-26T09:22:15.1626757Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsLinkAtStartBoundary' failed (0.0 seconds)
+2025-12-26T09:22:15.1627655Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsLinkOnMultipleLines' started at 2025-12-26 09:22:15.157
+2025-12-26T09:22:15.1628900Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:63: error: EditorParserLinkAtTests.testLinkAtReturnsLinkOnMultipleLines : XCTAssertNotNil failed - 
+2025-12-26T09:22:15.1630547Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:64: error: EditorParserLinkAtTests.testLinkAtReturnsLinkOnMultipleLines : XCTAssertEqual failed: ("nil") is not equal to ("Optional("link2.md")") - 
+2025-12-26T09:22:15.1632346Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:65: error: EditorParserLinkAtTests.testLinkAtReturnsLinkOnMultipleLines : XCTAssertEqual failed: ("nil") is not equal to ("Optional(Range(2..<3))") - 
+2025-12-26T09:22:15.1633587Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsLinkOnMultipleLines' failed (0.0 seconds)
+2025-12-26T09:22:15.1634334Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsLinkOneBeforeEndBoundary' started at 2025-12-26 09:22:15.157
+2025-12-26T09:22:15.1635549Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:207: error: EditorParserLinkAtTests.testLinkAtReturnsLinkOneBeforeEndBoundary : failed - No link found in test file
+2025-12-26T09:22:15.1636723Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsLinkOneBeforeEndBoundary' failed (0.0 seconds)
+2025-12-26T09:22:15.1637482Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsLinkWhenPositionInside' started at 2025-12-26 09:22:15.158
+2025-12-26T09:22:15.1638767Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:21: error: EditorParserLinkAtTests.testLinkAtReturnsLinkWhenPositionInside : XCTAssertNotNil failed - 
+2025-12-26T09:22:15.1640562Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:22: error: EditorParserLinkAtTests.testLinkAtReturnsLinkWhenPositionInside : XCTAssertEqual failed: ("nil") is not equal to ("Optional("file.md")") - 
+2025-12-26T09:22:15.1642379Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:23: error: EditorParserLinkAtTests.testLinkAtReturnsLinkWhenPositionInside : XCTAssertEqual failed: ("nil") is not equal to ("Optional(Range(1..<2))") - 
+2025-12-26T09:22:15.1643644Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsLinkWhenPositionInside' failed (0.0 seconds)
+2025-12-26T09:22:15.1644367Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilAtEndBoundary' started at 2025-12-26 09:22:15.158
+2025-12-26T09:22:15.1645504Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:189: error: EditorParserLinkAtTests.testLinkAtReturnsNilAtEndBoundary : failed - No link found in test file
+2025-12-26T09:22:15.1646594Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilAtEndBoundary' failed (0.0 seconds)
+2025-12-26T09:22:15.1647345Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForColumnBeyondLineBounds' started at 2025-12-26 09:22:15.158
+2025-12-26T09:22:15.1648246Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForColumnBeyondLineBounds' passed (0.0 seconds)
+2025-12-26T09:22:15.1649040Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForLineBeyondFileBounds' started at 2025-12-26 09:22:15.158
+2025-12-26T09:22:15.1649813Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForLineBeyondFileBounds' passed (0.0 seconds)
+2025-12-26T09:22:15.1650559Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForNegativeColumn' started at 2025-12-26 09:22:15.158
+2025-12-26T09:22:15.1651280Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForNegativeColumn' passed (0.0 seconds)
+2025-12-26T09:22:15.1651994Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForNegativeLine' started at 2025-12-26 09:22:15.159
+2025-12-26T09:22:15.1652811Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForNegativeLine' passed (0.0 seconds)
+2025-12-26T09:22:15.1653508Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForZeroColumn' started at 2025-12-26 09:22:15.159
+2025-12-26T09:22:15.1654190Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForZeroColumn' passed (0.0 seconds)
+2025-12-26T09:22:15.1654859Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForZeroLine' started at 2025-12-26 09:22:15.159
+2025-12-26T09:22:15.1655517Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilForZeroLine' passed (0.0 seconds)
+2025-12-26T09:22:15.1656229Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenLineAfterLastLink' started at 2025-12-26 09:22:15.159
+2025-12-26T09:22:15.1656987Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenLineAfterLastLink' passed (0.0 seconds)
+2025-12-26T09:22:15.1657764Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenLineBeforeFirstLink' started at 2025-12-26 09:22:15.159
+2025-12-26T09:22:15.1658640Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenLineBeforeFirstLink' passed (0.0 seconds)
+2025-12-26T09:22:15.1659361Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenNoLinks' started at 2025-12-26 09:22:15.159
+2025-12-26T09:22:15.1660024Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenNoLinks' passed (0.0 seconds)
+2025-12-26T09:22:15.1660752Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenPositionAfterLastLink' started at 2025-12-26 09:22:15.159
+2025-12-26T09:22:15.1661551Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenPositionAfterLastLink' passed (0.0 seconds)
+2025-12-26T09:22:15.1662369Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenPositionBeforeFirstLink' started at 2025-12-26 09:22:15.160
+2025-12-26T09:22:15.1663189Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenPositionBeforeFirstLink' passed (0.0 seconds)
+2025-12-26T09:22:15.1664166Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenPositionBetweenLinksHorizontally' started at 2025-12-26 09:22:15.160
+2025-12-26T09:22:15.1665089Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenPositionBetweenLinksHorizontally' passed (0.0 seconds)
+2025-12-26T09:22:15.1665998Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenPositionBetweenLinksVertically' started at 2025-12-26 09:22:15.160
+2025-12-26T09:22:15.1666892Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsNilWhenPositionBetweenLinksVertically' passed (0.0 seconds)
+2025-12-26T09:22:15.1667744Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsSecondLinkWhenPositionInSecond' started at 2025-12-26 09:22:15.160
+2025-12-26T09:22:15.1669070Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:48: error: EditorParserLinkAtTests.testLinkAtReturnsSecondLinkWhenPositionInSecond : XCTAssertNotNil failed - 
+2025-12-26T09:22:15.1670835Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:49: error: EditorParserLinkAtTests.testLinkAtReturnsSecondLinkWhenPositionInSecond : XCTAssertEqual failed: ("nil") is not equal to ("Optional("second.md")") - 
+2025-12-26T09:22:15.2640370Z Test Case 'EditorParserLinkAtTests.testLinkAtReturnsSecondLinkWhenPositionInSecond' failed (0.0 seconds)
+2025-12-26T09:22:15.2641259Z Test Case 'EditorParserLinkAtTests.testLinkAtWithComplexFile' started at 2025-12-26 09:22:15.160
+2025-12-26T09:22:15.2642570Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:326: error: EditorParserLinkAtTests.testLinkAtWithComplexFile : XCTAssertEqual failed: ("0") is not equal to ("5") - 
+2025-12-26T09:22:15.2644556Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:330: error: EditorParserLinkAtTests.testLinkAtWithComplexFile : XCTAssertEqual failed: ("nil") is not equal to ("Optional("link1.md")") - 
+2025-12-26T09:22:15.2647053Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:334: error: EditorParserLinkAtTests.testLinkAtWithComplexFile : XCTAssertEqual failed: ("nil") is not equal to ("Optional("link2.md")") - 
+2025-12-26T09:22:15.2649382Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:342: error: EditorParserLinkAtTests.testLinkAtWithComplexFile : XCTAssertEqual failed: ("nil") is not equal to ("Optional("link3.md")") - 
+2025-12-26T09:22:15.2651507Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:346: error: EditorParserLinkAtTests.testLinkAtWithComplexFile : XCTAssertEqual failed: ("nil") is not equal to ("Optional("link4.md")") - 
+2025-12-26T09:22:15.2653627Z /home/runner/work/Hyperprompt/Hyperprompt/Tests/EditorEngineTests/EditorParserLinkAtTests.swift:354: error: EditorParserLinkAtTests.testLinkAtWithComplexFile : XCTAssertEqual failed: ("nil") is not equal to ("Optional("link5.md")") - 
+2025-12-26T09:22:15.2655006Z Test Case 'EditorParserLinkAtTests.testLinkAtWithComplexFile' failed (0.0 seconds)
+2025-12-26T09:22:15.2655540Z Test Suite 'EditorParserLinkAtTests' failed at 2025-12-26 09:22:15.161
+2025-12-26T09:22:15.2655986Z 	 Executed 22 tests, with 21 failures (0 unexpected) in 0.008 (0.008) seconds
+2025-12-26T09:22:15.2656418Z Test Suite 'EditorParserTests' started at 2025-12-26 09:22:15.161
+2025-12-26T09:22:15.2656947Z Test Case 'EditorParserTests.testParseFilePathReportsIOError' started at 2025-12-26 09:22:15.161
+2025-12-26T09:22:15.2657576Z Test Case 'EditorParserTests.testParseFilePathReportsIOError' passed (0.0 seconds)
+2025-12-26T09:22:15.2658065Z Test Suite 'EditorParserTests' passed at 2025-12-26 09:22:15.161
+2025-12-26T09:22:15.2658581Z 	 Executed 1 test, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+2025-12-26T09:22:15.2658987Z Test Suite 'EditorResolverTests' started at 2025-12-26 09:22:15.161
+2025-12-26T09:22:15.2659598Z Test Case 'EditorResolverTests.testAmbiguousResolutionReturnsAmbiguousTarget' started at 2025-12-26 09:22:15.161
+2025-12-26T09:22:15.2660517Z Test Case 'EditorResolverTests.testAmbiguousResolutionReturnsAmbiguousTarget' passed (0.0 seconds)
+2025-12-26T09:22:15.2661275Z Test Case 'EditorResolverTests.testForbiddenExtensionReturnsForbiddenTarget' started at 2025-12-26 09:22:15.161
+2025-12-26T09:22:15.2662028Z Test Case 'EditorResolverTests.testForbiddenExtensionReturnsForbiddenTarget' passed (0.0 seconds)
+2025-12-26T09:22:15.2662773Z Test Case 'EditorResolverTests.testHypercodeFileResolvesToHypercodeTarget' started at 2025-12-26 09:22:15.161
+2025-12-26T09:22:15.2663507Z Test Case 'EditorResolverTests.testHypercodeFileResolvesToHypercodeTarget' passed (0.0 seconds)
+2025-12-26T09:22:15.2664195Z Test Case 'EditorResolverTests.testInlineTextReturnsInlineTarget' started at 2025-12-26 09:22:15.162
+2025-12-26T09:22:15.2664840Z Test Case 'EditorResolverTests.testInlineTextReturnsInlineTarget' passed (0.0 seconds)
+2025-12-26T09:22:15.2665524Z Test Case 'EditorResolverTests.testMarkdownFileResolvesToMarkdownTarget' started at 2025-12-26 09:22:15.162
+2025-12-26T09:22:15.2666255Z Test Case 'EditorResolverTests.testMarkdownFileResolvesToMarkdownTarget' passed (0.101 seconds)
+2025-12-26T09:22:15.2666952Z Test Case 'EditorResolverTests.testPathTraversalReturnsInvalidTarget' started at 2025-12-26 09:22:15.262
+2025-12-26T09:22:15.2667639Z Test Case 'EditorResolverTests.testPathTraversalReturnsInvalidTarget' passed (0.0 seconds)
+2025-12-26T09:22:15.2668275Z Test Suite 'EditorResolverTests' passed at 2025-12-26 09:22:15.263
+2025-12-26T09:22:15.2668703Z 	 Executed 6 tests, with 0 failures (0 unexpected) in 0.102 (0.102) seconds
+2025-12-26T09:22:15.2669108Z Test Suite 'GlobMatcherTests' started at 2025-12-26 09:22:15.263
+2025-12-26T09:22:15.2669610Z Test Case 'GlobMatcherTests.testArrayExtension_EmptyArray' started at 2025-12-26 09:22:15.263
+2025-12-26T09:22:15.2670176Z Test Case 'GlobMatcherTests.testArrayExtension_EmptyArray' passed (0.0 seconds)
+2025-12-26T09:22:15.2670741Z Test Case 'GlobMatcherTests.testArrayExtension_MatchesAny' started at 2025-12-26 09:22:15.263
+2025-12-26T09:22:15.2671472Z Test Case 'GlobMatcherTests.testArrayExtension_MatchesAny' passed (0.001 seconds)
+2025-12-26T09:22:15.2672073Z Test Case 'GlobMatcherTests.testDirectoryPattern_MatchesDirectory' started at 2025-12-26 09:22:15.264
+2025-12-26T09:22:15.3677511Z Test Case 'GlobMatcherTests.testDirectoryPattern_MatchesDirectory' passed (0.0 seconds)
+2025-12-26T09:22:15.3679037Z Test Case 'GlobMatcherTests.testDirectoryPattern_NestedPaths' started at 2025-12-26 09:22:15.264
+2025-12-26T09:22:15.3679800Z Test Case 'GlobMatcherTests.testDirectoryPattern_NestedPaths' passed (0.1 seconds)
+2025-12-26T09:22:15.3680776Z Test Case 'GlobMatcherTests.testDoubleWildcard_AllFiles' started at 2025-12-26 09:22:15.364
+2025-12-26T09:22:15.3681500Z Test Case 'GlobMatcherTests.testDoubleWildcard_AllFiles' passed (0.0 seconds)
+2025-12-26T09:22:15.3682212Z Test Case 'GlobMatcherTests.testDoubleWildcard_MatchesAnyDepth' started at 2025-12-26 09:22:15.364
+2025-12-26T09:22:15.3683122Z Test Case 'GlobMatcherTests.testDoubleWildcard_MatchesAnyDepth' passed (0.0 seconds)
+2025-12-26T09:22:15.3683863Z Test Case 'GlobMatcherTests.testEdgeCase_CaseSensitive' started at 2025-12-26 09:22:15.365
+2025-12-26T09:22:15.3732412Z Test Case 'GlobMatcherTests.testEdgeCase_CaseSensitive' passed (0.0 seconds)
+2025-12-26T09:22:15.3733234Z Test Case 'GlobMatcherTests.testEdgeCase_PathNormalization' started at 2025-12-26 09:22:15.365
+2025-12-26T09:22:15.3733843Z Test Case 'GlobMatcherTests.testEdgeCase_PathNormalization' passed (0.0 seconds)
+2025-12-26T09:22:15.3734415Z Test Case 'GlobMatcherTests.testEdgeCase_PathWithDots' started at 2025-12-26 09:22:15.365
+2025-12-26T09:22:15.3734972Z Test Case 'GlobMatcherTests.testEdgeCase_PathWithDots' passed (0.0 seconds)
+2025-12-26T09:22:15.3735499Z Test Case 'GlobMatcherTests.testEmptyPattern' started at 2025-12-26 09:22:15.365
+2025-12-26T09:22:15.3735986Z Test Case 'GlobMatcherTests.testEmptyPattern' passed (0.0 seconds)
+2025-12-26T09:22:15.3736789Z Test Case 'GlobMatcherTests.testExactMatch' started at 2025-12-26 09:22:15.365
+2025-12-26T09:22:15.3737254Z Test Case 'GlobMatcherTests.testExactMatch' passed (0.0 seconds)
+2025-12-26T09:22:15.3737750Z Test Case 'GlobMatcherTests.testPathPattern_DeepPath' started at 2025-12-26 09:22:15.365
+2025-12-26T09:22:15.3738415Z Test Case 'GlobMatcherTests.testPathPattern_DeepPath' passed (0.0 seconds)
+2025-12-26T09:22:15.3738969Z Test Case 'GlobMatcherTests.testPathPattern_WithDirectories' started at 2025-12-26 09:22:15.365
+2025-12-26T09:22:15.3739545Z Test Case 'GlobMatcherTests.testPathPattern_WithDirectories' passed (0.0 seconds)
+2025-12-26T09:22:15.3740100Z Test Case 'GlobMatcherTests.testRealWorld_BuildArtifacts' started at 2025-12-26 09:22:15.366
+2025-12-26T09:22:15.3740651Z Test Case 'GlobMatcherTests.testRealWorld_BuildArtifacts' passed (0.0 seconds)
+2025-12-26T09:22:15.3741176Z Test Case 'GlobMatcherTests.testRealWorld_DotFiles' started at 2025-12-26 09:22:15.366
+2025-12-26T09:22:15.3741687Z Test Case 'GlobMatcherTests.testRealWorld_DotFiles' passed (0.0 seconds)
+2025-12-26T09:22:15.3742226Z Test Case 'GlobMatcherTests.testRealWorld_NodeModules' started at 2025-12-26 09:22:15.366
+2025-12-26T09:22:15.3742751Z Test Case 'GlobMatcherTests.testRealWorld_NodeModules' passed (0.0 seconds)
+2025-12-26T09:22:15.3743286Z Test Case 'GlobMatcherTests.testRealWorld_TemporaryFiles' started at 2025-12-26 09:22:15.366
+2025-12-26T09:22:15.3743830Z Test Case 'GlobMatcherTests.testRealWorld_TemporaryFiles' passed (0.0 seconds)
+2025-12-26T09:22:15.3744427Z Test Case 'GlobMatcherTests.testRootAnchoredPattern_MatchesOnlyAtRoot' started at 2025-12-26 09:22:15.366
+2025-12-26T09:22:15.3745083Z Test Case 'GlobMatcherTests.testRootAnchoredPattern_MatchesOnlyAtRoot' passed (0.0 seconds)
+2025-12-26T09:22:15.3745662Z Test Case 'GlobMatcherTests.testWildcardExtension' started at 2025-12-26 09:22:15.366
+2025-12-26T09:22:15.3746188Z Test Case 'GlobMatcherTests.testWildcardExtension' passed (0.0 seconds)
+2025-12-26T09:22:15.3746685Z Test Case 'GlobMatcherTests.testWildcardMiddle' started at 2025-12-26 09:22:15.366
+2025-12-26T09:22:15.3747304Z Test Case 'GlobMatcherTests.testWildcardMiddle' passed (0.0 seconds)
+2025-12-26T09:22:15.3747834Z Test Case 'GlobMatcherTests.testWildcardPrefix' started at 2025-12-26 09:22:15.366
+2025-12-26T09:22:15.3748489Z Test Case 'GlobMatcherTests.testWildcardPrefix' passed (0.0 seconds)
+2025-12-26T09:22:15.3749036Z Test Case 'GlobMatcherTests.testWildcard_DoesNotCrossDirectories' started at 2025-12-26 09:22:15.367
+2025-12-26T09:22:15.3749644Z Test Case 'GlobMatcherTests.testWildcard_DoesNotCrossDirectories' passed (0.0 seconds)
+2025-12-26T09:22:15.3750123Z Test Suite 'GlobMatcherTests' passed at 2025-12-26 09:22:15.367
+2025-12-26T09:22:15.3750531Z 	 Executed 22 tests, with 0 failures (0 unexpected) in 0.104 (0.104) seconds
+2025-12-26T09:22:15.3750944Z Test Suite 'LinkSpanTests' started at 2025-12-26 09:22:15.367
+2025-12-26T09:22:15.3751452Z Test Case 'LinkSpanTests.testParseErrorReturnsDiagnostics' started at 2025-12-26 09:22:15.367
+2025-12-26T09:22:15.3752049Z Test Case 'LinkSpanTests.testParseErrorReturnsDiagnostics' passed (0.0 seconds)
+2025-12-26T09:22:15.3752609Z Test Case 'LinkSpanTests.testSingleLinkSpanOffsets' started at 2025-12-26 09:22:15.367
+2025-12-26T09:22:15.3753135Z Test Case 'LinkSpanTests.testSingleLinkSpanOffsets' passed (0.0 seconds)
+2025-12-26T09:22:15.3753635Z Test Case 'LinkSpanTests.testUtf8ByteOffsets' started at 2025-12-26 09:22:15.367
+2025-12-26T09:22:15.3754102Z Test Case 'LinkSpanTests.testUtf8ByteOffsets' passed (0.0 seconds)
+2025-12-26T09:22:15.3754503Z Test Suite 'LinkSpanTests' passed at 2025-12-26 09:22:15.368
+2025-12-26T09:22:15.3754928Z 	 Executed 3 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+2025-12-26T09:22:15.4710850Z Test Suite 'ProjectIndexTests' started at 2025-12-26 09:22:15.368
+2025-12-26T09:22:15.4711793Z Test Case 'ProjectIndexTests.testFileIndexEntry_Creation' started at 2025-12-26 09:22:15.368
+2025-12-26T09:22:15.4713173Z Test Case 'ProjectIndexTests.testFileIndexEntry_Creation' passed (0.0 seconds)
+2025-12-26T09:22:15.4714062Z Test Case 'ProjectIndexTests.testFileIndexEntry_Equality' started at 2025-12-26 09:22:15.368
+2025-12-26T09:22:15.4714875Z Test Case 'ProjectIndexTests.testFileIndexEntry_Equality' passed (0.1 seconds)
+2025-12-26T09:22:15.4715780Z Test Case 'ProjectIndexTests.testFileIndexEntry_WithModificationDate' started at 2025-12-26 09:22:15.468
+2025-12-26T09:22:15.4716770Z Test Case 'ProjectIndexTests.testFileIndexEntry_WithModificationDate' passed (0.0 seconds)
+2025-12-26T09:22:15.4717653Z Test Case 'ProjectIndexTests.testFileType_HypercodeExtension' started at 2025-12-26 09:22:15.468
+2025-12-26T09:22:15.4718660Z Test Case 'ProjectIndexTests.testFileType_HypercodeExtension' passed (0.0 seconds)
+2025-12-26T09:22:15.4719388Z Test Case 'ProjectIndexTests.testFileType_MarkdownExtension' started at 2025-12-26 09:22:15.468
+2025-12-26T09:22:15.4720134Z Test Case 'ProjectIndexTests.testFileType_MarkdownExtension' passed (0.0 seconds)
+2025-12-26T09:22:15.4721058Z Test Case 'ProjectIndexTests.testFileType_UnsupportedExtension' started at 2025-12-26 09:22:15.469
+2025-12-26T09:22:15.4721777Z Test Case 'ProjectIndexTests.testFileType_UnsupportedExtension' passed (0.0 seconds)
+2025-12-26T09:22:15.4722364Z Test Case 'ProjectIndexTests.testProjectIndex_Codable' started at 2025-12-26 09:22:15.469
+2025-12-26T09:22:15.4722907Z Test Case 'ProjectIndexTests.testProjectIndex_Codable' passed (0.001 seconds)
+2025-12-26T09:22:15.4723453Z Test Case 'ProjectIndexTests.testProjectIndex_EmptyIndex' started at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4724351Z Test Case 'ProjectIndexTests.testProjectIndex_EmptyIndex' passed (0.0 seconds)
+2025-12-26T09:22:15.4725004Z Test Case 'ProjectIndexTests.testProjectIndex_FilesSortedLexicographically' started at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4725776Z Test Case 'ProjectIndexTests.testProjectIndex_FilesSortedLexicographically' passed (0.0 seconds)
+2025-12-26T09:22:15.4726712Z Test Case 'ProjectIndexTests.testProjectIndex_FindFileByPath' started at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4727515Z Test Case 'ProjectIndexTests.testProjectIndex_FindFileByPath' passed (0.0 seconds)
+2025-12-26T09:22:15.4728448Z Test Case 'ProjectIndexTests.testProjectIndex_MultipleFiles' started at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4729300Z Test Case 'ProjectIndexTests.testProjectIndex_MultipleFiles' passed (0.0 seconds)
+2025-12-26T09:22:15.4730136Z Test Case 'ProjectIndexTests.testProjectIndex_SingleFile' started at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4730934Z Test Case 'ProjectIndexTests.testProjectIndex_SingleFile' passed (0.0 seconds)
+2025-12-26T09:22:15.4731519Z Test Suite 'ProjectIndexTests' passed at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4732154Z 	 Executed 12 tests, with 0 failures (0 unexpected) in 0.102 (0.102) seconds
+2025-12-26T09:22:15.4732755Z Test Suite 'ProjectIndexerTests' started at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4733615Z Test Case 'ProjectIndexerTests.testDefaultIgnoreDirs_ContainsCommonPatterns' started at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4734679Z Test Case 'ProjectIndexerTests.testDefaultIgnoreDirs_ContainsCommonPatterns' passed (0.0 seconds)
+2025-12-26T09:22:15.4735610Z Test Case 'ProjectIndexerTests.testIndexerError_Equality' started at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4736270Z Test Case 'ProjectIndexerTests.testIndexerError_Equality' passed (0.0 seconds)
+2025-12-26T09:22:15.4737211Z Test Case 'ProjectIndexerTests.testIndexerError_InvalidIgnoreFile' started at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4738048Z Test Case 'ProjectIndexerTests.testIndexerError_InvalidIgnoreFile' passed (0.0 seconds)
+2025-12-26T09:22:15.4738928Z Test Case 'ProjectIndexerTests.testIndexerError_MaxDepthExceeded' started at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4739921Z Test Case 'ProjectIndexerTests.testIndexerError_MaxDepthExceeded' passed (0.0 seconds)
+2025-12-26T09:22:15.4740755Z Test Case 'ProjectIndexerTests.testIndexerError_PermissionDenied' started at 2025-12-26 09:22:15.470
+2025-12-26T09:22:15.4741741Z Test Case 'ProjectIndexerTests.testIndexerError_PermissionDenied' passed (0.0 seconds)
+2025-12-26T09:22:15.4742642Z Test Case 'ProjectIndexerTests.testIndexerError_WorkspaceNotFound' started at 2025-12-26 09:22:15.471
+2025-12-26T09:22:15.4743614Z Test Case 'ProjectIndexerTests.testIndexerError_WorkspaceNotFound' passed (0.0 seconds)
+2025-12-26T09:22:15.4744700Z Test Case 'ProjectIndexerTests.testIndexerOptions_CustomValues' started at 2025-12-26 09:22:15.471
+2025-12-26T09:22:15.4745787Z Test Case 'ProjectIndexerTests.testIndexerOptions_CustomValues' passed (0.0 seconds)
+2025-12-26T09:22:15.4746456Z Test Case 'ProjectIndexerTests.testIndexerOptions_DefaultValues' started at 2025-12-26 09:22:15.471
+2025-12-26T09:22:15.4747418Z Test Case 'ProjectIndexerTests.testIndexerOptions_DefaultValues' passed (0.0 seconds)
+2025-12-26T09:22:15.4748371Z Test Case 'ProjectIndexerTests.testIndexer_RequiresMockFileSystemForFullTesting' started at 2025-12-26 09:22:15.471
+2025-12-26T09:22:15.4749530Z Test Case 'ProjectIndexerTests.testIndexer_RequiresMockFileSystemForFullTesting' passed (0.0 seconds)
+2025-12-26T09:22:15.4750565Z Test Case 'ProjectIndexerTests.testIndexer_WorkspaceNotFound_ThrowsError' started at 2025-12-26 09:22:15.471
+2025-12-26T09:22:15.4751308Z Test Case 'ProjectIndexerTests.testIndexer_WorkspaceNotFound_ThrowsError' passed (0.0 seconds)
+2025-12-26T09:22:15.4752204Z Test Suite 'ProjectIndexerTests' passed at 2025-12-26 09:22:15.471
+2025-12-26T09:22:15.4752832Z 	 Executed 10 tests, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+2025-12-26T09:22:15.4753369Z Test Suite 'LexerTests' started at 2025-12-26 09:22:15.471
+2025-12-26T09:22:15.4754040Z Test Case 'LexerTests.testBlankLine_Empty' started at 2025-12-26 09:22:15.471
+2025-12-26T09:22:15.4754673Z Test Case 'LexerTests.testBlankLine_Empty' passed (0.0 seconds)
+2025-12-26T09:22:15.4755253Z Test Case 'LexerTests.testBlankLine_ManySpaces' started at 2025-12-26 09:22:15.471
+2025-12-26T09:22:15.4755750Z Test Case 'LexerTests.testBlankLine_ManySpaces' passed (0.0 seconds)
+2025-12-26T09:22:15.4756555Z Test Case 'LexerTests.testBlankLine_Spaces' started at 2025-12-26 09:22:15.471
+2025-12-26T09:22:15.4757170Z Test Case 'LexerTests.testBlankLine_Spaces' passed (0.0 seconds)
+2025-12-26T09:22:15.4757659Z Test Case 'LexerTests.testCommentLine_DeepIndent' started at 2025-12-26 09:22:15.471
+2025-12-26T09:22:15.4758466Z Test Case 'LexerTests.testCommentLine_DeepIndent' passed (0.0 seconds)
+2025-12-26T09:22:15.4759178Z Test Case 'LexerTests.testCommentLine_EmptyComment' started at 2025-12-26 09:22:15.472
+2025-12-26T09:22:15.4759681Z Test Case 'LexerTests.testCommentLine_EmptyComment' passed (0.0 seconds)
+2025-12-26T09:22:15.4760341Z Test Case 'LexerTests.testCommentLine_NoIndent' started at 2025-12-26 09:22:15.472
+2025-12-26T09:22:15.4761014Z Test Case 'LexerTests.testCommentLine_NoIndent' passed (0.0 seconds)
+2025-12-26T09:22:15.4761499Z Test Case 'LexerTests.testCommentLine_WithIndent' started at 2025-12-26 09:22:15.472
+2025-12-26T09:22:15.4762004Z Test Case 'LexerTests.testCommentLine_WithIndent' passed (0.0 seconds)
+2025-12-26T09:22:15.4762689Z Test Case 'LexerTests.testComplexDocument' started at 2025-12-26 09:22:15.472
+2025-12-26T09:22:15.4763306Z Test Case 'LexerTests.testComplexDocument' passed (0.0 seconds)
+2025-12-26T09:22:15.4763789Z Test Case 'LexerTests.testDocumentWithBlankLines' started at 2025-12-26 09:22:15.472
+2025-12-26T09:22:15.4764672Z Test Case 'LexerTests.testDocumentWithBlankLines' passed (0.0 seconds)
+2025-12-26T09:22:15.4765176Z Test Case 'LexerTests.testDocumentWithComments' started at 2025-12-26 09:22:15.473
+2025-12-26T09:22:15.4765914Z Test Case 'LexerTests.testDocumentWithComments' passed (0.0 seconds)
+2025-12-26T09:22:15.4766493Z Test Case 'LexerTests.testEmptyContent' started at 2025-12-26 09:22:15.473
+2025-12-26T09:22:15.4767205Z Test Case 'LexerTests.testEmptyContent' passed (0.0 seconds)
+2025-12-26T09:22:15.4767788Z Test Case 'LexerTests.testErrorMessage_MisalignedIndentation' started at 2025-12-26 09:22:15.473
+2025-12-26T09:22:15.4768878Z Test Case 'LexerTests.testErrorMessage_MisalignedIndentation' passed (0.0 seconds)
+2025-12-26T09:22:15.4769765Z Test Case 'LexerTests.testErrorMessage_TabInIndentation' started at 2025-12-26 09:22:15.473
+2025-12-26T09:22:15.4770311Z Test Case 'LexerTests.testErrorMessage_TabInIndentation' passed (0.0 seconds)
+2025-12-26T09:22:15.4771230Z Test Case 'LexerTests.testErrorMessage_UnclosedQuote' started at 2025-12-26 09:22:15.473
+2025-12-26T09:22:15.4771954Z Test Case 'LexerTests.testErrorMessage_UnclosedQuote' passed (0.0 seconds)
+2025-12-26T09:22:15.4772645Z Test Case 'LexerTests.testError_InvalidLineFormat_BareLiteral' started at 2025-12-26 09:22:15.473
+2025-12-26T09:22:15.4773598Z Test Case 'LexerTests.testError_InvalidLineFormat_BareLiteral' passed (0.0 seconds)
+2025-12-26T09:22:15.4774401Z Test Case 'LexerTests.testError_InvalidLineFormat_StartsWithNumber' started at 2025-12-26 09:22:15.473
+2025-12-26T09:22:15.4775103Z Test Case 'LexerTests.testError_InvalidLineFormat_StartsWithNumber' passed (0.0 seconds)
+2025-12-26T09:22:15.4775953Z Test Case 'LexerTests.testError_MisalignedComment' started at 2025-12-26 09:22:15.474
+2025-12-26T09:22:15.4776455Z Test Case 'LexerTests.testError_MisalignedComment' passed (0.0 seconds)
+2025-12-26T09:22:15.4777363Z Test Case 'LexerTests.testError_MisalignedIndentation_1Space' started at 2025-12-26 09:22:15.474
+2025-12-26T09:22:15.4777953Z Test Case 'LexerTests.testError_MisalignedIndentation_1Space' passed (0.0 seconds)
+2025-12-26T09:22:15.4778908Z Test Case 'LexerTests.testError_MisalignedIndentation_2Spaces' started at 2025-12-26 09:22:15.474
+2025-12-26T09:22:15.4779623Z Test Case 'LexerTests.testError_MisalignedIndentation_2Spaces' passed (0.0 seconds)
+2025-12-26T09:22:15.4780306Z Test Case 'LexerTests.testError_MisalignedIndentation_3Spaces' started at 2025-12-26 09:22:15.474
+2025-12-26T09:22:15.4781205Z Test Case 'LexerTests.testError_MisalignedIndentation_3Spaces' passed (0.0 seconds)
+2025-12-26T09:22:15.4781820Z Test Case 'LexerTests.testError_MisalignedIndentation_5Spaces' started at 2025-12-26 09:22:15.474
+2025-12-26T09:22:15.4782927Z Test Case 'LexerTests.testError_MisalignedIndentation_5Spaces' passed (0.0 seconds)
+2025-12-26T09:22:15.4783767Z Test Case 'LexerTests.testError_TabInComment' started at 2025-12-26 09:22:15.474
+2025-12-26T09:22:15.4784461Z Test Case 'LexerTests.testError_TabInComment' passed (0.0 seconds)
+2025-12-26T09:22:15.4788402Z Test Case 'LexerTests.testError_TabInIndentation' started at 2025-12-26 09:22:15.474
+2025-12-26T09:22:15.4789283Z Test Case 'LexerTests.testError_TabInIndentation' passed (0.0 seconds)
+2025-12-26T09:22:15.4790198Z Test Case 'LexerTests.testError_TabInIndentation_AfterSpaces' started at 2025-12-26 09:22:15.474
+2025-12-26T09:22:15.4791124Z Test Case 'LexerTests.testError_TabInIndentation_AfterSpaces' passed (0.0 seconds)
+2025-12-26T09:22:15.4791922Z Test Case 'LexerTests.testError_TrailingContent' started at 2025-12-26 09:22:15.475
+2025-12-26T09:22:15.4792611Z Test Case 'LexerTests.testError_TrailingContent' passed (0.0 seconds)
+2025-12-26T09:22:15.4793365Z Test Case 'LexerTests.testError_UnclosedQuote_NoClosing' started at 2025-12-26 09:22:15.475
+2025-12-26T09:22:15.4794225Z Test Case 'LexerTests.testError_UnclosedQuote_NoClosing' passed (0.0 seconds)
+2025-12-26T09:22:15.4794779Z Test Case 'LexerTests.testError_UnclosedQuote_OnlyOpenQuote' started at 2025-12-26 09:22:15.475
+2025-12-26T09:22:15.4795355Z Test Case 'LexerTests.testError_UnclosedQuote_OnlyOpenQuote' passed (0.0 seconds)
+2025-12-26T09:22:15.4795881Z Test Case 'LexerTests.testIsBlankLine_Empty' started at 2025-12-26 09:22:15.475
+2025-12-26T09:22:15.4796708Z Test Case 'LexerTests.testIsBlankLine_Empty' passed (0.0 seconds)
+2025-12-26T09:22:15.4797192Z Test Case 'LexerTests.testIsBlankLine_Spaces' started at 2025-12-26 09:22:15.475
+2025-12-26T09:22:15.4797680Z Test Case 'LexerTests.testIsBlankLine_Spaces' passed (0.0 seconds)
+2025-12-26T09:22:15.4798691Z Test Case 'LexerTests.testIsBlankLine_WithContent' started at 2025-12-26 09:22:15.475
+2025-12-26T09:22:15.4799406Z Test Case 'LexerTests.testIsBlankLine_WithContent' passed (0.0 seconds)
+2025-12-26T09:22:15.4799880Z Test Case 'LexerTests.testLineEnding_CR' started at 2025-12-26 09:22:15.475
+2025-12-26T09:22:15.4800511Z Test Case 'LexerTests.testLineEnding_CR' passed (0.0 seconds)
+2025-12-26T09:22:15.4801057Z Test Case 'LexerTests.testLineEnding_CRLF' started at 2025-12-26 09:22:15.476
+2025-12-26T09:22:15.4801495Z Test Case 'LexerTests.testLineEnding_CRLF' passed (0.0 seconds)
+2025-12-26T09:22:15.4802120Z Test Case 'LexerTests.testLineEnding_LF' started at 2025-12-26 09:22:15.476
+2025-12-26T09:22:15.4802829Z Test Case 'LexerTests.testLineEnding_LF' passed (0.0 seconds)
+2025-12-26T09:22:15.4803397Z Test Case 'LexerTests.testLineEnding_Mixed' started at 2025-12-26 09:22:15.476
+2025-12-26T09:22:15.4804003Z Test Case 'LexerTests.testLineEnding_Mixed' passed (0.0 seconds)
+2025-12-26T09:22:15.4804781Z Test Case 'LexerTests.testLineEnding_TrailingCRLF' started at 2025-12-26 09:22:15.476
+2025-12-26T09:22:15.4805298Z Test Case 'LexerTests.testLineEnding_TrailingCRLF' passed (0.0 seconds)
+2025-12-26T09:22:15.4805978Z Test Case 'LexerTests.testLineEnding_TrailingLF' started at 2025-12-26 09:22:15.476
+2025-12-26T09:22:15.4806667Z Test Case 'LexerTests.testLineEnding_TrailingLF' passed (0.0 seconds)
+2025-12-26T09:22:15.4807168Z Test Case 'LexerTests.testMultipleBlankLines' started at 2025-12-26 09:22:15.477
+2025-12-26T09:22:15.4807851Z Test Case 'LexerTests.testMultipleBlankLines' passed (0.0 seconds)
+2025-12-26T09:22:15.4808714Z Test Case 'LexerTests.testNodeLine_DeepIndent' started at 2025-12-26 09:22:15.477
+2025-12-26T09:22:15.4809189Z Test Case 'LexerTests.testNodeLine_DeepIndent' passed (0.0 seconds)
+2025-12-26T09:22:15.4809722Z Test Case 'LexerTests.testNodeLine_EmptyLiteral' started at 2025-12-26 09:22:15.477
+2025-12-26T09:22:15.4810450Z Test Case 'LexerTests.testNodeLine_EmptyLiteral' passed (0.0 seconds)
+2025-12-26T09:22:15.4811163Z Test Case 'LexerTests.testNodeLine_FilePath' started at 2025-12-26 09:22:15.477
+2025-12-26T09:22:15.4811794Z Test Case 'LexerTests.testNodeLine_FilePath' passed (0.0 seconds)
+2025-12-26T09:22:15.4812722Z Test Case 'LexerTests.testNodeLine_HypercodeExtension' started at 2025-12-26 09:22:15.477
+2025-12-26T09:22:15.4813467Z Test Case 'LexerTests.testNodeLine_HypercodeExtension' passed (0.0 seconds)
+2025-12-26T09:22:15.4814293Z Test Case 'LexerTests.testNodeLine_Simple' started at 2025-12-26 09:22:15.478
+2025-12-26T09:22:15.4814926Z Test Case 'LexerTests.testNodeLine_Simple' passed (0.0 seconds)
+2025-12-26T09:22:15.4815699Z Test Case 'LexerTests.testNodeLine_TrailingWhitespace' started at 2025-12-26 09:22:15.478
+2025-12-26T09:22:15.4816561Z Test Case 'LexerTests.testNodeLine_TrailingWhitespace' passed (0.0 seconds)
+2025-12-26T09:22:15.4817434Z Test Case 'LexerTests.testNodeLine_WithIndent' started at 2025-12-26 09:22:15.478
+2025-12-26T09:22:15.4818460Z Test Case 'LexerTests.testNodeLine_WithIndent' passed (0.0 seconds)
+2025-12-26T09:22:15.4819321Z Test Case 'LexerTests.testNodeLine_WithSpaces' started at 2025-12-26 09:22:15.478
+2025-12-26T09:22:15.4820203Z Test Case 'LexerTests.testNodeLine_WithSpaces' passed (0.0 seconds)
+2025-12-26T09:22:15.4821141Z Test Case 'LexerTests.testNormalizeLineEndings_CR' started at 2025-12-26 09:22:15.478
+2025-12-26T09:22:15.4822088Z Test Case 'LexerTests.testNormalizeLineEndings_CR' passed (0.0 seconds)
+2025-12-26T09:22:15.4823035Z Test Case 'LexerTests.testNormalizeLineEndings_CRLF' started at 2025-12-26 09:22:15.478
+2025-12-26T09:22:15.4823955Z Test Case 'LexerTests.testNormalizeLineEndings_CRLF' passed (0.0 seconds)
+2025-12-26T09:22:15.4824909Z Test Case 'LexerTests.testNormalizeLineEndings_LF' started at 2025-12-26 09:22:15.478
+2025-12-26T09:22:15.4825874Z Test Case 'LexerTests.testNormalizeLineEndings_LF' passed (0.0 seconds)
+2025-12-26T09:22:15.4826851Z Test Case 'LexerTests.testNormalizeLineEndings_Mixed' started at 2025-12-26 09:22:15.479
+2025-12-26T09:22:15.4827897Z Test Case 'LexerTests.testNormalizeLineEndings_Mixed' passed (0.0 seconds)
+2025-12-26T09:22:15.4829250Z Test Case 'LexerTests.testOnlyNewline' started at 2025-12-26 09:22:15.479
+2025-12-26T09:22:15.4830061Z Test Case 'LexerTests.testOnlyNewline' passed (0.0 seconds)
+2025-12-26T09:22:15.4830904Z Test Case 'LexerTests.testSplitIntoLines_Empty' started at 2025-12-26 09:22:15.479
+2025-12-26T09:22:15.4831817Z Test Case 'LexerTests.testSplitIntoLines_Empty' passed (0.0 seconds)
+2025-12-26T09:22:15.4832719Z Test Case 'LexerTests.testSplitIntoLines_Multiple' started at 2025-12-26 09:22:15.479
+2025-12-26T09:22:15.4833653Z Test Case 'LexerTests.testSplitIntoLines_Multiple' passed (0.0 seconds)
+2025-12-26T09:22:15.4834638Z Test Case 'LexerTests.testSplitIntoLines_MultipleTrailingNewlines' started at 2025-12-26 09:22:15.479
+2025-12-26T09:22:15.4835728Z Test Case 'LexerTests.testSplitIntoLines_MultipleTrailingNewlines' passed (0.0 seconds)
+2025-12-26T09:22:15.4836718Z Test Case 'LexerTests.testSplitIntoLines_Single' started at 2025-12-26 09:22:15.479
+2025-12-26T09:22:15.4837611Z Test Case 'LexerTests.testSplitIntoLines_Single' passed (0.0 seconds)
+2025-12-26T09:22:15.4838767Z Test Case 'LexerTests.testSplitIntoLines_TrailingNewline' started at 2025-12-26 09:22:15.479
+2025-12-26T09:22:15.4839754Z Test Case 'LexerTests.testSplitIntoLines_TrailingNewline' passed (0.0 seconds)
+2025-12-26T09:22:15.4840673Z Test Case 'LexerTests.testTokenDepth' started at 2025-12-26 09:22:15.479
+2025-12-26T09:22:15.4841401Z Test Case 'LexerTests.testTokenDepth' passed (0.0 seconds)
+2025-12-26T09:22:15.4842172Z Test Case 'LexerTests.testTokenIsSemantic' started at 2025-12-26 09:22:15.480
+2025-12-26T09:22:15.4842973Z Test Case 'LexerTests.testTokenIsSemantic' passed (0.0 seconds)
+2025-12-26T09:22:15.4843762Z Test Case 'LexerTests.testTokenLocation' started at 2025-12-26 09:22:15.480
+2025-12-26T09:22:15.4844532Z Test Case 'LexerTests.testTokenLocation' passed (0.0 seconds)
+2025-12-26T09:22:15.4845290Z Test Case 'LexerTests.testUnicode_Arabic' started at 2025-12-26 09:22:15.480
+2025-12-26T09:22:15.4846081Z Test Case 'LexerTests.testUnicode_Arabic' passed (0.0 seconds)
+2025-12-26T09:22:15.4846874Z Test Case 'LexerTests.testUnicode_CJK' started at 2025-12-26 09:22:15.480
+2025-12-26T09:22:15.4847816Z Test Case 'LexerTests.testUnicode_CJK' passed (0.0 seconds)
+2025-12-26T09:22:15.4848721Z Test Case 'LexerTests.testUnicode_Emoji' started at 2025-12-26 09:22:15.480
+2025-12-26T09:22:15.4849484Z Test Case 'LexerTests.testUnicode_Emoji' passed (0.0 seconds)
+2025-12-26T09:22:15.4850299Z Test Case 'LexerTests.testUnicode_MixedScript' started at 2025-12-26 09:22:15.481
+2025-12-26T09:22:15.4851140Z Test Case 'LexerTests.testUnicode_MixedScript' passed (0.0 seconds)
+2025-12-26T09:22:15.4851839Z Test Suite 'LexerTests' passed at 2025-12-26 09:22:15.481
+2025-12-26T09:22:15.4852513Z 	 Executed 62 tests, with 0 failures (0 unexpected) in 0.009 (0.009) seconds
+2025-12-26T09:22:15.4853264Z Test Suite 'ParserTests' started at 2025-12-26 09:22:15.481
+2025-12-26T09:22:15.4854049Z Test Case 'ParserTests.test_parser_empty_token_stream' started at 2025-12-26 09:22:15.481
+2025-12-26T09:22:15.4854997Z Test Case 'ParserTests.test_parser_empty_token_stream' passed (0.0 seconds)
+2025-12-26T09:22:15.4855952Z Test Case 'ParserTests.test_parser_error_includes_location' started at 2025-12-26 09:22:15.481
+2025-12-26T09:22:15.4856929Z Test Case 'ParserTests.test_parser_error_includes_location' passed (0.0 seconds)
+2025-12-26T09:22:15.4857872Z Test Case 'ParserTests.test_parser_invalid_depth_exceeded' started at 2025-12-26 09:22:15.481
+2025-12-26T09:22:15.4859032Z Test Case 'ParserTests.test_parser_invalid_depth_exceeded' passed (0.0 seconds)
+2025-12-26T09:22:15.4860024Z Test Case 'ParserTests.test_parser_invalid_depth_jump_0_to_2' started at 2025-12-26 09:22:15.481
+2025-12-26T09:22:15.4861042Z Test Case 'ParserTests.test_parser_invalid_depth_jump_0_to_2' passed (0.0 seconds)
+2025-12-26T09:22:15.4862035Z Test Case 'ParserTests.test_parser_invalid_depth_jump_1_to_3' started at 2025-12-26 09:22:15.481
+2025-12-26T09:22:15.4863017Z Test Case 'ParserTests.test_parser_invalid_depth_jump_1_to_3' passed (0.0 seconds)
+2025-12-26T09:22:15.4864349Z Test Case 'ParserTests.test_parser_invalid_multiple_roots' started at 2025-12-26 09:22:15.481
+2025-12-26T09:22:15.4865343Z Test Case 'ParserTests.test_parser_invalid_multiple_roots' passed (0.0 seconds)
+2025-12-26T09:22:15.4866262Z Test Case 'ParserTests.test_parser_invalid_no_root' started at 2025-12-26 09:22:15.481
+2025-12-26T09:22:15.4867157Z Test Case 'ParserTests.test_parser_invalid_no_root' passed (0.0 seconds)
+2025-12-26T09:22:15.4868141Z Test Case 'ParserTests.test_parser_only_blank_and_comment_tokens' started at 2025-12-26 09:22:15.482
+2025-12-26T09:22:15.4869376Z Test Case 'ParserTests.test_parser_only_blank_and_comment_tokens' passed (0.0 seconds)
+2025-12-26T09:22:15.4870385Z Test Case 'ParserTests.test_parser_preserves_source_locations' started at 2025-12-26 09:22:15.482
+2025-12-26T09:22:15.4871402Z Test Case 'ParserTests.test_parser_preserves_source_locations' passed (0.0 seconds)
+2025-12-26T09:22:15.4872427Z Test Case 'ParserTests.test_parser_resets_after_depth_decrease' started at 2025-12-26 09:22:15.482
+2025-12-26T09:22:15.4873448Z Test Case 'ParserTests.test_parser_resets_after_depth_decrease' passed (0.0 seconds)
+2025-12-26T09:22:15.4874430Z Test Case 'ParserTests.test_parser_valid_complex_tree' started at 2025-12-26 09:22:15.482
+2025-12-26T09:22:15.4875355Z Test Case 'ParserTests.test_parser_valid_complex_tree' passed (0.0 seconds)
+2025-12-26T09:22:15.5225471Z Test Case 'ParserTests.test_parser_valid_maximum_depth_10' started at 2025-12-26 09:22:15.482
+2025-12-26T09:22:15.5226444Z Test Case 'ParserTests.test_parser_valid_maximum_depth_10' passed (0.0 seconds)
+2025-12-26T09:22:15.5227147Z Test Case 'ParserTests.test_parser_valid_root_with_multiple_siblings' started at 2025-12-26 09:22:15.482
+2025-12-26T09:22:15.5227893Z Test Case 'ParserTests.test_parser_valid_root_with_multiple_siblings' passed (0.0 seconds)
+2025-12-26T09:22:15.5228917Z Test Case 'ParserTests.test_parser_valid_root_with_single_child' started at 2025-12-26 09:22:15.482
+2025-12-26T09:22:15.5229552Z Test Case 'ParserTests.test_parser_valid_root_with_single_child' passed (0.0 seconds)
+2025-12-26T09:22:15.5230452Z Test Case 'ParserTests.test_parser_valid_single_root' started at 2025-12-26 09:22:15.483
+2025-12-26T09:22:15.5230983Z Test Case 'ParserTests.test_parser_valid_single_root' passed (0.0 seconds)
+2025-12-26T09:22:15.5231529Z Test Case 'ParserTests.test_parser_valid_three_level_nesting' started at 2025-12-26 09:22:15.483
+2025-12-26T09:22:15.5232101Z Test Case 'ParserTests.test_parser_valid_three_level_nesting' passed (0.0 seconds)
+2025-12-26T09:22:15.5232653Z Test Case 'ParserTests.test_parser_valid_with_blank_lines' started at 2025-12-26 09:22:15.483
+2025-12-26T09:22:15.5233196Z Test Case 'ParserTests.test_parser_valid_with_blank_lines' passed (0.0 seconds)
+2025-12-26T09:22:15.5233747Z Test Case 'ParserTests.test_parser_valid_with_comment_lines' started at 2025-12-26 09:22:15.483
+2025-12-26T09:22:15.5234293Z Test Case 'ParserTests.test_parser_valid_with_comment_lines' passed (0.0 seconds)
+2025-12-26T09:22:15.5234805Z Test Case 'ParserTests.test_program_max_depth' started at 2025-12-26 09:22:15.483
+2025-12-26T09:22:15.5235273Z Test Case 'ParserTests.test_program_max_depth' passed (0.0 seconds)
+2025-12-26T09:22:15.5235740Z Test Case 'ParserTests.test_program_node_count' started at 2025-12-26 09:22:15.483
+2025-12-26T09:22:15.5236208Z Test Case 'ParserTests.test_program_node_count' passed (0.0 seconds)
+2025-12-26T09:22:15.5236602Z Test Suite 'ParserTests' passed at 2025-12-26 09:22:15.483
+2025-12-26T09:22:15.5237002Z 	 Executed 20 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+2025-12-26T09:22:15.5237440Z Test Suite 'ArgumentParsingTests' started at 2025-12-26 09:22:15.483
+2025-12-26T09:22:15.5237974Z Test Case 'ArgumentParsingTests.testAllArgumentsTogether' started at 2025-12-26 09:22:15.483
+2025-12-26T09:22:15.5238691Z Test Case 'ArgumentParsingTests.testAllArgumentsTogether' passed (0.007 seconds)
+2025-12-26T09:22:15.5239333Z Test Case 'ArgumentParsingTests.testArgumentOrderDontMatter1' started at 2025-12-26 09:22:15.491
+2025-12-26T09:22:15.5240098Z Test Case 'ArgumentParsingTests.testArgumentOrderDontMatter1' passed (0.006 seconds)
+2025-12-26T09:22:15.5240690Z Test Case 'ArgumentParsingTests.testCommandConfiguration' started at 2025-12-26 09:22:15.496
+2025-12-26T09:22:15.5241252Z Test Case 'ArgumentParsingTests.testCommandConfiguration' passed (0.0 seconds)
+2025-12-26T09:22:15.5241847Z Test Case 'ArgumentParsingTests.testCompilerArgumentsLenientMode' started at 2025-12-26 09:22:15.496
+2025-12-26T09:22:15.5242481Z Test Case 'ArgumentParsingTests.testCompilerArgumentsLenientMode' passed (0.003 seconds)
+2025-12-26T09:22:15.5243114Z Test Case 'ArgumentParsingTests.testCompilerArgumentsStrictMode' started at 2025-12-26 09:22:15.499
+2025-12-26T09:22:15.5243741Z Test Case 'ArgumentParsingTests.testCompilerArgumentsStrictMode' passed (0.003 seconds)
+2025-12-26T09:22:15.5244389Z Test Case 'ArgumentParsingTests.testCompilerArgumentsStructCreation' started at 2025-12-26 09:22:15.502
+2025-12-26T09:22:15.5245065Z Test Case 'ArgumentParsingTests.testCompilerArgumentsStructCreation' passed (0.003 seconds)
+2025-12-26T09:22:15.5245651Z Test Case 'ArgumentParsingTests.testDefaultValues' started at 2025-12-26 09:22:15.505
+2025-12-26T09:22:15.5246159Z Test Case 'ArgumentParsingTests.testDefaultValues' passed (0.003 seconds)
+2025-12-26T09:22:15.5246741Z Test Case 'ArgumentParsingTests.testDefaultValuesInCompilerArguments' started at 2025-12-26 09:22:15.508
+2025-12-26T09:22:15.5247411Z Test Case 'ArgumentParsingTests.testDefaultValuesInCompilerArguments' passed (0.003 seconds)
+2025-12-26T09:22:15.5248042Z Test Case 'ArgumentParsingTests.testDryRunFlagDefaultIsFalse' started at 2025-12-26 09:22:15.511
+2025-12-26T09:22:15.5248746Z Test Case 'ArgumentParsingTests.testDryRunFlagDefaultIsFalse' passed (0.003 seconds)
+2025-12-26T09:22:15.5249323Z Test Case 'ArgumentParsingTests.testDryRunFlagIsRecognized' started at 2025-12-26 09:22:15.514
+2025-12-26T09:22:15.5249905Z Test Case 'ArgumentParsingTests.testDryRunFlagIsRecognized' passed (0.003 seconds)
+2025-12-26T09:22:15.5250584Z Test Case 'ArgumentParsingTests.testEmptyPathForInput' started at 2025-12-26 09:22:15.516
+2025-12-26T09:22:15.5251144Z Test Case 'ArgumentParsingTests.testEmptyPathForInput' passed (0.003 seconds)
+2025-12-26T09:22:15.5251685Z Test Case 'ArgumentParsingTests.testHelpFlagIsRecognized' started at 2025-12-26 09:22:15.519
+2025-12-26T09:22:15.5252234Z Test Case 'ArgumentParsingTests.testHelpFlagIsRecognized' passed (0.0 seconds)
+2025-12-26T09:22:15.5253090Z Test Case 'ArgumentParsingTests.testInputArgumentAcceptsAbsolutePath' started at 2025-12-26 09:22:15.519
+2025-12-26T09:22:15.5253862Z Test Case 'ArgumentParsingTests.testInputArgumentAcceptsAbsolutePath' passed (0.003 seconds)
+2025-12-26T09:22:15.6905183Z Test Case 'ArgumentParsingTests.testInputArgumentAcceptsRelativePath' started at 2025-12-26 09:22:15.522
+2025-12-26T09:22:15.6906091Z Test Case 'ArgumentParsingTests.testInputArgumentAcceptsRelativePath' passed (0.003 seconds)
+2025-12-26T09:22:15.6906993Z Test Case 'ArgumentParsingTests.testInputArgumentAcceptsSimpleFilename' started at 2025-12-26 09:22:15.525
+2025-12-26T09:22:15.6907873Z Test Case 'ArgumentParsingTests.testInputArgumentAcceptsSimpleFilename' passed (0.003 seconds)
+2025-12-26T09:22:15.6909028Z Test Case 'ArgumentParsingTests.testInputArgumentIsRequired' started at 2025-12-26 09:22:15.528
+2025-12-26T09:22:15.6909788Z Test Case 'ArgumentParsingTests.testInputArgumentIsRequired' passed (0.003 seconds)
+2025-12-26T09:22:15.6910545Z Test Case 'ArgumentParsingTests.testLenientFlagDefaultIsFalse' started at 2025-12-26 09:22:15.531
+2025-12-26T09:22:15.6911293Z Test Case 'ArgumentParsingTests.testLenientFlagDefaultIsFalse' passed (0.003 seconds)
+2025-12-26T09:22:15.6912037Z Test Case 'ArgumentParsingTests.testLenientFlagIsRecognized' started at 2025-12-26 09:22:15.534
+2025-12-26T09:22:15.6912799Z Test Case 'ArgumentParsingTests.testLenientFlagIsRecognized' passed (0.003 seconds)
+2025-12-26T09:22:15.6913865Z Test Case 'ArgumentParsingTests.testManifestOptionDefaultIsNil' started at 2025-12-26 09:22:15.537
+2025-12-26T09:22:15.6914572Z Test Case 'ArgumentParsingTests.testManifestOptionDefaultIsNil' passed (0.003 seconds)
+2025-12-26T09:22:15.6915244Z Test Case 'ArgumentParsingTests.testManifestOptionLongForm' started at 2025-12-26 09:22:15.540
+2025-12-26T09:22:15.6915900Z Test Case 'ArgumentParsingTests.testManifestOptionLongForm' passed (0.003 seconds)
+2025-12-26T09:22:15.6916558Z Test Case 'ArgumentParsingTests.testManifestOptionShortForm' started at 2025-12-26 09:22:15.542
+2025-12-26T09:22:15.6917219Z Test Case 'ArgumentParsingTests.testManifestOptionShortForm' passed (0.003 seconds)
+2025-12-26T09:22:15.6917869Z Test Case 'ArgumentParsingTests.testMixedShortAndLongForms' started at 2025-12-26 09:22:15.545
+2025-12-26T09:22:15.6918629Z Test Case 'ArgumentParsingTests.testMixedShortAndLongForms' passed (0.003 seconds)
+2025-12-26T09:22:15.6919236Z Test Case 'ArgumentParsingTests.testMultipleFlags' started at 2025-12-26 09:22:15.548
+2025-12-26T09:22:15.6919811Z Test Case 'ArgumentParsingTests.testMultipleFlags' passed (0.003 seconds)
+2025-12-26T09:22:15.6920435Z Test Case 'ArgumentParsingTests.testOutputOptionDefaultIsNil' started at 2025-12-26 09:22:15.551
+2025-12-26T09:22:15.6921110Z Test Case 'ArgumentParsingTests.testOutputOptionDefaultIsNil' passed (0.003 seconds)
+2025-12-26T09:22:15.6921772Z Test Case 'ArgumentParsingTests.testOutputOptionLongForm' started at 2025-12-26 09:22:15.554
+2025-12-26T09:22:15.6922407Z Test Case 'ArgumentParsingTests.testOutputOptionLongForm' passed (0.003 seconds)
+2025-12-26T09:22:15.6922991Z Test Case 'ArgumentParsingTests.testOutputOptionShortForm' started at 2025-12-26 09:22:15.557
+2025-12-26T09:22:15.6923557Z Test Case 'ArgumentParsingTests.testOutputOptionShortForm' passed (0.003 seconds)
+2025-12-26T09:22:15.6924118Z Test Case 'ArgumentParsingTests.testOutputOptionWithPath' started at 2025-12-26 09:22:15.560
+2025-12-26T09:22:15.6924665Z Test Case 'ArgumentParsingTests.testOutputOptionWithPath' passed (0.003 seconds)
+2025-12-26T09:22:15.6925194Z Test Case 'ArgumentParsingTests.testPathWithSpaces' started at 2025-12-26 09:22:15.563
+2025-12-26T09:22:15.6925842Z Test Case 'ArgumentParsingTests.testPathWithSpaces' passed (0.003 seconds)
+2025-12-26T09:22:15.6926404Z Test Case 'ArgumentParsingTests.testPathWithSpecialCharacters' started at 2025-12-26 09:22:15.565
+2025-12-26T09:22:15.6927012Z Test Case 'ArgumentParsingTests.testPathWithSpecialCharacters' passed (0.003 seconds)
+2025-12-26T09:22:15.6927597Z Test Case 'ArgumentParsingTests.testRootOptionDefaultIsNil' started at 2025-12-26 09:22:15.568
+2025-12-26T09:22:15.6928332Z Test Case 'ArgumentParsingTests.testRootOptionDefaultIsNil' passed (0.003 seconds)
+2025-12-26T09:22:15.6928931Z Test Case 'ArgumentParsingTests.testRootOptionLongForm' started at 2025-12-26 09:22:15.571
+2025-12-26T09:22:15.6929467Z Test Case 'ArgumentParsingTests.testRootOptionLongForm' passed (0.003 seconds)
+2025-12-26T09:22:15.6930008Z Test Case 'ArgumentParsingTests.testRootOptionShortForm' started at 2025-12-26 09:22:15.574
+2025-12-26T09:22:15.6930559Z Test Case 'ArgumentParsingTests.testRootOptionShortForm' passed (0.004 seconds)
+2025-12-26T09:22:15.6931120Z Test Case 'ArgumentParsingTests.testStatsFlagDefaultIsFalse' started at 2025-12-26 09:22:15.578
+2025-12-26T09:22:15.6931701Z Test Case 'ArgumentParsingTests.testStatsFlagDefaultIsFalse' passed (0.103 seconds)
+2025-12-26T09:22:15.6932279Z Test Case 'ArgumentParsingTests.testStatsFlagIsRecognized' started at 2025-12-26 09:22:15.682
+2025-12-26T09:22:15.6932842Z Test Case 'ArgumentParsingTests.testStatsFlagIsRecognized' passed (0.003 seconds)
+2025-12-26T09:22:15.6933636Z Test Case 'ArgumentParsingTests.testVerboseFlagDefaultIsFalse' started at 2025-12-26 09:22:15.685
+2025-12-26T09:22:15.6934677Z Test Case 'ArgumentParsingTests.testVerboseFlagDefaultIsFalse' passed (0.003 seconds)
+2025-12-26T09:22:15.6935657Z Test Case 'ArgumentParsingTests.testVerboseFlagLongForm' started at 2025-12-26 09:22:15.688
+2025-12-26T09:22:15.6980046Z Test Case 'ArgumentParsingTests.testVerboseFlagLongForm' passed (0.003 seconds)
+2025-12-26T09:22:15.6980903Z Test Case 'ArgumentParsingTests.testVerboseFlagShortForm' started at 2025-12-26 09:22:15.690
+2025-12-26T09:22:15.6981492Z Test Case 'ArgumentParsingTests.testVerboseFlagShortForm' passed (0.003 seconds)
+2025-12-26T09:22:15.6982084Z Test Case 'ArgumentParsingTests.testVersionFlagIsRecognized' started at 2025-12-26 09:22:15.693
+2025-12-26T09:22:15.6982669Z Test Case 'ArgumentParsingTests.testVersionFlagIsRecognized' passed (0.0 seconds)
+2025-12-26T09:22:15.6983144Z Test Suite 'ArgumentParsingTests' passed at 2025-12-26 09:22:15.693
+2025-12-26T09:22:15.6983547Z 	 Executed 38 tests, with 0 failures (0 unexpected) in 0.21 (0.21) seconds
+2025-12-26T09:22:15.6983913Z Test Suite 'CLITests' started at 2025-12-26 09:22:15.693
+2025-12-26T09:22:15.6984272Z Test Case 'CLITests.testPlaceholder' started at 2025-12-26 09:22:15.693
+2025-12-26T09:22:15.6984652Z Test Case 'CLITests.testPlaceholder' passed (0.0 seconds)
+2025-12-26T09:22:15.6985051Z Test Case 'CLITests.testSignalExitCodes' started at 2025-12-26 09:22:15.694
+2025-12-26T09:22:15.6985457Z Test Case 'CLITests.testSignalExitCodes' passed (0.0 seconds)
+2025-12-26T09:22:15.6985797Z Test Suite 'CLITests' passed at 2025-12-26 09:22:15.694
+2025-12-26T09:22:15.6986139Z 	 Executed 2 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+2025-12-26T09:22:15.6986598Z Test Suite 'DeterministicTimestampProviderTests' started at 2025-12-26 09:22:15.694
+2025-12-26T09:22:15.6987310Z Test Case 'DeterministicTimestampProviderTests.testFallsBackToEpochWhenNoSourcesFound' started at 2025-12-26 09:22:15.694
+2025-12-26T09:22:15.6988350Z Test Case 'DeterministicTimestampProviderTests.testFallsBackToEpochWhenNoSourcesFound' passed (0.0 seconds)
+2025-12-26T09:22:15.6989205Z Test Case 'DeterministicTimestampProviderTests.testFallsBackToSourceDateEpoch' started at 2025-12-26 09:22:15.694
+2025-12-26T09:22:15.6989980Z Test Case 'DeterministicTimestampProviderTests.testFallsBackToSourceDateEpoch' passed (0.0 seconds)
+2025-12-26T09:22:15.6990958Z Test Case 'DeterministicTimestampProviderTests.testUsesExplicitHyperpromptTimestamp' started at 2025-12-26 09:22:15.695
+2025-12-26T09:22:15.6991806Z Test Case 'DeterministicTimestampProviderTests.testUsesExplicitHyperpromptTimestamp' passed (0.0 seconds)
+2025-12-26T09:22:15.6992655Z Test Case 'DeterministicTimestampProviderTests.testUsesModificationDateWhenNoExplicitEpoch' started at 2025-12-26 09:22:15.695
+2025-12-26T09:22:15.6993544Z Test Case 'DeterministicTimestampProviderTests.testUsesModificationDateWhenNoExplicitEpoch' passed (0.002 seconds)
+2025-12-26T09:22:15.6994225Z Test Suite 'DeterministicTimestampProviderTests' passed at 2025-12-26 09:22:15.697
+2025-12-26T09:22:15.6994692Z 	 Executed 4 tests, with 0 failures (0 unexpected) in 0.003 (0.003) seconds
+2025-12-26T09:22:15.6995114Z Test Suite 'DiagnosticPrinterTests' started at 2025-12-26 09:22:15.697
+2025-12-26T09:22:15.6995663Z Test Case 'DiagnosticPrinterTests.testBasicErrorFormatWithLocation' started at 2025-12-26 09:22:15.697
+2025-12-26T09:22:15.6996307Z Test Case 'DiagnosticPrinterTests.testBasicErrorFormatWithLocation' passed (0.0 seconds)
+2025-12-26T09:22:15.6996965Z Test Case 'DiagnosticPrinterTests.testBasicErrorFormatWithoutLocation' started at 2025-12-26 09:22:15.697
+2025-12-26T09:22:15.6997636Z Test Case 'DiagnosticPrinterTests.testBasicErrorFormatWithoutLocation' passed (0.0 seconds)
+2025-12-26T09:22:15.6998370Z Test Case 'DiagnosticPrinterTests.testCaretPositioningAtQuote' started at 2025-12-26 09:22:15.697
+2025-12-26T09:22:15.6998970Z Test Case 'DiagnosticPrinterTests.testCaretPositioningAtQuote' passed (0.0 seconds)
+2025-12-26T09:22:15.6999560Z Test Case 'DiagnosticPrinterTests.testCaretPositioningAtStart' started at 2025-12-26 09:22:15.697
+2025-12-26T09:22:15.7000148Z Test Case 'DiagnosticPrinterTests.testCaretPositioningAtStart' passed (0.0 seconds)
+2025-12-26T09:22:15.7000695Z Test Case 'DiagnosticPrinterTests.testColorizedOutput' started at 2025-12-26 09:22:15.697
+2025-12-26T09:22:15.7001350Z Test Case 'DiagnosticPrinterTests.testColorizedOutput' passed (0.0 seconds)
+2025-12-26T09:22:15.7001913Z Test Case 'DiagnosticPrinterTests.testContextLineExtraction' started at 2025-12-26 09:22:15.697
+2025-12-26T09:22:15.7002492Z Test Case 'DiagnosticPrinterTests.testContextLineExtraction' passed (0.0 seconds)
+2025-12-26T09:22:15.7003056Z Test Case 'DiagnosticPrinterTests.testContextLineWithQuotes' started at 2025-12-26 09:22:15.697
+2025-12-26T09:22:15.7003623Z Test Case 'DiagnosticPrinterTests.testContextLineWithQuotes' passed (0.0 seconds)
+2025-12-26T09:22:15.7004164Z Test Case 'DiagnosticPrinterTests.testEmptyErrorArray' started at 2025-12-26 09:22:15.697
+2025-12-26T09:22:15.7004682Z Test Case 'DiagnosticPrinterTests.testEmptyErrorArray' passed (0.0 seconds)
+2025-12-26T09:22:15.7005257Z Test Case 'DiagnosticPrinterTests.testErrorFormatWithRelativePath' started at 2025-12-26 09:22:15.698
+2025-12-26T09:22:15.7005888Z Test Case 'DiagnosticPrinterTests.testErrorFormatWithRelativePath' passed (0.0 seconds)
+2025-12-26T09:22:15.7006542Z Test Case 'DiagnosticPrinterTests.testErrorWithoutLocationInMultiple' started at 2025-12-26 09:22:15.698
+2025-12-26T09:22:15.7007194Z Test Case 'DiagnosticPrinterTests.testErrorWithoutLocationInMultiple' passed (0.0 seconds)
+2025-12-26T09:22:15.8852806Z Test Case 'DiagnosticPrinterTests.testLineEndingNormalization' started at 2025-12-26 09:22:15.698
+2025-12-26T09:22:15.8853969Z Test Case 'DiagnosticPrinterTests.testLineEndingNormalization' passed (0.1 seconds)
+2025-12-26T09:22:15.8854985Z Test Case 'DiagnosticPrinterTests.testMissingSourceFile' started at 2025-12-26 09:22:15.798
+2025-12-26T09:22:15.8855931Z Test Case 'DiagnosticPrinterTests.testMissingSourceFile' passed (0.0 seconds)
+2025-12-26T09:22:15.8856844Z Test Case 'DiagnosticPrinterTests.testMultipleErrors' started at 2025-12-26 09:22:15.798
+2025-12-26T09:22:15.8857750Z Test Case 'DiagnosticPrinterTests.testMultipleErrors' passed (0.0 seconds)
+2025-12-26T09:22:15.8858998Z Test Case 'DiagnosticPrinterTests.testMultipleErrorsGroupedByFile' started at 2025-12-26 09:22:15.799
+2025-12-26T09:22:15.8860507Z Test Case 'DiagnosticPrinterTests.testMultipleErrorsGroupedByFile' passed (0.0 seconds)
+2025-12-26T09:22:15.8861574Z Test Case 'DiagnosticPrinterTests.testMultipleErrorsSortedByLine' started at 2025-12-26 09:22:15.799
+2025-12-26T09:22:15.8862678Z Test Case 'DiagnosticPrinterTests.testMultipleErrorsSortedByLine' passed (0.0 seconds)
+2025-12-26T09:22:15.8863644Z Test Case 'DiagnosticPrinterTests.testPlainTextOutput' started at 2025-12-26 09:22:15.799
+2025-12-26T09:22:15.8864524Z Test Case 'DiagnosticPrinterTests.testPlainTextOutput' passed (0.0 seconds)
+2025-12-26T09:22:15.8865448Z Test Case 'DiagnosticPrinterTests.testSingleErrorSummary' started at 2025-12-26 09:22:15.799
+2025-12-26T09:22:15.8866429Z Test Case 'DiagnosticPrinterTests.testSingleErrorSummary' passed (0.0 seconds)
+2025-12-26T09:22:15.8867458Z Test Case 'DiagnosticPrinterTests.testTrailingWhitespaceTrimmed' started at 2025-12-26 09:22:15.799
+2025-12-26T09:22:15.8868741Z Test Case 'DiagnosticPrinterTests.testTrailingWhitespaceTrimmed' passed (0.0 seconds)
+2025-12-26T09:22:15.8869732Z Test Case 'DiagnosticPrinterTests.testUTF8Content' started at 2025-12-26 09:22:15.799
+2025-12-26T09:22:15.8870586Z Test Case 'DiagnosticPrinterTests.testUTF8Content' passed (0.0 seconds)
+2025-12-26T09:22:15.8871460Z Test Case 'DiagnosticPrinterTests.testVeryLongLine' started at 2025-12-26 09:22:15.799
+2025-12-26T09:22:15.8872321Z Test Case 'DiagnosticPrinterTests.testVeryLongLine' passed (0.0 seconds)
+2025-12-26T09:22:15.8873266Z Test Case 'DiagnosticPrinterTests.testWriteMultipleToStream' started at 2025-12-26 09:22:15.800
+2025-12-26T09:22:15.8874253Z Test Case 'DiagnosticPrinterTests.testWriteMultipleToStream' passed (0.0 seconds)
+2025-12-26T09:22:15.8875208Z Test Case 'DiagnosticPrinterTests.testWriteToStream' started at 2025-12-26 09:22:15.800
+2025-12-26T09:22:15.8876125Z Test Case 'DiagnosticPrinterTests.testWriteToStream' passed (0.0 seconds)
+2025-12-26T09:22:15.8877099Z Test Suite 'DiagnosticPrinterTests' passed at 2025-12-26 09:22:15.800
+2025-12-26T09:22:15.8877813Z 	 Executed 22 tests, with 0 failures (0 unexpected) in 0.103 (0.103) seconds
+2025-12-26T09:22:15.8878595Z Test Suite 'debug.xctest' failed at 2025-12-26 09:22:15.800
+2025-12-26T09:22:15.8879329Z 	 Executed 557 tests, with 16 tests skipped and 21 failures (0 unexpected) in 31.749 (31.749) seconds
+2025-12-26T09:22:15.8880046Z Test Suite 'All tests' failed at 2025-12-26 09:22:15.800
+2025-12-26T09:22:15.8880750Z 	 Executed 557 tests, with 16 tests skipped and 21 failures (0 unexpected) in 31.749 (31.749) seconds
+2025-12-26T09:22:15.8881650Z ◇ Test run started.
+2025-12-26T09:22:15.8882205Z ↳ Testing Library Version: 6.2.3 (48a471ab313e858)
+2025-12-26T09:22:15.8882777Z ↳ Target Platform: x86_64-unknown-linux-gnu
+2025-12-26T09:22:15.8883415Z ✔ Test run with 0 tests in 0 suites passed after 0.004 seconds.
+2025-12-26T09:22:15.8945453Z ##[error]Process completed with exit code 1.
+2025-12-26T09:22:15.9050516Z Post job cleanup.
+2025-12-26T09:22:15.9979377Z [command]/usr/bin/git version
+2025-12-26T09:22:16.0015889Z git version 2.52.0
+2025-12-26T09:22:16.0057647Z Temporarily overriding HOME='/home/runner/work/_temp/e7839a81-a670-4fbe-bc1a-db5e72be23c2' before making global git config changes
+2025-12-26T09:22:16.0058701Z Adding repository directory to the temporary git global config as a safe directory
+2025-12-26T09:22:16.0070685Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Hyperprompt/Hyperprompt
+2025-12-26T09:22:16.0104153Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-12-26T09:22:16.0134977Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-12-26T09:22:16.0361013Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-12-26T09:22:16.0381511Z http.https://github.com/.extraheader
+2025-12-26T09:22:16.0394701Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-12-26T09:22:16.0424561Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-12-26T09:22:16.0646512Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2025-12-26T09:22:16.0677256Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2025-12-26T09:22:16.1003462Z Cleaning up orphan processes
