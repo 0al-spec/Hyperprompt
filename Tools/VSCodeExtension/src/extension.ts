@@ -3,6 +3,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { buildCompileParams, runCompileRequest, ResolutionMode } from './compileCommand';
+import { RpcDiagnostic, normalizeSeverity, toZeroBasedRange } from './diagnostics';
 import { resolveEngine, engineDiscoveryDefaults, EngineResolution } from './engineDiscovery';
 import {
 	buildLinkAtParams,
@@ -255,6 +256,43 @@ export async function activate(context: vscode.ExtensionContext) {
 		return workspaceFolder?.uri.fsPath ?? path.dirname(document.uri.fsPath);
 	};
 
+	const mapSeverity = (severity: string): vscode.DiagnosticSeverity => {
+		switch (normalizeSeverity(severity)) {
+			case 'warning':
+				return vscode.DiagnosticSeverity.Warning;
+			case 'info':
+				return vscode.DiagnosticSeverity.Information;
+			case 'hint':
+				return vscode.DiagnosticSeverity.Hint;
+			default:
+				return vscode.DiagnosticSeverity.Error;
+		}
+	};
+
+	const toDocumentPosition = (
+		document: vscode.TextDocument,
+		position: { line: number; character: number }
+	): vscode.Position => {
+		const safeLine = Math.min(Math.max(position.line, 0), Math.max(document.lineCount - 1, 0));
+		const lineText = document.lineAt(safeLine).text;
+		const safeCharacter = Math.min(Math.max(position.character, 0), lineText.length);
+		return new vscode.Position(safeLine, safeCharacter);
+	};
+
+	const toDiagnosticRange = (
+		document: vscode.TextDocument,
+		range?: { start: { line: number; column: number }; end: { line: number; column: number } }
+	): vscode.Range => {
+		const zeroBased = toZeroBasedRange(range);
+		if (!zeroBased) {
+			const start = toDocumentPosition(document, { line: 0, character: 0 });
+			return new vscode.Range(start, start);
+		}
+		const start = toDocumentPosition(document, zeroBased.start);
+		const end = toDocumentPosition(document, zeroBased.end);
+		return new vscode.Range(start, end);
+	};
+
 	const updateDiagnosticsForDocument = async (document: vscode.TextDocument) => {
 		if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
 			return;
@@ -278,14 +316,10 @@ export async function activate(context: vscode.ExtensionContext) {
 			params,
 			compileTimeoutMs
 		);
-		const diagnostics = (compileResult.diagnostics ?? []) as Array<{ message?: string; code?: string }>;
+		const diagnostics = (compileResult.diagnostics ?? []) as RpcDiagnostic[];
 		const vscodeDiagnostics = diagnostics.map((diagnostic) => {
-			const range = new vscode.Range(0, 0, 0, 0);
-			const entry = new vscode.Diagnostic(
-				range,
-				diagnostic.message ?? 'Unknown diagnostic',
-				vscode.DiagnosticSeverity.Error
-			);
+			const range = toDiagnosticRange(document, diagnostic.range);
+			const entry = new vscode.Diagnostic(range, diagnostic.message, mapSeverity(diagnostic.severity));
 			entry.code = diagnostic.code;
 			entry.source = 'Hyperprompt';
 			return entry;
