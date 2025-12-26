@@ -1,20 +1,20 @@
-# Next Task: VSC-6 — Diagnostics Integration
+# Next Task: VSC-7 — Live Preview Panel
 
 **Priority:** P0
 **Phase:** Phase 14 — VS Code Extension Development
-**Effort:** 4 hours
-**Dependencies:** VSC-4*, EE-EXT-2
-**Status:** ✅ Completed on 2025-12-27
+**Effort:** 6 hours
+**Dependencies:** VSC-4*, PERF-4
+**Status:** Selected
 
 ## Description
 
-Implement Problems panel diagnostics via EditorEngine workspace validation, mapping diagnostics to VS Code ranges and severities.
+Implement the markdown preview webview panel with compile-on-save updates and incremental performance considerations.
 
 ## Subtasks
 
-- [x] Implement DiagnosticCollection + RPC wiring for workspace validation
-- [x] Map diagnostics to VS Code ranges and severities, handle updates/clears
-- [x] Add diagnostics tests for common scenarios
+- [ ] Implement preview webview and showPreview command
+- [ ] Compile on save and update preview content
+- [ ] Add preview tests and refresh behavior
 
 ## Next Step
 
