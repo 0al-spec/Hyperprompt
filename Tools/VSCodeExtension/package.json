@@ -20,6 +20,7 @@
   "activationEvents": [
     "onLanguage:hypercode",
     "onCommand:hyperprompt.compile",
+    "onCommand:hyperprompt.compileLenient",
     "onCommand:hyperprompt.showPreview"
   ],
   "main": "./out/extension.js",
@@ -48,6 +49,10 @@
       {
         "command": "hyperprompt.compile",
         "title": "Hyperprompt: Compile"
+      },
+      {
+        "command": "hyperprompt.compileLenient",
+        "title": "Hyperprompt: Compile (Lenient)"
       },
       {
         "command": "hyperprompt.showPreview",

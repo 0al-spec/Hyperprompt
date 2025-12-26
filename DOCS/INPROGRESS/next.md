@@ -1,29 +1,30 @@
-# Next Task: RPC-Timeout — Editor RPC Stdout Flush
+# Next Task: VSC-7B — Compile Lenient Command
 
-**Priority:** P0
+**Priority:** P1
 **Phase:** Phase 14: VS Code Extension Development
-**Effort:** 0.5 hour
-**Dependencies:** None
-**Status:** ✅ Completed on 2025-12-26
+**Effort:** 1 hour
+**Dependencies:** VSC-2B, VSC-4*
+**Status:** In Progress
 
 ## Description
 
-Fix editor-rpc stdout flushing so RPC requests don't time out; align client timeout.
+Add a lenient compile command for the VS Code extension to avoid missing-file diagnostics in strict mode.
 
 ## Flow Steps (Tracker)
 
 - [x] SELECT
 - [x] PLAN
 - [x] INSTALL_SWIFT
-- [x] EXECUTE
-- [x] PROGRESS (optional)
+- [ ] EXECUTE
+- [ ] PROGRESS (optional)
 - [ ] ARCHIVE
 
 ## Mini TODO (Tracker)
 
-- [x] A1: Flush JSON-RPC responses to stdout in editor-rpc
-- [x] A2: Set compile timeout to 5s in extension
+- [x] A1: Register `hyperprompt.compileLenient` command and activation event
+- [ ] A2: Implement lenient compile handler in extension
+- [ ] A3: Document the lenient compile command in the extension README
 
 ## Next Step
 
-Run ARCHIVE if you want to clear completed tasks.
+Proceed to EXECUTE.
