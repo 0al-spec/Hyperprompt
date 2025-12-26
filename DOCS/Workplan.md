@@ -258,7 +258,7 @@ Completed phases include:
 ### EE-EXT-4: Multi-Root Workspace Support **[P1]**
 **Dependencies:** EE8
 **Estimated:** 2 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 INPROGRESS
 
 - [ ] **[P1, depends: EE8]** Update `EditorResolver.init` to accept `workspaceRoots: [String]`
 - [ ] **[P1, depends: EE8]** Update resolution algorithm to search all roots in order

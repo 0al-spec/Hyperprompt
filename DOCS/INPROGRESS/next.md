@@ -1,20 +1,20 @@
-# Next Task: VSC-12 — Extension Documentation & Release
+# Next Task: PRD-VAL-1 — PRD Requirements Checklist
 
 **Priority:** P0
-**Phase:** Phase 14 — VS Code Extension Development
-**Effort:** 3 hours
-**Dependencies:** VSC-11
-**Status:** ✅ Completed on 2025-12-27
+**Phase:** Phase 15 — PRD Validation & Gap Closure
+**Effort:** 2 hours
+**Dependencies:** VSC-12
+**Status:** Selected
 
 ## Description
 
-Complete extension README, release notes, packaging steps, and system requirements documentation.
+Verify all PRD_VSCode_Extension.md requirements and document the checklist results.
 
 ## Subtasks
 
-- [x] Add feature screenshot placeholder and reference it in README
-- [x] Add extension CHANGELOG
-- [x] Add release checklist to README
+- [ ] Verify Section 1.2 deliverables and record results
+- [ ] Verify Section 1.3 success criteria and functional requirements
+- [ ] Verify non-functional requirements and capture validation notes
 
 ## Next Step
 
