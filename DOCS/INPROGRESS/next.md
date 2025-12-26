@@ -14,7 +14,7 @@ Complete extension README, release notes, packaging steps, and system requiremen
 
 - [x] Update extension README with features and usage
 - [x] Add release notes and packaging instructions
-- [ ] Document system requirements and installation steps
+- [x] Document system requirements and installation steps
 
 ## Next Step
 
