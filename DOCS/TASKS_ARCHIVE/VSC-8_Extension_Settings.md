@@ -114,3 +114,6 @@ Extension settings allow users to choose strict vs lenient compilation, control 
 - `hyperprompt.compile` uses configured resolution mode.
 - Changing engine path/log level restarts RPC process.
 - README lists all settings.
+
+---
+**Archived:** 2025-12-26

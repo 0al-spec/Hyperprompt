@@ -216,6 +216,12 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** VSC-2B, VSC-4*
 - **Description:** Add a lenient compile command in the VS Code extension for missing-reference-tolerant builds.
 
+### VSC-8 — Extension Settings **[P1]** ✓ 2025-12-26
+- **PRD:** [VSC-8_Extension_Settings.md](./VSC-8_Extension_Settings.md)
+- **Effort:** 2 hours
+- **Dependencies:** VSC-4*
+- **Description:** Add extension settings schema and runtime handling for resolution mode, preview auto-update, diagnostics, and engine configuration.
+
 ---
 
 ## Other Archives
@@ -228,8 +234,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 26 items
-- **Total Effort:** 87 hours (tracked tasks only)
+- **Total Archived:** 27 items
+- **Total Effort:** 89 hours (tracked tasks only)
 - **Phases Represented:** 9 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14)
 
 ---
