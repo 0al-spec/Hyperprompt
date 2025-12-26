@@ -12,7 +12,7 @@ Complete extension README, release notes, packaging steps, and system requiremen
 
 ## Subtasks
 
-- [ ] Update extension README with features and usage
+- [x] Update extension README with features and usage
 - [ ] Add release notes and packaging instructions
 - [ ] Document system requirements and installation steps
 
