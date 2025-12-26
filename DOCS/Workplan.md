@@ -518,7 +518,7 @@ Completed phases include:
 ### VSC-6: Diagnostics Integration **[P0]**
 **Dependencies:** VSC-4*, EE-EXT-2
 **Estimated:** 4 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 INPROGRESS
 
 - [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Implement `DiagnosticCollection` for Problems panel
 - [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Call `EditorEngine.validateWorkspace()` on file save

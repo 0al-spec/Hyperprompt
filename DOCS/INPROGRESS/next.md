@@ -1,20 +1,20 @@
-# Next Task: VSC-5 — Navigation Features
+# Next Task: VSC-6 — Diagnostics Integration
 
 **Priority:** P0
 **Phase:** Phase 14 — VS Code Extension Development
-**Effort:** 5 hours
-**Dependencies:** VSC-4*, EE-EXT-1
-**Status:** ✅ Completed on 2025-12-27
+**Effort:** 4 hours
+**Dependencies:** VSC-4*, EE-EXT-2
+**Status:** Selected
 
 ## Description
 
-Implement go-to-definition and hover navigation features in the VS Code extension using EditorParser linkAt and EditorResolver.
+Implement Problems panel diagnostics via EditorEngine workspace validation, mapping diagnostics to VS Code ranges and severities.
 
 ## Subtasks
 
-- [x] Implement DefinitionProvider using linkAt + resolver
-- [x] Implement HoverProvider with resolved path/status
-- [x] Add integration tests for navigation features
+- [ ] Implement DiagnosticCollection + RPC wiring for workspace validation
+- [ ] Map diagnostics to VS Code ranges and severities, handle updates/clears
+- [ ] Add diagnostics tests for common scenarios
 
 ## Next Step
 
