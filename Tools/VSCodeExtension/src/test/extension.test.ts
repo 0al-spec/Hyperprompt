@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
@@ -6,8 +7,20 @@ import * as vscode from 'vscode';
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const fixtureRoot = path.resolve(__dirname, '..', '..', 'src', 'test', 'fixtures', 'workspace');
+const fixtureRootTwo = path.resolve(__dirname, '..', '..', 'src', 'test', 'fixtures', 'workspace-two');
 const mockEnginePath = path.resolve(__dirname, '..', '..', 'src', 'test', 'fixtures', 'mock-engine.js');
 const logFile = path.join(os.tmpdir(), `hyperprompt-vscode-test-${Date.now()}.log`);
+
+const readLogEntries = (): Array<{ method: string; params: Record<string, unknown> }> => {
+	if (!fs.existsSync(logFile)) {
+		return [];
+	}
+	return fs
+		.readFileSync(logFile, 'utf8')
+		.split('\n')
+		.filter((line) => line.trim().length > 0)
+		.map((line) => JSON.parse(line) as { method: string; params: Record<string, unknown> });
+};
 
 const setEnginePath = async (enginePath: string) => {
 	const config = vscode.workspace.getConfiguration('hyperprompt');
@@ -21,6 +34,7 @@ suite('Extension Integration', () => {
 			return;
 		}
 		vscode.workspace.updateWorkspaceFolders(0, null, { uri: vscode.Uri.file(fixtureRoot) });
+		vscode.workspace.updateWorkspaceFolders(1, null, { uri: vscode.Uri.file(fixtureRootTwo) });
 		await setEnginePath(mockEnginePath);
 		const config = vscode.workspace.getConfiguration('hyperprompt');
 		await config.update('previewAutoUpdate', true, vscode.ConfigurationTarget.Workspace);
@@ -44,6 +58,28 @@ suite('Extension Integration', () => {
 
 		assert.ok(results && results.length > 0);
 		assert.ok(results[0].uri.fsPath.endsWith(path.join('docs', 'readme.md')));
+
+		const log = readLogEntries().filter((entry) => entry.method === 'editor.resolve');
+		assert.ok(log.length > 0);
+		const last = log[log.length - 1];
+		assert.strictEqual(last.params.workspaceRoot, fixtureRoot);
+	});
+
+	test('Definition provider uses multi-root workspace folder', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRootTwo, 'main.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		await vscode.commands.executeCommand<vscode.Location[]>(
+			'vscode.executeDefinitionProvider',
+			uri,
+			new vscode.Position(0, 4)
+		);
+
+		const log = readLogEntries().filter((entry) => entry.method === 'editor.resolve');
+		assert.ok(log.length > 0);
+		const last = log[log.length - 1];
+		assert.strictEqual(last.params.workspaceRoot, fixtureRootTwo);
 	});
 
 	test('Compile command runs for active file', async () => {
@@ -97,6 +133,12 @@ suite('Extension Integration', () => {
 			group.tabs.some((tab) => tab.input instanceof vscode.TabInputWebview)
 		);
 		assert.ok(hasWebview);
+	});
+
+	test('Compile command handles missing engine', async () => {
+		await setEnginePath('/missing/hyperprompt');
+		await vscode.commands.executeCommand('hyperprompt.compile');
+		await setEnginePath(mockEnginePath);
 	});
 
 });
