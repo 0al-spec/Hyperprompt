@@ -496,16 +496,16 @@ Completed phases include:
 ### VSC-5: Navigation Features **[P0]**
 **Dependencies:** VSC-4*, EE-EXT-1
 **Estimated:** 5 hours
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-27
 
-- [ ] **[P0, depends: VSC-4*, EE-EXT-1]** Implement `DefinitionProvider` for go-to-definition
-- [ ] **[P0, depends: VSC-4*, EE-EXT-1]** Call `EditorParser.linkAt(line:column:)` on definition request
-- [ ] **[P0, depends: VSC-4*, EE-EXT-1]** Resolve link with `EditorResolver`
-- [ ] **[P0, depends: VSC-4*, EE-EXT-1]** Navigate to resolved file path
-- [ ] **[P1, depends: VSC-4*, EE-EXT-1]** Implement `HoverProvider` for hover tooltips
-- [ ] **[P1, depends: VSC-4*, EE-EXT-1]** Show resolved path and status in hover
-- [ ] **[P1, depends: VSC-4*, EE-EXT-1]** Handle unresolved links (show inline text message)
-- [ ] **[P1, depends: VSC-4*, EE-EXT-1]** Write extension tests (integration)
+- [x] **[P0, depends: VSC-4*, EE-EXT-1]** Implement `DefinitionProvider` for go-to-definition
+- [x] **[P0, depends: VSC-4*, EE-EXT-1]** Call `EditorParser.linkAt(line:column:)` on definition request
+- [x] **[P0, depends: VSC-4*, EE-EXT-1]** Resolve link with `EditorResolver`
+- [x] **[P0, depends: VSC-4*, EE-EXT-1]** Navigate to resolved file path
+- [x] **[P1, depends: VSC-4*, EE-EXT-1]** Implement `HoverProvider` for hover tooltips
+- [x] **[P1, depends: VSC-4*, EE-EXT-1]** Show resolved path and status in hover
+- [x] **[P1, depends: VSC-4*, EE-EXT-1]** Handle unresolved links (show inline text message)
+- [x] **[P1, depends: VSC-4*, EE-EXT-1]** Write extension tests (integration)
 
 **Acceptance Criteria:** Go-to-definition/peek works on all file references, hover shows resolved path
 
