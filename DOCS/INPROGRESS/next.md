@@ -4,7 +4,7 @@
 **Phase:** Phase 14: VS Code Extension Development
 **Effort:** 0.5 hour
 **Dependencies:** None
-**Status:** In Progress
+**Status:** ✅ Completed on 2025-12-26
 
 ## Description
 
@@ -15,15 +15,15 @@ Fix editor-rpc stdout flushing so RPC requests don't time out; align client time
 - [x] SELECT
 - [x] PLAN
 - [x] INSTALL_SWIFT
-- [ ] EXECUTE
-- [ ] PROGRESS (optional)
+- [x] EXECUTE
+- [x] PROGRESS (optional)
 - [ ] ARCHIVE
 
 ## Mini TODO (Tracker)
 
 - [x] A1: Flush JSON-RPC responses to stdout in editor-rpc
-- [ ] A2: Set compile timeout to 5s in extension
+- [x] A2: Set compile timeout to 5s in extension
 
 ## Next Step
 
-Run EXECUTE validation for A1 and commit.
+Run ARCHIVE if you want to clear completed tasks.

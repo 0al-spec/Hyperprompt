@@ -8,7 +8,7 @@ import { RpcClient } from './rpcClient';
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Hyperprompt extension activated.');
-	const compileTimeoutMs = 60000;
+	const compileTimeoutMs = 5000;
 
 	const rpcClient = new RpcClient({
 		command: 'hyperprompt',
