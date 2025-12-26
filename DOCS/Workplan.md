@@ -518,17 +518,17 @@ Completed phases include:
 ### VSC-6: Diagnostics Integration **[P0]**
 **Dependencies:** VSC-4*, EE-EXT-2
 **Estimated:** 4 hours
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-27
 
-- [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Implement `DiagnosticCollection` for Problems panel
-- [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Call `EditorEngine.validateWorkspace()` on file save
-- [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Map `Diagnostic[]` to VS Code diagnostics
-- [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Map 0-based line/column offsets to VS Code ranges correctly
-- [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Set severity (error, warning, info, hint)
-- [ ] **[P0, depends: VSC-4*, EE-EXT-2]** Set source ("Hyperprompt")
-- [ ] **[P1, depends: VSC-4*, EE-EXT-2]** Implement incremental diagnostic updates (only changed files)
-- [ ] **[P1, depends: VSC-4*, EE-EXT-2]** Clear diagnostics when file is fixed
-- [ ] **[P1, depends: VSC-4*, EE-EXT-2]** Write extension tests
+- [x] **[P0, depends: VSC-4*, EE-EXT-2]** Implement `DiagnosticCollection` for Problems panel
+- [x] **[P0, depends: VSC-4*, EE-EXT-2]** Call `EditorEngine.validateWorkspace()` on file save
+- [x] **[P0, depends: VSC-4*, EE-EXT-2]** Map `Diagnostic[]` to VS Code diagnostics
+- [x] **[P0, depends: VSC-4*, EE-EXT-2]** Map 0-based line/column offsets to VS Code ranges correctly
+- [x] **[P0, depends: VSC-4*, EE-EXT-2]** Set severity (error, warning, info, hint)
+- [x] **[P0, depends: VSC-4*, EE-EXT-2]** Set source ("Hyperprompt")
+- [x] **[P1, depends: VSC-4*, EE-EXT-2]** Implement incremental diagnostic updates (only changed files)
+- [x] **[P1, depends: VSC-4*, EE-EXT-2]** Clear diagnostics when file is fixed
+- [x] **[P1, depends: VSC-4*, EE-EXT-2]** Write extension tests
 
 **Acceptance Criteria:** Errors appear in Problems panel, jump to correct location, clear when fixed
 
