@@ -14,7 +14,7 @@ Implement engine discovery (settings → bundled → PATH) with platform guard a
 
 - [x] SELECT
 - [x] PLAN
-- [ ] INSTALL_SWIFT
+- [x] INSTALL_SWIFT
 - [ ] EXECUTE
 - [ ] PROGRESS (optional)
 - [ ] ARCHIVE
