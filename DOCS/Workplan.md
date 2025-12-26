@@ -496,7 +496,7 @@ Completed phases include:
 ### VSC-5: Navigation Features **[P0]**
 **Dependencies:** VSC-4*, EE-EXT-1
 **Estimated:** 5 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 INPROGRESS
 
 - [ ] **[P0, depends: VSC-4*, EE-EXT-1]** Implement `DefinitionProvider` for go-to-definition
 - [ ] **[P0, depends: VSC-4*, EE-EXT-1]** Call `EditorParser.linkAt(line:column:)` on definition request

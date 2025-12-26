@@ -1,20 +1,20 @@
-# Next Task: EE-EXT-1B — Fix EditorParser linkAt Regression
+# Next Task: VSC-5 — Navigation Features
 
 **Priority:** P0
-**Phase:** Phase 12 — EditorEngine API Enhancements
-**Effort:** 2 hours
-**Dependencies:** EE-EXT-1
-**Status:** ✅ Completed on 2025-12-27
+**Phase:** Phase 14 — VS Code Extension Development
+**Effort:** 5 hours
+**Dependencies:** VSC-4*, EE-EXT-1
+**Status:** Selected
 
 ## Description
 
-Restore link span extraction so EditorParser linkAt tests pass and ranges are correct for @"..." and UTF-8 offsets.
+Implement go-to-definition and hover navigation features in the VS Code extension using EditorParser linkAt and EditorResolver.
 
 ## Subtasks
 
-- [x] Fix link span extraction for EditorParser linkAt
-- [x] Verify UTF-8 byte/column ranges for @"..." links
-- [x] Run `swift test --traits Editor` and confirm EditorParserLinkAtTests pass
+- [ ] Implement DefinitionProvider using linkAt + resolver
+- [ ] Implement HoverProvider with resolved path/status
+- [ ] Add integration tests for navigation features
 
 ## Next Step
 
