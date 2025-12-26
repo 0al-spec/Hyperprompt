@@ -511,12 +511,12 @@ Completed phases include:
 ### VSC-7A: Compile on Demand Command **[P0]**
 **Dependencies:** VSC-2B, VSC-4*
 **Estimated:** 3 hours
-**Status:** 🟢 **IN PROGRESS**
+**Status:** ✅ **COMPLETED** on 2025-12-26
 
-- [ ] **[P0, depends: VSC-2B, VSC-4*]** Register `hyperprompt.compile` command
-- [ ] **[P0, depends: VSC-2B, VSC-4*]** Call `editor.compile` RPC and select entry file from active editor
-- [ ] **[P0, depends: VSC-2B, VSC-4*]** Surface compiled Markdown output (output channel or temporary document)
-- [ ] **[P1, depends: VSC-2B, VSC-4*]** Add compile command tests (CLI parity fixtures)
+- [x] **[P0, depends: VSC-2B, VSC-4*]** Register `hyperprompt.compile` command
+- [x] **[P0, depends: VSC-2B, VSC-4*]** Call `editor.compile` RPC and select entry file from active editor
+- [x] **[P0, depends: VSC-2B, VSC-4*]** Surface compiled Markdown output (output channel or temporary document)
+- [x] **[P1, depends: VSC-2B, VSC-4*]** Add compile command tests (CLI parity fixtures)
 
 **Acceptance Criteria:** Compile command produces output identical to CLI for fixtures
 
