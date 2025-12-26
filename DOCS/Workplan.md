@@ -185,6 +185,21 @@ Completed phases include:
 
 ---
 
+### EE-EXT-1B: Fix EditorParser linkAt Regression **[P0]**
+**Dependencies:** EE-EXT-1
+**Estimated:** 2 hours
+**Status:** ⏸️ Pending
+
+- [ ] **[P0, depends: EE-EXT-1]** Restore link span extraction for EditorParser so linkAt tests pass
+- [ ] **[P0, depends: EE-EXT-1]** Validate byte/column ranges for @"..." and UTF-8 offsets
+- [ ] **[P1, depends: EE-EXT-1]** Run `swift test --traits Editor` and confirm EditorParserLinkAtTests pass
+
+**Acceptance Criteria:** EditorParserLinkAtTests pass under Editor trait; link spans match cursor positions
+
+**Resolution Status:** 🔴 BLOCKER (CI Editor trait failures)
+
+---
+
 ### EE-EXT-2: Workspace-Level Diagnostics **[P1]**
 **Dependencies:** EE8
 **Estimated:** 4 hours
