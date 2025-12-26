@@ -91,7 +91,7 @@ const validateExecutable = async (
 	accessFn: (filePath: string) => Promise<void>,
 	notFoundMessage: string,
 	notExecutableMessage: string
-): Promise<EngineResolution | null> => {
+): Promise<Extract<EngineResolution, { ok: false }> | null> => {
 	try {
 		await accessFn(filePath);
 		return null;
