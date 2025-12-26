@@ -22,7 +22,7 @@ Add a lenient compile command for the VS Code extension to avoid missing-file di
 ## Mini TODO (Tracker)
 
 - [x] A1: Register `hyperprompt.compileLenient` command and activation event
-- [ ] A2: Implement lenient compile handler in extension
+- [x] A2: Implement lenient compile handler in extension
 - [ ] A3: Document the lenient compile command in the extension README
 
 ## Next Step

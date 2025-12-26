@@ -22,27 +22,56 @@ export function activate(context: vscode.ExtensionContext) {
 
 	rpcClient.start();
 
-	const compileCommand = vscode.commands.registerCommand('hyperprompt.compile', async () => {
+	const getActiveEntryFile = (actionLabel: string): string | null => {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) {
-			vscode.window.showWarningMessage('Hyperprompt: open a .hc file to compile.');
-			return;
+			vscode.window.showWarningMessage(`Hyperprompt: open a .hc file to ${actionLabel}.`);
+			return null;
 		}
 		const entryFile = editor.document.uri.fsPath;
 		if (path.extname(entryFile).toLowerCase() !== '.hc') {
-			vscode.window.showWarningMessage('Hyperprompt: open a .hc file to compile.');
-			return;
+			vscode.window.showWarningMessage(`Hyperprompt: open a .hc file to ${actionLabel}.`);
+			return null;
+		}
+		return entryFile;
+	};
+
+	const runCompile = async (mode?: 'strict' | 'lenient') => {
+		const entryFile = getActiveEntryFile('compile');
+		if (!entryFile) {
+			return null;
 		}
 		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? path.dirname(entryFile);
+		const params = { entryFile, workspaceRoot, includeOutput: false, mode };
 
+		const result = await rpcClient.request('editor.compile', params, compileTimeoutMs);
+		return result as { output?: string; diagnostics?: unknown[]; hasErrors?: boolean };
+	};
+
+	const compileCommand = vscode.commands.registerCommand('hyperprompt.compile', async () => {
 		try {
-			const result = await rpcClient.request(
-				'editor.compile',
-				{ entryFile, workspaceRoot, includeOutput: false },
-				compileTimeoutMs
-			);
-			const compileResult = result as { output?: string; diagnostics?: unknown[]; hasErrors?: boolean };
-			if (compileResult?.hasErrors) {
+			const compileResult = await runCompile();
+			if (!compileResult) {
+				return;
+			}
+			if (compileResult.hasErrors) {
+				const count = compileResult.diagnostics?.length ?? 0;
+				vscode.window.showErrorMessage(`Hyperprompt: compile reported ${count} diagnostics.`);
+			} else {
+				vscode.window.showInformationMessage('Hyperprompt: compile complete.');
+			}
+		} catch (error) {
+			vscode.window.showErrorMessage(`Hyperprompt: compile failed (${String(error)})`);
+		}
+	});
+
+	const compileLenientCommand = vscode.commands.registerCommand('hyperprompt.compileLenient', async () => {
+		try {
+			const compileResult = await runCompile('lenient');
+			if (!compileResult) {
+				return;
+			}
+			if (compileResult.hasErrors) {
 				const count = compileResult.diagnostics?.length ?? 0;
 				vscode.window.showErrorMessage(`Hyperprompt: compile reported ${count} diagnostics.`);
 			} else {
@@ -54,14 +83,8 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	const previewCommand = vscode.commands.registerCommand('hyperprompt.showPreview', async () => {
-		const editor = vscode.window.activeTextEditor;
-		if (!editor) {
-			vscode.window.showWarningMessage('Hyperprompt: open a .hc file to show preview.');
-			return;
-		}
-		const entryFile = editor.document.uri.fsPath;
-		if (path.extname(entryFile).toLowerCase() !== '.hc') {
-			vscode.window.showWarningMessage('Hyperprompt: open a .hc file to show preview.');
+		const entryFile = getActiveEntryFile('show preview');
+		if (!entryFile) {
 			return;
 		}
 		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? path.dirname(entryFile);
@@ -78,7 +101,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	context.subscriptions.push(compileCommand, previewCommand, rpcClient);
+	context.subscriptions.push(compileCommand, compileLenientCommand, previewCommand, rpcClient);
 }
 
 // This method is called when your extension is deactivated
