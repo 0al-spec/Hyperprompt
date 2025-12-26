@@ -4,7 +4,7 @@
 **Phase:** Hotfixes & Bug Reports
 **Effort:** 1 hour
 **Dependencies:** None
-**Status:** Selected
+**Status:** ✅ Completed on 2025-12-27
 
 ## Description
 
@@ -13,7 +13,7 @@ Document the lenient compilation bug where `DOCS/examples/with-markdown.hc` outp
 ## Subtasks
 
 - [x] Save a bug report with repro steps and expected vs actual output
-- [ ] Finalize task status and summary documentation
+- [x] Finalize task status and summary documentation
 
 ## Next Step
 
