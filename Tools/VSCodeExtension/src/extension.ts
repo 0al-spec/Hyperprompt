@@ -64,6 +64,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	console.log('Hyperprompt extension activated.');
 	const compileTimeoutMs = 5000;
 	const outputChannel = vscode.window.createOutputChannel('Hyperprompt');
+	const diagnosticCollection = vscode.languages.createDiagnosticCollection('hyperprompt');
 	let settings = readSettings();
 	let rpcClient: RpcClient | null = null;
 	let engineResolution: EngineResolution | null = null;
@@ -254,6 +255,44 @@ export async function activate(context: vscode.ExtensionContext) {
 		return workspaceFolder?.uri.fsPath ?? path.dirname(document.uri.fsPath);
 	};
 
+	const updateDiagnosticsForDocument = async (document: vscode.TextDocument) => {
+		if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
+			return;
+		}
+		if (!settings.diagnosticsEnabled) {
+			diagnosticCollection.delete(document.uri);
+			return;
+		}
+		const client = await ensureEngineReady();
+		if (!client) {
+			return;
+		}
+		const params = buildCompileParams(
+			document.uri.fsPath,
+			resolveWorkspaceRoot(document),
+			settings.resolutionMode,
+			false
+		);
+		const compileResult = await runCompileRequest(
+			client.request.bind(client),
+			params,
+			compileTimeoutMs
+		);
+		const diagnostics = (compileResult.diagnostics ?? []) as Array<{ message?: string; code?: string }>;
+		const vscodeDiagnostics = diagnostics.map((diagnostic) => {
+			const range = new vscode.Range(0, 0, 0, 0);
+			const entry = new vscode.Diagnostic(
+				range,
+				diagnostic.message ?? 'Unknown diagnostic',
+				vscode.DiagnosticSeverity.Error
+			);
+			entry.code = diagnostic.code;
+			entry.source = 'Hyperprompt';
+			return entry;
+		});
+		diagnosticCollection.set(document.uri, vscodeDiagnostics);
+	};
+
 	const definitionProvider = vscode.languages.registerDefinitionProvider('hypercode', {
 		provideDefinition: async (document, position) => {
 			if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
@@ -351,10 +390,20 @@ export async function activate(context: vscode.ExtensionContext) {
 		const engineChanged =
 			nextSettings.enginePath !== settings.enginePath ||
 			nextSettings.engineLogLevel !== settings.engineLogLevel;
+		const diagnosticsDisabled = settings.diagnosticsEnabled && !nextSettings.diagnosticsEnabled;
 		settings = nextSettings;
 		if (engineChanged) {
 			void refreshEngineState(true);
 		}
+		if (diagnosticsDisabled) {
+			diagnosticCollection.clear();
+		}
+	});
+
+	const diagnosticsWatcher = vscode.workspace.onDidSaveTextDocument((document) => {
+		void updateDiagnosticsForDocument(document).catch((error) => {
+			console.error(`[hyperprompt] diagnostics failed: ${String(error)}`);
+		});
 	});
 
 	context.subscriptions.push(
@@ -364,6 +413,8 @@ export async function activate(context: vscode.ExtensionContext) {
 		definitionProvider,
 		hoverProvider,
 		configWatcher,
+		diagnosticsWatcher,
+		diagnosticCollection,
 		outputChannel,
 		{ dispose: () => stopRpcClient() }
 	);
