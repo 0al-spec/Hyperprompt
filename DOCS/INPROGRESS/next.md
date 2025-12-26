@@ -1,20 +1,20 @@
-# Next Task: VSC-DOCS — TypeScript Project Documentation
+# Next Task: VSC-8 — Extension Settings
 
 **Priority:** P1
 **Phase:** Phase 14 — VS Code Extension Development
 **Effort:** 2 hours
-**Dependencies:** VSC-3
-**Status:** ✅ Completed on 2025-12-27
+**Dependencies:** VSC-4*
+**Status:** Selected
 
 ## Description
 
-Document the VS Code extension TypeScript project structure, workflows, and APIs to keep docs consistent with implementation.
+Add and document extension settings, and ensure changes apply correctly.
 
 ## Subtasks
 
-- [x] Define docs structure and workflow coverage for TS extension
-- [x] Document configuration, commands, and RPC API notes
-- [x] Update tracking, summary, and validation notes
+- [ ] Verify settings schema and handlers in package.json and extension code
+- [ ] Ensure README documents settings and behavior
+- [ ] Update tracking, summary, and validation notes
 
 ## Next Step
 
