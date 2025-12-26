@@ -12,7 +12,7 @@ Implement go-to-definition and hover navigation features in the VS Code extensio
 
 ## Subtasks
 
-- [ ] Implement DefinitionProvider using linkAt + resolver
+- [x] Implement DefinitionProvider using linkAt + resolver
 - [ ] Implement HoverProvider with resolved path/status
 - [ ] Add integration tests for navigation features
 

@@ -4,6 +4,13 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { buildCompileParams, runCompileRequest, ResolutionMode } from './compileCommand';
 import { resolveEngine, engineDiscoveryDefaults, EngineResolution } from './engineDiscovery';
+import {
+	buildLinkAtParams,
+	buildResolveParams,
+	resolvedTargetPath,
+	runLinkAtRequest,
+	runResolveRequest
+} from './navigation';
 import { RpcClient } from './rpcClient';
 type LogLevel = 'error' | 'warn' | 'info' | 'debug';
 
@@ -241,6 +248,56 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	const resolveWorkspaceRoot = (document: vscode.TextDocument): string => {
+		const workspaceFolder = vscode.workspace.getWorkspaceFolder(document.uri);
+		return workspaceFolder?.uri.fsPath ?? path.dirname(document.uri.fsPath);
+	};
+
+	const definitionProvider = vscode.languages.registerDefinitionProvider('hypercode', {
+		provideDefinition: async (document, position) => {
+			if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
+				return null;
+			}
+			try {
+				const client = await ensureEngineReady();
+				if (!client) {
+					return null;
+				}
+				const linkParams = buildLinkAtParams(
+					document.uri.fsPath,
+					position.line,
+					position.character
+				);
+				const linkSpan = await runLinkAtRequest(
+					client.request.bind(client),
+					linkParams,
+					compileTimeoutMs
+				);
+				if (!linkSpan) {
+					return null;
+				}
+				const resolveParams = buildResolveParams(
+					linkSpan.literal,
+					linkSpan.sourceFile,
+					resolveWorkspaceRoot(document)
+				);
+				const target = await runResolveRequest(
+					client.request.bind(client),
+					resolveParams,
+					compileTimeoutMs
+				);
+				const targetPath = resolvedTargetPath(target);
+				if (!targetPath) {
+					return null;
+				}
+				return new vscode.Location(vscode.Uri.file(targetPath), new vscode.Position(0, 0));
+			} catch (error) {
+				console.error(`[hyperprompt] definition failed: ${String(error)}`);
+				return null;
+			}
+		}
+	});
+
 	const configWatcher = vscode.workspace.onDidChangeConfiguration((event) => {
 		if (!event.affectsConfiguration('hyperprompt')) {
 			return;
@@ -259,6 +316,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		compileCommand,
 		compileLenientCommand,
 		previewCommand,
+		definitionProvider,
 		configWatcher,
 		outputChannel,
 		{ dispose: () => stopRpcClient() }
