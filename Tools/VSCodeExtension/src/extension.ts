@@ -2,10 +2,9 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { buildCompileParams, runCompileRequest, ResolutionMode } from './compileCommand';
 import { resolveEngine, engineDiscoveryDefaults, EngineResolution } from './engineDiscovery';
 import { RpcClient } from './rpcClient';
-
-type ResolutionMode = 'strict' | 'lenient';
 type LogLevel = 'error' | 'warn' | 'info' | 'debug';
 
 type HyperpromptSettings = {
@@ -56,6 +55,7 @@ const readSettings = (): HyperpromptSettings => {
 export async function activate(context: vscode.ExtensionContext) {
 	console.log('Hyperprompt extension activated.');
 	const compileTimeoutMs = 5000;
+	const outputChannel = vscode.window.createOutputChannel('Hyperprompt');
 	let settings = readSettings();
 	let rpcClient: RpcClient | null = null;
 	let engineResolution: EngineResolution | null = null;
@@ -169,7 +169,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		return entryFile;
 	};
 
-	const runCompile = async (mode?: ResolutionMode) => {
+	const runCompile = async (mode: ResolutionMode, includeOutput: boolean) => {
 		const entryFile = getActiveEntryFile('compile');
 		if (!entryFile) {
 			return null;
@@ -178,17 +178,14 @@ export async function activate(context: vscode.ExtensionContext) {
 		if (!client) {
 			return null;
 		}
-		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? path.dirname(entryFile);
-		const resolvedMode = mode ?? settings.resolutionMode;
-		const params = { entryFile, workspaceRoot, includeOutput: false, mode: resolvedMode };
-
-		const result = await client.request('editor.compile', params, compileTimeoutMs);
-		return result as { output?: string; diagnostics?: unknown[]; hasErrors?: boolean };
+		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+		const params = buildCompileParams(entryFile, workspaceRoot, mode, includeOutput);
+		return runCompileRequest(client.request.bind(client), params, compileTimeoutMs);
 	};
 
 	const compileCommand = vscode.commands.registerCommand('hyperprompt.compile', async () => {
 		try {
-			const compileResult = await runCompile();
+			const compileResult = await runCompile(settings.resolutionMode, true);
 			if (!compileResult) {
 				return;
 			}
@@ -205,7 +202,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const compileLenientCommand = vscode.commands.registerCommand('hyperprompt.compileLenient', async () => {
 		try {
-			const compileResult = await runCompile('lenient');
+			const compileResult = await runCompile('lenient', true);
 			if (!compileResult) {
 				return;
 			}
@@ -222,7 +219,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const previewCommand = vscode.commands.registerCommand('hyperprompt.showPreview', async () => {
 		try {
-			const compileResult = await runCompile(settings.resolutionMode);
+			const compileResult = await runCompile(settings.resolutionMode, false);
 			if (!compileResult) {
 				return;
 			}
@@ -251,6 +248,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		compileLenientCommand,
 		previewCommand,
 		configWatcher,
+		outputChannel,
 		{ dispose: () => stopRpcClient() }
 	);
 }
