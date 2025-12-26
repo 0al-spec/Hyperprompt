@@ -14,7 +14,7 @@ Add compile-on-demand output for the VS Code extension by calling editor.compile
 
 - [x] SELECT
 - [x] PLAN
-- [ ] INSTALL_SWIFT
+- [x] INSTALL_SWIFT
 - [ ] EXECUTE
 - [ ] PROGRESS (optional)
 - [ ] ARCHIVE
