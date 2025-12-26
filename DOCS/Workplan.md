@@ -297,7 +297,7 @@ Completed phases include:
 ### EE-EXT-6: Documentation & Semantic Clarifications **[P1]**
 **Dependencies:** EE-EXT-1, EE-EXT-2, EE-EXT-3, EE-EXT-4, EE-EXT-5
 **Estimated:** 2 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 INPROGRESS
 
 - [ ] **[P1, depends: EE-EXT-1..5]** Update DOCS/EDITOR_ENGINE.md with new APIs
 - [ ] **[P1, depends: EE8]** Document `LinkSpan.referenceHint` semantics (when to trust it)

@@ -1,20 +1,20 @@
-# Next Task: PRD-VAL-2 — Validation Report Update
+# Next Task: VSC-DOCS — TypeScript Project Documentation
 
 **Priority:** P1
-**Phase:** Phase 15 — PRD Validation & Gap Closure
+**Phase:** Phase 14 — VS Code Extension Development
 **Effort:** 2 hours
-**Dependencies:** PRD-VAL-1
-**Status:** ✅ Completed on 2025-12-27
+**Dependencies:** VSC-3
+**Status:** Selected
 
 ## Description
 
-Update the PRD validation report to reflect completed work, benchmarks, and resolved blockers.
+Document the VS Code extension TypeScript project structure, workflows, and APIs to keep docs consistent with implementation.
 
 ## Subtasks
 
-- [x] Update PRD validation report and architecture notes
-- [x] Mark blockers/critical/major issues resolved with evidence
-- [x] Add resolution summary and updated quality assessment
+- [ ] Define docs structure and workflow coverage for TS extension
+- [ ] Document configuration, commands, and RPC API notes
+- [ ] Update tracking, summary, and validation notes
 
 ## Next Step
 
