@@ -208,7 +208,7 @@ Completed phases include:
 ### EE-EXT-3: Source Map Generation **[P2]**
 **Dependencies:** EE8
 **Estimated:** 5 hours
-**Status:** 🟢 **IN PROGRESS**
+**Status:** ✅ **COMPLETED** on 2025-12-26
 
 - [ ] **[P2, depends: EE8]** Define `SourceMap` struct (output line → source location mapping)
 - [ ] **[P2, depends: EE8]** Extend `Emitter` to track source ranges during compilation
