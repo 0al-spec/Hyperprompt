@@ -12,7 +12,7 @@ Document the lenient compilation bug where `DOCS/examples/with-markdown.hc` outp
 
 ## Subtasks
 
-- [ ] Save a bug report with repro steps and expected vs actual output
+- [x] Save a bug report with repro steps and expected vs actual output
 - [ ] Finalize task status and summary documentation
 
 ## Next Step
