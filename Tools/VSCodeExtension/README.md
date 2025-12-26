@@ -58,6 +58,8 @@ Preview output renders raw Markdown text in a styled panel (Markdown-to-HTML ren
 - Default request timeout is 5s; adjust only if builds are slow.
 - Unsupported platforms (Windows) are blocked with a user-facing error message.
 - RPC methods used: `editor.compile`, `editor.linkAt`, `editor.indexProject`.
+- Engine probes call `hyperprompt --help` to ensure `editor-rpc` is available.
+- Common errors: missing Editor trait build, non-executable engine path, or missing binary on PATH.
 
 ## Development Testing
 
