@@ -40,6 +40,8 @@ In the Extension Development Host:
 - `Hyperprompt: Compile (Lenient)` — lenient mode (missing references treated as inline text).
 - `Hyperprompt: Show Preview` — placeholder until preview wiring is complete.
 
+Compile output appears in the "Hyperprompt" output channel.
+
 If `code` is not found, install it from VS Code: Command Palette → "Shell Command: Install 'code' command in PATH".
 
 ### RPC Client Notes

@@ -24,7 +24,7 @@ Add compile-on-demand output for the VS Code extension by calling editor.compile
 - [x] A1: Enable compile output payload and add output channel
 - [x] A2: Implement compile output rendering in UI
 - [x] A3: Add compile command tests
-- [ ] A4: Update README with output behavior
+- [x] A4: Update README with output behavior
 
 ## Next Step
 
