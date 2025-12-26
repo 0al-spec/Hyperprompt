@@ -650,7 +650,7 @@ Completed phases include:
 ### VSC-11: Extension Testing & QA **[P0]**
 **Dependencies:** VSC-5, VSC-6, VSC-7
 **Estimated:** 4 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 INPROGRESS
 
 - [ ] **[P0, depends: VSC-5, VSC-6, VSC-7]** Write extension integration tests (VS Code Test API)
 - [ ] **[P0, depends: VSC-5, VSC-6, VSC-7]** Test all features with corpus files (V01-V14, I01-I10)

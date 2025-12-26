@@ -1,20 +1,20 @@
-# Next Task: VSC-7 — Live Preview Panel
+# Next Task: VSC-11 — Extension Testing & QA
 
 **Priority:** P0
 **Phase:** Phase 14 — VS Code Extension Development
-**Effort:** 6 hours
-**Dependencies:** VSC-4*, PERF-4
-**Status:** ✅ Completed on 2025-12-27
+**Effort:** 4 hours
+**Dependencies:** VSC-5, VSC-6, VSC-7
+**Status:** Selected
 
 ## Description
 
-Implement the markdown preview webview panel with compile-on-save updates and incremental performance considerations.
+Add VS Code extension integration tests, cover core features, and set up CI execution for the extension test suite.
 
 ## Subtasks
 
-- [x] Implement preview webview and showPreview command
-- [x] Compile on save and update preview content
-- [x] Add preview tests and refresh behavior
+- [ ] Add extension integration tests for core commands and providers
+- [ ] Cover error handling and multi-root scenarios
+- [ ] Add CI job for extension tests
 
 ## Next Step
 
