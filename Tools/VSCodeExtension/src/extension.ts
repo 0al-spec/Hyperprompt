@@ -78,6 +78,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let rpcClient = buildRpcClient(settings);
 
+	const restartRpcClient = (nextSettings: HyperpromptSettings) => {
+		rpcClient.stop();
+		rpcClient = buildRpcClient(nextSettings);
+		rpcClient.start();
+	};
+
 	rpcClient.start();
 
 	const getActiveEntryFile = (actionLabel: string): string | null => {
@@ -153,7 +159,21 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	context.subscriptions.push(compileCommand, compileLenientCommand, previewCommand, rpcClient);
+	const configWatcher = vscode.workspace.onDidChangeConfiguration((event) => {
+		if (!event.affectsConfiguration('hyperprompt')) {
+			return;
+		}
+		const nextSettings = readSettings();
+		const engineChanged =
+			nextSettings.enginePath !== settings.enginePath ||
+			nextSettings.engineLogLevel !== settings.engineLogLevel;
+		settings = nextSettings;
+		if (engineChanged) {
+			restartRpcClient(nextSettings);
+		}
+	});
+
+	context.subscriptions.push(compileCommand, compileLenientCommand, previewCommand, configWatcher, rpcClient);
 }
 
 // This method is called when your extension is deactivated

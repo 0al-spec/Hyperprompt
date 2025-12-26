@@ -67,14 +67,13 @@ Use the helper script to validate the RPC CLI outside VS Code:
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+- `hyperprompt.resolutionMode` (`strict` | `lenient`, default: `strict`): Default resolution mode for compile/preview.
+- `hyperprompt.previewAutoUpdate` (default: `true`): Recompile on save when preview is wired.
+- `hyperprompt.diagnosticsEnabled` (default: `true`): Enable diagnostics when Problems integration is wired.
+- `hyperprompt.enginePath` (default: empty): Absolute path to the `hyperprompt` binary (overrides PATH).
+- `hyperprompt.engineLogLevel` (`error` | `warn` | `info` | `debug`, default: `info`): Log level passed to the engine process.
 
 ## Known Issues
 
