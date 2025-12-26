@@ -30,7 +30,7 @@ Parallelizable tasks to start while EditorEngine work continues:
 ### BUG-CE1-001: Lenient Compile Includes Markdown Filename Heading **[P0]**
 **Dependencies:** None
 **Estimated:** 1 hour
-**Status:** ✅ Completed on 2025-12-27
+**Status:** 🟢 INPROGRESS
 
 - [x] **[P0]** Save a bug report documenting lenient compile output for `DOCS/examples/with-markdown.hc`
 - [x] **[P1]** Capture expected vs actual output and repro steps
@@ -669,11 +669,11 @@ Completed phases include:
 ### VSC-12: Extension Documentation & Release **[P0]**
 **Dependencies:** VSC-11
 **Estimated:** 3 hours
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-27
 
-- [ ] **[P0, depends: VSC-11]** Write extension README (features, installation, usage)
+- [x] **[P0, depends: VSC-11]** Write extension README (features, installation, usage)
 - [ ] **[P0, depends: VSC-11]** Add screenshots/GIFs demonstrating features
-- [ ] **[P0, depends: VSC-11]** Document system requirements (macOS/Linux only)
+- [x] **[P0, depends: VSC-11]** Document system requirements (macOS/Linux only)
 - [ ] **[P0, depends: VSC-11]** Write CHANGELOG
 - [ ] **[P1, depends: VSC-11]** Package extension (.vsix)
 - [ ] **[P1, depends: VSC-11]** Test installation from VSIX

@@ -4,7 +4,7 @@
 **Phase:** Phase 14 — VS Code Extension Development
 **Effort:** 3 hours
 **Dependencies:** VSC-11
-**Status:** Selected
+**Status:** In Progress
 
 ## Description
 
@@ -12,9 +12,9 @@ Complete extension README, release notes, packaging steps, and system requiremen
 
 ## Subtasks
 
-- [x] Update extension README with features and usage
-- [x] Add release notes and packaging instructions
-- [x] Document system requirements and installation steps
+- [x] Add feature screenshot placeholder and reference it in README
+- [ ] Add extension CHANGELOG
+- [ ] Add release checklist to README
 
 ## Next Step
 
