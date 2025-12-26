@@ -524,6 +524,21 @@ Completed phases include:
 
 ---
 
+### VSC-7B: Compile Lenient Command **[P1]**
+**Dependencies:** VSC-2B, VSC-4*
+**Estimated:** 1 hour
+**Status:** ✅ **COMPLETED** on 2025-12-26
+
+- [x] **[P1, depends: VSC-2B, VSC-4*]** Register `hyperprompt.compileLenient` command
+- [x] **[P1, depends: VSC-2B, VSC-4*]** Call `editor.compile` with `mode: "lenient"` from the active editor
+- [x] **[P1, depends: VSC-2B, VSC-4*]** Document lenient compile behavior in the extension README
+
+**Acceptance Criteria:** Lenient compile command runs without missing-file diagnostics; docs updated
+
+**Resolution Status:** ✅ Addresses resolution mode ambiguity (Issue 3.1)
+
+---
+
 ### VSC-7: Live Preview Panel **[P0]**
 **Dependencies:** VSC-4*, PERF-4
 **Estimated:** 6 hours
@@ -744,7 +759,7 @@ Completed phases include:
 | **Phase 14** | VS Code Extension Development | 41h | ⏸️ Pending | ✅ PRD Implementation |
 | **Phase 15** | PRD Validation & Gap Closure | 4h | ⏸️ Pending | ✅ Final Validation |
 
-**Next Task:** VSC-3 (Extension Scaffold) — 3 hours
+**Next Task:** VSC-7B (Compile Lenient Command) — 1 hour
 
 ---
 

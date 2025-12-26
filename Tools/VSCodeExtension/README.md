@@ -30,7 +30,13 @@ code --extensionDevelopmentPath="$PWD"
 
 In the Extension Development Host:
 - Open any `.hc` file to trigger activation.
-- Use Command Palette and run `Hyperprompt: Compile` or `Hyperprompt: Show Preview`.
+- Use Command Palette and run `Hyperprompt: Compile`, `Hyperprompt: Compile (Lenient)`, or `Hyperprompt: Show Preview`.
+
+### Commands
+
+- `Hyperprompt: Compile` — strict mode (missing references report diagnostics).
+- `Hyperprompt: Compile (Lenient)` — lenient mode (missing references treated as inline text).
+- `Hyperprompt: Show Preview` — placeholder until preview wiring is complete.
 
 If `code` is not found, install it from VS Code: Command Palette → "Shell Command: Install 'code' command in PATH".
 

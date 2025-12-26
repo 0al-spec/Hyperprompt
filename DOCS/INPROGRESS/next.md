@@ -4,7 +4,7 @@
 **Phase:** Phase 14: VS Code Extension Development
 **Effort:** 1 hour
 **Dependencies:** VSC-2B, VSC-4*
-**Status:** In Progress
+**Status:** ✅ Completed on 2025-12-26
 
 ## Description
 
@@ -15,16 +15,16 @@ Add a lenient compile command for the VS Code extension to avoid missing-file di
 - [x] SELECT
 - [x] PLAN
 - [x] INSTALL_SWIFT
-- [ ] EXECUTE
-- [ ] PROGRESS (optional)
+- [x] EXECUTE
+- [x] PROGRESS (optional)
 - [ ] ARCHIVE
 
 ## Mini TODO (Tracker)
 
 - [x] A1: Register `hyperprompt.compileLenient` command and activation event
 - [x] A2: Implement lenient compile handler in extension
-- [ ] A3: Document the lenient compile command in the extension README
+- [x] A3: Document the lenient compile command in the extension README
 
 ## Next Step
 
-Proceed to EXECUTE.
+Run ARCHIVE if you want to clear completed tasks.
