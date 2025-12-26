@@ -89,6 +89,8 @@ code --install-extension hyperprompt-*.vsix
 
 ## Release Notes
 
+See `CHANGELOG.md` for the full history.
+
 ### 0.0.1
 
 - Initial preview release: compile commands, navigation, diagnostics, and preview panel.

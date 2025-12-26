@@ -674,7 +674,7 @@ Completed phases include:
 - [x] **[P0, depends: VSC-11]** Write extension README (features, installation, usage)
 - [ ] **[P0, depends: VSC-11]** Add screenshots/GIFs demonstrating features
 - [x] **[P0, depends: VSC-11]** Document system requirements (macOS/Linux only)
-- [ ] **[P0, depends: VSC-11]** Write CHANGELOG
+- [x] **[P0, depends: VSC-11]** Write CHANGELOG
 - [ ] **[P1, depends: VSC-11]** Package extension (.vsix)
 - [ ] **[P1, depends: VSC-11]** Test installation from VSIX
 - [ ] **[P2, depends: VSC-11]** Publish to VS Code Marketplace (manual step)

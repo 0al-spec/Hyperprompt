@@ -13,7 +13,7 @@ Complete extension README, release notes, packaging steps, and system requiremen
 ## Subtasks
 
 - [x] Add feature screenshot placeholder and reference it in README
-- [ ] Add extension CHANGELOG
+- [x] Add extension CHANGELOG
 - [ ] Add release checklist to README
 
 ## Next Step
