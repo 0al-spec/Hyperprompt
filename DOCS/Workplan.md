@@ -572,17 +572,17 @@ Completed phases include:
 ### VSC-7: Live Preview Panel **[P0]**
 **Dependencies:** VSC-4*, PERF-4
 **Estimated:** 6 hours
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-27
 
-- [ ] **[P0, depends: VSC-4*, PERF-4]** Create Webview panel for Markdown preview
-- [ ] **[P0, depends: VSC-4*, PERF-4]** Register `hyperprompt.showPreview` command
-- [ ] **[P0, depends: VSC-4*, PERF-4]** Call `EditorCompiler.compile()` on file save
-- [ ] **[P0, depends: VSC-4*, PERF-4]** Render Markdown output in Webview
-- [ ] **[P1, depends: VSC-4*, PERF-4]** Use incremental compilation for <200ms update
-- [ ] **[P1, depends: VSC-4*, PERF-4]** Sync scroll position (preview follows editor)
-- [ ] **[P1, depends: VSC-4*, PERF-4]** Add preview refresh command (manual override)
-- [ ] **[P2, depends: VSC-4*, PERF-4]** Style Markdown with VS Code theme CSS
-- [ ] **[P1, depends: VSC-4*, PERF-4]** Write extension tests
+- [x] **[P0, depends: VSC-4*, PERF-4]** Create Webview panel for Markdown preview
+- [x] **[P0, depends: VSC-4*, PERF-4]** Register `hyperprompt.showPreview` command
+- [x] **[P0, depends: VSC-4*, PERF-4]** Call `EditorCompiler.compile()` on file save
+- [x] **[P0, depends: VSC-4*, PERF-4]** Render Markdown output in Webview
+- [x] **[P1, depends: VSC-4*, PERF-4]** Use incremental compilation for <200ms update
+- [x] **[P1, depends: VSC-4*, PERF-4]** Sync scroll position (preview follows editor)
+- [x] **[P1, depends: VSC-4*, PERF-4]** Add preview refresh command (manual override)
+- [x] **[P2, depends: VSC-4*, PERF-4]** Style Markdown with VS Code theme CSS
+- [x] **[P1, depends: VSC-4*, PERF-4]** Write extension tests
 
 **Acceptance Criteria:** Preview updates on save, <200ms latency, Markdown rendered correctly
 
