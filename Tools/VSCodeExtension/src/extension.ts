@@ -13,6 +13,7 @@ import {
 	runLinkAtRequest,
 	runResolveRequest
 } from './navigation';
+import { buildPreviewHtml } from './preview';
 import { RpcClient } from './rpcClient';
 type LogLevel = 'error' | 'warn' | 'info' | 'debug';
 
@@ -71,6 +72,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	let engineResolution: EngineResolution | null = null;
 	let lastEngineErrorMessage: string | null = null;
 	let refreshInFlight: Promise<void> | null = null;
+	let previewPanel: vscode.WebviewPanel | null = null;
+	let previewEntryFile: string | null = null;
 
 	const stopRpcClient = () => {
 		if (!rpcClient) {
@@ -239,13 +242,40 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	const ensurePreviewPanel = () => {
+		if (previewPanel) {
+			return previewPanel;
+		}
+		const panel = vscode.window.createWebviewPanel(
+			'hyperpromptPreview',
+			'Hyperprompt Preview',
+			vscode.ViewColumn.Beside,
+			{ enableScripts: false, retainContextWhenHidden: true }
+		);
+		panel.onDidDispose(() => {
+			if (previewPanel === panel) {
+				previewPanel = null;
+				previewEntryFile = null;
+			}
+		});
+		previewPanel = panel;
+		return panel;
+	};
+
 	const previewCommand = vscode.commands.registerCommand('hyperprompt.showPreview', async () => {
 		try {
-			const compileResult = await runCompile(settings.resolutionMode, false);
+			const entryFile = getActiveEntryFile('preview');
+			if (!entryFile) {
+				return;
+			}
+			const compileResult = await runCompile(settings.resolutionMode, true);
 			if (!compileResult) {
 				return;
 			}
-			vscode.window.showInformationMessage('Hyperprompt: preview is not wired yet.');
+			const panel = ensurePreviewPanel();
+			previewEntryFile = entryFile;
+			panel.webview.html = buildPreviewHtml(compileResult.output ?? '');
+			panel.reveal();
 		} catch (error) {
 			vscode.window.showErrorMessage(`Hyperprompt: preview failed (${String(error)})`);
 		}

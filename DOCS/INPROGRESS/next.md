@@ -12,7 +12,7 @@ Implement the markdown preview webview panel with compile-on-save updates and in
 
 ## Subtasks
 
-- [ ] Implement preview webview and showPreview command
+- [x] Implement preview webview and showPreview command
 - [ ] Compile on save and update preview content
 - [ ] Add preview tests and refresh behavior
 
