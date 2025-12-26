@@ -14,7 +14,7 @@ Add extension settings (resolution mode, preview auto-update, diagnostics, engin
 
 - [x] SELECT
 - [x] PLAN
-- [ ] INSTALL_SWIFT
+- [x] INSTALL_SWIFT
 - [ ] EXECUTE
 - [ ] PROGRESS (optional)
 - [ ] ARCHIVE
