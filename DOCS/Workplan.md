@@ -23,6 +23,21 @@ Parallelizable tasks to start while EditorEngine work continues:
 - VSC-4C (platform guard + engine discovery)
 - VSC-8 (extension settings + configuration schema)
 
+---
+
+## Hotfixes & Bug Reports
+
+### BUG-CE1-001: Lenient Compile Includes Markdown Filename Heading **[P0]**
+**Dependencies:** None
+**Estimated:** 1 hour
+**Status:** 🟢 INPROGRESS
+
+- [ ] **[P0]** Save a bug report documenting lenient compile output for `DOCS/examples/with-markdown.hc`
+- [ ] **[P1]** Capture expected vs actual output and repro steps
+- [ ] **[P1]** Add task summary in `DOCS/INPROGRESS/`
+
+**Acceptance Criteria:** Bug report saved with repro steps, expected/actual output, and a clear impact statement
+
 **Total Estimated Effort (Phases 11-15):** ~92 hours total, ~80 hours remaining (VSC-1 + VSC-2B complete: 12h)
 
 ### 📁 Completed Work Archive
