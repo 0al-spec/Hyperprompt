@@ -82,6 +82,14 @@ vsce package
 code --install-extension hyperprompt-*.vsix
 ```
 
+## Release Checklist
+
+- Update `CHANGELOG.md` and `README.md` with release notes.
+- Run `npm run compile` and `npm test` (expect download time for VS Code).
+- Package the extension with `vsce package`.
+- Install the VSIX and smoke-test compile, preview, and diagnostics.
+- Tag the release once the extension behaves as expected.
+
 ## Known Issues
 
 - Preview panel renders raw Markdown (not HTML-rendered).

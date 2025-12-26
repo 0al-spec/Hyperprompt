@@ -14,7 +14,7 @@ Complete extension README, release notes, packaging steps, and system requiremen
 
 - [x] Add feature screenshot placeholder and reference it in README
 - [x] Add extension CHANGELOG
-- [ ] Add release checklist to README
+- [x] Add release checklist to README
 
 ## Next Step
 

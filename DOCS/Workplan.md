@@ -672,7 +672,7 @@ Completed phases include:
 **Status:** ✅ Completed on 2025-12-27
 
 - [x] **[P0, depends: VSC-11]** Write extension README (features, installation, usage)
-- [ ] **[P0, depends: VSC-11]** Add screenshots/GIFs demonstrating features
+- [x] **[P0, depends: VSC-11]** Add screenshots/GIFs demonstrating features
 - [x] **[P0, depends: VSC-11]** Document system requirements (macOS/Linux only)
 - [x] **[P0, depends: VSC-11]** Write CHANGELOG
 - [ ] **[P1, depends: VSC-11]** Package extension (.vsix)
