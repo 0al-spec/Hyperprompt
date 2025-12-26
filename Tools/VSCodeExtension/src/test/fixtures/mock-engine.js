@@ -64,6 +64,26 @@ const handleLine = (line) => {
 	switch (request.method) {
 		case 'editor.compile': {
 			const entryFile = request.params?.entryFile ?? '';
+			if (String(entryFile).includes('large.hc')) {
+				const diagnostics = Array.from({ length: 50 }, (_, index) => ({
+					code: 'W001',
+					severity: 'warning',
+					message: `Synthetic warning ${index + 1}`,
+					range: {
+						start: { line: 1, column: 1 },
+						end: { line: 1, column: 2 }
+					}
+				}));
+				return writeResponse({
+					jsonrpc: '2.0',
+					id: request.id,
+					result: {
+						output: `${'# Large Output\\n'.repeat(200)}`,
+						diagnostics,
+						hasErrors: false
+					}
+				});
+			}
 			if (String(entryFile).includes('broken.hc')) {
 				return writeResponse({
 					jsonrpc: '2.0',

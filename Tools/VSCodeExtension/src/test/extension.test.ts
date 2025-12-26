@@ -90,6 +90,29 @@ suite('Extension Integration', () => {
 		await vscode.commands.executeCommand('hyperprompt.compile');
 	});
 
+	test('Compile command runs across corpus fixtures', async () => {
+		const repoRoot = path.resolve(__dirname, '..', '..', '..', '..');
+		const validDir = path.join(repoRoot, 'Tests', 'IntegrationTests', 'Fixtures', 'Valid');
+		const invalidDir = path.join(repoRoot, 'Tests', 'IntegrationTests', 'Fixtures', 'Invalid');
+		const validFiles = Array.from({ length: 14 }, (_, index) => {
+			const id = String(index + 1).padStart(2, '0');
+			return path.join(validDir, `V${id}.hc`);
+		});
+		const invalidFiles = Array.from({ length: 10 }, (_, index) => {
+			const id = String(index + 1).padStart(2, '0');
+			return path.join(invalidDir, `I${id}.hc`);
+		});
+		const corpus = [...validFiles, ...invalidFiles].filter((filePath) => fs.existsSync(filePath));
+		assert.ok(corpus.length > 0);
+
+		for (const filePath of corpus) {
+			const uri = vscode.Uri.file(filePath);
+			const doc = await vscode.workspace.openTextDocument(uri);
+			await vscode.window.showTextDocument(doc);
+			await vscode.commands.executeCommand('hyperprompt.compile');
+		}
+	});
+
 	test('Hover provider returns link metadata', async () => {
 		const uri = vscode.Uri.file(path.join(fixtureRoot, 'main.hc'));
 		const doc = await vscode.workspace.openTextDocument(uri);
@@ -130,6 +153,14 @@ suite('Extension Integration', () => {
 
 		const diagnostics = vscode.languages.getDiagnostics(uri);
 		assert.ok(diagnostics.length > 0);
+	});
+
+	test('Compile command handles large output and diagnostics', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRoot, 'large.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		await vscode.commands.executeCommand('hyperprompt.compile');
 	});
 
 	test('Preview command opens webview', async () => {
