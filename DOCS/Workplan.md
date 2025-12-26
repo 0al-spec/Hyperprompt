@@ -297,7 +297,7 @@ Completed phases include:
 ### EE-EXT-6: Documentation & Semantic Clarifications **[P1]**
 **Dependencies:** EE-EXT-1, EE-EXT-2, EE-EXT-3, EE-EXT-4, EE-EXT-5
 **Estimated:** 2 hours
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-27
 
 - [ ] **[P1, depends: EE-EXT-1..5]** Update DOCS/EDITOR_ENGINE.md with new APIs
 - [ ] **[P1, depends: EE8]** Document `LinkSpan.referenceHint` semantics (when to trust it)
@@ -597,14 +597,14 @@ Completed phases include:
 **Estimated:** 2 hours
 **Status:** ⏸️ Pending
 
-- [ ] **[P1, depends: VSC-4*]** Add configuration schema to package.json
-- [ ] **[P1, depends: VSC-4*]** Add `hyperprompt.resolutionMode` setting (strict/lenient)
-- [ ] **[P1, depends: VSC-4*]** Add `hyperprompt.previewAutoUpdate` setting (boolean)
-- [ ] **[P1, depends: VSC-4*]** Add `hyperprompt.diagnosticsEnabled` setting (boolean)
-- [ ] **[P2, depends: VSC-4*]** Add `hyperprompt.enginePath` setting (EditorEngine CLI path)
-- [ ] **[P2, depends: VSC-4*]** Add `hyperprompt.engineLogLevel` setting (error/warn/info/debug)
-- [ ] **[P1, depends: VSC-4*]** Implement settings change handler (restart server if needed)
-- [ ] **[P1, depends: VSC-4*]** Document settings in README
+- [x] **[P1, depends: VSC-4*]** Add configuration schema to package.json
+- [x] **[P1, depends: VSC-4*]** Add `hyperprompt.resolutionMode` setting (strict/lenient)
+- [x] **[P1, depends: VSC-4*]** Add `hyperprompt.previewAutoUpdate` setting (boolean)
+- [x] **[P1, depends: VSC-4*]** Add `hyperprompt.diagnosticsEnabled` setting (boolean)
+- [x] **[P2, depends: VSC-4*]** Add `hyperprompt.enginePath` setting (EditorEngine CLI path)
+- [x] **[P2, depends: VSC-4*]** Add `hyperprompt.engineLogLevel` setting (error/warn/info/debug)
+- [x] **[P1, depends: VSC-4*]** Implement settings change handler (restart server if needed)
+- [x] **[P1, depends: VSC-4*]** Document settings in README
 
 **Acceptance Criteria:** Settings work, changes apply correctly, documented
 
