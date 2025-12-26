@@ -14,7 +14,7 @@ Implement Problems panel diagnostics via EditorEngine workspace validation, mapp
 
 - [x] Implement DiagnosticCollection + RPC wiring for workspace validation
 - [x] Map diagnostics to VS Code ranges and severities, handle updates/clears
-- [ ] Add diagnostics tests for common scenarios
+- [x] Add diagnostics tests for common scenarios
 
 ## Next Step
 
