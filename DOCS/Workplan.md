@@ -277,7 +277,7 @@ Completed phases include:
 ### EE-EXT-5: Async API Variants **[P1]**
 **Dependencies:** EE8
 **Estimated:** 3 hours
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-27
 
 - [ ] **[P1, depends: EE8]** Add `async` variants of blocking methods:
   - [ ] `EditorParser.parse(filePath:) async -> ParsedFile`
@@ -446,11 +446,11 @@ Completed phases include:
 **Estimated:** 2 hours
 **Status:** ⏸️ Pending
 
-- [ ] **[P1, depends: VSC-3]** Define documentation structure for the VS Code extension (README + docs/).
-- [ ] **[P1, depends: VSC-3]** Document development workflow (build, test, debug, release).
-- [ ] **[P1, depends: VSC-3]** Document configuration, commands, and expected behaviors.
-- [ ] **[P1, depends: VSC-3]** Add API reference notes for RPC client and error handling.
-- [ ] **[P1, depends: VSC-3]** Ensure docs match TypeScript implementation and update in future TS tasks.
+- [x] **[P1, depends: VSC-3]** Define documentation structure for the VS Code extension (README + docs/).
+- [x] **[P1, depends: VSC-3]** Document development workflow (build, test, debug, release).
+- [x] **[P1, depends: VSC-3]** Document configuration, commands, and expected behaviors.
+- [x] **[P1, depends: VSC-3]** Add API reference notes for RPC client and error handling.
+- [x] **[P1, depends: VSC-3]** Ensure docs match TypeScript implementation and update in future TS tasks.
 
 **Acceptance Criteria:** VS Code extension docs are complete, organized, and kept consistent with the TypeScript codebase.
 
