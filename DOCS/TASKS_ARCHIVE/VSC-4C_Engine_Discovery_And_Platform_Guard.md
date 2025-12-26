@@ -112,3 +112,6 @@ Engine discovery prevents confusing RPC errors by verifying the Hyperprompt bina
 - `npm run compile` in `Tools/VSCodeExtension` passes.
 - Discovery tests cover bad path, missing binary, unsupported OS.
 - Commands show actionable messages when engine is invalid.
+
+---
+**Archived:** 2025-12-26

@@ -201,6 +201,12 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** VSC-2B, VSC-3
 - **Description:** Implement a JSON-RPC client in the extension to spawn and communicate with the Hyperprompt editor process.
 
+### VSC-4C — Engine Discovery & Platform Guard **[P0]** ✓ 2025-12-26
+- **PRD:** [VSC-4C_Engine_Discovery_And_Platform_Guard.md](./VSC-4C_Engine_Discovery_And_Platform_Guard.md)
+- **Effort:** 3 hours
+- **Dependencies:** VSC-3, VSC-8
+- **Description:** Add engine discovery, platform gating, and Editor trait validation with remediation guidance.
+
 ### VSC-3 — Extension Scaffold **[P0]** ✓ 2025-12-26
 - **PRD:** [VSC-3_Extension_Scaffold.md](./VSC-3_Extension_Scaffold.md)
 - **PRD (Dev Host Validation):** [VSC-3_Extension_Scaffold_Dev_Host_Validation.md](./VSC-3_Extension_Scaffold_Dev_Host_Validation.md)
@@ -234,8 +240,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 27 items
-- **Total Effort:** 89 hours (tracked tasks only)
+- **Total Archived:** 28 items
+- **Total Effort:** 92 hours (tracked tasks only)
 - **Phases Represented:** 9 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14)
 
 ---
