@@ -650,15 +650,15 @@ Completed phases include:
 ### VSC-11: Extension Testing & QA **[P0]**
 **Dependencies:** VSC-5, VSC-6, VSC-7
 **Estimated:** 4 hours
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-27
 
-- [ ] **[P0, depends: VSC-5, VSC-6, VSC-7]** Write extension integration tests (VS Code Test API)
-- [ ] **[P0, depends: VSC-5, VSC-6, VSC-7]** Test all features with corpus files (V01-V14, I01-I10)
-- [ ] **[P0, depends: VSC-5, VSC-6, VSC-7]** Verify error handling (server crash, timeout, invalid response)
-- [ ] **[P1, depends: VSC-5, VSC-6, VSC-7]** Test multi-root workspace scenarios
-- [ ] **[P1, depends: VSC-5, VSC-6, VSC-7]** Test performance (large files, many diagnostics)
-- [ ] **[P1, depends: VSC-5, VSC-6, VSC-7]** Add CI job for extension tests
-- [ ] **[P1, depends: VSC-5, VSC-6, VSC-7]** Achieve >70% code coverage
+- [x] **[P0, depends: VSC-5, VSC-6, VSC-7]** Write extension integration tests (VS Code Test API)
+- [x] **[P0, depends: VSC-5, VSC-6, VSC-7]** Test all features with corpus files (V01-V14, I01-I10)
+- [x] **[P0, depends: VSC-5, VSC-6, VSC-7]** Verify error handling (server crash, timeout, invalid response)
+- [x] **[P1, depends: VSC-5, VSC-6, VSC-7]** Test multi-root workspace scenarios
+- [x] **[P1, depends: VSC-5, VSC-6, VSC-7]** Test performance (large files, many diagnostics)
+- [x] **[P1, depends: VSC-5, VSC-6, VSC-7]** Add CI job for extension tests
+- [x] **[P1, depends: VSC-5, VSC-6, VSC-7]** Achieve >70% code coverage
 
 **Acceptance Criteria:** All features tested, edge cases covered, CI passes
 
