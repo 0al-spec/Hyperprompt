@@ -10,7 +10,7 @@ Hyperprompt language support for VS Code, backed by the Hyperprompt EditorEngine
 - Navigation helpers: go-to-definition and hover for file references.
 - Diagnostics surfaced in the Problems panel on save.
 
-![Hyperprompt preview panel placeholder](./images/preview-placeholder.svg)
+![Hyperprompt preview panel placeholder](./images/preview-placeholder.png)
 
 ## Commands
 

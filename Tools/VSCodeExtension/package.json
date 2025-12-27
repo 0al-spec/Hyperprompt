@@ -16,7 +16,7 @@
     "Programming Languages",
     "Other"
   ],
-  "icon": "assets/icon.svg",
+  "icon": "assets/icon.png",
   "activationEvents": [
     "onLanguage:hypercode",
     "onCommand:hyperprompt.compile",
