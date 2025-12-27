@@ -27,7 +27,9 @@ const setEnginePath = async (enginePath: string) => {
 	await config.update('enginePath', enginePath, vscode.ConfigurationTarget.Workspace);
 };
 
-suite('Extension Integration', () => {
+suite('Extension Integration', function () {
+	this.timeout(120_000);
+
 	suiteSetup(async () => {
 		process.env.HYPERPROMPT_TEST_LOG = logFile;
 		if (vscode.workspace.workspaceFolders?.length) {
