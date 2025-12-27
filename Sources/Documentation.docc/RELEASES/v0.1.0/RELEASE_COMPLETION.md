@@ -57,7 +57,7 @@ Successfully completed all Release Preparation tasks for Hyperprompt Compiler v0
 
 ### 3. Test Results Archive ✅
 
-**Location:** `Documentation.docc/RELEASES/v0.1.0/test-results/`
+**Location:** `Sources/Documentation.docc/RELEASES/v0.1.0/test-results/`
 
 #### **test-summary.txt** (162 lines)
 - Total tests: 429
@@ -72,7 +72,7 @@ Successfully completed all Release Preparation tasks for Hyperprompt Compiler v0
 
 ### 4. Performance Benchmarks Archive ✅
 
-**Location:** `Documentation.docc/RELEASES/v0.1.0/benchmarks/`
+**Location:** `Sources/Documentation.docc/RELEASES/v0.1.0/benchmarks/`
 
 #### **P9_Performance_Results.md** (366 lines)
 - 1000-node tree: 853ms (target: 5000ms) — **5.9x faster**
@@ -99,7 +99,7 @@ Successfully completed all Release Preparation tasks for Hyperprompt Compiler v0
 
 ### 6. Distribution Package ✅
 
-**Location:** `Documentation.docc/RELEASES/v0.1.0/hyperprompt-0.1.0-linux-x86_64.zip`
+**Location:** `Sources/Documentation.docc/RELEASES/v0.1.0/hyperprompt-0.1.0-linux-x86_64.zip`
 
 #### Package Contents:
 - `hyperprompt` — Release binary (17 MB)
@@ -163,7 +163,7 @@ Dependencies: swift-argument-parser 1.2.0, swift-crypto 3.0.0, SpecificationCore
 ### 8. Git Commits ✅
 
 #### Commit eb2d246: "Add v0.1.0 Linux x86_64 release binary archive"
-- Added ZIP archive to Documentation.docc/RELEASES/v0.1.0/
+- Added ZIP archive to Sources/Documentation.docc/RELEASES/v0.1.0/
 - Binary verification completed
 - Pushed to remote successfully
 
@@ -182,11 +182,11 @@ Dependencies: swift-argument-parser 1.2.0, swift-crypto 3.0.0, SpecificationCore
 | Artifact | Location | Size | Status |
 |----------|----------|------|--------|
 | **Release binary** | `.build/release/hyperprompt` | 17 MB | ✅ Built & tested |
-| **ZIP archive** | `Documentation.docc/RELEASES/v0.1.0/*.zip` | 5.6 MB | ✅ Created |
+| **ZIP archive** | `Sources/Documentation.docc/RELEASES/v0.1.0/*.zip` | 5.6 MB | ✅ Created |
 | **CHANGELOG** | `CHANGELOG.md` | 6 KB | ✅ Created |
-| **Release notes** | `Documentation.docc/RELEASES/v0.1.0/RELEASE_NOTES_v0.1.0.md` | 16 KB | ✅ Created |
-| **Test results** | `Documentation.docc/RELEASES/v0.1.0/test-results/` | 6 KB | ✅ Archived |
-| **Benchmarks** | `Documentation.docc/RELEASES/v0.1.0/benchmarks/` | 12 KB | ✅ Archived |
+| **Release notes** | `Sources/Documentation.docc/RELEASES/v0.1.0/RELEASE_NOTES_v0.1.0.md` | 16 KB | ✅ Created |
+| **Test results** | `Sources/Documentation.docc/RELEASES/v0.1.0/test-results/` | 6 KB | ✅ Archived |
+| **Benchmarks** | `Sources/Documentation.docc/RELEASES/v0.1.0/benchmarks/` | 12 KB | ✅ Archived |
 | **Git tag** | `v0.1.0` | — | ✅ Created (local) |
 | **PRD** | `DOCS/INPROGRESS/Release_Preparation.md` | 45 KB | ✅ Created |
 

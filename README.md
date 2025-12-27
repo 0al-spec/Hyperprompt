@@ -95,17 +95,17 @@ hyperprompt root.hc --verbose --stats
 
 ## Documentation
 
-- **[USAGE.md](Documentation.docc/USAGE.md)** — Complete CLI reference with all flags and options
-- **[LANGUAGE.md](Documentation.docc/LANGUAGE.md)** — Hypercode grammar specification and syntax rules
-- **[ARCHITECTURE.md](Documentation.docc/ARCHITECTURE.md)** — System design, module overview, data flow
-- **[ERROR_CODES.md](Documentation.docc/ERROR_CODES.md)** — Exit codes, error scenarios, and solutions
-- **[SPECS_INTEGRATION.md](Documentation.docc/SPECS_INTEGRATION.md)** — SpecificationCore integration patterns
-- **[TROUBLESHOOTING.md](Documentation.docc/TROUBLESHOOTING.md)** — Common issues and frequently asked questions
+- **[USAGE.md](Sources/Documentation.docc/USAGE.md)** — Complete CLI reference with all flags and options
+- **[LANGUAGE.md](Sources/Documentation.docc/LANGUAGE.md)** — Hypercode grammar specification and syntax rules
+- **[ARCHITECTURE.md](Sources/Documentation.docc/ARCHITECTURE.md)** — System design, module overview, data flow
+- **[ERROR_CODES.md](Sources/Documentation.docc/ERROR_CODES.md)** — Exit codes, error scenarios, and solutions
+- **[SPECS_INTEGRATION.md](Sources/Documentation.docc/SPECS_INTEGRATION.md)** — SpecificationCore integration patterns
+- **[TROUBLESHOOTING.md](Sources/Documentation.docc/TROUBLESHOOTING.md)** — Common issues and frequently asked questions
 - **[PRD_EditorEngine.md](DOCS/PRD/PRD_EditorEngine.md)** — Future EditorEngine module plan
 
 ## Example Files
 
-See `Documentation.docc/examples/` for runnable example .hc files:
+See `Sources/Documentation.docc/examples/` for runnable example .hc files:
 - `hello.hc` — Simple root node
 - `nested.hc` — Hierarchical structure
 - `with-markdown.hc` — Markdown file references
@@ -172,8 +172,8 @@ Hyperprompt/
 │   ├── HypercodeGrammar/        # Grammar specifications
 │   └── EditorEngine/            # Future optional editor-facing engine (planned)
 ├── Tests/                       # Test suites
-├── Documentation.docc/examples/ # Example .hc files
-├── Documentation.docc/          # User documentation
+├── Sources/Documentation.docc/examples/ # Example .hc files
+├── Sources/Documentation.docc/          # User documentation
 └── Package.swift                # Swift Package manifest
 ```
 
@@ -228,7 +228,7 @@ Exit codes indicate compilation result:
 | `3` | Resolution Error | Missing reference or circular dependency |
 | `4` | Internal Error | Compiler bug (report to maintainers) |
 
-For detailed solutions, see [ERROR_CODES.md](Documentation.docc/ERROR_CODES.md).
+For detailed solutions, see [ERROR_CODES.md](Sources/Documentation.docc/ERROR_CODES.md).
 
 ## Language Overview
 
@@ -256,7 +256,7 @@ Hypercode is a simple, indentation-based language for defining hierarchical docu
     "nested-structure.hc"
 ```
 
-For complete syntax specification, see [LANGUAGE.md](Documentation.docc/LANGUAGE.md).
+For complete syntax specification, see [LANGUAGE.md](Sources/Documentation.docc/LANGUAGE.md).
 
 ## Integration
 
@@ -267,7 +267,7 @@ Hyperprompt uses [SpecificationCore](https://github.com/0al-spec/SpecificationCo
 - Path classification and validation (traversal checks, boundary enforcement)
 - Decision-based routing (file type detection, resolution strategy)
 
-See [SPECS_INTEGRATION.md](Documentation.docc/SPECS_INTEGRATION.md) for implementation details.
+See [SPECS_INTEGRATION.md](Sources/Documentation.docc/SPECS_INTEGRATION.md) for implementation details.
 
 ### Manifest Format
 
@@ -295,7 +295,7 @@ The generated `manifest.json` contains:
 - Use `--lenient` flag to treat missing files as text
 - Or verify referenced file exists and is readable
 
-For more help, see [TROUBLESHOOTING.md](Documentation.docc/TROUBLESHOOTING.md).
+For more help, see [TROUBLESHOOTING.md](Sources/Documentation.docc/TROUBLESHOOTING.md).
 
 ## Development
 
@@ -324,7 +324,7 @@ Contributions are welcome! Please:
 4. Ensure all tests pass: `swift test`
 5. Submit a pull request
 
-For detailed contribution guidelines, see [Documentation.docc/FUTURE.md](Documentation.docc/FUTURE.md).
+For detailed contribution guidelines, see [Sources/Documentation.docc/FUTURE.md](Sources/Documentation.docc/FUTURE.md).
 
 ## License
 
@@ -333,8 +333,8 @@ MIT License — See LICENSE file for details.
 ## Support
 
 - **Issues:** [Report bugs on GitHub](https://github.com/0al-spec/Hyperprompt/issues)
-- **Documentation:** See `Documentation.docc/` directory
-- **Examples:** See `Documentation.docc/examples/` directory
+- **Documentation:** See `Sources/Documentation.docc/` directory
+- **Examples:** See `Sources/Documentation.docc/examples/` directory
 
 ## Version History
 
