@@ -229,10 +229,10 @@ jobs:
         run: |
           npm install
 
-      - name: Install Xvfb
+      - name: Install Xvfb + D-Bus
         run: |
           sudo apt-get update
-          sudo apt-get install -y xvfb
+          sudo apt-get install -y xvfb dbus-x11
 
       - name: Run extension tests
         working-directory: Tools/VSCodeExtension
@@ -240,8 +240,11 @@ jobs:
           Xvfb :99 -screen 0 1280x720x24 -nolisten tcp &
           XVFB_PID=$!
           export DISPLAY=:99
+          export DBUS_SESSION_BUS_ADDRESS=
+          export VSCODE_DISABLE_CRASH_REPORTER=1
+          export VSCODE_DISABLE_UPDATE=1
           trap "kill ${XVFB_PID}" EXIT
-          npm test
+          dbus-run-session -- npm test
 
   build-no-cache:
     name: CI - Build without cache (from scratch)
