@@ -42,16 +42,16 @@ jobs:
 
       # Install Swift 6.0.3 toolchain
       # Version pinned per CI-01 audit findings
-      - name: Install Swift 6.0.3
+      - name: Install Swift 6.2.0
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: '6.0.3'
+          swift-version: '6.2.0'
 
       # Verify Swift installation
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "6.0.3"
+          swift --version | grep -q "6.2.0"
 
       # Cache .build and .swiftpm for 60-80% speedup on subsequent runs
       # Cache key includes Package.resolved hash for deterministic invalidation
@@ -130,15 +130,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Swift 6.0.3
+      - name: Install Swift 6.2.0
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: '6.0.3'
+          swift-version: '6.2.0'
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "6.0.3"
+          swift --version | grep -q "6.2.0"
 
       - name: Cache Swift dependencies
         uses: actions/cache@v4
@@ -175,15 +175,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Swift 6.0.3
+      - name: Install Swift 6.2.0
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: '6.0.3'
+          swift-version: '6.2.0'
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "6.0.3"
+          swift --version | grep -q "6.2.0"
 
       - name: Cache Swift dependencies
         uses: actions/cache@v4
@@ -260,15 +260,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Swift 6.0.3
+      - name: Install Swift 6.2.0
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: '6.0.3'
+          swift-version: '6.2.0'
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "6.0.3"
+          swift --version | grep -q "6.2.0"
 
       # IMPORTANT: NO cache step - intentionally build from scratch
       # This validates that Package.resolved is complete and reproducible
