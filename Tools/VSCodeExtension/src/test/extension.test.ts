@@ -42,6 +42,12 @@ suite('Extension Integration', function () {
 	this.timeout(120_000);
 
 	suiteSetup(async () => {
+		if (process.env.CI === 'true' && process.env.RUN_VSCODE_INTEGRATION !== '1') {
+			// Skip integration suite on CI unless explicitly enabled.
+			this.skip();
+			return;
+		}
+
 		process.env.HYPERPROMPT_TEST_LOG = logFile;
 		if (!vscode.workspace.workspaceFolders?.length) {
 			vscode.workspace.updateWorkspaceFolders(0, null, { uri: vscode.Uri.file(fixtureRoot) });
