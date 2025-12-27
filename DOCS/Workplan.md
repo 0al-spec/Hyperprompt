@@ -40,6 +40,18 @@ Parallelizable tasks to start while EditorEngine work continues:
 
 **Total Estimated Effort (Phases 11-15):** ~92 hours total, ~80 hours remaining (VSC-1 + VSC-2B complete: 12h)
 
+### DOC-REORG-001: Move User Docs to Documentation.docc **[P0]**
+**Dependencies:** None
+**Estimated:** 2 hours
+**Status:** ✅ Completed on 2025-12-27
+
+- [x] **[P0]** Identify user-facing documentation currently stored in `DOCS/`
+- [x] **[P0]** Move user-facing docs into `Documentation.docc/` while keeping development process docs in `DOCS/`
+- [x] **[P1]** Update links and references to new documentation paths
+- [x] **[P1]** Verify doc hierarchy is consistent with DocC expectations
+
+**Acceptance Criteria:** User-facing documentation resides in `Documentation.docc/`, process docs remain in `DOCS/`, and all internal links point to the correct locations
+
 ### 📁 Completed Work Archive
 
 **Phases 1-10 (Complete):** See archived work plan at:
