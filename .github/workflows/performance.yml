@@ -57,6 +57,8 @@ jobs:
           swift package resolve
 
       - name: Run performance tests
+        env:
+          RUN_PERFORMANCE_TESTS: "1"
         run: |
           swift test -c release --filter PerformanceTests 2>&1 | tee performance-results.txt
 

@@ -5,6 +5,8 @@ on:
     branches: [ main, "claude/**", "feature/**" ]
     paths-ignore:
       - 'DOCS/**'
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   build-without-editor-trait:

@@ -30,7 +30,7 @@ Common issues, frequently asked questions, and solutions.
 
 2. **Install Swift:**
    - **macOS:** Uses system Swift or Xcode
-   - **Linux:** See [DOCS/RULES/02_Swift_Installation.md](RULES/02_Swift_Installation.md)
+   - **Linux:** See [DOCS/RULES/02_Swift_Installation.md](../DOCS/RULES/02_Swift_Installation.md)
 
 3. **Add Swift to PATH:**
    ```bash

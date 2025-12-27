@@ -6,27 +6,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [main]
-    paths:
-      - 'Sources/**/*.swift'
-      - 'Tests/**/*.swift'
-      - 'Package.swift'
-      - 'Package.resolved'
-      - '.github/workflows/**'
-    paths-ignore:
-      - 'DOCS/**'
-
   push:
-    branches: [main]
-    paths:
-      - 'Sources/**/*.swift'
-      - 'Tests/**/*.swift'
-      - 'Package.swift'
-      - 'Package.resolved'
-      - '.github/workflows/**'
-    paths-ignore:
-      - 'DOCS/**'
-
   workflow_dispatch:
 
 # Least-privilege permissions for GitHub Actions
@@ -62,16 +42,16 @@ jobs:
 
       # Install Swift 6.0.3 toolchain
       # Version pinned per CI-01 audit findings
-      - name: Install Swift 6.0.3
+      - name: Install Swift 6.2.0
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: '6.0.3'
+          swift-version: '6.2.0'
 
       # Verify Swift installation
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "6.0.3"
+          swift --version | grep -q "Swift version 6.2"
 
       # Cache .build and .swiftpm for 60-80% speedup on subsequent runs
       # Cache key includes Package.resolved hash for deterministic invalidation
@@ -150,15 +130,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Swift 6.0.3
+      - name: Install Swift 6.2.0
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: '6.0.3'
+          swift-version: '6.2.0'
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "6.0.3"
+          swift --version | grep -q "Swift version 6.2"
 
       - name: Cache Swift dependencies
         uses: actions/cache@v4
@@ -185,6 +165,87 @@ jobs:
           swift build --build-tests
           echo "Build completed successfully"
 
+  build-with-editor-trait:
+    name: CI - Build with Editor trait
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Swift 6.2.0
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: '6.2.0'
+
+      - name: Verify Swift version
+        run: |
+          swift --version
+          swift --version | grep -q "Swift version 6.2"
+
+      - name: Cache Swift dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build
+            .swiftpm
+          key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-editor
+          restore-keys: |
+            ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-
+            ${{ runner.os }}-spm-
+
+      - name: Resolve dependencies
+        run: |
+          echo "Resolving Swift dependencies..."
+          swift package resolve
+          echo "Dependencies resolved successfully"
+
+      - name: Run tests (Editor trait)
+        run: |
+          echo "Running Swift tests with Editor trait..."
+          swift test --traits Editor
+          echo "Tests completed successfully"
+
+  vscode-extension-tests:
+    name: CI - VS Code Extension Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: Tools/VSCodeExtension
+        run: |
+          npm install
+
+      - name: Install Xvfb + D-Bus
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb dbus-x11
+
+      - name: Run extension tests
+        working-directory: Tools/VSCodeExtension
+        run: |
+          Xvfb :99 -screen 0 1280x720x24 -nolisten tcp &
+          XVFB_PID=$!
+          export DISPLAY=:99
+          export DBUS_SESSION_BUS_ADDRESS=
+          export VSCODE_DISABLE_CRASH_REPORTER=1
+          export VSCODE_DISABLE_UPDATE=1
+          trap "kill ${XVFB_PID}" EXIT
+          dbus-run-session -- npm test
+
   build-no-cache:
     name: CI - Build without cache (from scratch)
     # Validate that the project builds from scratch without cached dependencies.
@@ -206,15 +267,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Swift 6.0.3
+      - name: Install Swift 6.2.0
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: '6.0.3'
+          swift-version: '6.2.0'
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "6.0.3"
+          swift --version | grep -q "Swift version 6.2"
 
       # IMPORTANT: NO cache step - intentionally build from scratch
       # This validates that Package.resolved is complete and reproducible

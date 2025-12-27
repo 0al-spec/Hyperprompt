@@ -1,16 +1,32 @@
-# hyperprompt README
+# Hyperprompt VS Code Extension
 
-This is the README for your extension "hyperprompt". After writing up a brief description, we recommend including the following sections.
+Hyperprompt language support for VS Code, backed by the Hyperprompt EditorEngine RPC.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Hypercode syntax highlighting for `.hc` files.
+- Compile commands (strict and lenient) with output in the Hyperprompt output channel.
+- Live preview panel with compile-on-save updates.
+- Navigation helpers: go-to-definition and hover for file references.
+- Diagnostics surfaced in the Problems panel on save.
 
-For example if there is an image subfolder under your extension project workspace:
+![Hyperprompt preview panel placeholder](./images/preview-placeholder.png)
 
-\!\[feature X\]\(images/feature-x.png\)
+## Commands
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- `Hyperprompt: Compile` — compile in strict mode.
+- `Hyperprompt: Compile (Lenient)` — compile in lenient mode.
+- `Hyperprompt: Show Preview` — open or refresh the preview panel.
+
+## Settings
+
+- `hyperprompt.resolutionMode` (`strict` | `lenient`, default: `strict`)
+- `hyperprompt.previewAutoUpdate` (default: `true`)
+- `hyperprompt.diagnosticsEnabled` (default: `true`)
+- `hyperprompt.enginePath` (absolute path override, default: empty)
+- `hyperprompt.engineLogLevel` (`error` | `warn` | `info` | `debug`, default: `info`)
+
+Changing `hyperprompt.enginePath` or `hyperprompt.engineLogLevel` restarts the RPC process. Disabling diagnostics clears the Problems collection, and `previewAutoUpdate` controls on-save preview refreshes.
 
 ## Requirements
 
@@ -18,110 +34,108 @@ For example if there is an image subfolder under your extension project workspac
 - Hyperprompt CLI built with the Editor trait (`swift build --traits Editor`).
 - `hyperprompt` available on PATH or configured via `hyperprompt.enginePath`.
 
+## Usage
+
+1. Open a `.hc` file to activate the extension.
+2. Use Command Palette to run compile or preview commands.
+3. Hover or go-to-definition on `@"..."` references.
+4. Save files to refresh diagnostics and preview output.
+
+Preview output renders raw Markdown text in a styled panel (Markdown-to-HTML rendering is a future enhancement).
+
+## Project Structure
+
+- `src/extension.ts`: activation, command registration, and feature wiring.
+- `src/rpcClient.ts`: JSON-RPC transport for the `hyperprompt editor-rpc` process.
+- `src/engineDiscovery.ts`: engine discovery and platform guard logic.
+- `src/compileCommand.ts`: compile request helpers and params shaping.
+- `src/navigation.ts`: definition/hover utilities for references.
+- `src/diagnostics.ts`: diagnostics mapping into VS Code.
+- `src/preview.ts`: preview panel rendering and scroll sync.
+- `src/test/`: unit and integration coverage (includes mock engine).
+
+## RPC Integration Notes
+
+- Engine resolution order: `hyperprompt.enginePath` → bundled `bin/hyperprompt` → PATH.
+- Default request timeout is 5s; adjust only if builds are slow.
+- Unsupported platforms (Windows) are blocked with a user-facing error message.
+- RPC methods used: `editor.compile`, `editor.linkAt`, `editor.indexProject`.
+- Engine probes call `hyperprompt --help` to ensure `editor-rpc` is available.
+- Common errors: missing Editor trait build, non-executable engine path, or missing binary on PATH.
+
 ## Development Testing
 
-Run the extension in VS Code's Extension Development Host.
-
-### CLI launch (requires `code` on PATH)
+From `Tools/VSCodeExtension`:
 
 ```bash
-cd Tools/VSCodeExtension
+npm install
 npm run compile
 code --extensionDevelopmentPath="$PWD"
 ```
 
+Use `npm run watch` while debugging to recompile on changes:
+
+```bash
+npm run watch
+code --extensionDevelopmentPath="$PWD"
+```
+
 In the Extension Development Host:
-- Open any `.hc` file to trigger activation.
-- Use Command Palette and run `Hyperprompt: Compile`, `Hyperprompt: Compile (Lenient)`, or `Hyperprompt: Show Preview`.
-
-### Commands
-
-- `Hyperprompt: Compile` — strict mode (missing references report diagnostics).
-- `Hyperprompt: Compile (Lenient)` — lenient mode (missing references treated as inline text).
-- `Hyperprompt: Show Preview` — placeholder until preview wiring is complete.
+- Open a `.hc` file to trigger activation.
+- Run commands from the Command Palette.
+- Watch the "Hyperprompt" output channel for compile output.
 
 If `code` is not found, install it from VS Code: Command Palette → "Shell Command: Install 'code' command in PATH".
 
-### RPC Client Notes
+## Testing
 
-The extension spawns the Hyperprompt CLI in RPC mode on activation. Engine resolution order is:
+```bash
+npm test
+```
 
-1. `hyperprompt.enginePath` setting (absolute path)
-2. Bundled binary (`bin/hyperprompt` inside the extension, if present)
-3. `hyperprompt` on PATH
+The test runner downloads VS Code; slow networks may cause timeouts.
 
-Build with the Editor trait enabled:
+## Engine Setup
+
+Build the CLI with the Editor trait and ensure it is discoverable:
 
 ```bash
 swift build --traits Editor
-hyperprompt editor-rpc
+export PATH="/path/to/Hyperprompt/.build/debug:$PATH"
 ```
 
-If the engine is missing, not executable, or built without the Editor trait, the extension shows a remediation message and skips RPC startup.
+The extension resolves the engine in this order:
 
-### RPC Smoke Test
+1. `hyperprompt.enginePath` setting
+2. Bundled binary (`bin/hyperprompt` inside the extension, if present)
+3. `hyperprompt` on PATH
 
-Use the helper script to validate the RPC CLI outside VS Code:
+## Release Packaging (VSIX)
 
 ```bash
-./Tools/VSCodeExtension/scripts/rpc-smoke.sh /path/to/file.hc /path/to/workspace
+npm install -g @vscode/vsce
+npm install
+vsce package
+code --install-extension hyperprompt-*.vsix
 ```
 
-### VS Code UI
+## Release Checklist
 
-1. Open `Tools/VSCodeExtension` in VS Code.
-2. Press `F5` (Run Extension).
-3. In the dev host, open a `.hc` file and run commands from the Command Palette.
-
-## Extension Settings
-
-This extension contributes the following settings:
-
-- `hyperprompt.resolutionMode` (`strict` | `lenient`, default: `strict`): Default resolution mode for compile/preview.
-- `hyperprompt.previewAutoUpdate` (default: `true`): Recompile on save when preview is wired.
-- `hyperprompt.diagnosticsEnabled` (default: `true`): Enable diagnostics when Problems integration is wired.
-- `hyperprompt.enginePath` (default: empty): Absolute path to the `hyperprompt` binary (overrides PATH).
-- `hyperprompt.engineLogLevel` (`error` | `warn` | `info` | `debug`, default: `info`): Log level passed to the engine process.
+- Update `CHANGELOG.md` and `README.md` with release notes.
+- Run `npm run compile` and `npm test` (expect download time for VS Code).
+- Package the extension with `vsce package`.
+- Install the VSIX and smoke-test compile, preview, and diagnostics.
+- Tag the release once the extension behaves as expected.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- Preview panel renders raw Markdown (not HTML-rendered).
+- Extension integration tests require VS Code download and may time out on slow networks.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+See `CHANGELOG.md` for the full history.
 
-### 1.0.0
+### 0.0.1
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+- Initial preview release: compile commands, navigation, diagnostics, and preview panel.

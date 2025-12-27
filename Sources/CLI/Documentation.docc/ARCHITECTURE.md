@@ -570,7 +570,7 @@ All file paths validated against:
    - Language server (LSP)
    - Editor plugins
    - Linter/formatter
-   - EditorEngine module for editor integrations (planned, see `DOCS/PRD/PRD_EditorEngine.md`)
+   - EditorEngine module for editor integrations (planned, see `../DOCS/PRD/PRD_EditorEngine.md`)
 
 ---
 
