@@ -22,6 +22,7 @@ Complete extension documentation for features, installation, requirements, and r
 1. Update extension README with feature list and usage instructions.
 2. Add release packaging steps (VSIX build/install) and system requirements.
 3. Add release notes / changelog entries for the extension.
+4. Execute VSIX packaging and installation steps from the README and capture results.
 
 ### 1.2 Primary Deliverables
 
@@ -36,6 +37,7 @@ Complete extension documentation for features, installation, requirements, and r
 1. ✅ README documents all commands and settings
 2. ✅ Release steps documented for VSIX packaging
 3. ✅ System requirements clearly stated
+4. ✅ VSIX packaging and installation executed successfully or noted as blocked
 
 ### 1.4 Constraints
 
@@ -125,6 +127,26 @@ Complete extension documentation for features, installation, requirements, and r
 
 **Acceptance Criteria:**
 - ✅ Summary saved with validation notes
+
+---
+
+### Phase 4: Packaging Validation
+
+#### Task 2.4.1: Run VSIX packaging steps
+**Priority:** Medium
+**Effort:** 30 minutes
+**Dependencies:** 2.3.2
+
+**Process:**
+1. Install vsce if needed.
+2. Run `vsce package` in `Tools/VSCodeExtension`.
+3. Install the VSIX locally and smoke test activation.
+
+**Expected Output:**
+- VSIX package artifact and installation notes.
+
+**Acceptance Criteria:**
+- ✅ Packaging and installation steps executed or blockers recorded
 
 ---
 
