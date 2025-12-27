@@ -677,6 +677,7 @@ Completed phases include:
 - [x] **[P0, depends: VSC-11]** Write CHANGELOG
 - [ ] **[P1, depends: VSC-11]** Package extension (.vsix)
 - [ ] **[P1, depends: VSC-11]** Test installation from VSIX
+- [ ] **[P1, depends: VSC-11]** Run README packaging steps (VSIX build/install)
 - [ ] **[P2, depends: VSC-11]** Publish to VS Code Marketplace (manual step)
 - [ ] **[P1, depends: VSC-11]** Tag release (v0.1.0)
 
@@ -753,6 +754,17 @@ Completed phases include:
 **Resolution Status:** ✅ Documentation closure
 
 ---
+
+### PRD-VAL-3: Extension Parity Validation **[P1]**
+**Dependencies:** PRD-VAL-2
+**Estimated:** 2 hours
+**Status:** ⏸️ Pending
+
+- [ ] **[P1, depends: PRD-VAL-2]** Add deterministic output diff test between CLI and extension results
+
+**Acceptance Criteria:** Parity test compares CLI output to extension output and documents mismatches
+
+**Resolution Status:** 🟡 MAJOR (Determinism gap)
 
 ## Progress Tracking
 
