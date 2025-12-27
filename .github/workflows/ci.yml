@@ -6,23 +6,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [main]
-
   push:
-    branches: [main]
-    paths:
-      - 'Sources/**/*.swift'
-      - 'Tests/**/*.swift'
-      - 'Tools/VSCodeExtension/**'
-      - 'Sources/CLI/Documentation.docc/**'
-      - 'README.md'
-      - 'QUICKSTART_BUILD.md'
-      - 'Package.swift'
-      - 'Package.resolved'
-      - '.github/workflows/**'
-    paths-ignore:
-      - 'DOCS/**'
-
   workflow_dispatch:
 
 # Least-privilege permissions for GitHub Actions
