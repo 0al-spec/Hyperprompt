@@ -4,7 +4,7 @@
 **Phase:** Hotfixes & Bug Reports
 **Effort:** 1 hour
 **Dependencies:** None
-**Status:** Selected
+**Status:** ✅ Completed on 2025-12-27
 
 ## Description
 
@@ -14,7 +14,7 @@ Fix markdown file heading emission so resolved markdown includes do not emit fil
 
 - [x] Update markdown emitter to skip filename headings for markdown includes
 - [x] Validate output against fixtures and example
-- [ ] Update tracking and summary notes
+- [x] Update tracking and summary notes
 
 ## Next Step
 

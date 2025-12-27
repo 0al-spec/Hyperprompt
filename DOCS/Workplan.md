@@ -30,7 +30,7 @@ Parallelizable tasks to start while EditorEngine work continues:
 ### BUG-CE1-001: Lenient Compile Includes Markdown Filename Heading **[P0]**
 **Dependencies:** None
 **Estimated:** 1 hour
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-27
 
 - [x] **[P0]** Save a bug report documenting lenient compile output for `DOCS/examples/with-markdown.hc`
 - [x] **[P1]** Capture expected vs actual output and repro steps
