@@ -38,16 +38,14 @@ const setEnginePath = async (enginePath: string) => {
 	await config.update('enginePath', enginePath, vscode.ConfigurationTarget.Workspace);
 };
 
-suite('Extension Integration', function () {
+const runIntegrationSuite = !(process.env.CI === 'true' && process.env.RUN_VSCODE_INTEGRATION !== '1');
+
+const integrationSuite = runIntegrationSuite ? suite : suite.skip;
+
+integrationSuite('Extension Integration', function () {
 	this.timeout(120_000);
 
 	suiteSetup(async () => {
-		if (process.env.CI === 'true' && process.env.RUN_VSCODE_INTEGRATION !== '1') {
-			// Skip integration suite on CI unless explicitly enabled.
-			this.skip();
-			return;
-		}
-
 		process.env.HYPERPROMPT_TEST_LOG = logFile;
 		if (!vscode.workspace.workspaceFolders?.length) {
 			vscode.workspace.updateWorkspaceFolders(0, null, { uri: vscode.Uri.file(fixtureRoot) });
