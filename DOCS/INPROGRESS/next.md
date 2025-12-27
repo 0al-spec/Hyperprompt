@@ -12,7 +12,7 @@ Fix markdown file heading emission so resolved markdown includes do not emit fil
 
 ## Subtasks
 
-- [ ] Update markdown emitter to skip filename headings for markdown includes
+- [x] Update markdown emitter to skip filename headings for markdown includes
 - [ ] Validate output against fixtures and example
 - [ ] Update tracking and summary notes
 
