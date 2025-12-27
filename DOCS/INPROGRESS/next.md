@@ -12,7 +12,7 @@ Complete extension packaging steps (VSIX build/install) and document results.
 
 ## Subtasks
 
-- [ ] Run README packaging steps (VSIX build/install)
+- [x] Run README packaging steps (VSIX build/install)
 - [ ] Test VSIX installation and record results
 - [ ] Update tracking and summary notes
 
