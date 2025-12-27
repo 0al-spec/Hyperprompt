@@ -14,6 +14,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** None
 - **Description:** Document lenient compile output bug for markdown include headings and capture repro details.
 
+### DOC-REORG-001 — Move User Docs to Documentation.docc **[P0]** ✓ 2025-12-27
+- **PRD:** [DOC-REORG-001_Move_User_Docs_to_Documentation_docc.md](./DOC-REORG-001_Move_User_Docs_to_Documentation_docc.md)
+- **Summary:** [DOC-REORG-001-summary.md](./DOC-REORG-001-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** None
+- **Description:** Relocate user-facing docs to Documentation.docc, keep process docs in DOCS, and update references.
+
 ---
 
 ## Phase 4: Reference Resolution
@@ -331,8 +338,7 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 29 items
-- **Total Archived:** 40 items
+- **Total Archived:** 41 items
 - **Total Effort:** 128 hours (tracked tasks only)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
@@ -353,4 +359,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-27 (PRD-VAL-3 archived)
+**Last Updated:** 2025-12-27 (DOC-REORG-001 archived)
