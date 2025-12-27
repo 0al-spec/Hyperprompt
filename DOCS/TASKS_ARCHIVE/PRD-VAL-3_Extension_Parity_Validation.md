@@ -146,3 +146,6 @@ swift test 2>&1
 | Output nondeterminism | Flaky tests | Normalize line endings and metadata |
 
 ---
+
+---
+**Archived:** 2025-12-27

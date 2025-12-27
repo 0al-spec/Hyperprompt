@@ -312,6 +312,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** PRD-VAL-1
 - **Description:** Update validation report with resolved issues, architecture choice, and benchmarks.
 
+### PRD-VAL-3 — Extension Parity Validation **[P1]** ✓ 2025-12-27
+- **PRD:** [PRD-VAL-3_Extension_Parity_Validation.md](./PRD-VAL-3_Extension_Parity_Validation.md)
+- **Summary:** [PRD-VAL-3-summary.md](./PRD-VAL-3-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** PRD-VAL-2
+- **Description:** Add deterministic parity test comparing CLI output with extension RPC output.
+
 ---
 
 ## Other Archives
@@ -325,8 +332,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 ## Statistics
 
 - **Total Archived:** 29 items
-- **Total Archived:** 39 items
-- **Total Effort:** 126 hours (tracked tasks only)
+- **Total Archived:** 40 items
+- **Total Effort:** 128 hours (tracked tasks only)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
@@ -346,4 +353,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-27 (VSC-12, PRD-VAL, and docs archived)
+**Last Updated:** 2025-12-27 (PRD-VAL-3 archived)
