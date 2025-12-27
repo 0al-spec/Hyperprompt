@@ -299,7 +299,7 @@ IDE support with:
 #### 2. Documentation Contributions
 
 - Fix typos, clarify instructions
-- Add examples to Sources/Documentation.docc/
+- Add examples to Sources/CLI/Documentation.docc/
 - Improve error messages
 - Translate documentation
 
@@ -313,11 +313,11 @@ IDE support with:
 Share `.hc` file examples:
 
 ```bash
-# Create example in Sources/Documentation.docc/examples/
-echo '"Example Documentation"' > Sources/Documentation.docc/examples/my-example.hc
+# Create example in Sources/CLI/Documentation.docc/examples/
+echo '"Example Documentation"' > Sources/CLI/Documentation.docc/examples/my-example.hc
 
 # Document it
-echo "## My Example\nDescription of what this example does" > Sources/Documentation.docc/examples/my-example.md
+echo "## My Example\nDescription of what this example does" > Sources/CLI/Documentation.docc/examples/my-example.md
 ```
 
 ### Areas Needing Help
@@ -445,7 +445,7 @@ swift build
 swift test
 
 # Run in development
-./.build/debug/hyperprompt Sources/Documentation.docc/examples/hello.hc
+./.build/debug/hyperprompt Sources/CLI/Documentation.docc/examples/hello.hc
 ```
 
 ### Development Roadmap

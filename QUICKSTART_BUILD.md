@@ -184,7 +184,7 @@ aws s3 cp s3://mybucket/hyperprompt-caches/swift-build-cache-linux-x86_64.tar.gz
 
 ### Option 3: Git LFS (Recommended)
 
-See `Sources/Documentation.docc/BUILD_PERFORMANCE.md` for detailed Git LFS setup instructions.
+See `Sources/CLI/Documentation.docc/BUILD_PERFORMANCE.md` for detailed Git LFS setup instructions.
 
 ---
 
@@ -260,7 +260,7 @@ ln -s ~/.hyperprompt-cache .build-cache
 
 ## 📚 More Information
 
-- **Full analysis:** `Sources/Documentation.docc/BUILD_PERFORMANCE.md`
+- **Full analysis:** `Sources/CLI/Documentation.docc/BUILD_PERFORMANCE.md`
 - **GitHub Actions workflow:** `.github/workflows/build-with-cache.yml`
 - **Cache scripts:** `.github/scripts/`
 
@@ -287,4 +287,4 @@ After setting up cache:
 
 ---
 
-**Questions?** See `Sources/Documentation.docc/BUILD_PERFORMANCE.md` for detailed analysis and alternative strategies.
+**Questions?** See `Sources/CLI/Documentation.docc/BUILD_PERFORMANCE.md` for detailed analysis and alternative strategies.

@@ -304,18 +304,18 @@ hyperprompt root.hc --output project.md --manifest manifest.json
 
 ## Documentation
 
-Comprehensive documentation is available in the `Sources/Documentation.docc/` directory:
+Comprehensive documentation is available in the `Sources/CLI/Documentation.docc/` directory:
 
 | Document | Description |
 |----------|-------------|
 | **README.md** | Quick start, installation, common workflows |
-| **Sources/Documentation.docc/USAGE.md** | Complete CLI reference with examples |
-| **Sources/Documentation.docc/LANGUAGE.md** | Hypercode grammar specification |
-| **Sources/Documentation.docc/ARCHITECTURE.md** | System design and module overview |
-| **Sources/Documentation.docc/ERROR_CODES.md** | Exit codes and troubleshooting |
-| **Sources/Documentation.docc/SPECS_INTEGRATION.md** | SpecificationCore patterns |
-| **Sources/Documentation.docc/BUILD_PERFORMANCE.md** | Build optimization strategies |
-| **Sources/Documentation.docc/FUTURE.md** | Roadmap for v0.2+ features |
+| **Sources/CLI/Documentation.docc/USAGE.md** | Complete CLI reference with examples |
+| **Sources/CLI/Documentation.docc/LANGUAGE.md** | Hypercode grammar specification |
+| **Sources/CLI/Documentation.docc/ARCHITECTURE.md** | System design and module overview |
+| **Sources/CLI/Documentation.docc/ERROR_CODES.md** | Exit codes and troubleshooting |
+| **Sources/CLI/Documentation.docc/SPECS_INTEGRATION.md** | SpecificationCore patterns |
+| **Sources/CLI/Documentation.docc/BUILD_PERFORMANCE.md** | Build optimization strategies |
+| **Sources/CLI/Documentation.docc/FUTURE.md** | Roadmap for v0.2+ features |
 | **DOCS/RULES/02_Swift_Installation.md** | Swift setup for Linux |
 
 ---
