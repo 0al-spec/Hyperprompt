@@ -595,7 +595,7 @@ Completed phases include:
 ### VSC-8: Extension Settings **[P1]**
 **Dependencies:** VSC-4*
 **Estimated:** 2 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 INPROGRESS
 
 - [x] **[P1, depends: VSC-4*]** Add configuration schema to package.json
 - [x] **[P1, depends: VSC-4*]** Add `hyperprompt.resolutionMode` setting (strict/lenient)
