@@ -51,7 +51,7 @@ jobs:
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "6.2.0"
+          swift --version | grep -q "Swift version 6.2"
 
       # Cache .build and .swiftpm for 60-80% speedup on subsequent runs
       # Cache key includes Package.resolved hash for deterministic invalidation
@@ -138,7 +138,7 @@ jobs:
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "6.2.0"
+          swift --version | grep -q "Swift version 6.2"
 
       - name: Cache Swift dependencies
         uses: actions/cache@v4
@@ -183,7 +183,7 @@ jobs:
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "6.2.0"
+          swift --version | grep -q "Swift version 6.2"
 
       - name: Cache Swift dependencies
         uses: actions/cache@v4
@@ -268,7 +268,7 @@ jobs:
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "6.2.0"
+          swift --version | grep -q "Swift version 6.2"
 
       # IMPORTANT: NO cache step - intentionally build from scratch
       # This validates that Package.resolved is complete and reproducible
