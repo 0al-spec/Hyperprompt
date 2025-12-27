@@ -13,7 +13,7 @@ Add a deterministic output diff test to confirm CLI and extension output parity.
 ## Subtasks
 
 - [x] Design parity test approach and target fixture
-- [ ] Implement deterministic output diff test
+- [x] Implement deterministic output diff test
 - [ ] Update tracking and summary notes
 
 ## Next Step
