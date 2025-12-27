@@ -4,7 +4,7 @@
 **Phase:** Phase 15 — PRD Validation & Gap Closure
 **Effort:** 2 hours
 **Dependencies:** PRD-VAL-2
-**Status:** Selected
+**Status:** ✅ Completed on 2025-12-27
 
 ## Description
 
@@ -14,7 +14,7 @@ Add a deterministic output diff test to confirm CLI and extension output parity.
 
 - [x] Design parity test approach and target fixture
 - [x] Implement deterministic output diff test
-- [ ] Update tracking and summary notes
+- [x] Update tracking and summary notes
 
 ## Next Step
 

@@ -758,9 +758,9 @@ Completed phases include:
 ### PRD-VAL-3: Extension Parity Validation **[P1]**
 **Dependencies:** PRD-VAL-2
 **Estimated:** 2 hours
-**Status:** ⏸️ Pending
+**Status:** ✅ Completed on 2025-12-27
 
-- [ ] **[P1, depends: PRD-VAL-2]** Add deterministic output diff test between CLI and extension results
+- [x] **[P1, depends: PRD-VAL-2]** Add deterministic output diff test between CLI and extension results
 
 **Acceptance Criteria:** Parity test compares CLI output to extension output and documents mismatches
 
