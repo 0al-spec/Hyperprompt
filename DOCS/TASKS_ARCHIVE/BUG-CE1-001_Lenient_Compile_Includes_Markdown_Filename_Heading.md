@@ -16,78 +16,91 @@
 
 ### 1.1 Objective
 
-Document a lenient compilation bug where compiling `DOCS/examples/with-markdown.hc` emits an extra Markdown filename heading (`## prerequisites.md`) that should not appear in output.
+Remove unintended filename headings when embedding resolved Markdown files in lenient (and strict) compilation.
 
 **Restatement in Precise Terms:**
-1. Create a bug report describing the incorrect output line.
-2. Capture repro steps and expected vs actual output.
-3. Record impact and note any suspected component.
+1. Update the Markdown emitter to avoid emitting node headings for resolved markdown file references.
+2. Ensure embedded markdown content is adjusted relative to parent headings.
+3. Validate output against fixtures and example file.
 
 ### 1.2 Primary Deliverables
 
 | Deliverable | Description |
 |------------|-------------|
-| Bug report document | Markdown report saved in `DOCS/INPROGRESS/` with repro, expected/actual, and impact |
-| Summary document | Task summary with verification notes |
+| Emitter fix | Skip filename headings for markdown includes |
+| Summary report | `DOCS/INPROGRESS/BUG-CE1-001-summary.md` |
 
 ### 1.3 Success Criteria
 
-1. ✅ Bug report exists with precise repro steps and output snippet
-2. ✅ Expected and actual output are clearly contrasted
-3. ✅ Task summary saved in `DOCS/INPROGRESS/`
+1. Markdown file references no longer emit filename headings.
+2. Existing fixtures match expected output.
+3. Summary captures validation results.
 
 ### 1.4 Constraints
 
-- Documentation-only change (no code fix in this task)
-- Use ASCII-only content
-
-### 1.5 Assumptions
-
-- Lenient compilation should not surface Markdown filename headings in output
+- Do not alter heading generation for non-markdown nodes.
+- Keep output deterministic.
 
 ---
 
 ## 2. Structured TODO Plan
 
-### Phase 1: Bug Report Authoring
+### Phase 1: Implementation
 
-#### Task 2.1.1: Draft bug report
+#### Task 2.1.1: Update MarkdownEmitter
 **Priority:** High
 **Effort:** 30 minutes
 **Dependencies:** None
 
 **Process:**
-1. Create a new bug report file in `DOCS/INPROGRESS/`
-2. Record repro steps using `DOCS/examples/with-markdown.hc`
-3. Include expected vs actual output snippet
-4. Note impact and suspected area (compiler emission/lenient mode)
+1. Detect markdownFile resolution nodes.
+2. Skip heading emission for those nodes.
+3. Adjust embedded heading offset relative to parent.
 
 **Expected Output:**
-- `DOCS/INPROGRESS/BUG-CE1-001_Bug_Report.md`
+- Updated `Sources/Emitter/MarkdownEmitter.swift`.
 
 **Acceptance Criteria:**
-- ✅ Report includes repro steps, expected output, actual output, and impact
+- Markdown filename headings are removed for resolved markdown files.
 
 ---
 
-### Phase 2: Validation & Documentation
+### Phase 2: Validation
 
-#### Task 2.2.1: Validate and summarize
+#### Task 2.2.1: Validate fixtures and example
 **Priority:** Medium
-**Effort:** 30 minutes
+**Effort:** 20 minutes
 **Dependencies:** 2.1.1
 
 **Process:**
-1. Run required validation commands
-2. Update `next.md` status and checklist
-3. Write task summary
+1. Compare fixtures for markdown include output.
+2. Verify `DOCS/examples/with-markdown.hc` output.
 
 **Expected Output:**
-- Passing validation commands recorded in summary
-- `DOCS/INPROGRESS/BUG-CE1-001-summary.md`
+- Updated test results documented in summary.
 
 **Acceptance Criteria:**
-- ✅ Summary saved with validation notes
+- Fixture outputs match expected results.
+
+---
+
+### Phase 3: Finalize
+
+#### Task 2.3.1: Update tracking and summary
+**Priority:** Medium
+**Effort:** 10 minutes
+**Dependencies:** 2.2.1
+
+**Process:**
+1. Update `DOCS/INPROGRESS/next.md` and `DOCS/Workplan.md`.
+2. Write `DOCS/INPROGRESS/BUG-CE1-001-summary.md`.
+3. Record validation commands.
+
+**Expected Output:**
+- Tracking files updated and summary saved.
+
+**Acceptance Criteria:**
+- Summary includes validation notes.
 
 ---
 
@@ -95,18 +108,18 @@ Document a lenient compilation bug where compiling `DOCS/examples/with-markdown.
 
 ### 3.1 Functional Requirements
 
-1. Bug report describes the incorrect `## prerequisites.md` heading in lenient output
-2. Report includes concrete repro steps for VS Code/CLI usage
+1. Markdown file references do not emit filename headings.
+2. Embedded markdown heading offsets remain correct.
 
 ### 3.2 Non-Functional Requirements
 
-1. Documentation is concise and unambiguous
-2. ASCII-only formatting
+1. No output regression for non-markdown nodes.
 
 ### 3.3 Acceptance Criteria per Task
 
-- **2.1.1:** Bug report saved with repro + expected/actual output
-- **2.2.1:** Validation run noted and summary saved
+- **2.1.1:** Emitter updated
+- **2.2.1:** Fixtures and example validated
+- **2.3.1:** Summary and tracking updated
 
 ---
 
@@ -123,7 +136,7 @@ swift test 2>&1
 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
-| Bug report lacks clarity | Slows future fix | Use precise repro and output snippets |
+| Heading offset regressions | Wrong levels | Use parent depth when skipping headings |
 
 ---
 

@@ -4,38 +4,39 @@
 **Task Name:** Lenient Compile Includes Markdown Filename Heading
 **Status:** ✅ Completed
 **Completed:** 2025-12-27
-**Effort:** ~1 hour actual (1 hour estimated)
+**Effort:** ~1 hour estimated
 
 ---
 
 ## Executive Summary
 
-Documented a lenient compilation bug where output includes an unintended Markdown filename heading (`## prerequisites.md`) for `DOCS/examples/with-markdown.hc`.
+Adjusted markdown emission so resolved markdown includes no longer emit filename headings, matching expected lenient output for `DOCS/examples/with-markdown.hc`.
 
 ---
 
 ## Deliverables
 
-1. **`DOCS/INPROGRESS/BUG-CE1-001_Bug_Report.md`**
-   - Repro steps, expected vs actual output, and impact statement
+1. **`Sources/Emitter/MarkdownEmitter.swift`**
+   - Skip heading emission for markdown file nodes and adjust heading offsets.
 
 ---
 
 ## Acceptance Criteria Verification
 
-1. **Bug report saved with repro + expected/actual output** — ✅ Completed
-2. **Summary saved with validation notes** — ✅ Completed
+1. Markdown filename headings removed for resolved markdown includes — ✅ Completed
+2. Fixtures/example output validated — ✅ Completed
+3. Summary and tracking updates complete — ✅ Completed
 
 ---
 
 ## Validation Results (2025-12-27)
 
-- **Build cache restore:** Cache missing (no `.build-cache` entries)
-- **`swift test 2>&1`:** ✅ All tests passed (447 tests, 13 skipped)
-- **Warnings:** XCTest default `#file` vs `#filePath` warnings in `Tests/ParserTests/LexerTests.swift`
+- Build cache restore: cache missing (no `.build-cache` entries)
+- `swift test 2>&1`: ✅ Passed (447 tests, 13 skipped)
+- `swift run hyperprompt compile DOCS/examples/with-markdown.hc --root DOCS/examples --lenient`: ✅ Output matches expected (no `## prerequisites.md` heading)
 
 ---
 
 ## Notes
 
-- Issue observed in VS Code via `Hyperprompt: Compile Lenient`.
+- Strict compile still fails for missing `introduction.md` unless lenient mode is used.
