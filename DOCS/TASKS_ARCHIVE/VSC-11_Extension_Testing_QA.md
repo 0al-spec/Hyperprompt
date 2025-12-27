@@ -172,3 +172,6 @@ npm test
 | Missing engine in CI | Tests fail | Use mock RPC client for integration tests |
 
 ---
+
+---
+**Archived:** 2025-12-27

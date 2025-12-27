@@ -188,3 +188,6 @@ swift test 2>&1
 | Docs drift from implementation | User confusion | Cross-check commands/settings with code |
 
 ---
+
+---
+**Archived:** 2025-12-27

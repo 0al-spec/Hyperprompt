@@ -126,3 +126,6 @@ swift test 2>&1
 | Bug report lacks clarity | Slows future fix | Use precise repro and output snippets |
 
 ---
+
+---
+**Archived:** 2025-12-27

@@ -169,3 +169,6 @@ swift test 2>&1
 | Compile errors | Preview stale | Surface compile diagnostics and keep last output |
 
 ---
+
+---
+**Archived:** 2025-12-27

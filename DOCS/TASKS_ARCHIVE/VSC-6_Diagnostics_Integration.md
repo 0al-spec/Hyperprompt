@@ -169,3 +169,6 @@ swift test 2>&1
 | Range offsets incorrect | Incorrect highlights | Use explicit 1-based to 0-based mapping |
 
 ---
+
+---
+**Archived:** 2025-12-27

@@ -153,3 +153,6 @@ swift test --traits Editor 2>&1
 | Tokenization errors drop spans | Editor features broken | Compute spans before tokenization and preserve on failure |
 
 ---
+
+---
+**Archived:** 2025-12-27

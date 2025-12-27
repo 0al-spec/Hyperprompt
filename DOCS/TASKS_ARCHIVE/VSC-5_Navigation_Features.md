@@ -171,3 +171,6 @@ swift test 2>&1
 | Incorrect range mapping | Navigation points to wrong location | Use existing link span byte/column offsets |
 
 ---
+
+---
+**Archived:** 2025-12-27

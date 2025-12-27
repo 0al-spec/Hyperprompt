@@ -169,3 +169,6 @@ swift test 2>&1
 | Missing evidence links | Weak audit trail | Add file paths or test outputs |
 
 ---
+
+---
+**Archived:** 2025-12-27

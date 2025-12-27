@@ -186,3 +186,6 @@ swift test 2>&1
 | Performance requirements not met | Fails acceptance | Record stats and link to PERF tasks |
 
 ---
+
+---
+**Archived:** 2025-12-27

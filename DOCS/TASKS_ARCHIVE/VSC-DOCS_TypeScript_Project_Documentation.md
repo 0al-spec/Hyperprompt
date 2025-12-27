@@ -164,3 +164,6 @@ swift test 2>&1
 | Missing debug steps | Slow onboarding | Add step-by-step dev host guidance |
 
 ---
+
+---
+**Archived:** 2025-12-27
