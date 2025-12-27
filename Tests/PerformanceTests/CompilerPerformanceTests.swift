@@ -19,6 +19,11 @@ final class CompilerPerformanceTests: XCTestCase {
     override func setUp() async throws {
         try await super.setUp()
 
+        if ProcessInfo.processInfo.environment["CI"] == "true",
+           ProcessInfo.processInfo.environment["RUN_PERFORMANCE_TESTS"] != "1" {
+            throw XCTSkip("Skipping performance benchmarks on CI; enable with RUN_PERFORMANCE_TESTS=1.")
+        }
+
         // Locate benchmark corpus
         let fixturesURL = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
