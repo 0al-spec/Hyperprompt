@@ -304,18 +304,18 @@ hyperprompt root.hc --output project.md --manifest manifest.json
 
 ## Documentation
 
-Comprehensive documentation is available in the `DOCS/` directory:
+Comprehensive documentation is available in the `Documentation.docc/` directory:
 
 | Document | Description |
 |----------|-------------|
 | **README.md** | Quick start, installation, common workflows |
-| **DOCS/USAGE.md** | Complete CLI reference with examples |
-| **DOCS/LANGUAGE.md** | Hypercode grammar specification |
-| **DOCS/ARCHITECTURE.md** | System design and module overview |
-| **DOCS/ERROR_CODES.md** | Exit codes and troubleshooting |
-| **DOCS/SPECS_INTEGRATION.md** | SpecificationCore patterns |
-| **DOCS/BUILD_PERFORMANCE.md** | Build optimization strategies |
-| **DOCS/FUTURE.md** | Roadmap for v0.2+ features |
+| **Documentation.docc/USAGE.md** | Complete CLI reference with examples |
+| **Documentation.docc/LANGUAGE.md** | Hypercode grammar specification |
+| **Documentation.docc/ARCHITECTURE.md** | System design and module overview |
+| **Documentation.docc/ERROR_CODES.md** | Exit codes and troubleshooting |
+| **Documentation.docc/SPECS_INTEGRATION.md** | SpecificationCore patterns |
+| **Documentation.docc/BUILD_PERFORMANCE.md** | Build optimization strategies |
+| **Documentation.docc/FUTURE.md** | Roadmap for v0.2+ features |
 | **DOCS/RULES/02_Swift_Installation.md** | Swift setup for Linux |
 
 ---

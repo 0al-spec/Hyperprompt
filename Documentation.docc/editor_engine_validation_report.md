@@ -20,7 +20,7 @@ Date: 2025-12-?? (generated during repository review)
 | **EE3: Link Resolution** | ✅ | `Sources/EditorEngine/EditorResolver.swift`, `ResolvedTarget.swift` | ✅ **Done** |
 | **EE4: Editor Compilation** | ✅ | `Sources/EditorEngine/EditorCompiler.swift`, `CompileOptions.swift`, `CompileResult.swift` | ✅ **Done**, but depends on `CLI` (see notes) |
 | **EE5: Diagnostics Mapping** | ✅ | `Sources/EditorEngine/Diagnostics.swift`, `DiagnosticMapper.swift` | ✅ **Done** |
-| **EE6: Documentation & Testing** | ✅ | `DOCS/EDITOR_ENGINE.md` | ✅ **Done** |
+| **EE6: Documentation & Testing** | ✅ | `Documentation.docc/EDITOR_ENGINE.md` | ✅ **Done** |
 | **EE7: SpecificationCore Decision Refactor** | ✅ | DecisionSpec files: `LinkDecisionSpecs.swift`, `DirectoryDecisionSpecs.swift`, `FileTypeDecisionSpecs.swift`, `CompilePolicyDecisionSpecs.swift`, `OutputPathDecisionSpecs.swift`, `ResolutionDecisionSpecs.swift` | ✅ **Implemented in code**, but **no archive report** `DOCS/TASKS_ARCHIVE/EE7-summary.md` |
 
 **Task archive:**
@@ -51,7 +51,7 @@ Date: 2025-12-?? (generated during repository review)
 1. **Trait-gating is missing**
    - PRD requires EditorEngine to be disabled without `--traits Editor`.
    - `Package.swift` has no trait declaration; product/target are always available.
-   - `DOCS/EDITOR_ENGINE.md` claims trait-gating, but **code does not confirm this**.
+   - `Documentation.docc/EDITOR_ENGINE.md` claims trait-gating, but **code does not confirm this**.
 
 2. **EditorEngine depends on CLI**
    - `Package.swift` lists `CLI` as a dependency of `EditorEngine`.
@@ -70,7 +70,7 @@ Date: 2025-12-?? (generated during repository review)
 
 - EE0–EE6 are implemented and supported by source code.
 - PRD functional requirements are broadly covered **except trait-gating** and **CLI isolation**.
-- `DOCS/EDITOR_ENGINE.md` claims trait-gating but the build configuration does not.
+- `Documentation.docc/EDITOR_ENGINE.md` claims trait-gating but the build configuration does not.
 - EE7 appears implemented via DecisionSpecs, but the archive summary is missing.
 
 ## 7. Recommendations (no code changes)
@@ -85,7 +85,7 @@ Date: 2025-12-?? (generated during repository review)
 1. **Introduce Editor trait-gating**
    - Define the SwiftPM `Editor` trait in `Package.swift`.
    - Gate the `EditorEngine` target and product behind the trait.
-   - Update `DOCS/EDITOR_ENGINE.md` to match the build configuration.
+   - Update `Documentation.docc/EDITOR_ENGINE.md` to match the build configuration.
 
 2. **Decouple EditorEngine from CLI**
    - Remove `CLI` from `EditorEngine` dependencies.
