@@ -11,6 +11,17 @@ const fixtureRootTwo = path.resolve(__dirname, '..', '..', 'src', 'test', 'fixtu
 const mockEnginePath = path.resolve(__dirname, '..', '..', 'src', 'test', 'fixtures', 'mock-engine.js');
 const logFile = path.join(os.tmpdir(), `hyperprompt-vscode-test-${Date.now()}.log`);
 
+const waitForWorkspaceFolders = async (count: number, timeoutMs = 10_000) => {
+	const start = Date.now();
+	while (Date.now() - start < timeoutMs) {
+		if ((vscode.workspace.workspaceFolders?.length ?? 0) >= count) {
+			return;
+		}
+		await sleep(100);
+	}
+	throw new Error(`Workspace folders not ready (expected ${count})`);
+};
+
 const readLogEntries = (): Array<{ method: string; params: Record<string, unknown> }> => {
 	if (!fs.existsSync(logFile)) {
 		return [];
@@ -32,11 +43,11 @@ suite('Extension Integration', function () {
 
 	suiteSetup(async () => {
 		process.env.HYPERPROMPT_TEST_LOG = logFile;
-		if (vscode.workspace.workspaceFolders?.length) {
-			return;
+		if (!vscode.workspace.workspaceFolders?.length) {
+			vscode.workspace.updateWorkspaceFolders(0, null, { uri: vscode.Uri.file(fixtureRoot) });
+			vscode.workspace.updateWorkspaceFolders(1, null, { uri: vscode.Uri.file(fixtureRootTwo) });
+			await waitForWorkspaceFolders(2);
 		}
-		vscode.workspace.updateWorkspaceFolders(0, null, { uri: vscode.Uri.file(fixtureRoot) });
-		vscode.workspace.updateWorkspaceFolders(1, null, { uri: vscode.Uri.file(fixtureRootTwo) });
 		await setEnginePath(mockEnginePath);
 		const config = vscode.workspace.getConfiguration('hyperprompt');
 		await config.update('previewAutoUpdate', true, vscode.ConfigurationTarget.Workspace);
