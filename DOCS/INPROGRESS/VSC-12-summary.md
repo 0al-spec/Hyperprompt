@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-Updated the VS Code extension documentation with a preview placeholder, release checklist, and a standalone changelog to support release readiness.
+Updated the VS Code extension documentation, added packaging-safe assets, and validated VSIX packaging/install steps.
 
 ---
 
@@ -23,6 +23,10 @@ Updated the VS Code extension documentation with a preview placeholder, release 
    - Added initial release notes for version 0.0.1.
 3. **`Tools/VSCodeExtension/images/preview-placeholder.svg`**
    - Placeholder image for documentation until a real screenshot is captured.
+4. **`Tools/VSCodeExtension/assets/icon.png`**
+   - PNG icon to satisfy VSIX packaging requirements.
+5. **`Tools/VSCodeExtension/images/preview-placeholder.png`**
+   - PNG preview placeholder for VSIX packaging compatibility.
 
 ---
 
@@ -31,7 +35,8 @@ Updated the VS Code extension documentation with a preview placeholder, release 
 1. README documents commands/settings and release steps — ✅ Completed
 2. Release notes/changelog provided — ✅ Completed
 3. System requirements documented — ✅ Completed
-4. Validation commands recorded — ✅ Completed
+4. VSIX packaging and install steps executed — ✅ Completed
+5. Validation commands recorded — ✅ Completed
 
 ---
 
@@ -39,6 +44,8 @@ Updated the VS Code extension documentation with a preview placeholder, release 
 
 - **Build cache restore:** Cache missing (no `.build-cache` entries)
 - **`swift test 2>&1`:** ✅ Passed (447 tests, 13 skipped)
+- **VSIX packaging:** ✅ `npx @vscode/vsce package` (warning: LICENSE not found in extension folder)
+- **VSIX install:** ✅ `code --install-extension`
 
 ---
 
@@ -46,3 +53,4 @@ Updated the VS Code extension documentation with a preview placeholder, release 
 
 - VS Code extension integration tests may time out in CI if the VS Code download is slow.
 - Replace the placeholder preview image with a real screenshot before publishing.
+- Consider copying the repo `LICENSE` into `Tools/VSCodeExtension` to remove packaging warnings.
