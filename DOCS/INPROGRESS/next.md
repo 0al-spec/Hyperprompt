@@ -1,20 +1,20 @@
-# Next Task: VSC-8 — Extension Settings
+# Next Task: VSC-12 — Extension Documentation & Release
 
 **Priority:** P1
 **Phase:** Phase 14 — VS Code Extension Development
-**Effort:** 2 hours
-**Dependencies:** VSC-4*
-**Status:** ✅ Completed on 2025-12-27
+**Effort:** 3 hours
+**Dependencies:** VSC-11
+**Status:** Selected
 
 ## Description
 
-Add and document extension settings, and ensure changes apply correctly.
+Complete extension packaging steps (VSIX build/install) and document results.
 
 ## Subtasks
 
-- [x] Verify settings schema and handlers in package.json and extension code
-- [x] Ensure README documents settings and behavior
-- [x] Update tracking, summary, and validation notes
+- [ ] Run README packaging steps (VSIX build/install)
+- [ ] Test VSIX installation and record results
+- [ ] Update tracking and summary notes
 
 ## Next Step
 
