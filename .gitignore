@@ -1,7 +1,8 @@
 # Swift Package Manager
 .build/
 .swiftpm/
-.build-cache/
+.build-cache/*
+!.build-cache/*.tar.gz
 
 # Xcode
 xcuserdata/
