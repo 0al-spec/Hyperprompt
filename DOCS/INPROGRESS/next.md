@@ -4,7 +4,7 @@
 **Phase:** EditorEngine Code Review Fixes
 **Effort:** 1 hour
 **Dependencies:** None
-**Status:** Selected
+**Status:** Planned
 
 ## Description
 
