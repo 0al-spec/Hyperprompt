@@ -29,12 +29,16 @@ import Foundation
 
 /// Glob pattern matcher for file paths
 struct GlobMatcher {
+    /// Cache of compiled regular expressions
+    /// Maps regex pattern strings to compiled NSRegularExpression objects
+    private var regexCache: [String: NSRegularExpression] = [:]
+
     /// Checks if a path matches a glob pattern
     /// - Parameters:
     ///   - path: File path to check (relative to workspace root)
     ///   - pattern: Glob pattern (similar to .gitignore syntax)
     /// - Returns: true if path matches pattern
-    func matches(path: String, pattern: String) -> Bool {
+    mutating func matches(path: String, pattern: String) -> Bool {
         let normalizedPath = normalizePath(path)
         let normalizedPattern = pattern.trimmingCharacters(in: .whitespaces)
 
@@ -87,12 +91,22 @@ struct GlobMatcher {
     }
 
     /// Matches path against glob pattern using regex conversion
-    private func matchesGlobPattern(path: String, pattern: String) -> Bool {
-        let regex = globToRegex(pattern)
+    /// Uses cache to avoid recompiling the same regex pattern
+    private mutating func matchesGlobPattern(path: String, pattern: String) -> Bool {
+        let regexPattern = globToRegex(pattern)
 
-        guard let regexObj = try? NSRegularExpression(pattern: regex, options: []) else {
-            // Invalid regex - fall back to exact match
-            return path == pattern
+        // Check cache first
+        let regexObj: NSRegularExpression
+        if let cached = regexCache[regexPattern] {
+            regexObj = cached
+        } else {
+            guard let compiled = try? NSRegularExpression(pattern: regexPattern, options: []) else {
+                // Invalid regex - return false for safety
+                // Note: This differs from previous exact match fallback (see EE-FIX-5)
+                return false
+            }
+            regexCache[regexPattern] = compiled
+            regexObj = compiled
         }
 
         let range = NSRange(path.startIndex..., in: path)
@@ -166,9 +180,9 @@ extension Array where Element == String {
     /// Checks if any pattern in array matches the given path
     /// - Parameters:
     ///   - path: File path to check
-    ///   - matcher: Glob matcher to use (defaults to new instance)
+    ///   - matcher: Glob matcher to use (pass by inout to benefit from regex caching)
     /// - Returns: true if any pattern matches
-    func matchesAny(path: String, using matcher: GlobMatcher = GlobMatcher()) -> Bool {
+    func matchesAny(path: String, using matcher: inout GlobMatcher) -> Bool {
         for pattern in self {
             if matcher.matches(path: path, pattern: pattern) {
                 return true
