@@ -206,6 +206,12 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** None
 - **Description:** Fix `joinPath` to handle edge cases (trailing slash on base, leading slash on component, empty component) that can produce invalid paths with double slashes.
 
+### EE-FIX-4 — GlobMatcher Regex Caching **[P1] HIGH** ✓ 2025-12-28
+- **PRD:** [EE-FIX-4_GlobMatcher_Caching.md](./EE-FIX-4_GlobMatcher_Caching.md)
+- **Effort:** 2 hours
+- **Dependencies:** None
+- **Description:** Cache compiled glob regexes in GlobMatcher to reduce repeated compilation overhead during indexing.
+
 ---
 
 ## Phase 13: Performance & Incremental Compilation
@@ -360,8 +366,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 44 items
-- **Total Effort:** 132 hours (tracked tasks only)
+- **Total Archived:** 45 items
+- **Total Effort:** 134 hours (tracked tasks only)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
@@ -381,4 +387,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-28 (EE-FIX-3 archived)
+**Last Updated:** 2025-12-28 (EE-FIX-4 archived)
