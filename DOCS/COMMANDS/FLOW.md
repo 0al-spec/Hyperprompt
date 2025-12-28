@@ -24,6 +24,10 @@ FLOW is the top-level orchestrator; each step is a dedicated command with its ow
 └──────┬───────┘  Required: Swift compiler for build/test
        ↓
 ┌──────────────┐
+│INSTALL_GITLFS│  Install Git LFS (optional, for build cache)
+└──────┬───────┘  Optional: Large file storage for caches
+       ↓
+┌──────────────┐
 │   EXECUTE    │  Pre-flight → [YOU WORK] → Post-flight
 └──────┬───────┘  Validates, commits, pushes
        ↓
@@ -64,7 +68,20 @@ Install Swift compiler and toolchain required for building and testing Hyperprom
 
 ---
 
-### 4. EXECUTE
+### 4. INSTALL_GITLFS
+
+See `DOCS/COMMANDS/PRIMITIVES/GITLFS.md` for details.
+
+Install Git LFS (Large File Storage) for handling large binary files like build caches. **Optional but recommended** for development environments.
+
+**Skip if:**
+- Git LFS already installed (`git lfs version` works)
+- Not using build cache sharing
+- LFS server unavailable
+
+---
+
+### 5. EXECUTE
 
 See `DOCS/COMMANDS/EXECUTE.md` for details.
 
@@ -72,7 +89,7 @@ Run pre-flight checks, implement following XP/TDD, then validate like CI and upd
 
 ---
 
-### 5. PROGRESS (Optional)
+### 6. PROGRESS (Optional)
 
 See `DOCS/COMMANDS/PROGRESS.md` for details.
 
@@ -80,7 +97,7 @@ Update task checklists during execution (auto-called by EXECUTE).
 
 ---
 
-### 6. ARCHIVE
+### 7. ARCHIVE
 
 See `DOCS/COMMANDS/ARCHIVE.md` for details.
 

@@ -216,6 +216,50 @@ final class ProjectIndexerTests: XCTestCase {
             }
         }
     }
+
+    // MARK: - joinPath Tests
+
+    func testJoinPath_NormalCase() {
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let result = indexer.joinPath("/path", "file")
+        XCTAssertEqual(result, "/path/file")
+    }
+
+    func testJoinPath_TrailingSlashOnBase() {
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let result = indexer.joinPath("/path/", "file")
+        XCTAssertEqual(result, "/path/file")
+    }
+
+    func testJoinPath_LeadingSlashOnComponent() {
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let result = indexer.joinPath("/path", "/file")
+        XCTAssertEqual(result, "/path/file")
+    }
+
+    func testJoinPath_BothSlashes() {
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let result = indexer.joinPath("/path/", "/file")
+        XCTAssertEqual(result, "/path/file")
+    }
+
+    func testJoinPath_EmptyComponent() {
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let result = indexer.joinPath("/path", "")
+        XCTAssertEqual(result, "/path")
+    }
+
+    func testJoinPath_RootBase() {
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let result = indexer.joinPath("/", "file")
+        XCTAssertEqual(result, "/file")
+    }
 }
 
 // MARK: - MockFileSystem for Testing

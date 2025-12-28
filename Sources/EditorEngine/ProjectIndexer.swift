@@ -301,11 +301,21 @@ public struct ProjectIndexer {
     }
 
     /// Joins two path components
-    private func joinPath(_ base: String, _ component: String) -> String {
-        if base.hasSuffix("/") {
-            return base + component
+    internal func joinPath(_ base: String, _ component: String) -> String {
+        // Handle empty component
+        guard !component.isEmpty else {
+            return base
         }
-        return base + "/" + component
+
+        // Normalize trailing slash on base
+        let normalizedBase = base.hasSuffix("/") ? String(base.dropLast()) : base
+
+        // Normalize leading slash on component
+        let normalizedComponent = component.hasPrefix("/")
+            ? String(component.dropFirst())
+            : component
+
+        return normalizedBase + "/" + normalizedComponent
     }
 }
 #endif

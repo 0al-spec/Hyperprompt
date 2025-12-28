@@ -1,7 +1,12 @@
 # Swift Package Manager
 .build/
 .swiftpm/
-.build-cache/
+
+# Build caches (LFS-tracked archives only)
+caches/*
+!caches/.gitkeep
+# Temporarily ignore .tar.gz until LFS server is available
+# !caches/*.tar.gz
 
 # Xcode
 xcuserdata/

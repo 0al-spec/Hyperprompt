@@ -1,0 +1,2 @@
+# Git LFS configuration for build caches
+caches/*.tar.gz filter=lfs diff=lfs merge=lfs -text
