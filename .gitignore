@@ -3,6 +3,7 @@
 .swiftpm/
 .build-cache/*
 !.build-cache/*.tar.gz
+!.build-cache/.gitkeep
 
 # Xcode
 xcuserdata/
