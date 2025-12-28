@@ -77,10 +77,10 @@ Parallelizable tasks to start while EditorEngine work continues:
 
 ---
 
-### EE-FIX-2: Byte Offset Calculation Off-by-One Error **[P0] BLOCKER**
+### EE-FIX-2: Byte Offset Calculation Off-by-One Error **[P0] BLOCKER** **INPROGRESS**
 **Dependencies:** None
 **Estimated:** 2 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 In Progress
 **Location:** `Sources/EditorEngine/EditorParser.swift:188-202`
 
 - [ ] **[P0]** Review and validate `computeLineStartOffsets` logic for trailing newlines
