@@ -52,6 +52,127 @@ Parallelizable tasks to start while EditorEngine work continues:
 
 **Acceptance Criteria:** User-facing documentation resides in `Documentation.docc/`, process docs remain in `DOCS/`, and all internal links point to the correct locations
 
+---
+
+## EditorEngine Code Review Fixes
+
+**Source:** [REVIEW_EditorEngine_Implementation.md](INPROGRESS/REVIEW_EditorEngine_Implementation.md)
+**Review Date:** 2025-12-28
+**Total Estimated Effort:** ~12 hours
+
+### EE-FIX-1: Missing Workspace Root Path Validation **[P0] BLOCKER**
+**Dependencies:** None
+**Estimated:** 1 hour
+**Status:** ⏸️ Pending
+**Location:** `Sources/EditorEngine/ProjectIndexer.swift:136-140`
+
+- [ ] **[P0]** Add validation that `workspaceRoot` is an absolute path in `ProjectIndexer.index()`
+- [ ] **[P0]** Add new error case `IndexerError.invalidWorkspaceRoot(path:reason:)`
+- [ ] **[P0]** Throw error if path is relative (doesn't start with `/`)
+- [ ] **[P1]** Write unit tests for absolute/relative path validation
+
+**Acceptance Criteria:** ProjectIndexer rejects relative paths with clear error message
+
+**PRD:** [`DOCS/INPROGRESS/EE-FIX-1_Workspace_Root_Validation.md`](INPROGRESS/EE-FIX-1_Workspace_Root_Validation.md)
+
+---
+
+### EE-FIX-2: Byte Offset Calculation Off-by-One Error **[P0] BLOCKER**
+**Dependencies:** None
+**Estimated:** 2 hours
+**Status:** ⏸️ Pending
+**Location:** `Sources/EditorEngine/EditorParser.swift:188-202`
+
+- [ ] **[P0]** Review and validate `computeLineStartOffsets` logic for trailing newlines
+- [ ] **[P0]** Fix off-by-one error when file ends with newline
+- [ ] **[P0]** Add integration test verifying byte ranges match actual file content positions
+- [ ] **[P1]** Test with files ending with/without newlines
+- [ ] **[P1]** Test with multi-byte UTF-8 characters
+
+**Acceptance Criteria:** Byte offsets are accurate for all line ending scenarios; LSP-compatible positions
+
+**PRD:** [`DOCS/INPROGRESS/EE-FIX-2_Byte_Offset_Calculation.md`](INPROGRESS/EE-FIX-2_Byte_Offset_Calculation.md)
+
+---
+
+### EE-FIX-3: Path Manipulation Double-Slash Bug **[P1] HIGH**
+**Dependencies:** None
+**Estimated:** 1 hour
+**Status:** ⏸️ Pending
+**Location:** `Sources/EditorEngine/ProjectIndexer.swift:290-296`
+
+- [ ] **[P1]** Fix `joinPath` to handle trailing slash on base
+- [ ] **[P1]** Fix `joinPath` to handle leading slash on component
+- [ ] **[P1]** Fix `joinPath` to handle empty component
+- [ ] **[P1]** Write unit tests for edge cases (double slash, empty, leading slash)
+
+**Acceptance Criteria:** `joinPath` produces valid paths for all edge cases; no `//` in output
+
+**PRD:** [`DOCS/INPROGRESS/EE-FIX-3_Path_Manipulation.md`](INPROGRESS/EE-FIX-3_Path_Manipulation.md)
+
+---
+
+### EE-FIX-4: GlobMatcher Regex Caching **[P1] HIGH**
+**Dependencies:** None
+**Estimated:** 2 hours
+**Status:** ⏸️ Pending
+**Location:** `Sources/EditorEngine/GlobMatcher.swift:90-100`
+
+- [ ] **[P1]** Add regex cache dictionary to GlobMatcher (`[String: NSRegularExpression]`)
+- [ ] **[P1]** Update `matchesGlobPattern` to use cached regex
+- [ ] **[P1]** Make GlobMatcher a class or use mutable reference for caching
+- [ ] **[P1]** Update call sites to reuse matcher instance
+- [ ] **[P2]** Add cache eviction if needed (LRU with max entries)
+- [ ] **[P1]** Add performance test comparing cached vs uncached
+
+**Acceptance Criteria:** Regex compilation reduced by >80% on repeated pattern matching
+
+**PRD:** [`DOCS/INPROGRESS/EE-FIX-4_GlobMatcher_Caching.md`](INPROGRESS/EE-FIX-4_GlobMatcher_Caching.md)
+
+---
+
+### EE-FIX-5: Silent Regex Failure Fallback **[P1] HIGH**
+**Dependencies:** EE-FIX-4
+**Estimated:** 2 hours
+**Status:** ⏸️ Pending
+**Location:** `Sources/EditorEngine/GlobMatcher.swift:93-96`
+
+- [ ] **[P1]** Add debug assertion for invalid regex patterns
+- [ ] **[P1]** Return `false` instead of exact match fallback for safety
+- [ ] **[P1]** Add pattern validation in `loadIgnorePatterns`
+- [ ] **[P1]** Throw `IndexerError.invalidIgnoreFile` for invalid glob patterns
+- [ ] **[P1]** Include line number in error message for user debugging
+- [ ] **[P1]** Write tests for invalid pattern handling
+
+**Acceptance Criteria:** Invalid patterns surface errors during ignore file loading; no silent fallback
+
+**PRD:** [`DOCS/INPROGRESS/EE-FIX-5_Regex_Failure_Handling.md`](INPROGRESS/EE-FIX-5_Regex_Failure_Handling.md)
+
+---
+
+### EE-FIX-6: ProjectIndexer Integration Tests **[P1] HIGH**
+**Dependencies:** None
+**Estimated:** 4 hours
+**Status:** ⏸️ Pending
+**Location:** `Tests/EditorEngineTests/ProjectIndexerTests.swift:99-146`
+
+- [ ] **[P1]** Verify MockFileSystem supports directory structure simulation
+- [ ] **[P1]** Implement test: Multi-level directory traversal with .hc and .md files
+- [ ] **[P1]** Implement test: `.hyperpromptignore` pattern matching
+- [ ] **[P1]** Implement test: Default ignore directory exclusion (.git, .build, etc.)
+- [ ] **[P1]** Implement test: Symlink handling with skip/follow policies
+- [ ] **[P1]** Implement test: Hidden file handling with exclude/include policies
+- [ ] **[P1]** Implement test: Max depth limiting
+- [ ] **[P1]** Implement test: Deterministic ordering of discovered files
+- [ ] **[P1]** Implement test: Empty workspace handling
+- [ ] **[P1]** Implement test: Workspace with only ignored files
+
+**Acceptance Criteria:** All 10 integration test scenarios pass; placeholder tests replaced
+
+**PRD:** [`DOCS/INPROGRESS/EE-FIX-6_ProjectIndexer_Tests.md`](INPROGRESS/EE-FIX-6_ProjectIndexer_Tests.md)
+
+---
+
 ### 📁 Completed Work Archive
 
 **Phases 1-10 (Complete):** See archived work plan at:
