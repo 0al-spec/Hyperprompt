@@ -204,3 +204,6 @@ func testJoinPath_RootBase() {
 - [ ] No `//` in output for any valid input combination
 - [ ] All 6 test cases pass
 - [ ] All existing ProjectIndexer tests pass
+
+---
+**Archived:** 2025-12-28

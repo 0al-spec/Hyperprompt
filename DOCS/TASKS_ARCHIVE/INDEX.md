@@ -200,6 +200,12 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** None
 - **Description:** Review and validate `computeLineStartOffsets` logic for trailing newlines. Result: **No bug found** - added comprehensive test coverage to confirm correct implementation.
 
+### EE-FIX-3 — Path Manipulation Double-Slash Bug **[P1] HIGH** ✓ 2025-12-28
+- **PRD:** [EE-FIX-3_Path_Manipulation.md](./EE-FIX-3_Path_Manipulation.md)
+- **Effort:** 1 hour
+- **Dependencies:** None
+- **Description:** Fix `joinPath` to handle edge cases (trailing slash on base, leading slash on component, empty component) that can produce invalid paths with double slashes.
+
 ---
 
 ## Phase 13: Performance & Incremental Compilation
@@ -354,8 +360,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 43 items
-- **Total Effort:** 131 hours (tracked tasks only)
+- **Total Archived:** 44 items
+- **Total Effort:** 132 hours (tracked tasks only)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
@@ -375,4 +381,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-28 (EE-FIX-2 archived)
+**Last Updated:** 2025-12-28 (EE-FIX-3 archived)
