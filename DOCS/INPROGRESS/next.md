@@ -1,6 +1,18 @@
-# Next Task
+# Next Task: EE-FIX-3 — Path Manipulation Double-Slash Bug
 
-No active task. Run SELECT to choose next task:
+**Priority:** P1 HIGH
+**Phase:** EditorEngine Code Review Fixes
+**Effort:** 1 hour
+**Dependencies:** None
+**Status:** Selected
+
+## Description
+
+Fix `joinPath` in ProjectIndexer to handle edge cases that can produce invalid paths with double slashes. The function needs to properly handle trailing slashes on base, leading slashes on components, and empty components.
+
+## Next Step
+
+Run PLAN command to generate detailed PRD:
 ```bash
-claude "Выполни команду SELECT"
+claude "Выполни команду PLAN"
 ```
