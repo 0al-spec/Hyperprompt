@@ -186,6 +186,16 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## EditorEngine Code Review Fixes
+
+### EE-FIX-1 — Missing Workspace Root Path Validation **[P0] BLOCKER** ✓ 2025-12-28
+- **PRD:** [EE-FIX-1_Workspace_Root_Validation.md](./EE-FIX-1_Workspace_Root_Validation.md)
+- **Effort:** 1 hour
+- **Dependencies:** None
+- **Description:** Add validation that `workspaceRoot` is an absolute path in `ProjectIndexer.index()` to prevent relative paths from causing undefined behavior.
+
+---
+
 ## Phase 13: Performance & Incremental Compilation
 
 ### PERF-1 — Performance Baseline & Benchmarks **[P0]** ✓ 2025-12-24
@@ -338,8 +348,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 41 items
-- **Total Effort:** 128 hours (tracked tasks only)
+- **Total Archived:** 42 items
+- **Total Effort:** 129 hours (tracked tasks only)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
@@ -359,4 +369,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-27 (DOC-REORG-001 archived)
+**Last Updated:** 2025-12-28 (EE-FIX-1 archived)

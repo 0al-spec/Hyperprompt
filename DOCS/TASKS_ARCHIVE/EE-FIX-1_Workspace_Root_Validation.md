@@ -201,3 +201,6 @@ extension IndexerError: CustomStringConvertible {
 - [x] Test for relative path rejection passes
 - [x] Test for absolute path acceptance passes
 - [x] All existing tests continue to pass
+
+---
+**Archived:** 2025-12-28
