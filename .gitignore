@@ -2,8 +2,10 @@
 .build/
 .swiftpm/
 
-# Build caches (local only)
-caches/
+# Build caches (LFS-tracked archives only)
+caches/*
+!caches/*.tar.gz
+!caches/.gitkeep
 
 # Xcode
 xcuserdata/
