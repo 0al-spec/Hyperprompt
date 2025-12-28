@@ -103,10 +103,19 @@ public struct MarkdownEmitter {
         let headingLevel = effectiveDepth + 1
         let headingText = node.literal
         let heading = generateHeading(text: headingText, level: headingLevel)
-        output.appendLine(heading)
+        let isMarkdownInclude: Bool
+        if case .markdownFile = node.resolution {
+            isMarkdownInclude = true
+        } else {
+            isMarkdownInclude = false
+        }
+        if !isMarkdownInclude {
+            output.appendLine(heading)
+        }
 
         // Embed content based on resolution kind
-        embedContent(for: node, effectiveDepth: effectiveDepth, output: &output)
+        let headingOffset = isMarkdownInclude ? effectiveDepth : headingLevel
+        embedContent(for: node, headingOffset: headingOffset, output: &output)
 
         // Emit children with blank line separators
         for (index, child) in node.children.enumerated() {
@@ -146,7 +155,7 @@ public struct MarkdownEmitter {
     ///   - node: The node containing the resolution information.
     ///   - effectiveDepth: The effective depth of the node.
     ///   - output: The output builder to accumulate content.
-    private func embedContent(for node: Node, effectiveDepth: Int, output: inout StringBuilder) {
+    private func embedContent(for node: Node, headingOffset: Int, output: inout StringBuilder) {
         guard let resolution = node.resolution else {
             // Treat as inline text (no additional content)
             return
@@ -159,8 +168,7 @@ public struct MarkdownEmitter {
 
         case let .markdownFile(_, content):
             // Embed Markdown content with adjusted headings
-            let offset = effectiveDepth + 1
-            let adjusted = headingAdjuster.adjustHeadings(in: content, offset: offset)
+            let adjusted = headingAdjuster.adjustHeadings(in: content, offset: headingOffset)
             // Append adjusted content (HeadingAdjuster ensures it ends with LF)
             // Remove trailing newline to avoid double newlines
             let trimmed = adjusted.trimmingSuffix("\n")

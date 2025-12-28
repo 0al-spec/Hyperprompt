@@ -360,7 +360,7 @@ Per ADR-001, this CLI RPC interface is the MVP implementation. Migration to Lang
 
 ## References
 
-- **ADR-001:** DOCS/ARCHITECTURE_DECISIONS.md
+- **ADR-001:** ARCHITECTURE_DECISIONS.md
 - **PRD:** DOCS/INPROGRESS/VSC-2B_CLI_JSON-RPC_Interface.md
 - **JSON-RPC 2.0 Spec:** https://www.jsonrpc.org/specification
 - **EditorEngine API:** Sources/EditorEngine/EditorEngine.swift

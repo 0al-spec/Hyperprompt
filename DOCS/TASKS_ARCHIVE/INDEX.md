@@ -4,6 +4,25 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Hotfixes & Bug Reports
+
+### BUG-CE1-001 — Lenient Compile Includes Markdown Filename Heading **[P0]** ✓ 2025-12-27
+- **PRD:** [BUG-CE1-001_Lenient_Compile_Includes_Markdown_Filename_Heading.md](./BUG-CE1-001_Lenient_Compile_Includes_Markdown_Filename_Heading.md)
+- **Summary:** [BUG-CE1-001-summary.md](./BUG-CE1-001-summary.md)
+- **Report:** [BUG-CE1-001_Bug_Report.md](./BUG-CE1-001_Bug_Report.md)
+- **Effort:** 1 hour
+- **Dependencies:** None
+- **Description:** Document lenient compile output bug for markdown include headings and capture repro details.
+
+### DOC-REORG-001 — Move User Docs to Documentation.docc **[P0]** ✓ 2025-12-27
+- **PRD:** [DOC-REORG-001_Move_User_Docs_to_Documentation_docc.md](./DOC-REORG-001_Move_User_Docs_to_Documentation_docc.md)
+- **Summary:** [DOC-REORG-001-summary.md](./DOC-REORG-001-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** None
+- **Description:** Relocate user-facing docs to Documentation.docc, keep process docs in DOCS, and update references.
+
+---
+
 ## Phase 4: Reference Resolution
 
 ### B2 — Dependency Tracker **[P1]** ✓ 2025-12-21
@@ -158,6 +177,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 - **Description:** Add position-based query API to EditorParser with binary search for O(log n) lookup. Enables go-to-definition and hover features in VS Code extension.
 
+### EE-EXT-1B — Fix EditorParser linkAt Regression **[P0]** ✓ 2025-12-27
+- **PRD:** [EE-EXT-1B_Fix_EditorParser_linkAt_Regression.md](./EE-EXT-1B_Fix_EditorParser_linkAt_Regression.md)
+- **Summary:** [EE-EXT-1B-summary.md](./EE-EXT-1B-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** EE-EXT-1
+- **Description:** Restore link span extraction for linkAt queries and preserve ranges on lexer errors.
+
 ---
 
 ## Phase 13: Performance & Incremental Compilation
@@ -222,11 +248,83 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** VSC-2B, VSC-4*
 - **Description:** Add a lenient compile command in the VS Code extension for missing-reference-tolerant builds.
 
+### VSC-7A — Compile on Demand Command **[P0]** ✓ 2025-12-26
+- **PRD:** [VSC-7A_Compile_on_Demand_Command.md](./VSC-7A_Compile_on_Demand_Command.md)
+- **Effort:** 3 hours
+- **Dependencies:** VSC-2B, VSC-4*
+- **Description:** Surface compile output in the VS Code extension via output channel with tests.
 ### VSC-8 — Extension Settings **[P1]** ✓ 2025-12-26
 - **PRD:** [VSC-8_Extension_Settings.md](./VSC-8_Extension_Settings.md)
 - **Effort:** 2 hours
 - **Dependencies:** VSC-4*
 - **Description:** Add extension settings schema and runtime handling for resolution mode, preview auto-update, diagnostics, and engine configuration.
+
+### VSC-5 — Navigation Features **[P0]** ✓ 2025-12-27
+- **PRD:** [VSC-5_Navigation_Features.md](./VSC-5_Navigation_Features.md)
+- **Summary:** [VSC-5-summary.md](./VSC-5-summary.md)
+- **Effort:** 5 hours
+- **Dependencies:** VSC-4*, EE-EXT-1
+- **Description:** Add go-to-definition and hover support for Hypercode references.
+
+### VSC-6 — Diagnostics Integration **[P0]** ✓ 2025-12-27
+- **PRD:** [VSC-6_Diagnostics_Integration.md](./VSC-6_Diagnostics_Integration.md)
+- **Summary:** [VSC-6-summary.md](./VSC-6-summary.md)
+- **Effort:** 4 hours
+- **Dependencies:** VSC-4*, EE-EXT-2
+- **Description:** Surface diagnostics in the Problems panel with proper ranges and tests.
+
+### VSC-7 — Live Preview Panel **[P0]** ✓ 2025-12-27
+- **PRD:** [VSC-7_Live_Preview_Panel.md](./VSC-7_Live_Preview_Panel.md)
+- **Summary:** [VSC-7-summary.md](./VSC-7-summary.md)
+- **Effort:** 6 hours
+- **Dependencies:** VSC-4*, PERF-4
+- **Description:** Provide live preview panel with compile-on-save updates and scroll sync.
+
+### VSC-11 — Extension Testing & QA **[P0]** ✓ 2025-12-27
+- **PRD:** [VSC-11_Extension_Testing_QA.md](./VSC-11_Extension_Testing_QA.md)
+- **Summary:** [VSC-11-summary.md](./VSC-11-summary.md)
+- **Effort:** 4 hours
+- **Dependencies:** VSC-5, VSC-6, VSC-7
+- **Description:** Add integration coverage, fixtures, and CI validation for extension features.
+
+### VSC-12 — Extension Documentation & Release **[P0]** ✓ 2025-12-27
+- **PRD:** [VSC-12_Extension_Documentation_Release.md](./VSC-12_Extension_Documentation_Release.md)
+- **Summary:** [VSC-12-summary.md](./VSC-12-summary.md)
+- **Effort:** 3 hours
+- **Dependencies:** VSC-11
+- **Description:** Document extension features, requirements, and packaging steps with release notes.
+
+### VSC-DOCS — TypeScript Project Documentation **[P1]** ✓ 2025-12-27
+- **PRD:** [VSC-DOCS_TypeScript_Project_Documentation.md](./VSC-DOCS_TypeScript_Project_Documentation.md)
+- **Summary:** [VSC-DOCS-summary.md](./VSC-DOCS-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** VSC-3
+- **Description:** Document TypeScript project structure, workflows, and RPC behaviors.
+
+---
+
+## Phase 15: PRD Validation & Gap Closure
+
+### PRD-VAL-1 — PRD Requirements Checklist **[P0]** ✓ 2025-12-27
+- **PRD:** [PRD-VAL-1_PRD_Requirements_Checklist.md](./PRD-VAL-1_PRD_Requirements_Checklist.md)
+- **Summary:** [PRD-VAL-1-summary.md](./PRD-VAL-1-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** VSC-12
+- **Description:** Validate PRD requirements against implementation and document evidence.
+
+### PRD-VAL-2 — Validation Report Update **[P1]** ✓ 2025-12-27
+- **PRD:** [PRD-VAL-2_Validation_Report_Update.md](./PRD-VAL-2_Validation_Report_Update.md)
+- **Summary:** [PRD-VAL-2-summary.md](./PRD-VAL-2-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** PRD-VAL-1
+- **Description:** Update validation report with resolved issues, architecture choice, and benchmarks.
+
+### PRD-VAL-3 — Extension Parity Validation **[P1]** ✓ 2025-12-27
+- **PRD:** [PRD-VAL-3_Extension_Parity_Validation.md](./PRD-VAL-3_Extension_Parity_Validation.md)
+- **Summary:** [PRD-VAL-3-summary.md](./PRD-VAL-3-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** PRD-VAL-2
+- **Description:** Add deterministic parity test comparing CLI output with extension RPC output.
 
 ---
 
@@ -240,9 +338,9 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 28 items
-- **Total Effort:** 92 hours (tracked tasks only)
-- **Phases Represented:** 9 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14)
+- **Total Archived:** 41 items
+- **Total Effort:** 128 hours (tracked tasks only)
+- **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
 
@@ -261,4 +359,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-25 (PERF-4 archived)
+**Last Updated:** 2025-12-27 (DOC-REORG-001 archived)

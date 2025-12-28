@@ -2,10 +2,19 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { buildCompileParams, runCompileRequest, ResolutionMode } from './compileCommand';
+import { RpcDiagnostic, normalizeSeverity, toZeroBasedRange } from './diagnostics';
 import { resolveEngine, engineDiscoveryDefaults, EngineResolution } from './engineDiscovery';
+import {
+	buildLinkAtParams,
+	buildResolveParams,
+	describeResolvedTarget,
+	resolvedTargetPath,
+	runLinkAtRequest,
+	runResolveRequest
+} from './navigation';
+import { buildPreviewHtml } from './preview';
 import { RpcClient } from './rpcClient';
-
-type ResolutionMode = 'strict' | 'lenient';
 type LogLevel = 'error' | 'warn' | 'info' | 'debug';
 
 type HyperpromptSettings = {
@@ -56,11 +65,15 @@ const readSettings = (): HyperpromptSettings => {
 export async function activate(context: vscode.ExtensionContext) {
 	console.log('Hyperprompt extension activated.');
 	const compileTimeoutMs = 5000;
+	const outputChannel = vscode.window.createOutputChannel('Hyperprompt');
+	const diagnosticCollection = vscode.languages.createDiagnosticCollection('hyperprompt');
 	let settings = readSettings();
 	let rpcClient: RpcClient | null = null;
 	let engineResolution: EngineResolution | null = null;
 	let lastEngineErrorMessage: string | null = null;
 	let refreshInFlight: Promise<void> | null = null;
+	let previewPanel: vscode.WebviewPanel | null = null;
+	let previewEntryFile: string | null = null;
 
 	const stopRpcClient = () => {
 		if (!rpcClient) {
@@ -169,7 +182,17 @@ export async function activate(context: vscode.ExtensionContext) {
 		return entryFile;
 	};
 
-	const runCompile = async (mode?: ResolutionMode) => {
+	const renderCompileOutput = (result: { output?: string }) => {
+		if (result.output && result.output.length > 0) {
+			outputChannel.clear();
+			outputChannel.appendLine(result.output);
+			outputChannel.show(true);
+			return;
+		}
+		vscode.window.showWarningMessage('Hyperprompt: compile produced no output.');
+	};
+
+	const runCompile = async (mode: ResolutionMode, includeOutput: boolean) => {
 		const entryFile = getActiveEntryFile('compile');
 		if (!entryFile) {
 			return null;
@@ -178,17 +201,14 @@ export async function activate(context: vscode.ExtensionContext) {
 		if (!client) {
 			return null;
 		}
-		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? path.dirname(entryFile);
-		const resolvedMode = mode ?? settings.resolutionMode;
-		const params = { entryFile, workspaceRoot, includeOutput: false, mode: resolvedMode };
-
-		const result = await client.request('editor.compile', params, compileTimeoutMs);
-		return result as { output?: string; diagnostics?: unknown[]; hasErrors?: boolean };
+		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+		const params = buildCompileParams(entryFile, workspaceRoot, mode, includeOutput);
+		return runCompileRequest(client.request.bind(client), params, compileTimeoutMs);
 	};
 
 	const compileCommand = vscode.commands.registerCommand('hyperprompt.compile', async () => {
 		try {
-			const compileResult = await runCompile();
+			const compileResult = await runCompile(settings.resolutionMode, true);
 			if (!compileResult) {
 				return;
 			}
@@ -198,6 +218,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			} else {
 				vscode.window.showInformationMessage('Hyperprompt: compile complete.');
 			}
+			renderCompileOutput(compileResult);
 		} catch (error) {
 			vscode.window.showErrorMessage(`Hyperprompt: compile failed (${String(error)})`);
 		}
@@ -205,7 +226,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const compileLenientCommand = vscode.commands.registerCommand('hyperprompt.compileLenient', async () => {
 		try {
-			const compileResult = await runCompile('lenient');
+			const compileResult = await runCompile('lenient', true);
 			if (!compileResult) {
 				return;
 			}
@@ -215,20 +236,259 @@ export async function activate(context: vscode.ExtensionContext) {
 			} else {
 				vscode.window.showInformationMessage('Hyperprompt: compile complete.');
 			}
+			renderCompileOutput(compileResult);
 		} catch (error) {
 			vscode.window.showErrorMessage(`Hyperprompt: compile failed (${String(error)})`);
 		}
 	});
 
+	const ensurePreviewPanel = () => {
+		if (previewPanel) {
+			return previewPanel;
+		}
+		const panel = vscode.window.createWebviewPanel(
+			'hyperpromptPreview',
+			'Hyperprompt Preview',
+			vscode.ViewColumn.Beside,
+			{ enableScripts: true, retainContextWhenHidden: true }
+		);
+		panel.onDidDispose(() => {
+			if (previewPanel === panel) {
+				previewPanel = null;
+				previewEntryFile = null;
+			}
+		});
+		previewPanel = panel;
+		return panel;
+	};
+
+	const updatePreviewOutput = async (entryFile: string) => {
+		if (!previewPanel) {
+			return;
+		}
+		const client = await ensureEngineReady();
+		if (!client) {
+			return;
+		}
+		const params = buildCompileParams(
+			entryFile,
+			resolveWorkspaceRootForPath(entryFile),
+			settings.resolutionMode,
+			true
+		);
+		const compileResult = await runCompileRequest(
+			client.request.bind(client),
+			params,
+			compileTimeoutMs
+		);
+		previewPanel.webview.html = buildPreviewHtml(compileResult.output ?? '');
+		const activeEditor = vscode.window.activeTextEditor;
+		if (activeEditor && activeEditor.document.uri.fsPath === entryFile) {
+			sendPreviewScroll(activeEditor);
+		}
+	};
+
 	const previewCommand = vscode.commands.registerCommand('hyperprompt.showPreview', async () => {
 		try {
-			const compileResult = await runCompile(settings.resolutionMode);
-			if (!compileResult) {
+			const entryFile = getActiveEntryFile('preview');
+			if (!entryFile) {
 				return;
 			}
-			vscode.window.showInformationMessage('Hyperprompt: preview is not wired yet.');
+			const panel = ensurePreviewPanel();
+			previewEntryFile = entryFile;
+			await updatePreviewOutput(entryFile);
+			panel.reveal();
 		} catch (error) {
 			vscode.window.showErrorMessage(`Hyperprompt: preview failed (${String(error)})`);
+		}
+	});
+
+	const computeScrollRatio = (editor: vscode.TextEditor): number => {
+		const visible = editor.visibleRanges[0];
+		const topLine = visible ? visible.start.line : 0;
+		const totalLines = Math.max(editor.document.lineCount - 1, 1);
+		return Math.min(1, Math.max(0, topLine / totalLines));
+	};
+
+	const sendPreviewScroll = (editor: vscode.TextEditor) => {
+		if (!previewPanel || !previewEntryFile) {
+			return;
+		}
+		if (editor.document.uri.fsPath !== previewEntryFile) {
+			return;
+		}
+		const ratio = computeScrollRatio(editor);
+		previewPanel.webview.postMessage({ type: 'scroll', ratio });
+	};
+
+	const resolveWorkspaceRoot = (document: vscode.TextDocument): string => {
+		const workspaceFolder = vscode.workspace.getWorkspaceFolder(document.uri);
+		return workspaceFolder?.uri.fsPath ?? path.dirname(document.uri.fsPath);
+	};
+
+	const resolveWorkspaceRootForPath = (filePath: string): string => {
+		const uri = vscode.Uri.file(filePath);
+		const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+		return workspaceFolder?.uri.fsPath ?? path.dirname(filePath);
+	};
+
+	const mapSeverity = (severity: string): vscode.DiagnosticSeverity => {
+		switch (normalizeSeverity(severity)) {
+			case 'warning':
+				return vscode.DiagnosticSeverity.Warning;
+			case 'info':
+				return vscode.DiagnosticSeverity.Information;
+			case 'hint':
+				return vscode.DiagnosticSeverity.Hint;
+			default:
+				return vscode.DiagnosticSeverity.Error;
+		}
+	};
+
+	const toDocumentPosition = (
+		document: vscode.TextDocument,
+		position: { line: number; character: number }
+	): vscode.Position => {
+		const safeLine = Math.min(Math.max(position.line, 0), Math.max(document.lineCount - 1, 0));
+		const lineText = document.lineAt(safeLine).text;
+		const safeCharacter = Math.min(Math.max(position.character, 0), lineText.length);
+		return new vscode.Position(safeLine, safeCharacter);
+	};
+
+	const toDiagnosticRange = (
+		document: vscode.TextDocument,
+		range?: { start: { line: number; column: number }; end: { line: number; column: number } }
+	): vscode.Range => {
+		const zeroBased = toZeroBasedRange(range);
+		if (!zeroBased) {
+			const start = toDocumentPosition(document, { line: 0, character: 0 });
+			return new vscode.Range(start, start);
+		}
+		const start = toDocumentPosition(document, zeroBased.start);
+		const end = toDocumentPosition(document, zeroBased.end);
+		return new vscode.Range(start, end);
+	};
+
+	const updateDiagnosticsForDocument = async (document: vscode.TextDocument) => {
+		if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
+			return;
+		}
+		if (!settings.diagnosticsEnabled) {
+			diagnosticCollection.delete(document.uri);
+			return;
+		}
+		const client = await ensureEngineReady();
+		if (!client) {
+			return;
+		}
+		const params = buildCompileParams(
+			document.uri.fsPath,
+			resolveWorkspaceRoot(document),
+			settings.resolutionMode,
+			false
+		);
+		const compileResult = await runCompileRequest(
+			client.request.bind(client),
+			params,
+			compileTimeoutMs
+		);
+		const diagnostics = (compileResult.diagnostics ?? []) as RpcDiagnostic[];
+		const vscodeDiagnostics = diagnostics.map((diagnostic) => {
+			const range = toDiagnosticRange(document, diagnostic.range);
+			const entry = new vscode.Diagnostic(range, diagnostic.message, mapSeverity(diagnostic.severity));
+			entry.code = diagnostic.code;
+			entry.source = 'Hyperprompt';
+			return entry;
+		});
+		diagnosticCollection.set(document.uri, vscodeDiagnostics);
+	};
+
+	const definitionProvider = vscode.languages.registerDefinitionProvider('hypercode', {
+		provideDefinition: async (document, position) => {
+			if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
+				return null;
+			}
+			try {
+				const client = await ensureEngineReady();
+				if (!client) {
+					return null;
+				}
+				const linkParams = buildLinkAtParams(
+					document.uri.fsPath,
+					position.line,
+					position.character
+				);
+				const linkSpan = await runLinkAtRequest(
+					client.request.bind(client),
+					linkParams,
+					compileTimeoutMs
+				);
+				if (!linkSpan) {
+					return null;
+				}
+				const resolveParams = buildResolveParams(
+					linkSpan.literal,
+					linkSpan.sourceFile,
+					resolveWorkspaceRoot(document)
+				);
+				const target = await runResolveRequest(
+					client.request.bind(client),
+					resolveParams,
+					compileTimeoutMs
+				);
+				const targetPath = resolvedTargetPath(target);
+				if (!targetPath) {
+					return null;
+				}
+				return new vscode.Location(vscode.Uri.file(targetPath), new vscode.Position(0, 0));
+			} catch (error) {
+				console.error(`[hyperprompt] definition failed: ${String(error)}`);
+				return null;
+			}
+		}
+	});
+
+	const hoverProvider = vscode.languages.registerHoverProvider('hypercode', {
+		provideHover: async (document, position) => {
+			if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
+				return null;
+			}
+			try {
+				const client = await ensureEngineReady();
+				if (!client) {
+					return null;
+				}
+				const linkParams = buildLinkAtParams(
+					document.uri.fsPath,
+					position.line,
+					position.character
+				);
+				const linkSpan = await runLinkAtRequest(
+					client.request.bind(client),
+					linkParams,
+					compileTimeoutMs
+				);
+				if (!linkSpan) {
+					return null;
+				}
+				const resolveParams = buildResolveParams(
+					linkSpan.literal,
+					linkSpan.sourceFile,
+					resolveWorkspaceRoot(document)
+				);
+				const target = await runResolveRequest(
+					client.request.bind(client),
+					resolveParams,
+					compileTimeoutMs
+				);
+				const markdown = new vscode.MarkdownString(
+					[`**Hyperprompt**`, `Link: \`${linkSpan.literal}\``, describeResolvedTarget(target)].join('\n\n')
+				);
+				return new vscode.Hover(markdown);
+			} catch (error) {
+				console.error(`[hyperprompt] hover failed: ${String(error)}`);
+				return null;
+			}
 		}
 	});
 
@@ -240,17 +500,54 @@ export async function activate(context: vscode.ExtensionContext) {
 		const engineChanged =
 			nextSettings.enginePath !== settings.enginePath ||
 			nextSettings.engineLogLevel !== settings.engineLogLevel;
+		const diagnosticsDisabled = settings.diagnosticsEnabled && !nextSettings.diagnosticsEnabled;
 		settings = nextSettings;
 		if (engineChanged) {
 			void refreshEngineState(true);
 		}
+		if (diagnosticsDisabled) {
+			diagnosticCollection.clear();
+		}
+	});
+
+	const diagnosticsWatcher = vscode.workspace.onDidSaveTextDocument((document) => {
+		void updateDiagnosticsForDocument(document).catch((error) => {
+			console.error(`[hyperprompt] diagnostics failed: ${String(error)}`);
+		});
+	});
+
+	const previewWatcher = vscode.workspace.onDidSaveTextDocument((document) => {
+		if (!previewPanel || !settings.previewAutoUpdate || !previewEntryFile) {
+			return;
+		}
+		const ext = path.extname(document.uri.fsPath).toLowerCase();
+		if (ext !== '.hc' && ext !== '.md') {
+			return;
+		}
+		void updatePreviewOutput(previewEntryFile).catch((error) => {
+			console.error(`[hyperprompt] preview update failed: ${String(error)}`);
+		});
+	});
+
+	const previewScrollWatcher = vscode.window.onDidChangeTextEditorVisibleRanges((event) => {
+		if (!previewPanel || !previewEntryFile) {
+			return;
+		}
+		sendPreviewScroll(event.textEditor);
 	});
 
 	context.subscriptions.push(
 		compileCommand,
 		compileLenientCommand,
 		previewCommand,
+		definitionProvider,
+		hoverProvider,
 		configWatcher,
+		diagnosticsWatcher,
+		previewWatcher,
+		previewScrollWatcher,
+		diagnosticCollection,
+		outputChannel,
 		{ dispose: () => stopRpcClient() }
 	);
 }

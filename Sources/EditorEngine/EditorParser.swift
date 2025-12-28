@@ -56,17 +56,22 @@ public struct EditorParser {
         let normalizedContent = normalizeLineEndings(content)
         let lines = splitIntoLines(normalizedContent)
         let lineStartOffsets = computeLineStartOffsets(lines)
+        let linkSpans = extractLinkSpans(
+            lines: lines,
+            lineStartOffsets: lineStartOffsets,
+            sourceFile: filePath
+        )
 
         var diagnostics: [CompilerError] = []
         let tokens: [Token]
 
         do {
-            tokens = try lexer.tokenize(content: content, filePath: filePath)
+            tokens = try lexer.tokenize(content: normalizedContent, filePath: filePath)
         } catch let error as CompilerError {
             diagnostics.append(error)
             return ParsedFile(
                 ast: nil,
-                linkSpans: [],
+                linkSpans: linkSpans,
                 diagnostics: diagnostics,
                 sourceFile: filePath
             )
@@ -79,7 +84,7 @@ public struct EditorParser {
             )
             return ParsedFile(
                 ast: nil,
-                linkSpans: [],
+                linkSpans: linkSpans,
                 diagnostics: diagnostics,
                 sourceFile: filePath
             )
@@ -87,13 +92,6 @@ public struct EditorParser {
 
         let parseResult = parser.parseWithRecovery(tokens: tokens)
         diagnostics.append(contentsOf: parseResult.diagnostics)
-
-        let linkSpans = extractLinkSpans(
-            tokens: tokens,
-            lines: lines,
-            lineStartOffsets: lineStartOffsets,
-            sourceFile: filePath
-        )
 
         return ParsedFile(
             ast: parseResult.program,
@@ -106,64 +104,65 @@ public struct EditorParser {
     // MARK: - Link Span Extraction
 
     private func extractLinkSpans(
-        tokens: [Token],
         lines: [String],
         lineStartOffsets: [Int],
         sourceFile: String
     ) -> [LinkSpan] {
         var spans: [LinkSpan] = []
 
-        for token in tokens {
-            guard case .node(_, let literal, let location) = token else {
-                continue
+        for (lineIndex, line) in lines.enumerated() {
+            let lineNumber = lineIndex + 1
+            var searchIndex = line.startIndex
+
+            while searchIndex < line.endIndex {
+                guard let openQuote = line[searchIndex...].firstIndex(of: "\"") else {
+                    break
+                }
+
+                let hasAtPrefix: Bool = {
+                    guard openQuote > line.startIndex else {
+                        return false
+                    }
+                    let prevIndex = line.index(before: openQuote)
+                    return line[prevIndex] == "@"
+                }()
+
+                let literalStart = line.index(after: openQuote)
+                guard let closeQuote = line[literalStart...].firstIndex(of: "\"") else {
+                    break
+                }
+
+                let literal = String(line[literalStart..<closeQuote])
+                let spanStartIndex = hasAtPrefix ? openQuote : literalStart
+
+                let lineStartOffset = lineStartOffsets[lineIndex]
+                let byteStart = lineStartOffset + line[..<spanStartIndex].utf8.count
+                let literalByteCount = line[literalStart..<closeQuote].utf8.count
+                let spanByteLength = hasAtPrefix ? (1 + literalByteCount) : literalByteCount
+                let byteEnd = byteStart + spanByteLength
+
+                let startColumn = line.distance(from: line.startIndex, to: spanStartIndex) + 1
+                let spanColumnLength = hasAtPrefix ? (1 + literal.count) : literal.count
+                let endColumn = startColumn + spanColumnLength
+
+                let lineRange = lineNumber..<(lineNumber + 1)
+                let columnRange = startColumn..<endColumn
+
+                let span = LinkSpan(
+                    literal: literal,
+                    byteRange: byteStart..<byteEnd,
+                    lineRange: lineRange,
+                    columnRange: columnRange,
+                    referenceHint: referenceHintDecision.decide(literal) ?? .inlineText,
+                    sourceFile: sourceFile
+                )
+                spans.append(span)
+
+                searchIndex = line.index(after: closeQuote)
             }
-
-            let lineIndex = location.line - 1
-            guard lineIndex >= 0, lineIndex < lines.count else {
-                continue
-            }
-
-            let line = lines[lineIndex]
-            guard let literalBounds = literalBounds(in: line) else {
-                continue
-            }
-
-            let literalStartIndex = literalBounds.start
-            let literalEndIndex = literalBounds.end
-
-            let lineStartOffset = lineStartOffsets[lineIndex]
-            let byteStart = lineStartOffset + line[..<literalStartIndex].utf8.count
-            let byteEnd = byteStart + line[literalStartIndex..<literalEndIndex].utf8.count
-
-            let startColumn = line.distance(from: line.startIndex, to: literalStartIndex) + 1
-            let endColumn = startColumn + literal.count
-
-            let lineRange = location.line..<(location.line + 1)
-            let columnRange = startColumn..<endColumn
-
-            let span = LinkSpan(
-                literal: literal,
-                byteRange: byteStart..<byteEnd,
-                lineRange: lineRange,
-                columnRange: columnRange,
-                referenceHint: referenceHintDecision.decide(literal) ?? .inlineText,
-                sourceFile: sourceFile
-            )
-            spans.append(span)
         }
 
         return spans
-    }
-
-    private func literalBounds(in line: String) -> (start: String.Index, end: String.Index)? {
-        guard let openQuote = line.firstIndex(of: "\"") else {
-            return nil
-        }
-        let start = line.index(after: openQuote)
-        guard let closeQuote = line[start...].firstIndex(of: "\"") else {
-            return nil
-        }
-        return (start: start, end: closeQuote)
     }
 
     // MARK: - Line Ending Normalization
