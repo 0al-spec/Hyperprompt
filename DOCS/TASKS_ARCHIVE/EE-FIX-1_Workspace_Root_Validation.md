@@ -195,9 +195,12 @@ extension IndexerError: CustomStringConvertible {
 
 ## 8. Acceptance Checklist
 
-- [ ] `IndexerError.invalidWorkspaceRoot` case added
-- [ ] Error description implemented
-- [ ] Validation guard clause added to `index()` method
-- [ ] Test for relative path rejection passes
-- [ ] Test for absolute path acceptance passes
-- [ ] All existing tests continue to pass
+- [x] `IndexerError.invalidWorkspaceRoot` case added
+- [x] Error description implemented
+- [x] Validation guard clause added to `index()` method
+- [x] Test for relative path rejection passes
+- [x] Test for absolute path acceptance passes
+- [x] All existing tests continue to pass
+
+---
+**Archived:** 2025-12-28
