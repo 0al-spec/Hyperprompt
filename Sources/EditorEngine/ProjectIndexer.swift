@@ -301,7 +301,7 @@ public struct ProjectIndexer {
     }
 
     /// Joins two path components
-    private func joinPath(_ base: String, _ component: String) -> String {
+    internal func joinPath(_ base: String, _ component: String) -> String {
         // Handle empty component
         guard !component.isEmpty else {
             return base
