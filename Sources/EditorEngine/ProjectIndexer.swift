@@ -267,8 +267,8 @@ public struct ProjectIndexer {
 
     /// Checks if a path matches any ignore pattern using glob matching
     private func matchesIgnorePattern(path: String, patterns: [String]) -> Bool {
-        let matcher = GlobMatcher()
-        return patterns.matchesAny(path: path, using: matcher)
+        var matcher = GlobMatcher()
+        return patterns.matchesAny(path: path, using: &matcher)
     }
 
     /// Collects metadata for a file
