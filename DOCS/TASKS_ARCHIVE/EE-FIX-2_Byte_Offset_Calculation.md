@@ -243,3 +243,6 @@ func testByteOffsets_UTF8Characters() {
 ## Result
 
 Issue B-002 from code review analysis was **NOT CONFIRMED**. The current implementation of `computeLineStartOffsets` correctly handles all edge cases including files with/without trailing newlines and multi-byte UTF-8 characters. Comprehensive test coverage added to validate this.
+
+---
+**Archived:** 2025-12-28
