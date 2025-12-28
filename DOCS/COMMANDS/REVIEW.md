@@ -114,6 +114,8 @@ Produce output following this structure:
 
 ## Output
 
+- **Report location**: `DOCS/INPROGRESS/{readable_name}.md`
+  - `{readable_name}` should describe the review scope (e.g., `REVIEW_add_code_reviewer_role.md`)
 - Structured code review report in markdown format
 - Actionable findings with severity classification
 - Proposed fixes for critical issues
