@@ -60,10 +60,10 @@ Parallelizable tasks to start while EditorEngine work continues:
 **Review Date:** 2025-12-28
 **Total Estimated Effort:** ~12 hours
 
-### EE-FIX-1: Missing Workspace Root Path Validation **[P0] BLOCKER**
+### EE-FIX-1: Missing Workspace Root Path Validation **[P0] BLOCKER** **INPROGRESS**
 **Dependencies:** None
 **Estimated:** 1 hour
-**Status:** ⏸️ Pending
+**Status:** 🟢 In Progress
 **Location:** `Sources/EditorEngine/ProjectIndexer.swift:136-140`
 
 - [ ] **[P0]** Add validation that `workspaceRoot` is an absolute path in `ProjectIndexer.index()`
