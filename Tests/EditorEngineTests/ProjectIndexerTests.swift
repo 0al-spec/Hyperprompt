@@ -72,6 +72,45 @@ final class ProjectIndexerTests: XCTestCase {
         XCTAssertTrue(description.contains("malformed"))
     }
 
+    func testIndexer_InvalidIgnorePattern_ThrowsError() {
+        let mockFS = MockFileSystem()
+        mockFS.addFile(path: "/workspace")
+        mockFS.addFile(path: "/workspace/.hyperpromptignore", content: "\0")
+
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+
+        XCTAssertThrowsError(try indexer.index(workspaceRoot: "/workspace")) { error in
+            guard case IndexerError.invalidIgnoreFile(let path, let reason) = error else {
+                XCTFail("Expected IndexerError.invalidIgnoreFile, got \(error)")
+                return
+            }
+            XCTAssertEqual(path, "/workspace/.hyperpromptignore")
+            XCTAssertTrue(reason.contains("line 1"))
+        }
+    }
+
+    func testIndexer_InvalidCustomIgnorePattern_ThrowsError() {
+        let mockFS = MockFileSystem()
+        mockFS.addFile(path: "/workspace")
+
+        let options = IndexerOptions(
+            symlinkPolicy: .skip,
+            hiddenEntryPolicy: .exclude,
+            maxDepth: 100,
+            customIgnorePatterns: ["\0"]
+        )
+
+        let indexer = ProjectIndexer(fileSystem: mockFS, options: options)
+
+        XCTAssertThrowsError(try indexer.index(workspaceRoot: "/workspace")) { error in
+            guard case IndexerError.invalidIgnoreFile(_, let reason) = error else {
+                XCTFail("Expected IndexerError.invalidIgnoreFile, got \(error)")
+                return
+            }
+            XCTAssertTrue(reason.contains("custom ignore pattern"))
+        }
+    }
+
     func testIndexerError_InvalidWorkspaceRoot_Description() {
         let error = IndexerError.invalidWorkspaceRoot(path: "relative/path", reason: "Workspace root must be an absolute path")
         let description = error.description

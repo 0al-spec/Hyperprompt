@@ -103,6 +103,9 @@ struct GlobMatcher {
             guard let compiled = try? NSRegularExpression(pattern: regexPattern, options: []) else {
                 // Invalid regex - return false for safety
                 // Note: This differs from previous exact match fallback (see EE-FIX-5)
+                #if DEBUG
+                assertionFailure("Invalid regex pattern '\(regexPattern)' generated from glob '\(pattern)'")
+                #endif
                 return false
             }
             regexCache[regexPattern] = compiled
@@ -121,7 +124,7 @@ struct GlobMatcher {
     /// - `?` → `[^/]` (matches single character except /)
     /// - `.` → `\.` (escape dots)
     /// - Other special regex chars → escaped
-    private func globToRegex(_ pattern: String) -> String {
+    func globToRegex(_ pattern: String) -> String {
         var regex = "^"
         var i = pattern.startIndex
 
