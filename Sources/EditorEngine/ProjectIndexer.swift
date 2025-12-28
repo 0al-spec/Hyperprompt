@@ -64,6 +64,9 @@ public struct IndexerOptions: Sendable {
 
 /// Errors that can occur during project indexing
 public enum IndexerError: Error, Equatable {
+    /// Workspace root path is invalid (e.g., relative path)
+    case invalidWorkspaceRoot(path: String, reason: String)
+
     /// Workspace root directory does not exist
     case workspaceNotFound(path: String)
 
@@ -80,6 +83,8 @@ public enum IndexerError: Error, Equatable {
 extension IndexerError: CustomStringConvertible {
     public var description: String {
         switch self {
+        case .invalidWorkspaceRoot(let path, let reason):
+            return "Invalid workspace root '\(path)': \(reason)"
         case .workspaceNotFound(let path):
             return "Workspace not found: \(path)"
         case .permissionDenied(let path):
@@ -134,6 +139,14 @@ public struct ProjectIndexer {
     /// - Returns: ProjectIndex with all discovered files
     /// - Throws: IndexerError if workspace cannot be scanned
     public func index(workspaceRoot: String) throws -> ProjectIndex {
+        // Validate workspace root is absolute path
+        guard workspaceRoot.hasPrefix("/") else {
+            throw IndexerError.invalidWorkspaceRoot(
+                path: workspaceRoot,
+                reason: "Workspace root must be an absolute path"
+            )
+        }
+
         // Verify workspace exists
         guard fileSystem.fileExists(at: workspaceRoot) else {
             throw IndexerError.workspaceNotFound(path: workspaceRoot)

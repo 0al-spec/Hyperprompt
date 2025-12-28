@@ -72,6 +72,14 @@ final class ProjectIndexerTests: XCTestCase {
         XCTAssertTrue(description.contains("malformed"))
     }
 
+    func testIndexerError_InvalidWorkspaceRoot_Description() {
+        let error = IndexerError.invalidWorkspaceRoot(path: "relative/path", reason: "Workspace root must be an absolute path")
+        let description = error.description
+
+        XCTAssertTrue(description.contains("relative/path"))
+        XCTAssertTrue(description.contains("Workspace root must be an absolute path"))
+    }
+
     func testIndexerError_Equality() {
         let error1 = IndexerError.workspaceNotFound(path: "/test")
         let error2 = IndexerError.workspaceNotFound(path: "/test")
@@ -143,5 +151,129 @@ final class ProjectIndexerTests: XCTestCase {
 
         XCTAssertTrue(true, "Error handling requires MockFileSystem")
     }
+
+    // MARK: - Workspace Root Path Validation Tests
+
+    func testIndexer_RelativePath_ThrowsError() {
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+
+        XCTAssertThrowsError(try indexer.index(workspaceRoot: "relative/path")) { error in
+            guard case IndexerError.invalidWorkspaceRoot(let path, let reason) = error else {
+                XCTFail("Expected IndexerError.invalidWorkspaceRoot, got \(error)")
+                return
+            }
+            XCTAssertEqual(path, "relative/path")
+            XCTAssertEqual(reason, "Workspace root must be an absolute path")
+        }
+    }
+
+    func testIndexer_EmptyPath_ThrowsError() {
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+
+        XCTAssertThrowsError(try indexer.index(workspaceRoot: "")) { error in
+            guard case IndexerError.invalidWorkspaceRoot = error else {
+                XCTFail("Expected IndexerError.invalidWorkspaceRoot, got \(error)")
+                return
+            }
+        }
+    }
+
+    func testIndexer_CurrentDirectoryPath_ThrowsError() {
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+
+        XCTAssertThrowsError(try indexer.index(workspaceRoot: ".")) { error in
+            guard case IndexerError.invalidWorkspaceRoot = error else {
+                XCTFail("Expected IndexerError.invalidWorkspaceRoot, got \(error)")
+                return
+            }
+        }
+    }
+
+    func testIndexer_ParentDirectoryPath_ThrowsError() {
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+
+        XCTAssertThrowsError(try indexer.index(workspaceRoot: "../foo")) { error in
+            guard case IndexerError.invalidWorkspaceRoot = error else {
+                XCTFail("Expected IndexerError.invalidWorkspaceRoot, got \(error)")
+                return
+            }
+        }
+    }
+
+    func testIndexer_AbsolutePath_ProceedsToExistenceCheck() {
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+
+        // Absolute path should pass validation, then fail on existence check
+        XCTAssertThrowsError(try indexer.index(workspaceRoot: "/absolute/path")) { error in
+            guard case IndexerError.workspaceNotFound = error else {
+                XCTFail("Expected IndexerError.workspaceNotFound (path validation passed), got \(error)")
+                return
+            }
+        }
+    }
+}
+
+// MARK: - MockFileSystem for Testing
+
+/// Minimal mock file system for ProjectIndexer tests
+private final class MockFileSystem: FileSystem {
+    private var files: [String: String] = [:]
+    private var currentDir = "/mock"
+
+    func addFile(path: String, content: String = "") {
+        files[path] = content
+    }
+
+    func readFile(at path: String) throws -> String {
+        guard let content = files[path] else {
+            throw MockFileSystemError(message: "File not found: \(path)")
+        }
+        return content
+    }
+
+    func fileExists(at path: String) -> Bool {
+        files[path] != nil
+    }
+
+    func canonicalizePath(_ path: String) throws -> String {
+        if path.hasPrefix("/") {
+            return path
+        }
+        return currentDir + "/" + path
+    }
+
+    func currentDirectory() -> String {
+        currentDir
+    }
+
+    func writeFile(at path: String, content: String) throws {
+        files[path] = content
+    }
+
+    func listDirectory(at path: String) throws -> [String] {
+        []
+    }
+
+    func isDirectory(at path: String) -> Bool {
+        false
+    }
+
+    func fileAttributes(at path: String) -> FileAttributes? {
+        guard let content = files[path] else {
+            return nil
+        }
+        return FileAttributes(size: content.utf8.count)
+    }
+}
+
+private struct MockFileSystemError: CompilerError {
+    let category: ErrorCategory = .io
+    let message: String
+    let location: SourceLocation? = nil
 }
 #endif

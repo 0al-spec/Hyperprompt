@@ -60,18 +60,18 @@ Parallelizable tasks to start while EditorEngine work continues:
 **Review Date:** 2025-12-28
 **Total Estimated Effort:** ~12 hours
 
-### EE-FIX-1: Missing Workspace Root Path Validation **[P0] BLOCKER** **INPROGRESS**
+### EE-FIX-1: Missing Workspace Root Path Validation **[P0] BLOCKER**
 **Dependencies:** None
 **Estimated:** 1 hour
-**Status:** 🟢 In Progress
+**Status:** ✅ Completed on 2025-12-28
 **Location:** `Sources/EditorEngine/ProjectIndexer.swift:136-140`
 
-- [ ] **[P0]** Add validation that `workspaceRoot` is an absolute path in `ProjectIndexer.index()`
-- [ ] **[P0]** Add new error case `IndexerError.invalidWorkspaceRoot(path:reason:)`
-- [ ] **[P0]** Throw error if path is relative (doesn't start with `/`)
-- [ ] **[P1]** Write unit tests for absolute/relative path validation
+- [x] **[P0]** Add validation that `workspaceRoot` is an absolute path in `ProjectIndexer.index()`
+- [x] **[P0]** Add new error case `IndexerError.invalidWorkspaceRoot(path:reason:)`
+- [x] **[P0]** Throw error if path is relative (doesn't start with `/`)
+- [x] **[P1]** Write unit tests for absolute/relative path validation
 
-**Acceptance Criteria:** ProjectIndexer rejects relative paths with clear error message
+**Acceptance Criteria:** ✅ ProjectIndexer rejects relative paths with clear error message
 
 **PRD:** [`DOCS/INPROGRESS/EE-FIX-1_Workspace_Root_Validation.md`](INPROGRESS/EE-FIX-1_Workspace_Root_Validation.md)
 
