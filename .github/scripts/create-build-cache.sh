@@ -24,7 +24,7 @@ NC='\033[0m' # No Color
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 CACHE_NAME="${1:-swift-build-cache-${OS}-${ARCH}}"
-CACHE_DIR="${BUILD_CACHE_DIR:-.build-cache}"
+CACHE_DIR="${BUILD_CACHE_DIR:-caches}"
 BUILD_DIR=".build"
 
 echo -e "${GREEN}Creating build cache...${NC}"

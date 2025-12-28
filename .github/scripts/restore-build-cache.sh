@@ -39,7 +39,7 @@ done
 # Determine cache file
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
-CACHE_DIR="${BUILD_CACHE_DIR:-.build-cache}"
+CACHE_DIR="${BUILD_CACHE_DIR:-caches}"
 DEFAULT_CACHE="${CACHE_DIR}/swift-build-cache-${OS}-${ARCH}.tar.gz"
 CACHE_FILE="${CACHE_FILE_ARG:-$DEFAULT_CACHE}"
 
