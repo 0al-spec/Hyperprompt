@@ -486,7 +486,7 @@ Completed phases include:
 ### PERF-2: Incremental Compilation — File Caching **[P0]**
 **Dependencies:** PERF-1
 **Estimated:** 6 hours
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-29
 
 - [x] **[P0, depends: PERF-1]** Implement `ParsedFileCache` (file path → (checksum, ParsedFile))
 - [x] **[P0, depends: PERF-1]** Compute file checksums (SHA256 or faster hash)
