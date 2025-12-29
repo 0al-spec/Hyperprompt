@@ -1,140 +1,145 @@
 # PRD: PERF-2 — Incremental Compilation — File Caching
 
-## 1. Scope and Intent
+## 1. Scope & Intent
 
 ### Objective
-Implement a parsed file cache that avoids re-parsing unchanged files during compilation by using checksums and invalidation, with a bounded eviction policy and unit test coverage.
+Implement a file-level parse cache for the EditorEngine incremental compilation pipeline so unchanged files are not re-parsed, while ensuring correct invalidation and bounded memory usage.
 
 ### Deliverables
-- A `ParsedFileCache` implementation that stores `ParsedFile` instances keyed by file path and checksum.
-- Integration of the cache into the EditorEngine compilation/parse flow so unchanged files reuse cached parse results.
-- Invalidation logic for changed files and cascading invalidation for referenced dependencies.
-- An eviction policy (LRU, max 1000 entries).
-- Unit tests covering cache hit/miss, invalidation, and eviction scenarios.
-- Documentation updates if needed (performance notes or internal comments).
+- A `ParsedFileCache` component that maps file paths to `(checksum, ParsedFile)` entries.
+- Checksum computation for input files to detect changes.
+- Cache hit/miss logic integrated into parsing flow to skip unchanged files.
+- Correct invalidation when files change or dependencies require reparse.
+- Cache eviction policy (LRU, max 1000 entries) to limit memory use.
+- Unit tests covering hit/miss, invalidation, and eviction behavior.
 
 ### Success Criteria
-- Second compile of an unchanged workspace skips parsing for unchanged files.
-- Cache invalidation occurs when file contents change.
-- Cascading invalidation ensures dependent files are re-parsed if referenced files change.
-- Cache size is bounded and evicts the least-recently-used entries when over limit.
-- All new tests pass.
+- Second compile on an unchanged project reduces parse time by >80% compared to baseline.
+- Incremental compile output remains identical to full compile output.
+- Cache does not grow beyond configured limits and evicts least recently used entries.
 
-### Constraints & Assumptions
-- Swift toolchain and XCTest are available.
-- Existing parsing and compilation APIs remain deterministic.
-- Cache is memory-resident (no disk persistence required).
-- Thread-safety requirements align with current EditorEngine usage (single-threaded or synchronized access).
-
-### External Dependencies
-- None beyond existing Swift standard library and project modules.
+### Constraints & Dependencies
+- **Dependencies:** PERF-1 baseline suite and fixtures must exist and be runnable.
+- **Constraints:** Must preserve deterministic output and existing parsing semantics.
+- **Assumptions:** File contents are available on disk; checksum computation is deterministic and stable across runs.
 
 ---
 
-## 2. Structured TODO Plan
+## 2. Functional Requirements
 
-### Phase A — Design & Data Structures
-1. **Locate parse/compile entrypoints**
-   - Identify where `ParsedFile` is produced and reused (EditorEngine/EditorParser/EditorCompiler).
-   - Confirm the call graph to insert cache usage without breaking existing behavior.
+1. **ParsedFileCache storage**
+   - Store entries keyed by absolute file path.
+   - Each entry stores checksum and `ParsedFile`.
 
-2. **Define cache interface**
-   - Define `ParsedFileCache` API: `get(path:checksum:)`, `set(path:checksum:file:)`, `invalidate(path:)`, `invalidateAll()`.
-   - Define LRU bookkeeping (e.g., linked list or ordered dictionary behavior).
+2. **Checksum computation**
+   - Compute a stable checksum for file contents (e.g., SHA256 or fast hash).
+   - Avoid caching when checksum computation fails (return parse error instead).
 
-### Phase B — Implementation
-3. **Checksum computation**
-   - Implement a checksum function for file contents (SHA256 or fast hash acceptable).
-   - Ensure consistent hashing for identical content across runs.
+3. **Cache hit/miss logic**
+   - On parse request, compute checksum and check cache.
+   - If checksum matches, return cached `ParsedFile` without parsing.
+   - If checksum mismatches or cache miss, parse file and update cache.
 
-4. **Cache integration**
-   - On parse request: compute checksum → return cached `ParsedFile` when checksum matches.
-   - On mismatch: parse, store in cache, and update LRU state.
+4. **Invalidation**
+   - When a file changes, invalidate its cache entry and dependents if needed.
+   - Ensure references to invalidated entries cannot be reused.
 
-5. **Invalidation logic**
-   - Invalidate cache entries on file change (checksum mismatch).
-   - Implement cascading invalidation for dependent files (from dependency graph or referenced files list).
+5. **Eviction (LRU, max 1000)**
+   - Maintain access order to evict least recently used entries.
+   - Evict when inserting and cache size exceeds max.
 
-6. **Eviction policy**
-   - Enforce max size (1000 entries).
-   - Evict least-recently-used entries when adding beyond limit.
-
-### Phase C — Testing
-7. **Unit tests**
-   - Cache hit with unchanged file.
-   - Cache miss with changed checksum.
-   - Cascading invalidation when a referenced file changes.
-   - LRU eviction removes least-recently-used entries.
-   - Cache respects max size.
-
-### Phase D — Validation
-8. **Performance sanity check**
-   - Run existing benchmark or measure parse invocation count to verify skipped parsing on second compile.
+6. **Integration**
+   - Ensure cache is used by the EditorEngine compilation pipeline (parsing stage).
+   - Ensure cache logic does not affect non-incremental flows (full compile remains valid).
 
 ---
 
-## 3. Subtask Metadata
+## 3. Non-Functional Requirements
 
-| ID | Task | Priority | Effort | Dependencies | Tools/Modules | Acceptance Criteria |
-| --- | --- | --- | --- | --- | --- | --- |
-| A1 | Locate parse/compile entrypoints | High | 0.5h | None | Sources/EditorEngine | Entry points identified and documented in notes/comments |
-| A2 | Define cache interface | High | 0.5h | A1 | Sources/EditorEngine | `ParsedFileCache` API agreed and implemented |
-| B1 | Implement checksum computation | High | 1h | A2 | Swift Crypto/Stdlib | Checksum stable and tested |
-| B2 | Integrate cache into parse flow | High | 1.5h | B1 | EditorParser/EditorEngine | Unchanged files reuse cached parse results |
-| B3 | Implement invalidation logic | High | 1h | B2 | EditorEngine | Invalidations on file change and dependency change |
-| B4 | Add LRU eviction | Medium | 0.5h | B2 | ParsedFileCache | Eviction enforced at size limit |
-| C1 | Write unit tests | High | 1h | B2-B4 | Tests | All cache behaviors covered |
-| D1 | Performance sanity check | Medium | 0.5h | C1 | Tests/Benchmarks | Second compile shows reduced parsing |
+- **Performance:** >80% parse time reduction on second compile with unchanged inputs.
+- **Determinism:** Compiled output must be identical to full parse/compile.
+- **Memory:** Cache size capped at 1000 entries; eviction policy enforced.
+- **Reliability:** No crashes on cache misses or corrupted entries; fallback to re-parse.
 
 ---
 
-## 4. Feature Description & Rationale
+## 4. Edge Cases & Failure Scenarios
 
-Introducing a parsed file cache reduces redundant parsing, which is a primary cost in compilation. By caching `ParsedFile` outputs and reusing them when file contents have not changed, the compiler can significantly reduce time spent on repeated compiles, enabling the <200ms performance target for medium projects.
-
----
-
-## 5. Functional Requirements
-
-1. **Cache Retrieval**: When a file parse is requested, if the checksum matches the cached entry, return the cached `ParsedFile` without parsing.
-2. **Cache Population**: When a file is parsed due to cache miss, store it with checksum and update LRU order.
-3. **Invalidation**: When file contents change, the cache entry is invalidated. Dependent files referencing the changed file are also invalidated.
-4. **Eviction**: Cache evicts the least-recently-used entries when exceeding max capacity (1000 entries).
-5. **Compatibility**: Existing API behavior and outputs remain identical to pre-cache compilation.
+- File deleted between checksum and parse: return a clear error and remove stale cache entry.
+- File modified during parse: checksum mismatch should trigger re-parse on next run.
+- Checksum computation error (I/O error): surface parse error; do not update cache.
+- Symlinked paths: cache should key on resolved absolute path to avoid duplicates.
+- Very large files: checksum computation should not cause excessive memory spikes.
 
 ---
 
-## 6. Non-Functional Requirements
+## 5. Implementation Plan (TODO Breakdown)
 
-- **Performance**: Second compile should reduce parse time by >80% for unchanged files.
-- **Determinism**: Cache usage must not alter the compilation output.
-- **Memory Bound**: Cache should never exceed the configured maximum entries.
-- **Maintainability**: Cache code should be isolated and testable.
+### Phase A — Core Cache Implementation
+1. **Define ParsedFileCache type**
+   - **Priority:** High
+   - **Effort:** 1h
+   - **Tools:** Swift standard library
+   - **Acceptance:** New type exists with get/put APIs and unit test scaffolding.
+
+2. **Add checksum computation helper**
+   - **Priority:** High
+   - **Effort:** 0.5h
+   - **Tools:** CryptoKit or existing hashing utility
+   - **Acceptance:** Helper returns deterministic checksum for file contents.
+
+3. **Integrate cache lookups in parsing flow**
+   - **Priority:** High
+   - **Effort:** 1h
+   - **Tools:** EditorParser integration
+   - **Acceptance:** Cache hit skips parsing and returns cached `ParsedFile`.
+
+### Phase B — Invalidation & Eviction
+4. **Implement invalidation logic**
+   - **Priority:** High
+   - **Effort:** 1h
+   - **Tools:** Cache + dependency tracking (if available)
+   - **Acceptance:** Stale entries invalidated on checksum mismatch.
+
+5. **Add LRU eviction policy**
+   - **Priority:** Medium
+   - **Effort:** 1h
+   - **Tools:** Ordered dictionary / linked list
+   - **Acceptance:** Cache evicts least recently used entries at >1000 items.
+
+### Phase C — Tests & Verification
+6. **Unit tests for cache hit/miss**
+   - **Priority:** High
+   - **Effort:** 0.5h
+   - **Tools:** XCTest
+   - **Acceptance:** Tests verify cached parse re-use and miss updates.
+
+7. **Unit tests for invalidation & eviction**
+   - **Priority:** Medium
+   - **Effort:** 1h
+   - **Tools:** XCTest
+   - **Acceptance:** Tests verify invalidation after content change and LRU eviction.
+
+8. **Performance verification**
+   - **Priority:** High
+   - **Effort:** 0.5h
+   - **Tools:** Existing PERF-1 benchmarks
+   - **Acceptance:** Benchmark results show >80% parse time reduction.
 
 ---
 
-## 7. Edge Cases & Failure Scenarios
+## 6. Verification & Validation
 
-- File deletion: cache entry removed or ignored gracefully.
-- Rapid file changes: repeated checksum mismatches must not corrupt cache.
-- Dependency cycles: cascading invalidation must not loop indefinitely.
-- Partial parse failures: cache should not store failed parse results.
-- Large projects: eviction should prevent unbounded growth.
+- Run existing performance benchmarks and compare to baseline (PERF-1).
+- Run unit tests for cache behavior and ensure deterministic outputs match full compile.
+- Add or update performance documentation if benchmark results change materially.
 
 ---
 
-## 8. Verification Plan
+## 7. Notes
 
-- Run unit tests for cache hit/miss, invalidation, and eviction.
-- Compare compile outputs before and after cache integration for identical results.
-- Measure parse invocation count or timing across two successive compiles.
-
----
-
-## 9. Notes
-
-- If a dependency graph exists (from PERF-3), use its data structures to determine cascading invalidation. If not available yet, derive dependencies from current parse results (e.g., referenced files list).
-- Keep cache interface internal to EditorEngine unless future requirements need exposure.
+- If dependency graph logic is required for invalidation, align with PERF-3’s implementation to avoid redundant tracking.
+- Prefer using existing hashing utilities if present to avoid introducing new dependencies.
 
 ---
-**Archived:** 2025-12-24
+**Archived:** 2025-12-29

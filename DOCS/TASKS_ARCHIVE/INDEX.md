@@ -219,6 +219,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE-FIX-4
 - **Description:** Handle invalid glob regex patterns safely by surfacing errors during ignore file loading and avoiding silent fallback behavior.
 
+### EE-FIX-6 — ProjectIndexer Integration Tests **[P1] HIGH** ✓ 2025-12-29
+- **PRD:** [EE-FIX-6_ProjectIndexer_Tests.md](./EE-FIX-6_ProjectIndexer_Tests.md)
+- **Summary:** [EE-FIX-6-summary.md](./EE-FIX-6-summary.md)
+- **Effort:** 4 hours
+- **Dependencies:** None
+- **Description:** Replace placeholder ProjectIndexer tests with integration coverage for directory traversal, ignore patterns, hidden entries, depth limits, and deterministic ordering.
+
 ---
 
 ## Phase 13: Performance & Incremental Compilation
@@ -373,8 +380,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 46 items
-- **Total Effort:** 136 hours (tracked tasks only)
+- **Total Archived:** 47 items
+- **Total Effort:** 140 hours (tracked tasks only)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
@@ -394,4 +401,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-29 (EE-FIX-5 archived)
+**Last Updated:** 2025-12-29 (EE-FIX-6 archived)

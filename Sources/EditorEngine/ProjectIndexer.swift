@@ -159,6 +159,7 @@ public struct ProjectIndexer {
         let discoveredPaths = try discoverFiles(
             at: workspaceRoot,
             depth: 0,
+            workspaceRoot: workspaceRoot,
             ignorePatterns: ignorePatterns
         )
 
@@ -181,6 +182,7 @@ public struct ProjectIndexer {
     private func discoverFiles(
         at directory: String,
         depth: Int,
+        workspaceRoot: String,
         ignorePatterns: [String]
     ) throws -> [String] {
         // Check depth limit
@@ -200,6 +202,14 @@ public struct ProjectIndexer {
         for item in contents.sorted() {
             let fullPath = joinPath(directory, item)
 
+            if options.hiddenEntryPolicy == .exclude, item.hasPrefix(".") {
+                continue
+            }
+
+            if options.symlinkPolicy == .skip, isSymlink(fullPath) {
+                continue
+            }
+
             // Check if this is a directory
             if fileSystem.isDirectory(at: fullPath) {
                 // Skip if should be ignored
@@ -211,13 +221,14 @@ public struct ProjectIndexer {
                 let subFiles = try discoverFiles(
                     at: fullPath,
                     depth: depth + 1,
+                    workspaceRoot: workspaceRoot,
                     ignorePatterns: ignorePatterns
                 )
                 discoveredFiles.append(contentsOf: subFiles)
 
             } else if isTargetFile(fullPath) {
                 // Check if file should be ignored by patterns
-                let relativePath = makeRelative(path: fullPath, to: directory)
+                let relativePath = makeRelative(path: fullPath, to: workspaceRoot)
                 if !matchesIgnorePattern(path: relativePath, patterns: ignorePatterns) {
                     discoveredFiles.append(fullPath)
                 }
@@ -311,6 +322,13 @@ public struct ProjectIndexer {
     private func matchesIgnorePattern(path: String, patterns: [String]) -> Bool {
         var matcher = GlobMatcher()
         return patterns.matchesAny(path: path, using: &matcher)
+    }
+
+    private func isSymlink(_ path: String) -> Bool {
+        guard let canonicalPath = try? fileSystem.canonicalizePath(path) else {
+            return false
+        }
+        return canonicalPath != path
     }
 
     /// Collects metadata for a file

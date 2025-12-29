@@ -157,19 +157,19 @@ Parallelizable tasks to start while EditorEngine work continues:
 ### EE-FIX-6: ProjectIndexer Integration Tests **[P1] HIGH**
 **Dependencies:** None
 **Estimated:** 4 hours
-**Status:** ⏸️ Pending
+**Status:** ✅ Completed on 2025-12-29
 **Location:** `Tests/EditorEngineTests/ProjectIndexerTests.swift:99-146`
 
-- [ ] **[P1]** Verify MockFileSystem supports directory structure simulation
-- [ ] **[P1]** Implement test: Multi-level directory traversal with .hc and .md files
-- [ ] **[P1]** Implement test: `.hyperpromptignore` pattern matching
-- [ ] **[P1]** Implement test: Default ignore directory exclusion (.git, .build, etc.)
-- [ ] **[P1]** Implement test: Symlink handling with skip/follow policies
-- [ ] **[P1]** Implement test: Hidden file handling with exclude/include policies
-- [ ] **[P1]** Implement test: Max depth limiting
-- [ ] **[P1]** Implement test: Deterministic ordering of discovered files
-- [ ] **[P1]** Implement test: Empty workspace handling
-- [ ] **[P1]** Implement test: Workspace with only ignored files
+- [x] **[P1]** Verify MockFileSystem supports directory structure simulation
+- [x] **[P1]** Implement test: Multi-level directory traversal with .hc and .md files
+- [x] **[P1]** Implement test: `.hyperpromptignore` pattern matching
+- [x] **[P1]** Implement test: Default ignore directory exclusion (.git, .build, etc.)
+- [x] **[P1]** Implement test: Symlink handling with skip/follow policies
+- [x] **[P1]** Implement test: Hidden file handling with exclude/include policies
+- [x] **[P1]** Implement test: Max depth limiting
+- [x] **[P1]** Implement test: Deterministic ordering of discovered files
+- [x] **[P1]** Implement test: Empty workspace handling
+- [x] **[P1]** Implement test: Workspace with only ignored files
 
 **Acceptance Criteria:** All 10 integration test scenarios pass; placeholder tests replaced
 
