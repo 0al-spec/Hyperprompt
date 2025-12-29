@@ -249,6 +249,15 @@ public struct ProjectIndexer {
         var matcher = GlobMatcher()
 
         func validatePattern(_ pattern: String, lineNumber: Int?) throws {
+            if pattern.contains("\0") {
+                let reason: String
+                if let lineNumber {
+                    reason = "Invalid glob pattern at line \(lineNumber): contains NUL"
+                } else {
+                    reason = "Invalid custom ignore pattern: contains NUL"
+                }
+                throw IndexerError.invalidIgnoreFile(path: ignorePath, reason: reason)
+            }
             let regexPattern = matcher.globToRegex(pattern)
             guard (try? NSRegularExpression(pattern: regexPattern, options: [])) != nil else {
                 let reason: String
