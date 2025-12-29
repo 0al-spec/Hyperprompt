@@ -252,3 +252,6 @@ func testGlobMatcher_PerformanceWithCaching() {
 - [ ] Performance test shows >80% reduction in overhead
 - [ ] All existing pattern matching tests pass
 - [ ] No change in matching behavior
+
+---
+**Archived:** 2025-12-28

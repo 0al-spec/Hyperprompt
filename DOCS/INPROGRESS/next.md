@@ -1,38 +1,22 @@
-# Next Task: EE-FIX-4 — GlobMatcher Regex Caching
+# Next Task: EE-FIX-5 — Silent Regex Failure Fallback
 
-**Priority:** P1 HIGH
+**Priority:** P1
 **Phase:** EditorEngine Code Review Fixes
 **Effort:** 2 hours
-**Dependencies:** None
+**Dependencies:** EE-FIX-4
 **Status:** ✅ Completed on 2025-12-28
 
 ## Description
 
-Add regex cache to GlobMatcher to reduce compilation overhead on repeated pattern matching. Current implementation recompiles regex for each pattern match.
+Handle invalid glob regex patterns safely in GlobMatcher by surfacing errors during ignore file loading and avoiding silent fallback behavior.
 
-## Implementation Summary
+## Checklist
 
-**Changes Made:**
-1. ✅ Added `regexCache: [String: NSRegularExpression]` property to GlobMatcher
-2. ✅ Made `matchesGlobPattern` mutating to use cache
-3. ✅ Updated `matchesGlobPattern` to check cache before compiling
-4. ✅ Updated Array.matchesAny extension to accept `inout GlobMatcher`
-5. ✅ Updated ProjectIndexer call sites to use `var matcher`
-6. ✅ Added 5 new tests for caching behavior and performance
-
-**Expected Performance Improvement:**
-- Regex compilation reduced by >80% on repeated patterns
-- Indexing overhead: ~5ms (cached) vs ~100ms (uncached)
-
-**Environment Limitation:**
-⚠️  Swift toolchain unavailable in environment (network issues)
-⚠️  Unable to run `swift test` for validation
-⚠️  Code follows PRD and Swift 6 best practices
-⚠️  Manual validation required in Swift-enabled environment
+- [x] Add debug assertion for invalid regex compilation and keep safe non-match fallback.
+- [x] Validate ignore patterns on load with line-numbered errors.
+- [x] Add tests for invalid ignore pattern handling.
 
 ## Next Step
 
-Run ARCHIVE command to clean workspace:
-```bash
-claude "Выполни команду ARCHIVE"
-```
+Run ARCHIVE to clean workspace or SELECT for the next task:
+$ claude "Выполни команду ARCHIVE"

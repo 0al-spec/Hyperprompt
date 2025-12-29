@@ -138,15 +138,15 @@ Parallelizable tasks to start while EditorEngine work continues:
 ### EE-FIX-5: Silent Regex Failure Fallback **[P1] HIGH**
 **Dependencies:** EE-FIX-4
 **Estimated:** 2 hours
-**Status:** ⏸️ Pending
+**Status:** ✅ Completed on 2025-12-28
 **Location:** `Sources/EditorEngine/GlobMatcher.swift:93-96`
 
-- [ ] **[P1]** Add debug assertion for invalid regex patterns
-- [ ] **[P1]** Return `false` instead of exact match fallback for safety
-- [ ] **[P1]** Add pattern validation in `loadIgnorePatterns`
-- [ ] **[P1]** Throw `IndexerError.invalidIgnoreFile` for invalid glob patterns
-- [ ] **[P1]** Include line number in error message for user debugging
-- [ ] **[P1]** Write tests for invalid pattern handling
+- [x] **[P1]** Add debug assertion for invalid regex patterns
+- [x] **[P1]** Return `false` instead of exact match fallback for safety
+- [x] **[P1]** Add pattern validation in `loadIgnorePatterns`
+- [x] **[P1]** Throw `IndexerError.invalidIgnoreFile` for invalid glob patterns
+- [x] **[P1]** Include line number in error message for user debugging
+- [x] **[P1]** Write tests for invalid pattern handling
 
 **Acceptance Criteria:** Invalid patterns surface errors during ignore file loading; no silent fallback
 

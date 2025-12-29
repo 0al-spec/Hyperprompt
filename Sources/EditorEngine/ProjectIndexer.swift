@@ -246,23 +246,65 @@ public struct ProjectIndexer {
     /// Loads ignore patterns from .hyperpromptignore file
     private func loadIgnorePatterns(workspaceRoot: String) throws -> [String] {
         let ignorePath = joinPath(workspaceRoot, ".hyperpromptignore")
+        var matcher = GlobMatcher()
+
+        func validatePattern(_ pattern: String, lineNumber: Int?) throws {
+            if pattern.contains("\0") {
+                let reason: String
+                if let lineNumber {
+                    reason = "Invalid glob pattern at line \(lineNumber): contains NUL"
+                } else {
+                    reason = "Invalid custom ignore pattern: contains NUL"
+                }
+                throw IndexerError.invalidIgnoreFile(path: ignorePath, reason: reason)
+            }
+            let regexPattern = matcher.globToRegex(pattern)
+            guard (try? NSRegularExpression(pattern: regexPattern, options: [])) != nil else {
+                let reason: String
+                if let lineNumber {
+                    reason = "Invalid glob pattern at line \(lineNumber): '\(pattern)'"
+                } else {
+                    reason = "Invalid custom ignore pattern: '\(pattern)'"
+                }
+                throw IndexerError.invalidIgnoreFile(path: ignorePath, reason: reason)
+            }
+        }
+
+        func validatedCustomPatterns() throws -> [String] {
+            var validated: [String] = []
+            for pattern in options.customIgnorePatterns {
+                try validatePattern(pattern, lineNumber: nil)
+                validated.append(pattern)
+            }
+            return validated
+        }
 
         guard fileSystem.fileExists(at: ignorePath) else {
-            return options.customIgnorePatterns
+            return try validatedCustomPatterns()
         }
 
         // Read and parse ignore file
         guard let content = try? fileSystem.readFile(at: ignorePath) else {
             // Cannot read file - use only custom patterns
-            return options.customIgnorePatterns
+            return try validatedCustomPatterns()
         }
 
         let lines = content.components(separatedBy: .newlines)
-        let patterns = lines
-            .map { $0.trimmingCharacters(in: .whitespaces) }
-            .filter { !$0.isEmpty && !$0.hasPrefix("#") } // Skip comments and blank lines
+        var patterns: [String] = []
 
-        return patterns + options.customIgnorePatterns
+        for (lineIndex, line) in lines.enumerated() {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            guard !trimmed.isEmpty, !trimmed.hasPrefix("#") else {
+                continue
+            }
+
+            try validatePattern(trimmed, lineNumber: lineIndex + 1)
+            patterns.append(trimmed)
+        }
+
+        patterns.append(contentsOf: try validatedCustomPatterns())
+
+        return patterns
     }
 
     /// Checks if a path matches any ignore pattern using glob matching
