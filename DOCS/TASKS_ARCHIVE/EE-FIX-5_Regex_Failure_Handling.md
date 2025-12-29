@@ -295,3 +295,6 @@ func testLoadIgnorePatterns_CommentsAndEmptyLines_Skipped() {
 - [ ] Test: invalid pattern in ignore file throws
 - [ ] Test: valid patterns still work
 - [ ] All existing tests pass
+
+---
+**Archived:** 2025-12-29
