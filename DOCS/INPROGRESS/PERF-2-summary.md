@@ -14,8 +14,8 @@
 - `swift test 2>&1` completed successfully (13 tests skipped per existing test suite annotations, 0 failures).
 
 ## Acceptance Criteria Check
-- ✅ Incremental caching functionality present (validated by existing tests and test suite pass).
-- ✅ Cache invalidation and eviction behavior covered by tests (ParsedFileCacheTests).
+- ✅ Incremental caching functionality present (validated by existing tests and test suite pass). Key paths: `Sources/Resolver/ParsedFileCache.swift`.
+- ✅ Cache invalidation and eviction behavior covered by tests (`Tests/ResolverTests/ParsedFileCacheTests.swift`).
 - ✅ Overall compile/test suite passes on Swift 6.2.
 
 ## Notes / Follow-ups

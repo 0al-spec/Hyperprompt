@@ -12,7 +12,6 @@ Implement a file-level parse cache for the EditorEngine incremental compilation 
 - Correct invalidation when files change or dependencies require reparse.
 - Cache eviction policy (LRU, max 1000 entries) to limit memory use.
 - Unit tests covering hit/miss, invalidation, and eviction behavior.
-- Updated performance baseline evidence showing >80% parse time reduction on second compile.
 
 ### Success Criteria
 - Second compile on an unchanged project reduces parse time by >80% compared to baseline.
