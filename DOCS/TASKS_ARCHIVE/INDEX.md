@@ -212,6 +212,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** None
 - **Description:** Cache compiled glob regexes in GlobMatcher to reduce repeated compilation overhead during indexing.
 
+### EE-FIX-5 — Silent Regex Failure Fallback **[P1] HIGH** ✓ 2025-12-28
+- **PRD:** [EE-FIX-5_Regex_Failure_Handling.md](./EE-FIX-5_Regex_Failure_Handling.md)
+- **Summary:** [EE-FIX-5-summary.md](./EE-FIX-5-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** EE-FIX-4
+- **Description:** Handle invalid glob regex patterns safely by surfacing errors during ignore file loading and avoiding silent fallback behavior.
+
 ---
 
 ## Phase 13: Performance & Incremental Compilation
@@ -366,8 +373,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 45 items
-- **Total Effort:** 134 hours (tracked tasks only)
+- **Total Archived:** 46 items
+- **Total Effort:** 136 hours (tracked tasks only)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
@@ -387,4 +394,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-28 (EE-FIX-4 archived)
+**Last Updated:** 2025-12-29 (EE-FIX-5 archived)
