@@ -10,7 +10,7 @@
 - Task selection entry updated in `DOCS/INPROGRESS/next.md`.
 
 ## Validation
-- Build cache restore attempted but failed due to non-gzip cache archive; proceeded with a clean build.
+- `./.github/scripts/restore-build-cache.sh` failed due to a non-gzip cache archive; proceeded with a clean build.
 - `swift test 2>&1` completed successfully (13 tests skipped per existing test suite annotations, 0 failures).
 
 ## Acceptance Criteria Check
