@@ -752,13 +752,13 @@ Completed phases include:
 ### VSC-9: Multi-Column Workflow (Optional) **[P2]**
 **Dependencies:** VSC-5, EE-EXT-4
 **Estimated:** 3 hours
-**Status:** 🟢 **SELECTED** (2025-12-30)
+**Status:** ✅ Completed on 2025-12-30
 
-- [ ] **[P2, depends: VSC-5, EE-EXT-4]** Open referenced files in editor group beside source
-- [ ] **[P2, depends: VSC-5, EE-EXT-4]** Configure 3-column layout (source | reference | preview)
-- [ ] **[P2, depends: VSC-5, EE-EXT-4]** Add `hyperprompt.openBeside` command
-- [ ] **[P2, depends: VSC-5, EE-EXT-4]** Test multi-root workspace support
-- [ ] **[P2, depends: VSC-5, EE-EXT-4]** Write extension tests
+- [x] **[P2, depends: VSC-5, EE-EXT-4]** Open referenced files in editor group beside source
+- [x] **[P2, depends: VSC-5, EE-EXT-4]** Configure 3-column layout (source | reference | preview)
+- [x] **[P2, depends: VSC-5, EE-EXT-4]** Add `hyperprompt.openBeside` command
+- [x] **[P2, depends: VSC-5, EE-EXT-4]** Test multi-root workspace support
+- [x] **[P2, depends: VSC-5, EE-EXT-4]** Write extension tests
 
 **Acceptance Criteria:** Multi-column layout works, navigation preserves layout
 

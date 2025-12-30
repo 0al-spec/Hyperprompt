@@ -303,6 +303,73 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	const openBesideCommand = vscode.commands.registerCommand('hyperprompt.openBeside', async () => {
+		try {
+			const editor = vscode.window.activeTextEditor;
+			if (!editor) {
+				vscode.window.showInformationMessage('Hyperprompt: No active editor.');
+				return;
+			}
+			const document = editor.document;
+			if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
+				vscode.window.showInformationMessage('Hyperprompt: Open a .hc file to navigate.');
+				return;
+			}
+
+			const client = await ensureEngineReady();
+			if (!client) {
+				return;
+			}
+
+			// Call editor.linkAt to find link at cursor
+			const position = editor.selection.active;
+			const linkParams = buildLinkAtParams(
+				document.uri.fsPath,
+				position.line,
+				position.character
+			);
+			const linkSpan = await runLinkAtRequest(
+				client.request.bind(client),
+				linkParams,
+				compileTimeoutMs
+			);
+
+			if (!linkSpan) {
+				vscode.window.showInformationMessage('Hyperprompt: No link at cursor position.');
+				return;
+			}
+
+			// Call editor.resolve to resolve link target
+			const resolveParams = buildResolveParams(
+				linkSpan.literal,
+				linkSpan.sourceFile,
+				resolveWorkspaceRoot(document)
+			);
+			const target = await runResolveRequest(
+				client.request.bind(client),
+				resolveParams,
+				compileTimeoutMs
+			);
+
+			const targetPath = resolvedTargetPath(target);
+			if (!targetPath) {
+				vscode.window.showErrorMessage(`Hyperprompt: ${describeResolvedTarget(target)}`);
+				return;
+			}
+
+			// Open file in adjacent editor group (beside)
+			await vscode.window.showTextDocument(
+				vscode.Uri.file(targetPath),
+				{
+					viewColumn: vscode.ViewColumn.Beside,
+					preview: false
+				}
+			);
+		} catch (error) {
+			vscode.window.showErrorMessage(`Hyperprompt: Open Beside failed (${String(error)})`);
+		}
+	});
+
 	const computeScrollRatio = (editor: vscode.TextEditor): number => {
 		const visible = editor.visibleRanges[0];
 		const topLine = visible ? visible.start.line : 0;
@@ -540,6 +607,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		compileCommand,
 		compileLenientCommand,
 		previewCommand,
+		openBesideCommand,
 		definitionProvider,
 		hoverProvider,
 		configWatcher,
