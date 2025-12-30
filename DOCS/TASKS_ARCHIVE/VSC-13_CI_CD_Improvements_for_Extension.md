@@ -210,3 +210,6 @@ vscode-extension-tests:
 **Status:** Ready to execute
 **Dependencies:** VSC-11 ✅, VSC-12 ✅
 **Blocks:** None (quality improvement)
+
+---
+**Archived:** 2025-12-30

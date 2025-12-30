@@ -167,7 +167,8 @@ struct EditorRPCCommand: ParsableCommand {
         let compileResponse = CompileResultResponse(
             output: includeOutput ? result.output : nil,
             diagnostics: diagnostics,
-            hasErrors: result.hasErrors
+            hasErrors: result.hasErrors,
+            sourceMap: result.sourceMap
         )
 
         return successResponse(id: request.id, result: compileResponse)
@@ -240,5 +241,6 @@ struct CompileResultResponse: Codable {
     let output: String?
     let diagnostics: [Diagnostic]
     let hasErrors: Bool
+    let sourceMap: SourceMap?
 }
 #endif

@@ -1,36 +1,29 @@
-# Next Task: VSC-13 — CI/CD Improvements for Extension
+# Next Task: VSC-10 — Bidirectional Navigation (Optional)
 
-**Priority:** [P1]
+**Priority:** [P2]
 **Phase:** Phase 14 (VS Code Extension Development)
-**Effort:** 2 hours
-**Dependencies:** VSC-11 ✅, VSC-12 ✅
+**Effort:** 5 hours (actual vs 4h estimated)
+**Dependencies:** VSC-7 ✅, EE-EXT-3 ✅
 **Status:** ✅ Completed on 2025-12-30
 
 ## Description
 
-Improve CI/CD pipeline for VS Code extension to enhance robustness, visibility, and build reproducibility. This includes removing PR-only restrictions, adding dependency caching, splitting CI steps for better observability, and verifying VSIX packaging.
+Implemented click-to-navigate from preview panel to source files using minimal source maps. Users can now click on any line in the preview panel and jump directly to the corresponding source location in the editor.
 
-## Acceptance Criteria
+## Implementation Summary
 
-- ✅ CI runs on all events (PR, push to main, workflow_dispatch) — VERIFIED
-- ✅ Node.js dependencies cached for faster builds — VERIFIED
-- ✅ Separate steps for lint, compile, and test — VERIFIED
-- ✅ `npm ci` used instead of `npm install` — VERIFIED
-- ✅ VSIX packaging verification added — VERIFIED
-- ✅ CI documentation updated in extension README — VERIFIED
+- Implemented minimal SourceMap in EditorEngine (Swift)
+- Updated RPC protocol to return sourceMap
+- Added click handler to preview webview (TypeScript)
+- Implemented navigation logic in extension
 
-## Implementation Tasks
+**Note:** Resolved EE-EXT-3 dependency by implementing stub SourceMap (maps to entry file only). Full multi-file tracking requires future Emitter integration.
 
-1. **Remove PR-only restriction** — Allow CI to run on push and manual dispatch
-2. **Add Node.js caching** — Use `actions/setup-node` with cache option
-3. **Split CI steps** — Separate lint, compile, test for visibility
-4. **Use npm ci** — Replace `npm install` for reproducible builds
-5. **Add VSIX verification** — Ensure extension packages correctly
-6. **Update documentation** — Document CI behavior in README
+**Files:** 9 modified, 1 new (~185 lines added)
 
-## Next Step
+**Summary:** [`DOCS/INPROGRESS/VSC-10-summary.md`](VSC-10-summary.md)
+**PRD:** [`DOCS/INPROGRESS/VSC-10_Bidirectional_Navigation.md`](VSC-10_Bidirectional_Navigation.md)
 
-Run PLAN command to create detailed PRD:
-```bash
-$ claude "Выполни команду PLAN"
-```
+---
+
+**Next Step:** Run SELECT to choose next task or ARCHIVE completed tasks.

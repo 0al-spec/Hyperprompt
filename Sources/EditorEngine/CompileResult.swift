@@ -16,6 +16,9 @@ public struct CompileResult {
     /// Optional compilation statistics.
     public let statistics: CompilationStats?
 
+    /// Optional source map for bidirectional navigation.
+    public let sourceMap: SourceMap?
+
     /// Whether diagnostics contain errors.
     public var hasErrors: Bool {
         !diagnostics.isEmpty
@@ -25,12 +28,14 @@ public struct CompileResult {
         output: String?,
         diagnostics: [CompilerError],
         manifest: String?,
-        statistics: CompilationStats?
+        statistics: CompilationStats?,
+        sourceMap: SourceMap? = nil
     ) {
         self.output = output
         self.diagnostics = diagnostics
         self.manifest = manifest
         self.statistics = statistics
+        self.sourceMap = sourceMap
     }
 }
 #endif

@@ -9,10 +9,20 @@ export type CompileParams = {
 	mode: ResolutionMode;
 };
 
+export type SourceLocation = {
+	filePath: string;
+	line: number;  // 1-indexed (matches Core.SourceLocation)
+};
+
+export type SourceMap = {
+	mappings: Record<string, SourceLocation>;
+};
+
 export type CompileResult = {
 	output?: string;
 	diagnostics?: unknown[];
 	hasErrors?: boolean;
+	sourceMap?: SourceMap;
 };
 
 export type CompileRequest = (method: string, params: CompileParams, timeoutMs: number) => Promise<unknown>;
