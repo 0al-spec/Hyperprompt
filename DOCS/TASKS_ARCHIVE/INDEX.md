@@ -351,6 +351,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** VSC-5, EE-EXT-4
 - **Description:** Implement multi-column workflow feature with `hyperprompt.openBeside` command for side-by-side editing.
 
+### VSC-13 — CI/CD Improvements for Extension **[P1]** ✓ 2025-12-30
+- **PRD:** [VSC-13_CI_CD_Improvements_for_Extension.md](./VSC-13_CI_CD_Improvements_for_Extension.md)
+- **Summary:** [VSC-13-summary.md](./VSC-13-summary.md)
+- **Effort:** 2 hours
+- **Dependencies:** VSC-11, VSC-12
+- **Description:** Enhance CI/CD pipeline with dependency caching, separate lint/compile/test steps, reproducible builds, and VSIX packaging verification.
+
 ---
 
 ## Phase 15: PRD Validation & Gap Closure
@@ -388,8 +395,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 48 items
-- **Total Effort:** 143 hours (tracked tasks only)
+- **Total Archived:** 49 items
+- **Total Effort:** 145 hours (tracked tasks only)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
@@ -409,4 +416,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-30 (VSC-9 archived)
+**Last Updated:** 2025-12-30 (VSC-13 archived)

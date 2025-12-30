@@ -151,3 +151,6 @@ vscode-extension-tests:
 - **Workplan:** [`DOCS/Workplan.md#vsc-13`](../Workplan.md)
 - **CI Workflow:** [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)
 - **Extension README:** [`Tools/VSCodeExtension/README.md`](../../Tools/VSCodeExtension/README.md)
+
+---
+**Archived:** 2025-12-30
