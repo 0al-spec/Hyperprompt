@@ -343,6 +343,14 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** VSC-3
 - **Description:** Document TypeScript project structure, workflows, and RPC behaviors.
 
+### VSC-9 — Multi-Column Workflow (Optional) **[P2]** ✓ 2025-12-30
+- **PRD:** [VSC-9_Multi-Column_Workflow.md](./VSC-9_Multi-Column_Workflow.md)
+- **Summary:** [VSC-9-summary.md](./VSC-9-summary.md)
+- **Review:** [REVIEW_VSC-9_Multi-Column_Workflow.md](./REVIEW_VSC-9_Multi-Column_Workflow.md)
+- **Effort:** 3 hours
+- **Dependencies:** VSC-5, EE-EXT-4
+- **Description:** Implement multi-column workflow feature with `hyperprompt.openBeside` command for side-by-side editing.
+
 ---
 
 ## Phase 15: PRD Validation & Gap Closure
@@ -380,8 +388,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 47 items
-- **Total Effort:** 140 hours (tracked tasks only)
+- **Total Archived:** 48 items
+- **Total Effort:** 143 hours (tracked tasks only)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
@@ -401,4 +409,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-29 (EE-FIX-6 archived)
+**Last Updated:** 2025-12-30 (VSC-9 archived)
