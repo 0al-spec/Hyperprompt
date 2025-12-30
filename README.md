@@ -142,6 +142,8 @@ hyperprompt editor-rpc
 
 Restart VS Code after updating PATH so the Extension Host picks it up.
 
+**For extension development setup** (including Node.js/TypeScript installation), see [Tools/VSCodeExtension/README.md](Tools/VSCodeExtension/README.md).
+
 ### Release Build
 ```bash
 swift build -c release
