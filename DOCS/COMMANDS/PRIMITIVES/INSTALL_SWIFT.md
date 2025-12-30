@@ -38,11 +38,15 @@ tar zxf swift.tar.gz
 sudo mkdir -p /opt/swift
 sudo mv swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04 /opt/swift/current
 
-# 4. Add to PATH (add to ~/.bashrc for persistence)
+# 4. Fix linker symlink (Swift toolchain has lld but clang expects ld)
+cd /opt/swift/current/usr/bin
+sudo ln -s lld ld
+
+# 5. Add to PATH (add to ~/.bashrc for persistence)
 export PATH="/opt/swift/current/usr/bin:$PATH"
 echo 'export PATH="/opt/swift/current/usr/bin:$PATH"' >> ~/.bashrc
 
-# 5. Verify installation
+# 6. Verify installation
 swift --version
 ```
 
@@ -69,11 +73,15 @@ tar -xzf swift.tar.gz
 # 3. Install system-wide
 sudo mv swift-6.0.3-RELEASE-ubuntu24.04 /usr/share/swift
 
-# 4. Add to PATH (add to ~/.bashrc)
+# 4. Fix linker symlink (Swift toolchain has lld but clang expects ld)
+cd /usr/share/swift/usr/bin
+sudo ln -s lld ld
+
+# 5. Add to PATH (add to ~/.bashrc)
 export PATH="/usr/share/swift/usr/bin:$PATH"
 source ~/.bashrc
 
-# 5. Verify
+# 6. Verify
 swift --version
 ```
 
@@ -103,6 +111,11 @@ swift test
 - Check PATH: `echo $PATH`
 - Re-source profile: `source ~/.bashrc`
 
+**"Executable 'ld' doesn't exist" during swift test**
+- Swift toolchain includes `lld` but clang expects `ld`
+- Fix: `cd /opt/swift/current/usr/bin && sudo ln -s lld ld`
+- This symlink is required for running tests and compiling Package.swift manifests
+
 **Missing dependencies**
 - Install: `sudo apt install libpython3.8 libcurl4 libxml2`
 
@@ -120,6 +133,7 @@ Full installation guide: [`DOCS/RULES/02_Swift_Installation.md`](../../RULES/02_
 ## Notes
 
 - **Recommended:** Development snapshot (verified with 130/130 tests passing)
+- **Linker symlink required:** Swift toolchain includes LLVM linker (`lld`) but clang searches for `ld` by default. The symlink `ld → lld` enables `swift test` and Package.swift manifest compilation.
 - Installation takes ~2-5 minutes
 - Requires ~1.5 GB disk space
 - One-time setup per development environment
