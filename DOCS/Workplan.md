@@ -374,21 +374,33 @@ Completed phases include:
 
 ### EE-EXT-3: Source Map Generation **[P2]**
 **Dependencies:** EE8
-**Estimated:** 5 hours
-**Status:** ✅ **COMPLETED** on 2025-12-26
+**Estimated:** 5 hours (stub only), 12-18 hours (full implementation)
+**Status:** ⚠️ **PARTIALLY IMPLEMENTED** (Stub Only) on 2025-12-26
 
-- [ ] **[P2, depends: EE8]** Define `SourceMap` struct (output line → source location mapping)
-- [ ] **[P2, depends: EE8]** Extend `Emitter` to track source ranges during compilation
-- [ ] **[P2, depends: EE8]** Add `CompileResult.sourceMap` field (optional)
-- [ ] **[P2, depends: EE8]** Implement JSON source map format (compatible with browser devtools)
-- [ ] **[P2, depends: EE8]** Add `SourceMap.lookup(outputLine:) -> SourceLocation?` method
-- [ ] **[P2, depends: EE8]** Write unit tests (verify source map accuracy for nested files)
+- [x] **[P2, depends: EE8]** Define `SourceMap` struct (output line → source location mapping)
+- [ ] **[P2, depends: EE8]** Extend `Emitter` to track source ranges during compilation — **NOT DONE**
+- [x] **[P2, depends: EE8]** Add `CompileResult.sourceMap` field (optional)
+- [~] **[P2, depends: EE8]** Implement JSON source map format (compatible with browser devtools) — **PARTIAL** (Codable only)
+- [x] **[P2, depends: EE8]** Add `SourceMap.lookup(outputLine:) -> SourceLocation?` method
+- [ ] **[P2, depends: EE8]** Write unit tests (verify source map accuracy for nested files) — **NOT DONE**
 
-**Acceptance Criteria:** Source maps correctly map output lines to source locations
+**Acceptance Criteria:** ⚠️ **PARTIAL** — Basic structure exists but stub implementation only maps to entry file
 
-**Blocks:** VSC-7 (bidirectional navigation feature — Phase 4 of PRD)
+**Current Implementation:** Minimal stub in `EditorCompiler.buildStubSourceMap()` maps all output lines to entry file. Does NOT track actual source locations through Emitter. Multi-file navigation unsupported.
 
-**Resolution Status:** 🟠 CRITICAL (Issue 2.2 from validation report — optional feature)
+**Limitations:**
+- ❌ No Emitter integration (critical requirement)
+- ❌ All output lines map to entry file (incorrect for included files)
+- ❌ No unit tests
+- ❌ Line mappings are approximate (output line N → source line N)
+
+**Blocks:** VSC-7 (bidirectional navigation feature — works with limitations)
+
+**Resolution Status:** 🟡 PARTIAL (Issue 2.2 from validation report — stub sufficient for VSC-10, full implementation deferred)
+
+**Review:** See detailed analysis in [`DOCS/TASKS_ARCHIVE/EE-EXT-3-review.md`](TASKS_ARCHIVE/EE-EXT-3-review.md)
+
+**Follow-up:** Create EE-EXT-3-FULL task for proper Emitter integration (12-18h effort)
 
 ---
 
