@@ -824,6 +824,25 @@ Completed phases include:
 
 ---
 
+### VSC-13: CI/CD Improvements for Extension **[P1]**
+**Dependencies:** VSC-11, VSC-12
+**Estimated:** 2 hours
+**Status:** ⏸️ Pending
+
+- [ ] **[P1, depends: VSC-11]** Remove PR-only restriction from `vscode-extension-tests` job
+- [ ] **[P1, depends: VSC-11]** Add Node.js dependency caching (`actions/setup-node` with cache)
+- [ ] **[P1, depends: VSC-11]** Split steps: separate lint, compile, and test for better visibility
+- [ ] **[P1, depends: VSC-11]** Replace `npm install` with `npm ci` for reproducible builds
+- [ ] **[P1, depends: VSC-12]** Add VSIX packaging verification step (`vsce package`)
+- [ ] **[P2, depends: VSC-11]** Add test coverage reporting (optional)
+- [ ] **[P1, depends: VSC-11]** Update CI documentation in extension README
+
+**Acceptance Criteria:** CI runs on all events (PR/push/dispatch), includes caching, verifies VSIX builds
+
+**Resolution Status:** Enhances CI robustness and visibility for extension development
+
+---
+
 ## Phase 15: PRD Validation & Gap Closure
 
 **Goal:** Verify all PRD_VSCode_Extension.md requirements met
@@ -905,26 +924,26 @@ Completed phases include:
 
 ## Progress Tracking
 
-**Overall Progress:** 344 / 546 tasks completed (63%)
+**Overall Progress:** 344 / 553 tasks completed (62%)
 - **Phases 1-10 (Archive):** 305 / 310 tasks ✅ (see archive)
-- **Phases 11-15 (Active):** 39 / 236 tasks
+- **Phases 11-15 (Active):** 39 / 243 tasks
 
 ### By Phase (Checklist Items, Phases 11-15)
 - [x] **Phases 1-10:** Complete (see archive) — **131h** ✅
 - [~] **Phase 11:** VS Code Integration Architecture (13/40 tasks) — **18h total**
 - [~] **Phase 12:** EditorEngine API Enhancements (9/41 tasks) — **14h total**
 - [~] **Phase 13:** Performance & Incremental Compilation (17/32 tasks) — **15h total**
-- [ ] **Phase 14:** VS Code Extension Development (0/86 tasks) — **41h total**
+- [ ] **Phase 14:** VS Code Extension Development (0/93 tasks) — **43h total**
 - [ ] **Phase 15:** PRD Validation & Gap Closure (0/37 tasks) — **4h total**
 
 ### By Priority (Phases 11-15 only)
 - **[P0] Critical:** 18 / 84 tasks complete
-- **[P1] High:** 9 / 86 tasks complete
-- **[P2] Medium:** 0 / 21 tasks complete
+- **[P1] High:** 9 / 92 tasks complete
+- **[P2] Medium:** 0 / 22 tasks complete
 
 ### By Track
 - **Track C (Editor Engine):** Phase 12, 13 — 29 hours ⏸️ Pending
-- **Track D (VS Code Extension):** Phase 11, 14, 15 — 63 hours (12h complete, 51h pending)
+- **Track D (VS Code Extension):** Phase 11, 14, 15 — 65 hours (12h complete, 53h pending)
 
 ---
 
@@ -935,10 +954,10 @@ Completed phases include:
 | **Phase 11** | VS Code Extension Integration Architecture | 18h total | 🟢 In Progress (VSC-1, VSC-2B ✅) | 🔴 FFI Blocker |
 | **Phase 12** | EditorEngine API Enhancements | 14h | ⏸️ Pending | 🟠 Critical APIs |
 | **Phase 13** | Performance & Incremental Compilation | 15h | ⏸️ Pending | 🔴 Performance Blocker |
-| **Phase 14** | VS Code Extension Development | 41h | ⏸️ Pending | ✅ PRD Implementation |
+| **Phase 14** | VS Code Extension Development | 43h | ⏸️ Pending | ✅ PRD Implementation |
 | **Phase 15** | PRD Validation & Gap Closure | 4h | ⏸️ Pending | ✅ Final Validation |
 
-**Next Task:** VSC-7B (Compile Lenient Command) — 1 hour
+**Next Task:** VSC-13 (CI/CD Improvements for Extension) — 2 hours
 
 ---
 
