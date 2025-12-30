@@ -1,29 +1,33 @@
-# Next Task: VSC-10 — Bidirectional Navigation (Optional)
+# Next Task: EE-EXT-3 Status Review — Diagnostic Task
 
-**Priority:** [P2]
-**Phase:** Phase 14 (VS Code Extension Development)
-**Effort:** 5 hours (actual vs 4h estimated)
-**Dependencies:** VSC-7 ✅, EE-EXT-3 ✅
+**Priority:** [Diagnostic]
+**Phase:** Quality Assurance
+**Effort:** 2 hours
 **Status:** ✅ Completed on 2025-12-30
 
 ## Description
 
-Implemented click-to-navigate from preview panel to source files using minimal source maps. Users can now click on any line in the preview panel and jump directly to the corresponding source location in the editor.
+Investigated suspicions that task EE-EXT-3 (Source Map Generation) was marked complete but not fully implemented. Confirmed that only 50% of requirements were delivered (stub implementation only).
 
-## Implementation Summary
+## Actions Taken
 
-- Implemented minimal SourceMap in EditorEngine (Swift)
-- Updated RPC protocol to return sourceMap
-- Added click handler to preview webview (TypeScript)
-- Implemented navigation logic in extension
+1. ✅ Analyzed SourceMap implementation code
+2. ✅ Created detailed review: `DOCS/TASKS_ARCHIVE/EE-EXT-3-review.md`
+3. ✅ Created summary: `DOCS/TASKS_ARCHIVE/EE-EXT-3-summary.md`
+4. ✅ Updated Workplan.md status: ✅ COMPLETED → ⚠️ PARTIALLY IMPLEMENTED
+5. ✅ Updated TASKS_ARCHIVE/INDEX.md
+6. ✅ Committed and pushed changes
 
-**Note:** Resolved EE-EXT-3 dependency by implementing stub SourceMap (maps to entry file only). Full multi-file tracking requires future Emitter integration.
+## Findings
 
-**Files:** 9 modified, 1 new (~185 lines added)
+**Status:** ⚠️ Task is only 50% complete (3/6 requirements)
+- ✅ Basic SourceMap struct exists
+- ❌ NO Emitter integration (critical requirement)
+- ❌ NO multi-file support (all lines map to entry file)
+- ❌ NO unit tests
 
-**Summary:** [`DOCS/INPROGRESS/VSC-10-summary.md`](VSC-10-summary.md)
-**PRD:** [`DOCS/INPROGRESS/VSC-10_Bidirectional_Navigation.md`](VSC-10_Bidirectional_Navigation.md)
+**Recommendation:** Keep stub for v1.0, create EE-EXT-3-FULL task for full implementation (12-18h).
 
 ---
 
-**Next Step:** Run SELECT to choose next task or ARCHIVE completed tasks.
+**Next Step:** Run SELECT to choose next development task.
