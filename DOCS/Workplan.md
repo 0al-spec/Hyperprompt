@@ -827,19 +827,19 @@ Completed phases include:
 ### VSC-13: CI/CD Improvements for Extension **[P1]**
 **Dependencies:** VSC-11, VSC-12
 **Estimated:** 2 hours
-**Status:** ⏸️ Pending
+**Status:** ✅ Completed on 2025-12-30
 
-- [ ] **[P1, depends: VSC-11]** Remove PR-only restriction from `vscode-extension-tests` job
-- [ ] **[P1, depends: VSC-11]** Add Node.js dependency caching (`actions/setup-node` with cache)
-- [ ] **[P1, depends: VSC-11]** Split steps: separate lint, compile, and test for better visibility
-- [ ] **[P1, depends: VSC-11]** Replace `npm install` with `npm ci` for reproducible builds
-- [ ] **[P1, depends: VSC-12]** Add VSIX packaging verification step (`vsce package`)
-- [ ] **[P2, depends: VSC-11]** Add test coverage reporting (optional)
-- [ ] **[P1, depends: VSC-11]** Update CI documentation in extension README
+- [x] **[P1, depends: VSC-11]** Remove PR-only restriction from `vscode-extension-tests` job
+- [x] **[P1, depends: VSC-11]** Add Node.js dependency caching (`actions/setup-node` with cache)
+- [x] **[P1, depends: VSC-11]** Split steps: separate lint, compile, and test for better visibility
+- [x] **[P1, depends: VSC-11]** Replace `npm install` with `npm ci` for reproducible builds
+- [x] **[P1, depends: VSC-12]** Add VSIX packaging verification step (`vsce package`)
+- [ ] **[P2, depends: VSC-11]** Add test coverage reporting (optional) — Deferred
+- [x] **[P1, depends: VSC-11]** Update CI documentation in extension README
 
-**Acceptance Criteria:** CI runs on all events (PR/push/dispatch), includes caching, verifies VSIX builds
+**Acceptance Criteria:** ✅ CI runs on all events (PR/push/dispatch), includes caching, verifies VSIX builds
 
-**Resolution Status:** Enhances CI robustness and visibility for extension development
+**Resolution Status:** ✅ Complete — CI robustness and visibility enhanced for extension development
 
 ---
 
