@@ -1,33 +1,50 @@
-# Next Task: EE-EXT-3 Status Review — Diagnostic Task
+# Next Task: EE-EXT-3-FULL — Complete Source Map Implementation
 
-**Priority:** [Diagnostic]
-**Phase:** Quality Assurance
-**Effort:** 2 hours
-**Status:** ✅ Completed on 2025-12-30
+**Priority:** [P2]
+**Phase:** Phase 12 (EditorEngine API Enhancements)
+**Effort:** 12-18 hours
+**Dependencies:** EE-EXT-3 (stub) ✅, EE8 ✅
+**Status:** 🔵 Ready to start
 
 ## Description
 
-Investigated suspicions that task EE-EXT-3 (Source Map Generation) was marked complete but not fully implemented. Confirmed that only 50% of requirements were delivered (stub implementation only).
+Complete the Source Map Generation implementation by integrating with Emitter to track actual source locations during compilation. Current stub implementation maps all output lines to entry file only — this task adds multi-file support and accurate source tracking.
 
-## Actions Taken
+## Objectives
 
-1. ✅ Analyzed SourceMap implementation code
-2. ✅ Created detailed review: `DOCS/TASKS_ARCHIVE/EE-EXT-3-review.md`
-3. ✅ Created summary: `DOCS/TASKS_ARCHIVE/EE-EXT-3-summary.md`
-4. ✅ Updated Workplan.md status: ✅ COMPLETED → ⚠️ PARTIALLY IMPLEMENTED
-5. ✅ Updated TASKS_ARCHIVE/INDEX.md
-6. ✅ Committed and pushed changes
+1. **Emitter Integration** — Track source ranges during compilation
+2. **Multi-File Support** — Map output lines to actual source files (not just entry)
+3. **Unit Tests** — Comprehensive test coverage for source map accuracy
+4. **Remove Stub** — Replace `buildStubSourceMap()` with real implementation
 
-## Findings
+## Current Gap
 
-**Status:** ⚠️ Task is only 50% complete (3/6 requirements)
-- ✅ Basic SourceMap struct exists
-- ❌ NO Emitter integration (critical requirement)
-- ❌ NO multi-file support (all lines map to entry file)
-- ❌ NO unit tests
+- ⚠️ Stub implementation in `EditorCompiler.buildStubSourceMap()`
+- ❌ No Emitter integration (critical requirement)
+- ❌ All lines map to entry file (incorrect for @"..." includes)
+- ❌ No unit tests
+- ❌ VSC-10 bidirectional navigation limited to entry file only
 
-**Recommendation:** Keep stub for v1.0, create EE-EXT-3-FULL task for full implementation (12-18h).
+## Expected Outcome
+
+- ✅ Source maps track actual source files through Emitter
+- ✅ Multi-file projects navigate correctly in VS Code
+- ✅ Output line → source location mapping is accurate
+- ✅ Unit tests verify complex scenarios (nested files, transformations)
+
+## Subtasks
+
+- [ ] Read and understand Emitter implementation
+- [ ] Design source tracking mechanism (SourceMapBuilder integration)
+- [ ] Update Emitter to track source locations per output line
+- [ ] Pass SourceMapBuilder through compilation pipeline
+- [ ] Replace stub with Emitter-based implementation
+- [ ] Write unit tests for SourceMap
+- [ ] Write integration tests with multi-file projects
+- [ ] Verify VSC-10 works with nested files
+- [ ] Update documentation
 
 ---
 
-**Next Step:** Run SELECT to choose next development task.
+**PRD:** Will be created in `DOCS/INPROGRESS/EE-EXT-3-FULL_Complete_Source_Map_Implementation.md`
+**Next Step:** Run PLAN to generate detailed PRD

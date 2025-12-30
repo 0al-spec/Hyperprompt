@@ -404,6 +404,49 @@ Completed phases include:
 
 ---
 
+### EE-EXT-3-FULL: Complete Source Map Implementation **[P2]**
+**Dependencies:** EE-EXT-3 (stub), EE8
+**Estimated:** 12-18 hours
+**Status:** 🔵 **TODO** — Not started
+
+- [ ] **[P2, depends: EE-EXT-3]** Integrate SourceMapBuilder with Emitter to track actual source ranges
+- [ ] **[P2, depends: EE-EXT-3]** Update Emitter to emit source location metadata during compilation
+- [ ] **[P2, depends: EE-EXT-3]** Pass SourceMapBuilder through compilation pipeline (Compiler → Emitter)
+- [ ] **[P2, depends: EE-EXT-3]** Track source file changes during file inclusion (@"...")
+- [ ] **[P2, depends: EE-EXT-3]** Track line number transformations (heading adjustments, content shifts)
+- [ ] **[P2, depends: EE-EXT-3]** Replace stub `buildStubSourceMap()` with real Emitter-based implementation
+- [ ] **[P2, depends: EE-EXT-3]** Write unit tests for SourceMap with multi-file scenarios
+- [ ] **[P2, depends: EE-EXT-3]** Write integration tests verifying source map accuracy for nested files
+- [ ] **[P2, depends: EE-EXT-3]** Verify VSC-10 (bidirectional navigation) works with multi-file projects
+- [ ] **[P1, optional]** Implement browser-compatible source map v3 format (JSON with VLQ encoding)
+
+**Acceptance Criteria:**
+- Source maps correctly map output lines to actual source files (not just entry file)
+- Multi-file navigation works in VS Code extension
+- Unit tests verify accuracy for complex compilation scenarios (nested files, transformations)
+- All output lines map to correct source locations
+
+**Current Gap:**
+- Stub implementation maps all lines to entry file only
+- No Emitter integration (critical requirement unfulfilled)
+- Multi-file projects show incorrect source locations
+
+**Impact:**
+- VSC-10 (bidirectional navigation) limited to entry file only
+- Cannot debug multi-file projects effectively
+- Cannot trace included content back to actual source
+
+**Code Locations:**
+- `Sources/EditorEngine/EditorCompiler.swift:118-147` (stub to replace)
+- `Sources/Core/Emitter.swift` (needs source tracking)
+- `Tests/EditorEngineTests/SourceMapTests.swift` (needs creation)
+
+**Blocks:** None (optional feature, stub sufficient for v1.0)
+
+**Resolution Status:** 🟡 DEFERRED (Issue 2.2 from validation report — stub acceptable for v1.0, full implementation v1.1+)
+
+---
+
 ### EE-EXT-4: Multi-Root Workspace Support **[P1]**
 **Dependencies:** EE8
 **Estimated:** 2 hours
