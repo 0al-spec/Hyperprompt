@@ -32,9 +32,16 @@ Changing `hyperprompt.enginePath` or `hyperprompt.engineLogLevel` restarts the R
 
 ## Requirements
 
+### For Users
 - macOS or Linux (Windows is not supported yet).
 - Hyperprompt CLI built with the Editor trait (`swift build --traits Editor`).
 - `hyperprompt` available on PATH or configured via `hyperprompt.enginePath`.
+
+### For Development
+- **Node.js** 20.x or later (install from [nodejs.org](https://nodejs.org/) or via package manager)
+- **npm** (comes with Node.js)
+- **TypeScript** (installed automatically via `npm install`)
+- VS Code 1.85.0 or later
 
 ## Usage
 
@@ -65,20 +72,55 @@ Preview output renders raw Markdown text in a styled panel (Markdown-to-HTML ren
 - Engine probes call `hyperprompt --help` to ensure `editor-rpc` is available.
 - Common errors: missing Editor trait build, non-executable engine path, or missing binary on PATH.
 
-## Development Testing
+## Development Setup
+
+### First-Time Setup on a Clean Machine
+
+1. **Install Node.js** (if not already installed):
+   ```bash
+   # On macOS with Homebrew
+   brew install node
+
+   # On Ubuntu/Debian
+   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+   sudo apt-get install -y nodejs
+
+   # Or download from https://nodejs.org/
+   ```
+
+2. **Verify installation**:
+   ```bash
+   node --version   # Should show v20.x.x or later
+   npm --version    # Should show 10.x.x or later
+   ```
+
+3. **Install extension dependencies**:
+   ```bash
+   cd Tools/VSCodeExtension
+   npm install      # This installs TypeScript and all other dependencies
+   ```
+
+### Development Testing
+
+**IMPORTANT:** Always run `npm install` first on a clean machine or fresh clone!
 
 From `Tools/VSCodeExtension`:
 
 ```bash
-npm install
-npm run compile
+# Step 1: Install dependencies (REQUIRED on first run or clean machine)
+npm install      # Installs TypeScript, @types/node, @types/vscode, and all dependencies
+
+# Step 2: Compile TypeScript to JavaScript
+npm run compile  # Must run after npm install
+
+# Step 3: Open in Extension Development Host
 code --extensionDevelopmentPath="$PWD"
 ```
 
-Use `npm run watch` while debugging to recompile on changes:
+**Development workflow** - Use `npm run watch` while debugging to recompile on changes:
 
 ```bash
-npm run watch
+npm run watch    # Auto-recompile on file changes
 code --extensionDevelopmentPath="$PWD"
 ```
 
@@ -178,6 +220,41 @@ code --install-extension hyperprompt-*.vsix
 - Package the extension with `vsce package`.
 - Install the VSIX and smoke-test compile, preview, and diagnostics.
 - Tag the release once the extension behaves as expected.
+
+## Troubleshooting
+
+### Common Development Issues
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `tsc: command not found` | TypeScript not installed | Run `npm install` to install all dependencies including TypeScript |
+| `npm: command not found` | Node.js/npm not installed | Install Node.js from [nodejs.org](https://nodejs.org/) or via package manager |
+| `npm ERR! code ENOENT` | Missing package.json or wrong directory | Ensure you're in `Tools/VSCodeExtension` directory |
+| `Cannot find module` errors during compile | Dependencies not installed | Run `npm install` to restore dependencies |
+| `code: command not found` | VS Code CLI not in PATH | Install via VS Code: Command Palette → "Shell Command: Install 'code' command in PATH" |
+| Tests timeout | Slow network downloading VS Code | Increase timeout or run tests again (VS Code is cached after first download) |
+
+### Quick Fix for Clean Machine Setup
+
+If you encounter `tsc: command not found` or similar errors:
+
+```bash
+# 1. Verify Node.js is installed
+node --version  # Should output v20.x.x or later
+
+# 2. If Node.js is not installed, install it first
+# (see "First-Time Setup" section above)
+
+# 3. Install all extension dependencies
+cd Tools/VSCodeExtension
+npm install
+
+# 4. Verify TypeScript is installed
+npx tsc --version  # Should output TypeScript version
+
+# 5. Now you can compile
+npm run compile
+```
 
 ## Known Issues
 

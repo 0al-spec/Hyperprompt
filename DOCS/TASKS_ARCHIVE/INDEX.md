@@ -193,6 +193,12 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Description:** Minimal stub implementation for source map generation. Maps all output lines to entry file only. Missing: Emitter integration, multi-file support, unit tests.
 - **Note:** ⚠️ Marked complete but not fully implemented. See review for details.
 
+### EE-EXT-3-FULL — Complete Source Map Implementation **[P2]** ✓ 2025-12-30
+- **PRD:** [EE-EXT-3-FULL_Complete_Source_Map_Implementation.md](./EE-EXT-3-FULL_Complete_Source_Map_Implementation.md)
+- **Effort:** 8 hours (completed under estimate)
+- **Dependencies:** EE-EXT-3 (stub), EE8
+- **Description:** Complete source map implementation with Emitter integration for precise line tracking. Moved SourceMap to Core module, added line tracking to StringBuilder, implemented source tracking in emitNode/embedContent, replaced stub with re-emission approach. Enables accurate multi-file navigation in VS Code extension. All 447 tests pass.
+
 ---
 
 ## EditorEngine Code Review Fixes
@@ -413,8 +419,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 51 items (50 complete, 1 partial)
-- **Total Effort:** 150 hours completed + 5 hours partial + 12-18 hours pending (EE-EXT-3 full implementation)
+- **Total Archived:** 52 items (51 complete, 1 partial)
+- **Total Effort:** 158 hours completed + 5 hours partial (EE-EXT-3 stub)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
@@ -434,4 +440,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-30 (VSC-13 archived)
+**Last Updated:** 2025-12-30 (EE-EXT-3-FULL archived)
