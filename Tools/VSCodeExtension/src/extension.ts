@@ -182,6 +182,20 @@ export async function activate(context: vscode.ExtensionContext) {
 		return entryFile;
 	};
 
+	const getActiveHypercodeEditor = (): vscode.TextEditor | null => {
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) {
+			vscode.window.showInformationMessage('Hyperprompt: No active editor.');
+			return null;
+		}
+		const document = editor.document;
+		if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
+			vscode.window.showInformationMessage('Hyperprompt: Open a .hc file to navigate.');
+			return null;
+		}
+		return editor;
+	};
+
 	const renderCompileOutput = (result: { output?: string }) => {
 		if (result.output && result.output.length > 0) {
 			outputChannel.clear();
@@ -300,6 +314,68 @@ export async function activate(context: vscode.ExtensionContext) {
 			panel.reveal();
 		} catch (error) {
 			vscode.window.showErrorMessage(`Hyperprompt: preview failed (${String(error)})`);
+		}
+	});
+
+	const openBesideCommand = vscode.commands.registerCommand('hyperprompt.openBeside', async () => {
+		try {
+			const editor = getActiveHypercodeEditor();
+			if (!editor) {
+				return;
+			}
+			const document = editor.document;
+
+			const client = await ensureEngineReady();
+			if (!client) {
+				return;
+			}
+
+			// Call editor.linkAt to find link at cursor
+			const position = editor.selection.active;
+			const linkParams = buildLinkAtParams(
+				document.uri.fsPath,
+				position.line,
+				position.character
+			);
+			const linkSpan = await runLinkAtRequest(
+				client.request.bind(client),
+				linkParams,
+				compileTimeoutMs
+			);
+
+			if (!linkSpan) {
+				vscode.window.showInformationMessage('Hyperprompt: No link at cursor position.');
+				return;
+			}
+
+			// Call editor.resolve to resolve link target
+			const resolveParams = buildResolveParams(
+				linkSpan.literal,
+				linkSpan.sourceFile,
+				resolveWorkspaceRoot(document)
+			);
+			const target = await runResolveRequest(
+				client.request.bind(client),
+				resolveParams,
+				compileTimeoutMs
+			);
+
+			const targetPath = resolvedTargetPath(target);
+			if (!targetPath) {
+				vscode.window.showErrorMessage(`Hyperprompt: ${describeResolvedTarget(target)}`);
+				return;
+			}
+
+			// Open file in adjacent editor group (beside)
+			await vscode.window.showTextDocument(
+				vscode.Uri.file(targetPath),
+				{
+					viewColumn: vscode.ViewColumn.Beside,
+					preview: false
+				}
+			);
+		} catch (error) {
+			vscode.window.showErrorMessage(`Hyperprompt: Open Beside failed (${String(error)})`);
 		}
 	});
 
@@ -540,6 +616,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		compileCommand,
 		compileLenientCommand,
 		previewCommand,
+		openBesideCommand,
 		definitionProvider,
 		hoverProvider,
 		configWatcher,

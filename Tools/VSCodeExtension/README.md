@@ -17,6 +17,7 @@ Hyperprompt language support for VS Code, backed by the Hyperprompt EditorEngine
 - `Hyperprompt: Compile` — compile in strict mode.
 - `Hyperprompt: Compile (Lenient)` — compile in lenient mode.
 - `Hyperprompt: Show Preview` — open or refresh the preview panel.
+- `Hyperprompt: Open Beside` — open referenced file in adjacent editor group for multi-column workflow.
 
 ## Settings
 

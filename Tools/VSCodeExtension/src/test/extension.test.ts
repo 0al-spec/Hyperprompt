@@ -74,11 +74,11 @@ integrationSuite('Extension Integration', function () {
 		);
 
 		assert.ok(results && results.length > 0);
-		assert.ok(results[0].uri.fsPath.endsWith(path.join('docs', 'readme.md')));
+		assert.ok(results[0]!.uri.fsPath.endsWith(path.join('docs', 'readme.md')));
 
 		const log = readLogEntries().filter((entry) => entry.method === 'editor.resolve');
 		assert.ok(log.length > 0);
-		const last = log[log.length - 1];
+		const last = log[log.length - 1]!;
 		assert.strictEqual(last.params.workspaceRoot, fixtureRoot);
 	});
 
@@ -95,7 +95,7 @@ integrationSuite('Extension Integration', function () {
 
 		const log = readLogEntries().filter((entry) => entry.method === 'editor.resolve');
 		assert.ok(log.length > 0);
-		const last = log[log.length - 1];
+		const last = log[log.length - 1]!;
 		assert.strictEqual(last.params.workspaceRoot, fixtureRootTwo);
 	});
 
@@ -142,7 +142,7 @@ integrationSuite('Extension Integration', function () {
 		);
 
 		assert.ok(hovers && hovers.length > 0);
-		const contents = hovers[0].contents
+		const contents = hovers[0]!.contents
 			.map((item) => {
 				if (typeof item === 'string') {
 					return item;
@@ -198,6 +198,126 @@ integrationSuite('Extension Integration', function () {
 		await setEnginePath('/missing/hyperprompt');
 		await vscode.commands.executeCommand('hyperprompt.compile');
 		await setEnginePath(mockEnginePath);
+	});
+
+	test('Open Beside command navigates to referenced file', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRoot, 'main.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		// Position cursor on link at line 0, column 4
+		const editor = vscode.window.activeTextEditor;
+		assert.ok(editor);
+		editor.selection = new vscode.Selection(new vscode.Position(0, 4), new vscode.Position(0, 4));
+
+		await vscode.commands.executeCommand('hyperprompt.openBeside');
+		await sleep(300);
+
+		// Verify that a second editor group was created
+		assert.ok(vscode.window.tabGroups.all.length >= 2);
+
+		// Verify that the resolved file is open
+		const activeEditor = vscode.window.activeTextEditor;
+		assert.ok(activeEditor);
+		assert.ok(activeEditor.document.uri.fsPath.endsWith(path.join('docs', 'readme.md')));
+	});
+
+	test('Open Beside command uses multi-root workspace folder', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRootTwo, 'main.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		const editor = vscode.window.activeTextEditor;
+		assert.ok(editor);
+		editor.selection = new vscode.Selection(new vscode.Position(0, 4), new vscode.Position(0, 4));
+
+		await vscode.commands.executeCommand('hyperprompt.openBeside');
+		await sleep(300);
+
+		const log = readLogEntries().filter((entry) => entry.method === 'editor.resolve');
+		assert.ok(log.length > 0);
+		const last = log[log.length - 1]!;
+		assert.strictEqual(last.params.workspaceRoot, fixtureRootTwo);
+	});
+
+	test('Open Beside command shows message when no link at cursor', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRoot, 'main.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		const editor = vscode.window.activeTextEditor;
+		assert.ok(editor);
+		// Position cursor on empty space (line 2, column 0)
+		editor.selection = new vscode.Selection(new vscode.Position(2, 0), new vscode.Position(2, 0));
+
+		await vscode.commands.executeCommand('hyperprompt.openBeside');
+		await sleep(100);
+
+		// Command should complete without error
+		// (Message shown to user is not testable in integration tests)
+	});
+
+	test('Open Beside command handles invalid link gracefully', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRoot, 'broken.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		const editor = vscode.window.activeTextEditor;
+		assert.ok(editor);
+		editor.selection = new vscode.Selection(new vscode.Position(0, 4), new vscode.Position(0, 4));
+
+		await vscode.commands.executeCommand('hyperprompt.openBeside');
+		await sleep(100);
+
+		// Command should complete without crashing
+	});
+
+	test('Open Beside command handles forbidden extension', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRoot, 'forbidden.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		const editor = vscode.window.activeTextEditor;
+		assert.ok(editor);
+		editor.selection = new vscode.Selection(new vscode.Position(0, 4), new vscode.Position(0, 4));
+
+		await vscode.commands.executeCommand('hyperprompt.openBeside');
+		await sleep(100);
+
+		// Command should show error message for forbidden extension
+		// (Error message display not directly testable in integration tests)
+	});
+
+	test('Open Beside command handles ambiguous reference', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRoot, 'ambiguous.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		const editor = vscode.window.activeTextEditor;
+		assert.ok(editor);
+		editor.selection = new vscode.Selection(new vscode.Position(0, 4), new vscode.Position(0, 4));
+
+		await vscode.commands.executeCommand('hyperprompt.openBeside');
+		await sleep(100);
+
+		// Command should show error message with candidates
+		// (Error message display not directly testable in integration tests)
+	});
+
+	test('Open Beside command handles inline text link', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRoot, 'inline.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		const editor = vscode.window.activeTextEditor;
+		assert.ok(editor);
+		editor.selection = new vscode.Selection(new vscode.Position(0, 4), new vscode.Position(0, 4));
+
+		await vscode.commands.executeCommand('hyperprompt.openBeside');
+		await sleep(100);
+
+		// Command should show info message for inline text
+		// (Info message display not directly testable in integration tests)
 	});
 
 });
