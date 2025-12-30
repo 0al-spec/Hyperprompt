@@ -548,3 +548,19 @@ editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
 
 **Status:** Ready to Execute
 **Next Step:** Run EXECUTE command or start with Task 2.3.1 (verify SourceMap) to validate dependencies
+
+---
+
+## Archive Metadata
+
+**Archived:** 2025-12-30
+**Completed:** 2025-12-30
+**Actual Effort:** 5 hours (vs 4h estimated)
+**Summary:** [VSC-10-summary.md](./VSC-10-summary.md)
+**Validation:** [VSC-10-validation-report.md](./VSC-10-validation-report.md)
+
+**Implementation Notes:**
+- Implemented minimal SourceMap (stub) as EE-EXT-3 was not fully complete
+- All output lines map to entry file (limitation documented)
+- Full multi-file navigation requires Emitter integration (future enhancement)
+- Feature functional for basic use cases, limitations acceptable for v1.0

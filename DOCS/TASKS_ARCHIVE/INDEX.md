@@ -184,6 +184,15 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE-EXT-1
 - **Description:** Restore link span extraction for linkAt queries and preserve ranges on lexer errors.
 
+### EE-EXT-3 — Source Map Generation **[P2]** ⚠️ PARTIAL (Stub Only) 2025-12-26
+- **Review:** [EE-EXT-3-review.md](./EE-EXT-3-review.md)
+- **Summary:** [EE-EXT-3-summary.md](./EE-EXT-3-summary.md)
+- **Effort:** 5 hours (stub only), 12-18 hours needed for full implementation
+- **Dependencies:** EE8
+- **Status:** Only 50% complete (3/6 requirements)
+- **Description:** Minimal stub implementation for source map generation. Maps all output lines to entry file only. Missing: Emitter integration, multi-file support, unit tests.
+- **Note:** ⚠️ Marked complete but not fully implemented. See review for details.
+
 ---
 
 ## EditorEngine Code Review Fixes
@@ -351,6 +360,15 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** VSC-5, EE-EXT-4
 - **Description:** Implement multi-column workflow feature with `hyperprompt.openBeside` command for side-by-side editing.
 
+### VSC-10 — Bidirectional Navigation (Optional) **[P2]** ✓ 2025-12-30
+- **PRD:** [VSC-10_Bidirectional_Navigation.md](./VSC-10_Bidirectional_Navigation.md)
+- **Summary:** [VSC-10-summary.md](./VSC-10-summary.md)
+- **Validation:** [VSC-10-validation-report.md](./VSC-10-validation-report.md)
+- **Effort:** 5 hours (actual vs 4h estimated)
+- **Dependencies:** VSC-7, EE-EXT-3
+- **Description:** Implement click-to-navigate from preview to source files using minimal source maps. Maps to entry file only (multi-file requires Emitter integration).
+- **Note:** Uses stub SourceMap implementation; full multi-file tracking deferred to EE-EXT-3-FULL.
+
 ### VSC-13 — CI/CD Improvements for Extension **[P1]** ✓ 2025-12-30
 - **PRD:** [VSC-13_CI_CD_Improvements_for_Extension.md](./VSC-13_CI_CD_Improvements_for_Extension.md)
 - **Summary:** [VSC-13-summary.md](./VSC-13-summary.md)
@@ -395,8 +413,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 49 items
-- **Total Effort:** 145 hours (tracked tasks only)
+- **Total Archived:** 51 items (50 complete, 1 partial)
+- **Total Effort:** 150 hours completed + 5 hours partial + 12-18 hours pending (EE-EXT-3 full implementation)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---

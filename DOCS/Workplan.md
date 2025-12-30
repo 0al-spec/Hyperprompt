@@ -374,21 +374,76 @@ Completed phases include:
 
 ### EE-EXT-3: Source Map Generation **[P2]**
 **Dependencies:** EE8
-**Estimated:** 5 hours
-**Status:** ✅ **COMPLETED** on 2025-12-26
+**Estimated:** 5 hours (stub only), 12-18 hours (full implementation)
+**Status:** ⚠️ **PARTIALLY IMPLEMENTED** (Stub Only) on 2025-12-26
 
-- [ ] **[P2, depends: EE8]** Define `SourceMap` struct (output line → source location mapping)
-- [ ] **[P2, depends: EE8]** Extend `Emitter` to track source ranges during compilation
-- [ ] **[P2, depends: EE8]** Add `CompileResult.sourceMap` field (optional)
-- [ ] **[P2, depends: EE8]** Implement JSON source map format (compatible with browser devtools)
-- [ ] **[P2, depends: EE8]** Add `SourceMap.lookup(outputLine:) -> SourceLocation?` method
-- [ ] **[P2, depends: EE8]** Write unit tests (verify source map accuracy for nested files)
+- [x] **[P2, depends: EE8]** Define `SourceMap` struct (output line → source location mapping)
+- [ ] **[P2, depends: EE8]** Extend `Emitter` to track source ranges during compilation — **NOT DONE**
+- [x] **[P2, depends: EE8]** Add `CompileResult.sourceMap` field (optional)
+- [~] **[P2, depends: EE8]** Implement JSON source map format (compatible with browser devtools) — **PARTIAL** (Codable only)
+- [x] **[P2, depends: EE8]** Add `SourceMap.lookup(outputLine:) -> SourceLocation?` method
+- [ ] **[P2, depends: EE8]** Write unit tests (verify source map accuracy for nested files) — **NOT DONE**
 
-**Acceptance Criteria:** Source maps correctly map output lines to source locations
+**Acceptance Criteria:** ⚠️ **PARTIAL** — Basic structure exists but stub implementation only maps to entry file
 
-**Blocks:** VSC-7 (bidirectional navigation feature — Phase 4 of PRD)
+**Current Implementation:** Minimal stub in `EditorCompiler.buildStubSourceMap()` maps all output lines to entry file. Does NOT track actual source locations through Emitter. Multi-file navigation unsupported.
 
-**Resolution Status:** 🟠 CRITICAL (Issue 2.2 from validation report — optional feature)
+**Limitations:**
+- ❌ No Emitter integration (critical requirement)
+- ❌ All output lines map to entry file (incorrect for included files)
+- ❌ No unit tests
+- ❌ Line mappings are approximate (output line N → source line N)
+
+**Blocks:** VSC-7 (bidirectional navigation feature — works with limitations)
+
+**Resolution Status:** 🟡 PARTIAL (Issue 2.2 from validation report — stub sufficient for VSC-10, full implementation deferred)
+
+**Review:** See detailed analysis in [`DOCS/TASKS_ARCHIVE/EE-EXT-3-review.md`](TASKS_ARCHIVE/EE-EXT-3-review.md)
+
+**Follow-up:** Create EE-EXT-3-FULL task for proper Emitter integration (12-18h effort)
+
+---
+
+### EE-EXT-3-FULL: Complete Source Map Implementation **[P2]**
+**Dependencies:** EE-EXT-3 (stub), EE8
+**Estimated:** 12-18 hours
+**Status:** 🔵 **TODO** — Not started
+
+- [ ] **[P2, depends: EE-EXT-3]** Integrate SourceMapBuilder with Emitter to track actual source ranges
+- [ ] **[P2, depends: EE-EXT-3]** Update Emitter to emit source location metadata during compilation
+- [ ] **[P2, depends: EE-EXT-3]** Pass SourceMapBuilder through compilation pipeline (Compiler → Emitter)
+- [ ] **[P2, depends: EE-EXT-3]** Track source file changes during file inclusion (@"...")
+- [ ] **[P2, depends: EE-EXT-3]** Track line number transformations (heading adjustments, content shifts)
+- [ ] **[P2, depends: EE-EXT-3]** Replace stub `buildStubSourceMap()` with real Emitter-based implementation
+- [ ] **[P2, depends: EE-EXT-3]** Write unit tests for SourceMap with multi-file scenarios
+- [ ] **[P2, depends: EE-EXT-3]** Write integration tests verifying source map accuracy for nested files
+- [ ] **[P2, depends: EE-EXT-3]** Verify VSC-10 (bidirectional navigation) works with multi-file projects
+- [ ] **[P1, optional]** Implement browser-compatible source map v3 format (JSON with VLQ encoding)
+
+**Acceptance Criteria:**
+- Source maps correctly map output lines to actual source files (not just entry file)
+- Multi-file navigation works in VS Code extension
+- Unit tests verify accuracy for complex compilation scenarios (nested files, transformations)
+- All output lines map to correct source locations
+
+**Current Gap:**
+- Stub implementation maps all lines to entry file only
+- No Emitter integration (critical requirement unfulfilled)
+- Multi-file projects show incorrect source locations
+
+**Impact:**
+- VSC-10 (bidirectional navigation) limited to entry file only
+- Cannot debug multi-file projects effectively
+- Cannot trace included content back to actual source
+
+**Code Locations:**
+- `Sources/EditorEngine/EditorCompiler.swift:118-147` (stub to replace)
+- `Sources/Core/Emitter.swift` (needs source tracking)
+- `Tests/EditorEngineTests/SourceMapTests.swift` (needs creation)
+
+**Blocks:** None (optional feature, stub sufficient for v1.0)
+
+**Resolution Status:** 🟡 DEFERRED (Issue 2.2 from validation report — stub acceptable for v1.0, full implementation v1.1+)
 
 ---
 
