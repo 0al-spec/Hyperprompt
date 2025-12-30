@@ -96,6 +96,56 @@ npm test
 
 The test runner downloads VS Code; slow networks may cause timeouts.
 
+## CI/CD
+
+The extension is continuously tested via GitHub Actions in `.github/workflows/ci.yml`.
+
+### CI Pipeline
+
+The `vscode-extension-tests` job runs on:
+- All pull requests
+- Pushes to main branch
+- Manual workflow dispatch
+
+### CI Steps
+
+1. **Setup Node.js** — Uses Node.js 20 with npm dependency caching for faster builds
+2. **Install dependencies** — Uses `npm ci` for reproducible builds from `package-lock.json`
+3. **Lint** — Runs ESLint on source files
+4. **Compile** — Compiles TypeScript to JavaScript
+5. **Run extension tests** — Executes VS Code extension tests in headless mode (Xvfb)
+6. **Package VSIX** — Verifies extension packaging with `vsce package`
+7. **Upload artifact** — Stores VSIX file for debugging
+
+### Performance
+
+- **Caching**: Node.js dependencies are cached using `actions/setup-node` cache feature (~30-50% speedup)
+- **Reproducibility**: `npm ci` ensures consistent builds across environments
+- **Observability**: Separate lint/compile/test steps make failures easy to diagnose
+
+### Troubleshooting CI Failures
+
+| Failure Step | Common Causes | Solution |
+|--------------|--------------|----------|
+| Lint | ESLint errors in source code | Run `npm run lint` locally and fix issues |
+| Compile | TypeScript compilation errors | Run `npm run compile` locally and fix type errors |
+| Test | Extension tests failing | Run `npm test` locally with VS Code downloaded |
+| Package VSIX | Missing dependencies or invalid package.json | Verify `package.json` and run `vsce package` locally |
+
+### Local CI Verification
+
+To replicate CI locally:
+
+```bash
+cd Tools/VSCodeExtension
+npm ci                    # Install dependencies (like CI)
+npm run lint              # Run linter
+npm run compile           # Compile TypeScript
+npm test                  # Run tests
+npm install -g @vscode/vsce
+vsce package              # Verify packaging
+```
+
 ## Engine Setup
 
 Build the CLI with the Editor trait and ensure it is discoverable:
