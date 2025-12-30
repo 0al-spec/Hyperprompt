@@ -732,7 +732,7 @@ Completed phases include:
 ### VSC-8: Extension Settings **[P1]**
 **Dependencies:** VSC-4*
 **Estimated:** 2 hours
-**Status:** 🟢 INPROGRESS
+**Status:** ✅ Completed on 2025-12-30
 
 - [x] **[P1, depends: VSC-4*]** Add configuration schema to package.json
 - [x] **[P1, depends: VSC-4*]** Add `hyperprompt.resolutionMode` setting (strict/lenient)
@@ -752,7 +752,7 @@ Completed phases include:
 ### VSC-9: Multi-Column Workflow (Optional) **[P2]**
 **Dependencies:** VSC-5, EE-EXT-4
 **Estimated:** 3 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 **SELECTED** (2025-12-30)
 
 - [ ] **[P2, depends: VSC-5, EE-EXT-4]** Open referenced files in editor group beside source
 - [ ] **[P2, depends: VSC-5, EE-EXT-4]** Configure 3-column layout (source | reference | preview)
