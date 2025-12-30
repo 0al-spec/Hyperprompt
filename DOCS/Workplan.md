@@ -769,7 +769,7 @@ Completed phases include:
 ### VSC-10: Bidirectional Navigation (Optional) **[P2]**
 **Dependencies:** VSC-7, EE-EXT-3
 **Estimated:** 4 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 **IN PROGRESS** — Selected on 2025-12-30
 
 - [ ] **[P2, depends: VSC-7, EE-EXT-3]** Implement click handler in preview Webview
 - [ ] **[P2, depends: VSC-7, EE-EXT-3]** Send message to extension (line number clicked)
