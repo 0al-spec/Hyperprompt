@@ -182,6 +182,20 @@ export async function activate(context: vscode.ExtensionContext) {
 		return entryFile;
 	};
 
+	const getActiveHypercodeEditor = (): vscode.TextEditor | null => {
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) {
+			vscode.window.showInformationMessage('Hyperprompt: No active editor.');
+			return null;
+		}
+		const document = editor.document;
+		if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
+			vscode.window.showInformationMessage('Hyperprompt: Open a .hc file to navigate.');
+			return null;
+		}
+		return editor;
+	};
+
 	const renderCompileOutput = (result: { output?: string }) => {
 		if (result.output && result.output.length > 0) {
 			outputChannel.clear();
@@ -305,16 +319,11 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const openBesideCommand = vscode.commands.registerCommand('hyperprompt.openBeside', async () => {
 		try {
-			const editor = vscode.window.activeTextEditor;
+			const editor = getActiveHypercodeEditor();
 			if (!editor) {
-				vscode.window.showInformationMessage('Hyperprompt: No active editor.');
 				return;
 			}
 			const document = editor.document;
-			if (path.extname(document.uri.fsPath).toLowerCase() !== '.hc') {
-				vscode.window.showInformationMessage('Hyperprompt: Open a .hc file to navigate.');
-				return;
-			}
 
 			const client = await ensureEngineReady();
 			if (!client) {
