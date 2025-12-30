@@ -102,18 +102,25 @@ Preview output renders raw Markdown text in a styled panel (Markdown-to-HTML ren
 
 ### Development Testing
 
+**IMPORTANT:** Always run `npm install` first on a clean machine or fresh clone!
+
 From `Tools/VSCodeExtension`:
 
 ```bash
-npm install      # Install dependencies (includes TypeScript)
-npm run compile  # Compile TypeScript to JavaScript
+# Step 1: Install dependencies (REQUIRED on first run or clean machine)
+npm install      # Installs TypeScript, @types/node, @types/vscode, and all dependencies
+
+# Step 2: Compile TypeScript to JavaScript
+npm run compile  # Must run after npm install
+
+# Step 3: Open in Extension Development Host
 code --extensionDevelopmentPath="$PWD"
 ```
 
-Use `npm run watch` while debugging to recompile on changes:
+**Development workflow** - Use `npm run watch` while debugging to recompile on changes:
 
 ```bash
-npm run watch
+npm run watch    # Auto-recompile on file changes
 code --extensionDevelopmentPath="$PWD"
 ```
 
