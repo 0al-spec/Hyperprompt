@@ -1,6 +1,7 @@
 #if Editor
 import CompilerDriver
 import Core
+import Parser  // For Node type (used in source map generation)
 
 /// EditorCompiler — Editor-facing wrapper around CompilerDriver.
 public struct EditorCompiler {
