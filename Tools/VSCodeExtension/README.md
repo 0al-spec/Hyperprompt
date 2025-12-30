@@ -8,6 +8,7 @@ Hyperprompt language support for VS Code, backed by the Hyperprompt EditorEngine
 - Compile commands (strict and lenient) with output in the Hyperprompt output channel.
 - Live preview panel with compile-on-save updates.
 - Navigation helpers: go-to-definition and hover for file references.
+- **Bidirectional navigation:** Click any line in the preview panel to jump to the corresponding source location in the editor.
 - Diagnostics surfaced in the Problems panel on save.
 
 ![Hyperprompt preview panel placeholder](./images/preview-placeholder.png)

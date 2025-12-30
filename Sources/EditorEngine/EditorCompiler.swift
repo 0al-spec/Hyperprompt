@@ -44,6 +44,14 @@ public struct EditorCompiler {
 
         do {
             let result = try driver.compile(args)
+
+            // Build stub source map (maps all output lines to entry file)
+            // TODO: Enhance with full source tracking through Emitter
+            let sourceMap = buildStubSourceMap(
+                output: result.markdown,
+                entryFile: entryFile
+            )
+
             return CompileResult(
                 output: result.markdown,
                 diagnostics: [],
@@ -52,7 +60,8 @@ public struct EditorCompiler {
                     : nil,
                 statistics: (statsDecision.decide(options.statisticsPolicy) ?? false)
                     ? result.statistics
-                    : nil
+                    : nil,
+                sourceMap: sourceMap
             )
         } catch let error as CompilerError {
             return CompileResult(
@@ -102,6 +111,39 @@ public struct EditorCompiler {
         case .currentDirectory:
             return "."
         }
+    }
+
+    // MARK: - Source Map Generation (Stub Implementation)
+
+    /// Build stub source map that maps all output lines to entry file.
+    ///
+    /// This is a minimal implementation for VSC-10 (bidirectional navigation).
+    /// TODO: Replace with full source tracking through Emitter to support multi-file navigation.
+    ///
+    /// - Parameters:
+    ///   - output: Compiled markdown output
+    ///   - entryFile: Path to entry .hc file
+    /// - Returns: SourceMap with basic line mappings
+    private func buildStubSourceMap(output: String?, entryFile: String) -> SourceMap? {
+        guard let output = output, !output.isEmpty else {
+            return nil
+        }
+
+        let builder = SourceMapBuilder()
+        let lines = output.split(separator: "\n", omittingEmptySubsequences: false)
+
+        // Map each output line to corresponding line in entry file
+        // This is approximate since we don't track actual source ranges yet
+        for (outputLine, _) in lines.enumerated() {
+            let sourceLocation = SourceLocation(
+                filePath: entryFile,
+                line: outputLine,  // Approximate: assume 1:1 mapping
+                column: 0
+            )
+            builder.addMapping(outputLine: outputLine, sourceLocation: sourceLocation)
+        }
+
+        return builder.build()
     }
 }
 #endif

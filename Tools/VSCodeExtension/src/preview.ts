@@ -42,6 +42,9 @@ export const buildPreviewHtml = (markdown: string): string => {
 	<pre>${escaped}</pre>
 	<script>
 		(function() {
+			const vscode = acquireVsCodeApi();
+
+			// Handle scroll sync messages from extension
 			window.addEventListener('message', (event) => {
 				const message = event.data;
 				if (!message || message.type !== 'scroll') {
@@ -51,6 +54,27 @@ export const buildPreviewHtml = (markdown: string): string => {
 				const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
 				window.scrollTo({ top: maxScroll * ratio });
 			});
+
+			// Handle clicks for bidirectional navigation
+			const preElement = document.querySelector('pre');
+			if (preElement) {
+				preElement.addEventListener('click', (event) => {
+					const target = event.target;
+					if (!target) return;
+
+					// Calculate 0-indexed line number from click position
+					const preRect = preElement.getBoundingClientRect();
+					const lineHeight = parseInt(window.getComputedStyle(preElement).lineHeight || '21');
+					const clickY = event.clientY - preRect.top + preElement.scrollTop;
+					const lineNumber = Math.floor(clickY / lineHeight);
+
+					// Send navigate message to extension
+					vscode.postMessage({
+						type: 'navigateToSource',
+						line: lineNumber
+					});
+				});
+			}
 		})();
 	</script>
 </body>

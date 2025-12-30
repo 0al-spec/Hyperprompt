@@ -74,6 +74,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	let refreshInFlight: Promise<void> | null = null;
 	let previewPanel: vscode.WebviewPanel | null = null;
 	let previewEntryFile: string | null = null;
+	let previewSourceMap: import('./compileCommand').SourceMap | null = null;
 
 	const stopRpcClient = () => {
 		if (!rpcClient) {
@@ -256,6 +257,27 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	const navigateToSource = async (outputLine: number) => {
+		if (!previewSourceMap) {
+			void vscode.window.showInformationMessage('No source map available for this preview.');
+			return;
+		}
+		const sourceLocation = previewSourceMap.mappings[String(outputLine)];
+		if (!sourceLocation) {
+			void vscode.window.showInformationMessage(`No source location available for line ${outputLine}.`);
+			return;
+		}
+		try {
+			const doc = await vscode.workspace.openTextDocument(sourceLocation.filePath);
+			const editor = await vscode.window.showTextDocument(doc);
+			const position = new vscode.Position(sourceLocation.line, sourceLocation.column);
+			editor.selection = new vscode.Selection(position, position);
+			editor.revealRange(new vscode.Range(position, position), vscode.TextEditorRevealType.InCenter);
+		} catch (error) {
+			void vscode.window.showErrorMessage(`Cannot open file: ${sourceLocation.filePath}`);
+		}
+	};
+
 	const ensurePreviewPanel = () => {
 		if (previewPanel) {
 			return previewPanel;
@@ -270,6 +292,12 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (previewPanel === panel) {
 				previewPanel = null;
 				previewEntryFile = null;
+				previewSourceMap = null;
+			}
+		});
+		panel.webview.onDidReceiveMessage((message: {type: string; line?: number}) => {
+			if (message.type === 'navigateToSource' && typeof message.line === 'number') {
+				void navigateToSource(message.line);
 			}
 		});
 		previewPanel = panel;
@@ -296,6 +324,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			compileTimeoutMs
 		);
 		previewPanel.webview.html = buildPreviewHtml(compileResult.output ?? '');
+		previewSourceMap = compileResult.sourceMap ?? null;
 		const activeEditor = vscode.window.activeTextEditor;
 		if (activeEditor && activeEditor.document.uri.fsPath === entryFile) {
 			sendPreviewScroll(activeEditor);
