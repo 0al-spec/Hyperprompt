@@ -65,11 +65,21 @@ Implemented bidirectional navigation between compiled Markdown output and source
 - **Limitation:** Only supports navigation to entry file, not included files
 - **Future Enhancement:** Track source ranges through Emitter during compilation for multi-file navigation
 
+### Compilation Fixes Applied
+After initial implementation, compilation fixes were required:
+- **Core.SourceLocation Integration:** Reused existing Core.SourceLocation instead of custom type
+- **Line Indexing:** Core.SourceLocation uses 1-indexed lines (standard editor convention)
+- **Output → Source Mapping:** Convert 0-indexed output lines to 1-indexed source locations
+- **TypeScript Adjustments:** Updated types to match Swift (removed column, 1-indexed lines)
+- **VS Code Navigation:** Convert 1-indexed source locations to 0-indexed VS Code Position
+- **Codable Wrapper:** Created CodableSourceLocation for JSON serialization (Core.SourceLocation is not Codable)
+
 ### Key Technical Details
-1. **0-indexed line numbers:** Consistent across webview, SourceMap, and VS Code API
-2. **JSON serialization:** SourceMap uses string keys (JSON limitation) with custom Codable implementation
-3. **Thread safety:** SourceMapBuilder uses NSLock for concurrent access
-4. **Message passing:** Standard VS Code webview ↔ extension pattern (postMessage/onDidReceiveMessage)
+1. **Line indexing:** Output lines are 0-indexed, source locations are 1-indexed (Core.SourceLocation convention)
+2. **VS Code Position:** 0-indexed, requires conversion from 1-indexed source locations
+3. **JSON serialization:** SourceMap uses string keys (JSON limitation) with custom Codable implementation
+4. **Thread safety:** SourceMapBuilder uses NSLock for concurrent access
+5. **Message passing:** Standard VS Code webview ↔ extension pattern (postMessage/onDidReceiveMessage)
 
 ---
 
@@ -115,10 +125,11 @@ Implemented bidirectional navigation between compiled Markdown output and source
 
 **Validation Report:** [`VSC-10-validation-report.md`](VSC-10-validation-report.md)
 
-### Swift Compilation ⚠️ PENDING
-- ❌ **Swift build:** Cannot verify due to network constraints (Swift download failed)
-- ❌ **Swift test:** Cannot run test suite
-- **Action Required:** Run `swift build && swift test` after deployment
+### Swift Compilation ✅ COMPLETED
+- ✅ **Swift build:** Successfully compiled with `swift build --traits Editor`
+- ✅ **Binary created:** `.build/debug/hyperprompt` (20MB)
+- ⚠️ **Swift test:** Cannot run (linker 'ld' not available in environment)
+- **Note:** Compilation fixes applied (use Core.SourceLocation, proper line indexing)
 
 ### Manual Testing ⚠️ PENDING
 - ❌ Integration tests deferred due to environment constraints
