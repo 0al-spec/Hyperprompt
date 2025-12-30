@@ -74,11 +74,11 @@ integrationSuite('Extension Integration', function () {
 		);
 
 		assert.ok(results && results.length > 0);
-		assert.ok(results[0].uri.fsPath.endsWith(path.join('docs', 'readme.md')));
+		assert.ok(results[0]!.uri.fsPath.endsWith(path.join('docs', 'readme.md')));
 
 		const log = readLogEntries().filter((entry) => entry.method === 'editor.resolve');
 		assert.ok(log.length > 0);
-		const last = log[log.length - 1];
+		const last = log[log.length - 1]!;
 		assert.strictEqual(last.params.workspaceRoot, fixtureRoot);
 	});
 
@@ -95,7 +95,7 @@ integrationSuite('Extension Integration', function () {
 
 		const log = readLogEntries().filter((entry) => entry.method === 'editor.resolve');
 		assert.ok(log.length > 0);
-		const last = log[log.length - 1];
+		const last = log[log.length - 1]!;
 		assert.strictEqual(last.params.workspaceRoot, fixtureRootTwo);
 	});
 
@@ -142,7 +142,7 @@ integrationSuite('Extension Integration', function () {
 		);
 
 		assert.ok(hovers && hovers.length > 0);
-		const contents = hovers[0].contents
+		const contents = hovers[0]!.contents
 			.map((item) => {
 				if (typeof item === 'string') {
 					return item;
@@ -236,7 +236,7 @@ integrationSuite('Extension Integration', function () {
 
 		const log = readLogEntries().filter((entry) => entry.method === 'editor.resolve');
 		assert.ok(log.length > 0);
-		const last = log[log.length - 1];
+		const last = log[log.length - 1]!;
 		assert.strictEqual(last.params.workspaceRoot, fixtureRootTwo);
 	});
 
