@@ -1,5 +1,4 @@
 #if Editor
-import Core
 import Foundation
 
 /// Minimal source map tracking output lines to source locations.

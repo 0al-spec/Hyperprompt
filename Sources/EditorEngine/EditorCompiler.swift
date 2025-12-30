@@ -1,7 +1,8 @@
 #if Editor
 import CompilerDriver
 import Core
-import Parser  // For Node type (used in source map generation)
+import Emitter  // For MarkdownEmitter and EmitterConfig
+import Parser  // For Node type
 
 /// EditorCompiler — Editor-facing wrapper around CompilerDriver.
 public struct EditorCompiler {
@@ -46,17 +47,22 @@ public struct EditorCompiler {
         do {
             let result = try driver.compile(args)
 
-            // Build improved source map from AST (tracks multi-file includes)
-            // NOTE: This is an enhanced stub that uses AST to track source files.
-            // Line numbers are approximate (±2-3 lines) due to heading adjustments.
-            //
-            // TODO: EE-EXT-3-FULL - Replace with full Emitter integration for precise line tracking.
-            // See DOCS/INPROGRESS/EE-EXT-3-FULL_Complete_Source_Map_Implementation.md
-            let sourceMap = buildSourceMap(
-                output: result.markdown,
-                resolvedAST: result.resolvedAST,
-                entryFile: entryFile
-            )
+            // Build source map by re-emitting with SourceMapBuilder
+            // This allows precise line tracking through Emitter integration.
+            // Note: Re-emission is a small performance cost acceptable for Editor mode.
+            let sourceMap: SourceMap?
+            if let resolvedAST = result.resolvedAST {
+                let sourceMapBuilder = SourceMapBuilder()
+                let emitterConfig = EmitterConfig(
+                    insertBlankLines: true,
+                    useFilenameAsHeading: false
+                )
+                let emitter = MarkdownEmitter(config: emitterConfig, sourceMapBuilder: sourceMapBuilder)
+                _ = emitter.emit(resolvedAST)  // Re-emit to build source map
+                sourceMap = sourceMapBuilder.build()
+            } else {
+                sourceMap = nil
+            }
 
             return CompileResult(
                 output: result.markdown,
@@ -117,147 +123,6 @@ public struct EditorCompiler {
         case .currentDirectory:
             return "."
         }
-    }
-
-    // MARK: - Source Map Generation (Enhanced Implementation)
-
-    /// Build source map from resolved AST, tracking multi-file includes.
-    ///
-    /// This is an **improved stub** that traverses the AST to extract source file information
-    /// from Node.resolution. It correctly maps output lines to their actual source files
-    /// (not just the entry file), enabling multi-file navigation in VSC-10.
-    ///
-    /// **Limitations:**
-    /// - Line numbers are approximate (±2-3 lines) due to heading level adjustments
-    /// - Does not account for blank line insertions between siblings
-    /// - Markdown content from included .md files uses rough line estimation
-    ///
-    /// **Accuracy:** ~90% for simple projects, ~70-80% for complex nested structures
-    ///
-    /// TODO: EE-EXT-3-FULL - Replace with Emitter integration for precise tracking.
-    /// The full implementation will track source locations during emission, accounting for:
-    /// - Heading level adjustments (MarkdownEmitter.generateHeading)
-    /// - Blank line insertions (EmitterConfig.insertBlankLines)
-    /// - Content transformations (HeadingAdjuster)
-    /// See DOCS/INPROGRESS/EE-EXT-3-FULL_Complete_Source_Map_Implementation.md
-    /// See DOCS/TASKS_ARCHIVE/EE-EXT-3-review.md for analysis of stub limitations
-    ///
-    /// - Parameters:
-    ///   - output: Compiled markdown output
-    ///   - resolvedAST: Resolved AST root node (contains source file info in Node.resolution)
-    ///   - entryFile: Path to entry .hc file (fallback if AST unavailable)
-    /// - Returns: SourceMap with multi-file line mappings
-    private func buildSourceMap(output: String?, resolvedAST: Node?, entryFile: String) -> SourceMap? {
-        guard let output = output, !output.isEmpty else {
-            return nil
-        }
-
-        guard let ast = resolvedAST else {
-            // Fallback: no AST available, map all to entry file (old stub behavior)
-            return buildFallbackSourceMap(output: output, entryFile: entryFile)
-        }
-
-        let builder = SourceMapBuilder()
-        var currentOutputLine = 0
-
-        // Traverse AST depth-first, tracking output line offset
-        traverseAST(node: ast, builder: builder, outputLine: &currentOutputLine, entryFile: entryFile)
-
-        return builder.build()
-    }
-
-    /// Traverse AST depth-first and build source mappings.
-    ///
-    /// This mirrors the structure of MarkdownEmitter.emitNode to estimate output line offsets.
-    ///
-    /// - Parameters:
-    ///   - node: Current AST node
-    ///   - builder: SourceMapBuilder to add mappings
-    ///   - outputLine: Current output line number (0-indexed, mutated as we traverse)
-    ///   - entryFile: Fallback source file if node has no resolution
-    private func traverseAST(node: Node, builder: SourceMapBuilder, outputLine: inout Int, entryFile: String) {
-        // Determine source file from Node.resolution
-        let sourceFile = extractSourceFile(from: node, fallback: entryFile)
-
-        // Each node generates a heading (1 line) unless it's a markdown include
-        let isMarkdownInclude: Bool
-        if case .markdownFile = node.resolution {
-            isMarkdownInclude = true
-        } else {
-            isMarkdownInclude = false
-        }
-
-        if !isMarkdownInclude {
-            // Heading line: map to source file at approximate line
-            let sourceLine = 1  // Approximation: use line 1 for node headings
-            let location = SourceLocation(filePath: sourceFile, line: sourceLine)
-            builder.addMapping(outputLine: outputLine, sourceLocation: location)
-            outputLine += 1
-        }
-
-        // If node has content (markdown file), estimate content line count
-        if case let .markdownFile(_, content) = node.resolution {
-            let contentLines = content.split(separator: "\n", omittingEmptySubsequences: false).count
-            // Map each content line to the markdown source file
-            for lineOffset in 0..<contentLines {
-                let location = SourceLocation(filePath: sourceFile, line: lineOffset + 1)
-                builder.addMapping(outputLine: outputLine, sourceLocation: location)
-                outputLine += 1
-            }
-        }
-
-        // Traverse children (depth-first, matches MarkdownEmitter)
-        for (index, child) in node.children.enumerated() {
-            // Blank line between siblings (if not first child)
-            if index > 0 {
-                // Blank lines don't get mapped (or map to parent's source file)
-                outputLine += 1
-            }
-            traverseAST(node: child, builder: builder, outputLine: &outputLine, entryFile: entryFile)
-        }
-    }
-
-    /// Extract source file path from Node.resolution.
-    ///
-    /// - Parameters:
-    ///   - node: AST node
-    ///   - fallback: Fallback file path if node has no resolution
-    /// - Returns: Source file path
-    private func extractSourceFile(from node: Node, fallback: String) -> String {
-        guard let resolution = node.resolution else {
-            return fallback
-        }
-
-        switch resolution {
-        case .inlineText:
-            return fallback
-        case let .markdownFile(path, _):
-            return path
-        case let .hypercodeFile(path, _):
-            return path
-        case .forbidden:
-            return fallback
-        }
-    }
-
-    /// Fallback source map (old stub behavior): map all output lines to entry file.
-    ///
-    /// Used when AST is unavailable (shouldn't happen in normal operation).
-    ///
-    /// - Parameters:
-    ///   - output: Compiled markdown output
-    ///   - entryFile: Entry .hc file path
-    /// - Returns: SourceMap with all lines mapped to entry file
-    private func buildFallbackSourceMap(output: String, entryFile: String) -> SourceMap {
-        let builder = SourceMapBuilder()
-        let lines = output.split(separator: "\n", omittingEmptySubsequences: false)
-
-        for (outputLine, _) in lines.enumerated() {
-            let location = SourceLocation(filePath: entryFile, line: outputLine + 1)
-            builder.addMapping(outputLine: outputLine, sourceLocation: location)
-        }
-
-        return builder.build()
     }
 }
 #endif
