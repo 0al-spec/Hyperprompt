@@ -11,8 +11,7 @@ export type CompileParams = {
 
 export type SourceLocation = {
 	filePath: string;
-	line: number;
-	column: number;
+	line: number;  // 1-indexed (matches Core.SourceLocation)
 };
 
 export type SourceMap = {

@@ -270,7 +270,8 @@ export async function activate(context: vscode.ExtensionContext) {
 		try {
 			const doc = await vscode.workspace.openTextDocument(sourceLocation.filePath);
 			const editor = await vscode.window.showTextDocument(doc);
-			const position = new vscode.Position(sourceLocation.line, sourceLocation.column);
+			// sourceLocation.line is 1-indexed (Core.SourceLocation), VS Code Position is 0-indexed
+			const position = new vscode.Position(sourceLocation.line - 1, 0);
 			editor.selection = new vscode.Selection(position, position);
 			editor.revealRange(new vscode.Range(position, position), vscode.TextEditorRevealType.InCenter);
 		} catch (error) {

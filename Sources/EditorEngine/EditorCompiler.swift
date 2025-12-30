@@ -134,11 +134,11 @@ public struct EditorCompiler {
 
         // Map each output line to corresponding line in entry file
         // This is approximate since we don't track actual source ranges yet
+        // Note: outputLine is 0-indexed (array enumeration), but SourceLocation requires 1-indexed lines
         for (outputLine, _) in lines.enumerated() {
             let sourceLocation = SourceLocation(
                 filePath: entryFile,
-                line: outputLine,  // Approximate: assume 1:1 mapping
-                column: 0
+                line: outputLine + 1  // Convert 0-indexed to 1-indexed for source location
             )
             builder.addMapping(outputLine: outputLine, sourceLocation: sourceLocation)
         }
