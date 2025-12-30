@@ -117,11 +117,33 @@ const handleLine = (line) => {
 		}
 		case 'editor.linkAt': {
 			const filePath = request.params?.filePath ?? '';
+			const line = request.params?.line ?? 1;
+			const column = request.params?.column ?? 1;
+
+			// Return null for empty positions (no link at cursor)
+			if (filePath.includes('empty-position.hc')) {
+				return writeResponse({
+					jsonrpc: '2.0',
+					id: request.id,
+					result: null
+				});
+			}
+
+			// Different literals based on file type for testing edge cases
+			let literal = 'docs/readme.md';
+			if (filePath.includes('forbidden.hc')) {
+				literal = 'malware.exe';
+			} else if (filePath.includes('ambiguous.hc')) {
+				literal = 'ambiguous.md';
+			} else if (filePath.includes('inline.hc')) {
+				literal = 'inline:some text here';
+			}
+
 			return writeResponse({
 				jsonrpc: '2.0',
 				id: request.id,
 				result: {
-					literal: 'docs/readme.md',
+					literal,
 					byteRangeStart: 2,
 					byteRangeEnd: 16,
 					lineRangeStart: 1,
@@ -136,6 +158,50 @@ const handleLine = (line) => {
 		case 'editor.resolve': {
 			const workspaceRoot = request.params?.workspaceRoot ?? '';
 			const linkPath = request.params?.linkPath ?? '';
+
+			// Handle forbidden extension scenario
+			if (linkPath.endsWith('.exe') || linkPath.endsWith('.dll')) {
+				const ext = path.extname(linkPath).slice(1);
+				return writeResponse({
+					jsonrpc: '2.0',
+					id: request.id,
+					result: {
+						type: 'forbidden',
+						fileExtension: ext,
+						reason: `Extension .${ext} is not allowed`
+					}
+				});
+			}
+
+			// Handle ambiguous reference scenario
+			if (linkPath.includes('ambiguous')) {
+				return writeResponse({
+					jsonrpc: '2.0',
+					id: request.id,
+					result: {
+						type: 'ambiguous',
+						reason: 'Multiple matches found',
+						candidates: [
+							path.join(workspaceRoot, 'docs', linkPath),
+							path.join(workspaceRoot, 'src', linkPath)
+						]
+					}
+				});
+			}
+
+			// Handle inline text scenario
+			if (linkPath.startsWith('inline:')) {
+				return writeResponse({
+					jsonrpc: '2.0',
+					id: request.id,
+					result: {
+						type: 'inlineText',
+						reason: 'Link is inline text, not a file reference'
+					}
+				});
+			}
+
+			// Default: markdown file
 			return writeResponse({
 				jsonrpc: '2.0',
 				id: request.id,

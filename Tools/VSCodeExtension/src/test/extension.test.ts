@@ -272,4 +272,52 @@ integrationSuite('Extension Integration', function () {
 		// Command should complete without crashing
 	});
 
+	test('Open Beside command handles forbidden extension', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRoot, 'forbidden.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		const editor = vscode.window.activeTextEditor;
+		assert.ok(editor);
+		editor.selection = new vscode.Selection(new vscode.Position(0, 4), new vscode.Position(0, 4));
+
+		await vscode.commands.executeCommand('hyperprompt.openBeside');
+		await sleep(100);
+
+		// Command should show error message for forbidden extension
+		// (Error message display not directly testable in integration tests)
+	});
+
+	test('Open Beside command handles ambiguous reference', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRoot, 'ambiguous.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		const editor = vscode.window.activeTextEditor;
+		assert.ok(editor);
+		editor.selection = new vscode.Selection(new vscode.Position(0, 4), new vscode.Position(0, 4));
+
+		await vscode.commands.executeCommand('hyperprompt.openBeside');
+		await sleep(100);
+
+		// Command should show error message with candidates
+		// (Error message display not directly testable in integration tests)
+	});
+
+	test('Open Beside command handles inline text link', async () => {
+		const uri = vscode.Uri.file(path.join(fixtureRoot, 'inline.hc'));
+		const doc = await vscode.workspace.openTextDocument(uri);
+		await vscode.window.showTextDocument(doc);
+
+		const editor = vscode.window.activeTextEditor;
+		assert.ok(editor);
+		editor.selection = new vscode.Selection(new vscode.Position(0, 4), new vscode.Position(0, 4));
+
+		await vscode.commands.executeCommand('hyperprompt.openBeside');
+		await sleep(100);
+
+		// Command should show info message for inline text
+		// (Info message display not directly testable in integration tests)
+	});
+
 });
