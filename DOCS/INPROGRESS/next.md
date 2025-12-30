@@ -1,22 +1,36 @@
-# Next Task: VSC-9 — Multi-Column Workflow (Optional)
+# Next Task: VSC-13 — CI/CD Improvements for Extension
 
-**Priority:** [P2]
+**Priority:** [P1]
 **Phase:** Phase 14 (VS Code Extension Development)
-**Effort:** 3 hours
-**Dependencies:** VSC-5 ✅, EE-EXT-4 ✅
-**Status:** ✅ Completed on 2025-12-30
+**Effort:** 2 hours
+**Dependencies:** VSC-11 ✅, VSC-12 ✅
+**Status:** 📋 Ready to start
 
 ## Description
 
-Implement multi-column workflow feature for the VS Code extension, enabling users to open referenced files in a separate editor group beside the source file. This enhances the editing experience by supporting a 3-column layout: source | reference | preview.
+Improve CI/CD pipeline for VS Code extension to enhance robustness, visibility, and build reproducibility. This includes removing PR-only restrictions, adding dependency caching, splitting CI steps for better observability, and verifying VSIX packaging.
 
-## PRD
+## Acceptance Criteria
 
-Detailed PRD created at: `DOCS/INPROGRESS/VSC-9_Multi-Column_Workflow.md`
+- ✅ CI runs on all events (PR, push to main, workflow_dispatch)
+- ✅ Node.js dependencies cached for faster builds
+- ✅ Separate steps for lint, compile, and test
+- ✅ `npm ci` used instead of `npm install`
+- ✅ VSIX packaging verification added
+- ✅ CI documentation updated in extension README
+
+## Implementation Tasks
+
+1. **Remove PR-only restriction** — Allow CI to run on push and manual dispatch
+2. **Add Node.js caching** — Use `actions/setup-node` with cache option
+3. **Split CI steps** — Separate lint, compile, test for visibility
+4. **Use npm ci** — Replace `npm install` for reproducible builds
+5. **Add VSIX verification** — Ensure extension packages correctly
+6. **Update documentation** — Document CI behavior in README
 
 ## Next Step
 
-Run EXECUTE command to implement the task:
+Run PLAN command to create detailed PRD:
 ```bash
-$ claude "Выполни команду EXECUTE"
+$ claude "Выполни команду PLAN"
 ```

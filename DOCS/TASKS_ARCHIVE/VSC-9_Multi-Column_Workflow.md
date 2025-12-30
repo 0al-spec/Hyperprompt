@@ -548,3 +548,6 @@ This ensures each file uses its own workspace root for resolution.
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-12-30 | Hyperprompt Planning System | Initial PRD creation |
+
+---
+**Archived:** 2025-12-30
