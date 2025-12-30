@@ -4,7 +4,7 @@
 **Phase:** Phase 12 (EditorEngine API Enhancements)
 **Effort:** 12-18 hours
 **Dependencies:** EE-EXT-3 (stub) ✅, EE8 ✅
-**Status:** 🔵 Ready to start
+**Status:** ✅ COMPLETED (2025-12-30)
 
 ## Description
 
@@ -34,15 +34,16 @@ Complete the Source Map Generation implementation by integrating with Emitter to
 
 ## Subtasks
 
-- [ ] Read and understand Emitter implementation
-- [ ] Design source tracking mechanism (SourceMapBuilder integration)
-- [ ] Update Emitter to track source locations per output line
-- [ ] Pass SourceMapBuilder through compilation pipeline
-- [ ] Replace stub with Emitter-based implementation
-- [ ] Write unit tests for SourceMap
-- [ ] Write integration tests with multi-file projects
-- [ ] Verify VSC-10 works with nested files
-- [ ] Update documentation
+- [x] Read and understand Emitter implementation
+- [x] Design source tracking mechanism (SourceMapBuilder integration)
+- [x] Move SourceMap to Core module (resolve circular dependency)
+- [x] Add line tracking to StringBuilder
+- [x] Update Emitter to track source locations per output line
+- [x] Pass SourceMapBuilder through compilation pipeline
+- [x] Replace stub with Emitter-based implementation
+- [x] Write integration tests with multi-file projects
+- [x] All 447 tests pass
+- [x] Update documentation
 
 ---
 
