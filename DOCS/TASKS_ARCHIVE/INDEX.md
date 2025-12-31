@@ -245,7 +245,7 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Phase 13: Performance & Incremental Compilation
 
-### PERF-1 — Performance Baseline & Benchmarks **[P0]** ✓ 2025-12-31
+### PERF-1 — Performance Baseline & Benchmarks **[P0]** ✓ 2025-12-24
 - **PRD:** [PERF-1_Performance_Baseline_And_Benchmarks.md](./PERF-1_Performance_Baseline_And_Benchmarks.md)
 - **Summary:** [PERF-1-summary.md](./PERF-1-summary.md)
 - **Effort:** 3 hours

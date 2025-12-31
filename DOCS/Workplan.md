@@ -231,7 +231,7 @@ Completed phases include:
 ### VSC-2A: Language Server Implementation (if LSP chosen) **[P1]**
 **Dependencies:** VSC-1
 **Estimated:** 12 hours
-**Status:** 🟡 **INPROGRESS** — Selected for next execution cycle
+**Status:** 🟡 **INPROGRESS** — Selected for current cycle (previously deferred)
 
 - [ ] **[P0, depends: VSC-1]** Create `Sources/LanguageServer/` module in Swift
 - [ ] **[P0, depends: VSC-1]** Implement LSP server skeleton (initialize, shutdown, exit)

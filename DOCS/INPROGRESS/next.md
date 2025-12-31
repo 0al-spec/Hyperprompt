@@ -10,12 +10,6 @@
 
 Implement the Swift Language Server module for the LSP path, including JSON-RPC transport and core text document notifications/requests so the extension can migrate from CLI to LSP.
 
-## Checklist
-
-- [ ] Create LanguageServer module + executable target skeleton
-- [ ] Implement JSON-RPC transport and core LSP lifecycle/textDocument handlers
-- [ ] Add integration tests and document LSP capabilities
-
 ## Next Step
 
 Run PLAN command to generate detailed PRD:
