@@ -1,0 +1,8 @@
+"Section 09 - Diagnostics"
+    "Rules"
+        "Error"
+        "Warning"
+        "Info"
+    "Aggregation"
+        "By file"
+        "By line"

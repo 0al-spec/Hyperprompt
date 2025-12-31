@@ -15,6 +15,8 @@ final class CompilerPerformanceTests: XCTestCase {
 
     var corpusPath: String!
     var entryFilePath: String!
+    var mediumCorpusPath: String!
+    var mediumEntryFilePath: String!
 
     override func setUp() async throws {
         try await super.setUp()
@@ -33,6 +35,11 @@ final class CompilerPerformanceTests: XCTestCase {
 
         corpusPath = fixturesURL.path
         entryFilePath = fixturesURL.appendingPathComponent("comprehensive_test.hc").path
+        mediumCorpusPath = fixturesURL.appendingPathComponent("medium").path
+        mediumEntryFilePath = fixturesURL
+            .appendingPathComponent("medium")
+            .appendingPathComponent("medium_project.hc")
+            .path
 
         // Verify corpus exists
         guard let entryFilePath = entryFilePath else {
@@ -41,6 +48,14 @@ final class CompilerPerformanceTests: XCTestCase {
         }
         guard FileManager.default.fileExists(atPath: entryFilePath) else {
             XCTFail("Benchmark corpus not found at \(entryFilePath). Run BenchmarkGenerator first.")
+            return
+        }
+        guard let mediumEntryFilePath = mediumEntryFilePath else {
+            XCTFail("Medium fixture path missing. Ensure medium fixture is present.")
+            return
+        }
+        guard FileManager.default.fileExists(atPath: mediumEntryFilePath) else {
+            XCTFail("Medium fixture not found at \(mediumEntryFilePath).")
             return
         }
     }
@@ -54,10 +69,10 @@ final class CompilerPerformanceTests: XCTestCase {
         measure {
             do {
                 let args = CompilerArguments(
-                    input: entryFilePath,
+                    input: mediumEntryFilePath,
                     output: "/tmp/test-output.md",
                     manifest: "/tmp/test-manifest.json",
-                    root: corpusPath,
+                    root: mediumCorpusPath,
                     mode: .lenient,
                     verbose: false,
                     stats: false,
@@ -77,7 +92,7 @@ final class CompilerPerformanceTests: XCTestCase {
 
         // Report metrics
         print("\n📊 Full Compilation Benchmark")
-        print("   Corpus: comprehensive_test.hc + large markdown files")
+        print("   Corpus: medium fixture (medium_project.hc)")
         print("   Target: <200ms (Phase 13 goal)")
     }
 
@@ -88,10 +103,10 @@ final class CompilerPerformanceTests: XCTestCase {
         var lastStats: CompilationStats?
 
         let args = CompilerArguments(
-            input: entryFilePath,
+            input: mediumEntryFilePath,
             output: "/tmp/test-output.md",
             manifest: "/tmp/test-manifest.json",
-            root: corpusPath,
+            root: mediumCorpusPath,
             mode: .lenient,
             verbose: false,
             stats: true,  // Enable statistics collection
@@ -126,10 +141,10 @@ final class CompilerPerformanceTests: XCTestCase {
         let driver = CompilerDriver()
 
         let args = CompilerArguments(
-            input: entryFilePath,
+            input: mediumEntryFilePath,
             output: "/tmp/test-output.md",
             manifest: "/tmp/test-manifest.json",
-            root: corpusPath,
+            root: mediumCorpusPath,
             mode: .strict,  // Strict mode - fail on missing refs
             verbose: false,
             stats: false,

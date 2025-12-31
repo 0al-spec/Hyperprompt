@@ -1,0 +1,7 @@
+"Section 13 - Normalization"
+    "Inputs"
+        "Trim spaces"
+        "Normalize paths"
+    "Defaults"
+        "Lenient mode"
+        "Stable ordering"

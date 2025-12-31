@@ -516,10 +516,10 @@ Completed phases include:
 ### PERF-1: Performance Baseline & Benchmarks **[P0]**
 **Dependencies:** EE8 (Phase 10 — EditorEngine complete)
 **Estimated:** 3 hours
-**Status:** ✅ **Completed on 2025-12-24**
+**Status:** ✅ Completed on 2025-12-30
 
 - [x] **[P0, depends: EE8]** Define "medium project" benchmark (50 files, 5000 lines total)
-- [ ] **[P0, depends: EE8]** Define PRD medium fixture (20 `.hc`, 5 `.md`, ~200 nodes, depth 6)
+- [x] **[P0, depends: EE8]** Define PRD medium fixture (20 `.hc`, 5 `.md`, ~200 nodes, depth 6)
 - [x] **[P0, depends: EE8]** Create synthetic benchmark corpus (auto-generated .hc files)
 - [x] **[P0, depends: EE8]** Implement performance test suite (XCTest with XCTMeasure)
 - [x] **[P0, depends: EE8]** Baseline current performance:

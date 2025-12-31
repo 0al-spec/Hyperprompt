@@ -1,0 +1,7 @@
+"Section 19 - Release Notes"
+    "Highlights"
+        "Performance gains"
+        "Coverage"
+    "Follow-ups"
+        "Review fixtures"
+        "Track regressions"
