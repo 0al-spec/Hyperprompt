@@ -94,6 +94,7 @@ swift run
 
 **Notes:**
 - Stress test uses `comprehensive_test.hc` corpus (50 files). A separate 120-file fixture is not available yet.
+- PRD medium fixture lives at `Tests/TestCorpus/Performance/medium/medium_project.hc` (20 `.hc`, 5 `.md`, depth 6).
 - Profiling was not required because targets were met; use Instruments if regressions appear.
 
 ### Full Compilation

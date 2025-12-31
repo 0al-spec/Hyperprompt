@@ -1,0 +1,7 @@
+"Section 12 - Release"
+    "Checklist"
+        "Benchmarks"
+        "Docs"
+    "Schedule"
+        "Weekly"
+        "On demand"

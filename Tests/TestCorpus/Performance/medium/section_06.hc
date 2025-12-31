@@ -1,0 +1,7 @@
+"Section 06 - Preflight"
+    "Checks"
+        "Paths resolved"
+        "Fixtures present"
+    "Outputs"
+        "Ready flag"
+        "Warnings empty"

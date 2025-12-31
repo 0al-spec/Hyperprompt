@@ -1,0 +1,7 @@
+"Section 08 - Resolution"
+    "Search"
+        "Relative paths"
+        "Workspace roots"
+    "Outputs"
+        "Resolved refs"
+        "Missing refs"

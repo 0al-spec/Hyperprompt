@@ -1,0 +1,7 @@
+"Section 07 - Parsing"
+    "Stages"
+        "Tokenize"
+        "Build tree"
+    "Metrics"
+        "Nodes"
+        "Depth"

@@ -1,0 +1,8 @@
+"Section 17 - Caching"
+    "Strategy"
+        "Checksum"
+        "LRU"
+    "Behavior"
+        "Hit"
+        "Miss"
+    "section_18.hc"
