@@ -440,4 +440,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-30 (EE-EXT-3-FULL archived)
+**Last Updated:** 2025-12-31 (PERF-1 archived)

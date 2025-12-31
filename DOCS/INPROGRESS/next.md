@@ -1,16 +1,16 @@
-# Next Task: PERF-1 — Performance Baseline & Benchmarks
+# Next Task: VSC-2A — Language Server Implementation (if LSP chosen)
 
-**Priority:** P0
-**Phase:** Phase 13 — Performance & Incremental Compilation
-**Effort:** 3 hours
-**Dependencies:** EE8 (Phase 10 — EditorEngine complete)
-**Status:** ✅ Completed on 2025-12-30
+**Priority:** P1
+**Phase:** Phase 11 — VS Code Extension Integration Architecture
+**Effort:** 12 hours
+**Dependencies:** VSC-1
+**Status:** Selected
 
 ## Description
 
-Define and finalize performance benchmarks for the EditorEngine, including the PRD medium fixture needed to measure compile time and performance targets.
+Implement the Swift Language Server module for the LSP path, including JSON-RPC transport and core text document notifications/requests so the extension can migrate from CLI to LSP.
 
 ## Next Step
 
-Run SELECT to choose the next task:
-$ claude "Выполни команду SELECT"
+Run PLAN command to generate detailed PRD:
+$ claude "Выполни команду PLAN"
