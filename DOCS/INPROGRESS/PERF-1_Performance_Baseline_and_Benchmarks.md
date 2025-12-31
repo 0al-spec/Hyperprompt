@@ -126,7 +126,6 @@ Tests/TestCorpus/Performance/medium/
 ├── section_17.hc
 ├── section_18.hc
 ├── section_19.hc
-├── section_20.hc
 ├── notes_01.md
 ├── notes_02.md
 ├── notes_03.md

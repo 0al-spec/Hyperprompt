@@ -12,5 +12,5 @@ Define and finalize performance benchmarks for the EditorEngine, including the P
 
 ## Next Step
 
-Run PLAN command to generate detailed PRD:
-$ claude "Выполни команду PLAN"
+Run SELECT to choose the next task:
+$ claude "Выполни команду SELECT"
