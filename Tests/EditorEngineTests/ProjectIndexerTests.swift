@@ -74,7 +74,7 @@ final class ProjectIndexerTests: XCTestCase {
 
     func testIndexer_InvalidIgnorePattern_ThrowsError() {
         let mockFS = MockFileSystem()
-        mockFS.addFile(path: "/workspace")
+        mockFS.addDirectory(path: "/workspace")
         mockFS.addFile(path: "/workspace/.hyperpromptignore", content: "\0")
 
         let indexer = ProjectIndexer(fileSystem: mockFS)
@@ -91,7 +91,7 @@ final class ProjectIndexerTests: XCTestCase {
 
     func testIndexer_InvalidCustomIgnorePattern_ThrowsError() {
         let mockFS = MockFileSystem()
-        mockFS.addFile(path: "/workspace")
+        mockFS.addDirectory(path: "/workspace")
 
         let options = IndexerOptions(
             symlinkPolicy: .skip,
@@ -128,67 +128,193 @@ final class ProjectIndexerTests: XCTestCase {
         XCTAssertNotEqual(error1, error3)
     }
 
-    // MARK: - Default Ignore Directories
+    // MARK: - Integration Tests
 
-    func testDefaultIgnoreDirs_ContainsCommonPatterns() {
-        // This test verifies that ProjectIndexer has sensible defaults
-        // We can't directly access the private static property, but we can
-        // test the behavior through integration tests with MockFileSystem
-        // For now, this is a placeholder for documentation
+    func testIndexer_MultiLevelDirectoryTraversal() throws {
+        let mockFS = MockFileSystem()
+        mockFS.addDirectory(path: "/workspace")
+        mockFS.addDirectory(path: "/workspace/src")
+        mockFS.addDirectory(path: "/workspace/docs")
+        mockFS.addFile(path: "/workspace/main.hc")
+        mockFS.addFile(path: "/workspace/src/utils.hc")
+        mockFS.addFile(path: "/workspace/docs/readme.md")
 
-        // Expected default ignore directories:
-        // .git, .build, build, Build, DerivedData, node_modules, Packages,
-        // .vscode, .idea, .cache, dist, target
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let index = try indexer.index(workspaceRoot: "/workspace")
 
-        XCTAssertTrue(true, "Default ignore patterns are defined in ProjectIndexer")
+        XCTAssertEqual(index.totalFiles, 3)
+        XCTAssertEqual(index.files.map(\.path), ["docs/readme.md", "main.hc", "src/utils.hc"])
     }
 
-    // MARK: - Integration Test Placeholders
+    func testIndexer_HyperpromptignoreExcludesMatches() throws {
+        let mockFS = MockFileSystem()
+        mockFS.addDirectory(path: "/workspace")
+        mockFS.addFile(path: "/workspace/.hyperpromptignore", content: "*.draft\ntmp/\n")
+        mockFS.addDirectory(path: "/workspace/tmp")
+        mockFS.addFile(path: "/workspace/main.hc")
+        mockFS.addFile(path: "/workspace/notes.draft")
+        mockFS.addFile(path: "/workspace/tmp/temp.hc")
 
-    func testIndexer_RequiresMockFileSystemForFullTesting() {
-        // Full integration testing requires:
-        // 1. MockFileSystem implementation with directory structure
-        // 2. Test workspace setup with .hc and .md files
-        // 3. .hyperpromptignore file creation
-        // 4. Verification of discovered files and ordering
-        //
-        // Example test structure:
-        //
-        // let mockFS = MockFileSystem()
-        // mockFS.createDirectory("/workspace/src")
-        // mockFS.createFile("/workspace/main.hc", content: "")
-        // mockFS.createFile("/workspace/src/utils.hc", content: "")
-        //
-        // let indexer = ProjectIndexer(fileSystem: mockFS)
-        // let index = try indexer.index(workspaceRoot: "/workspace")
-        //
-        // XCTAssertEqual(index.totalFiles, 2)
-        // XCTAssertEqual(index.files[0].path, "main.hc")
-        // XCTAssertEqual(index.files[1].path, "src/utils.hc")
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let index = try indexer.index(workspaceRoot: "/workspace")
 
-        XCTAssertTrue(true, "Integration tests require MockFileSystem implementation")
+        XCTAssertEqual(index.totalFiles, 1)
+        XCTAssertEqual(index.files.first?.path, "main.hc")
+    }
+
+    func testIndexer_DefaultIgnoreDirectoriesExcluded() throws {
+        let mockFS = MockFileSystem()
+        mockFS.addDirectory(path: "/workspace")
+        mockFS.addDirectory(path: "/workspace/.git")
+        mockFS.addDirectory(path: "/workspace/.build")
+        mockFS.addDirectory(path: "/workspace/node_modules")
+        mockFS.addFile(path: "/workspace/main.hc")
+        mockFS.addFile(path: "/workspace/.git/config.hc")
+        mockFS.addFile(path: "/workspace/.build/output.hc")
+        mockFS.addFile(path: "/workspace/node_modules/package.hc")
+
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let index = try indexer.index(workspaceRoot: "/workspace")
+
+        XCTAssertEqual(index.totalFiles, 1)
+        XCTAssertEqual(index.files.first?.path, "main.hc")
+    }
+
+    func testIndexer_SymlinkSkipPolicy() throws {
+        let mockFS = MockFileSystem()
+        mockFS.addDirectory(path: "/workspace")
+        mockFS.addDirectory(path: "/external")
+        mockFS.addFile(path: "/workspace/main.hc")
+        mockFS.addFile(path: "/external/linked.hc")
+        mockFS.addSymlink(path: "/workspace/link", target: "/external")
+
+        let options = IndexerOptions(symlinkPolicy: .skip, hiddenEntryPolicy: .exclude, maxDepth: 100)
+        let indexer = ProjectIndexer(fileSystem: mockFS, options: options)
+        let index = try indexer.index(workspaceRoot: "/workspace")
+
+        XCTAssertEqual(index.totalFiles, 1)
+        XCTAssertEqual(index.files.first?.path, "main.hc")
+    }
+
+    func testIndexer_SymlinkFollowPolicy() throws {
+        let mockFS = MockFileSystem()
+        mockFS.addDirectory(path: "/workspace")
+        mockFS.addDirectory(path: "/external")
+        mockFS.addFile(path: "/workspace/main.hc")
+        mockFS.addFile(path: "/external/linked.hc")
+        mockFS.addSymlink(path: "/workspace/link", target: "/external")
+
+        let options = IndexerOptions(symlinkPolicy: .follow, hiddenEntryPolicy: .exclude, maxDepth: 100)
+        let indexer = ProjectIndexer(fileSystem: mockFS, options: options)
+        let index = try indexer.index(workspaceRoot: "/workspace")
+
+        XCTAssertEqual(index.totalFiles, 2)
+        XCTAssertEqual(index.files.map(\.path), ["link/linked.hc", "main.hc"])
+    }
+
+    func testIndexer_HiddenFilesExcluded() throws {
+        let mockFS = MockFileSystem()
+        mockFS.addDirectory(path: "/workspace")
+        mockFS.addFile(path: "/workspace/main.hc")
+        mockFS.addFile(path: "/workspace/.hidden.hc")
+
+        let options = IndexerOptions(symlinkPolicy: .skip, hiddenEntryPolicy: .exclude, maxDepth: 100)
+        let indexer = ProjectIndexer(fileSystem: mockFS, options: options)
+        let index = try indexer.index(workspaceRoot: "/workspace")
+
+        XCTAssertEqual(index.totalFiles, 1)
+        XCTAssertEqual(index.files.first?.path, "main.hc")
+    }
+
+    func testIndexer_HiddenFilesIncluded() throws {
+        let mockFS = MockFileSystem()
+        mockFS.addDirectory(path: "/workspace")
+        mockFS.addFile(path: "/workspace/main.hc")
+        mockFS.addFile(path: "/workspace/.hidden.hc")
+
+        let options = IndexerOptions(symlinkPolicy: .skip, hiddenEntryPolicy: .include, maxDepth: 100)
+        let indexer = ProjectIndexer(fileSystem: mockFS, options: options)
+        let index = try indexer.index(workspaceRoot: "/workspace")
+
+        XCTAssertEqual(index.totalFiles, 2)
+        XCTAssertEqual(index.files.map(\.path), [".hidden.hc", "main.hc"])
+    }
+
+    func testIndexer_MaxDepthExceeded() {
+        let mockFS = MockFileSystem()
+        mockFS.addDirectory(path: "/workspace")
+        mockFS.addDirectory(path: "/workspace/level1")
+        mockFS.addDirectory(path: "/workspace/level1/level2")
+        mockFS.addDirectory(path: "/workspace/level1/level2/level3")
+        mockFS.addFile(path: "/workspace/root.hc")
+        mockFS.addFile(path: "/workspace/level1/l1.hc")
+        mockFS.addFile(path: "/workspace/level1/level2/l2.hc")
+        mockFS.addFile(path: "/workspace/level1/level2/level3/l3.hc")
+
+        let options = IndexerOptions(symlinkPolicy: .skip, hiddenEntryPolicy: .exclude, maxDepth: 2)
+        let indexer = ProjectIndexer(fileSystem: mockFS, options: options)
+
+        XCTAssertThrowsError(try indexer.index(workspaceRoot: "/workspace")) { error in
+            guard case IndexerError.maxDepthExceeded(let depth, let limit) = error else {
+                XCTFail("Expected maxDepthExceeded, got \(error)")
+                return
+            }
+            XCTAssertEqual(depth, 2)
+            XCTAssertEqual(limit, 2)
+        }
+    }
+
+    func testIndexer_DeterministicOrdering() throws {
+        let mockFS = MockFileSystem()
+        mockFS.addDirectory(path: "/workspace")
+        mockFS.addFile(path: "/workspace/zebra.hc")
+        mockFS.addFile(path: "/workspace/alpha.hc")
+        mockFS.addFile(path: "/workspace/beta.md")
+
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let index = try indexer.index(workspaceRoot: "/workspace")
+
+        XCTAssertEqual(index.totalFiles, 3)
+        XCTAssertEqual(index.files.map(\.path), ["alpha.hc", "beta.md", "zebra.hc"])
+    }
+
+    func testIndexer_EmptyWorkspace() throws {
+        let mockFS = MockFileSystem()
+        mockFS.addDirectory(path: "/workspace")
+
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let index = try indexer.index(workspaceRoot: "/workspace")
+
+        XCTAssertEqual(index.totalFiles, 0)
+        XCTAssertTrue(index.files.isEmpty)
+    }
+
+    func testIndexer_WorkspaceWithOnlyIgnoredFiles() throws {
+        let mockFS = MockFileSystem()
+        mockFS.addDirectory(path: "/workspace")
+        mockFS.addFile(path: "/workspace/.hyperpromptignore", content: "*.hc\n")
+        mockFS.addFile(path: "/workspace/ignored.hc")
+
+        let indexer = ProjectIndexer(fileSystem: mockFS)
+        let index = try indexer.index(workspaceRoot: "/workspace")
+
+        XCTAssertEqual(index.totalFiles, 0)
+        XCTAssertTrue(index.files.isEmpty)
     }
 
     // MARK: - Error Condition Tests
 
     func testIndexer_WorkspaceNotFound_ThrowsError() {
-        // This test would require MockFileSystem that reports "directory not found"
-        // For now, placeholder for expected behavior
+        let mockFS = MockFileSystem()
+        let indexer = ProjectIndexer(fileSystem: mockFS)
 
-        // let mockFS = MockFileSystem()
-        // mockFS.markDirectoryAsNonExistent("/nonexistent")
-        //
-        // let indexer = ProjectIndexer(fileSystem: mockFS)
-        //
-        // XCTAssertThrowsError(try indexer.index(workspaceRoot: "/nonexistent")) { error in
-        //     if case IndexerError.workspaceNotFound = error {
-        //         // Expected error
-        //     } else {
-        //         XCTFail("Expected IndexerError.workspaceNotFound")
-        //     }
-        // }
-
-        XCTAssertTrue(true, "Error handling requires MockFileSystem")
+        XCTAssertThrowsError(try indexer.index(workspaceRoot: "/nonexistent")) { error in
+            guard case IndexerError.workspaceNotFound(let path) = error else {
+                XCTFail("Expected IndexerError.workspaceNotFound, got \(error)")
+                return
+            }
+            XCTAssertEqual(path, "/nonexistent")
+        }
     }
 
     // MARK: - Workspace Root Path Validation Tests
@@ -306,28 +432,53 @@ final class ProjectIndexerTests: XCTestCase {
 /// Minimal mock file system for ProjectIndexer tests
 private final class MockFileSystem: FileSystem {
     private var files: [String: String] = [:]
+    private var directories: Set<String> = ["/"]
+    private var symlinks: [String: String] = [:]
     private var currentDir = "/mock"
 
     func addFile(path: String, content: String = "") {
+        addDirectory(path: parentDirectory(of: path))
         files[path] = content
     }
 
+    func addDirectory(path: String) {
+        var path = path
+        if !path.hasPrefix("/") {
+            path = currentDir + "/" + path
+        }
+
+        var components = path.split(separator: "/").map(String.init)
+        var current = ""
+        while !components.isEmpty {
+            current += "/" + components.removeFirst()
+            directories.insert(current)
+        }
+    }
+
+    func addSymlink(path: String, target: String) {
+        addDirectory(path: parentDirectory(of: path))
+        symlinks[path] = target
+    }
+
     func readFile(at path: String) throws -> String {
-        guard let content = files[path] else {
+        let resolvedPath = try canonicalizePath(path)
+        guard let content = files[resolvedPath] else {
             throw MockFileSystemError(message: "File not found: \(path)")
         }
         return content
     }
 
     func fileExists(at path: String) -> Bool {
-        files[path] != nil
+        let resolvedPath = resolvePath(path)
+        return files[resolvedPath] != nil || directories.contains(resolvedPath) || symlinks[resolvedPath] != nil
     }
 
     func canonicalizePath(_ path: String) throws -> String {
-        if path.hasPrefix("/") {
-            return path
+        let absolutePath = path.hasPrefix("/") ? path : currentDir + "/" + path
+        if let mapped = resolveSymlinkPath(absolutePath) {
+            return mapped
         }
-        return currentDir + "/" + path
+        return absolutePath
     }
 
     func currentDirectory() -> String {
@@ -335,22 +486,92 @@ private final class MockFileSystem: FileSystem {
     }
 
     func writeFile(at path: String, content: String) throws {
+        addDirectory(path: parentDirectory(of: path))
         files[path] = content
     }
 
     func listDirectory(at path: String) throws -> [String] {
-        []
+        let resolvedPath = try canonicalizePath(path)
+        guard isDirectory(at: resolvedPath) else {
+            throw MockFileSystemError(message: "Not a directory: \(path)")
+        }
+
+        let normalizedPath = resolvedPath.hasSuffix("/") ? resolvedPath : resolvedPath + "/"
+        var results: Set<String> = []
+
+        for filePath in files.keys {
+            if filePath.hasPrefix(normalizedPath) {
+                let relativePath = String(filePath.dropFirst(normalizedPath.count))
+                if let firstComponent = relativePath.split(separator: "/").first {
+                    results.insert(String(firstComponent))
+                }
+            }
+        }
+
+        for directoryPath in directories {
+            if directoryPath == resolvedPath {
+                continue
+            }
+            if directoryPath.hasPrefix(normalizedPath) {
+                let relativePath = String(directoryPath.dropFirst(normalizedPath.count))
+                if let firstComponent = relativePath.split(separator: "/").first {
+                    results.insert(String(firstComponent))
+                }
+            }
+        }
+
+        for symlinkPath in symlinks.keys {
+            if symlinkPath.hasPrefix(normalizedPath) {
+                let relativePath = String(symlinkPath.dropFirst(normalizedPath.count))
+                if let firstComponent = relativePath.split(separator: "/").first {
+                    results.insert(String(firstComponent))
+                }
+            }
+        }
+
+        return Array(results)
     }
 
     func isDirectory(at path: String) -> Bool {
-        false
+        let resolvedPath = resolvePath(path)
+        return directories.contains(resolvedPath)
     }
 
     func fileAttributes(at path: String) -> FileAttributes? {
-        guard let content = files[path] else {
+        let resolvedPath = resolvePath(path)
+        guard let content = files[resolvedPath] else {
             return nil
         }
         return FileAttributes(size: content.utf8.count)
+    }
+
+    private func resolvePath(_ path: String) -> String {
+        if let absolutePath = try? canonicalizePath(path) {
+            return absolutePath
+        }
+        return path
+    }
+
+    private func resolveSymlinkPath(_ path: String) -> String? {
+        let sortedSymlinks = symlinks.keys.sorted { $0.count > $1.count }
+        for symlinkPath in sortedSymlinks {
+            if path == symlinkPath {
+                return symlinks[symlinkPath]
+            }
+            let prefix = symlinkPath.hasSuffix("/") ? symlinkPath : symlinkPath + "/"
+            if path.hasPrefix(prefix), let target = symlinks[symlinkPath] {
+                let remainder = String(path.dropFirst(prefix.count))
+                return target.hasSuffix("/") ? target + remainder : target + "/" + remainder
+            }
+        }
+        return nil
+    }
+
+    private func parentDirectory(of path: String) -> String {
+        if let index = path.lastIndex(of: "/"), index != path.startIndex {
+            return String(path[..<index])
+        }
+        return "/"
     }
 }
 
