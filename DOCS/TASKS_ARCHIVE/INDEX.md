@@ -234,13 +234,6 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** EE-FIX-4
 - **Description:** Handle invalid glob regex patterns safely by surfacing errors during ignore file loading and avoiding silent fallback behavior.
 
-### EE-FIX-6 — ProjectIndexer Integration Tests **[P1] HIGH** ✓ 2025-12-29
-- **PRD:** [EE-FIX-6_ProjectIndexer_Tests.md](./EE-FIX-6_ProjectIndexer_Tests.md)
-- **Summary:** [EE-FIX-6-summary.md](./EE-FIX-6-summary.md)
-- **Effort:** 4 hours
-- **Dependencies:** None
-- **Description:** Replace placeholder ProjectIndexer tests with integration coverage for directory traversal, ignore patterns, hidden entries, depth limits, and deterministic ordering.
-
 ---
 
 ## Phase 13: Performance & Incremental Compilation

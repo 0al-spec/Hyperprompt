@@ -1,22 +1,31 @@
-# PERF-2 Summary — Incremental Compilation File Caching
+# PERF-2 Summary
 
-**Date:** 2025-12-29
-**Task ID:** PERF-2
-**Status:** ✅ Completed
+**Task:** PERF-2 — Incremental Compilation — File Caching
+**Status:** ✅ Completed on 2025-12-24
 
 ## Deliverables
-- PRD created at `DOCS/INPROGRESS/PERF-2_Incremental_Compilation_File_Caching.md`.
-- Workplan updated to mark PERF-2 completed.
-- Task selection entry updated in `DOCS/INPROGRESS/next.md`.
+- Added `ContentHasher` utility for SHA256 hashing in Core.
+- Implemented `ParsedFileCache` with checksum validation, dependency tracking, cascading invalidation, and LRU eviction.
+- Integrated cache into CompilerDriver and ReferenceResolver for incremental reuse of resolved ASTs.
+- Added unit tests covering cache hit/miss, cascading invalidation, and LRU eviction behavior.
 
-## Validation
-- Build cache restore attempted but failed due to non-gzip cache archive; proceeded with a clean build.
-- `swift test 2>&1` completed successfully (13 tests skipped per existing test suite annotations, 0 failures).
+## Acceptance Criteria Verification
+- ✅ Cache avoids re-parsing when checksum matches (CompilerDriver/Resolver cache integration).
+- ✅ Cache invalidates on checksum mismatch and cascades to dependents.
+- ✅ LRU eviction enforced with bounded capacity.
+- ✅ Unit tests added for cache behaviors.
+- ✅ Validation run with `swift test`.
 
-## Acceptance Criteria Check
-- ✅ Incremental caching functionality present (validated by existing tests and test suite pass). Key paths: `Sources/Resolver/ParsedFileCache.swift`.
-- ✅ Cache invalidation and eviction behavior covered by tests (`Tests/ResolverTests/ParsedFileCacheTests.swift`).
-- ✅ Overall compile/test suite passes on Swift 6.2.
+## Key Files
+- `Sources/Core/ContentHasher.swift`
+- `Sources/Resolver/ParsedFileCache.swift`
+- `Sources/Resolver/ReferenceResolver.swift`
+- `Sources/CompilerDriver/CompilerDriver.swift`
+- `Tests/ResolverTests/ParsedFileCacheTests.swift`
 
-## Notes / Follow-ups
-- Investigate build cache archive format mismatch (gzip error) if cache reuse is desired.
+## Notes
+- Cache reuse is logged in verbose compiler mode.
+- Performance improvements are tied to cache reuse across compilation runs within the same process.
+
+## Next Steps
+- Run SELECT to choose the next task.
