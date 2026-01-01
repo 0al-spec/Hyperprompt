@@ -157,7 +157,7 @@ Parallelizable tasks to start while EditorEngine work continues:
 ### EE-FIX-6: ProjectIndexer Integration Tests **[P1] HIGH**
 **Dependencies:** None
 **Estimated:** 4 hours
-**Status:** ⏸️ Pending
+**Status:** 🟢 INPROGRESS
 **Location:** `Tests/EditorEngineTests/ProjectIndexerTests.swift:99-146`
 
 - [ ] **[P1]** Verify MockFileSystem supports directory structure simulation

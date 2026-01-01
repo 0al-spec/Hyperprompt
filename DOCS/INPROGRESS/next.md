@@ -1,16 +1,16 @@
-# Next Task: PERF-1 — Performance Baseline & Benchmarks
+# Next Task: EE-FIX-6 — ProjectIndexer Integration Tests
 
-**Priority:** P0
-**Phase:** Phase 13 — Performance & Incremental Compilation
-**Effort:** 3 hours
-**Dependencies:** EE8 (Phase 10 — EditorEngine complete)
-**Status:** ✅ Completed on 2025-12-30
+**Priority:** P1
+**Phase:** Phase 10 — Editor Engine Module
+**Effort:** 4 hours
+**Dependencies:** None
+**Status:** Selected
 
 ## Description
 
-Define and finalize performance benchmarks for the EditorEngine, including the PRD medium fixture needed to measure compile time and performance targets.
+Replace placeholder ProjectIndexer integration tests with real coverage and ensure MockFileSystem supports the required directory behaviors.
 
 ## Next Step
 
-Run SELECT to choose the next task:
-$ claude "Выполни команду SELECT"
+Run PLAN command to generate detailed PRD:
+$ claude "Выполни команду PLAN"
