@@ -139,3 +139,6 @@ Build the Swift Language Server module for Hyperprompt so the project can migrat
 - `DOCS/PRD/v0.0.1/00_PRD_001.md`
 - `DOCS/PRD/v0.0.1/01_DESIGN_SPEC_001.md`
 - `DOCS/PRD/v0.0.1/02_DESIGN_SPEC_SPECIFICATION_CORE.md`
+
+---
+**Archived:** 2026-01-15

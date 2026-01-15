@@ -231,20 +231,20 @@ Completed phases include:
 ### VSC-2A: Language Server Implementation (if LSP chosen) **[P1]**
 **Dependencies:** VSC-1
 **Estimated:** 12 hours
-**Status:** 🟡 **INPROGRESS** — Selected for current cycle (previously deferred)
+**Status:** ✅ Completed on 2026-01-15
 
-- [ ] **[P0, depends: VSC-1]** Create `Sources/LanguageServer/` module in Swift
-- [ ] **[P0, depends: VSC-1]** Implement LSP server skeleton (initialize, shutdown, exit)
-- [ ] **[P0, depends: VSC-1]** Add JSON-RPC message handling (stdio transport)
-- [ ] **[P0, depends: VSC-1]** Implement `textDocument/didOpen` notification
-- [ ] **[P0, depends: VSC-1]** Implement `textDocument/didChange` notification
-- [ ] **[P0, depends: VSC-1]** Implement `textDocument/didSave` notification
-- [ ] **[P0, depends: VSC-1]** Implement `textDocument/definition` request (go-to-definition)
-- [ ] **[P0, depends: VSC-1]** Implement `textDocument/hover` request
-- [ ] **[P0, depends: VSC-1]** Implement `textDocument/publishDiagnostics` notification
-- [ ] **[P1, depends: VSC-1]** Add LSP server build target (executable)
-- [ ] **[P1, depends: VSC-1]** Write integration tests (mock LSP client)
-- [ ] **[P1, depends: VSC-1]** Document LSP capabilities in DOCS/LSP.md
+- [x] **[P0, depends: VSC-1]** Create `Sources/LanguageServer/` module in Swift
+- [x] **[P0, depends: VSC-1]** Implement LSP server skeleton (initialize, shutdown, exit)
+- [x] **[P0, depends: VSC-1]** Add JSON-RPC message handling (stdio transport)
+- [x] **[P0, depends: VSC-1]** Implement `textDocument/didOpen` notification
+- [x] **[P0, depends: VSC-1]** Implement `textDocument/didChange` notification
+- [x] **[P0, depends: VSC-1]** Implement `textDocument/didSave` notification
+- [x] **[P0, depends: VSC-1]** Implement `textDocument/definition` request (go-to-definition)
+- [x] **[P0, depends: VSC-1]** Implement `textDocument/hover` request
+- [x] **[P0, depends: VSC-1]** Implement `textDocument/publishDiagnostics` notification
+- [x] **[P1, depends: VSC-1]** Add LSP server build target (executable)
+- [x] **[P1, depends: VSC-1]** Write integration tests (mock LSP client)
+- [x] **[P1, depends: VSC-1]** Document LSP capabilities in DOCS/LSP.md
 
 **Acceptance Criteria:** LSP server binary runs, handles basic requests, integrates with EditorEngine
 

@@ -12,6 +12,10 @@ var products: [Product] = [
         name: "hyperprompt",
         targets: ["CLI"]
     ),
+    .executable(
+        name: "hyperprompt-lsp",
+        targets: ["LanguageServer"]
+    ),
     .library(
         name: "HypercodeGrammar",
         targets: ["HypercodeGrammar"]
@@ -86,6 +90,13 @@ var targets: [Target] = [
                 .target(name: "EditorEngine", condition: .when(traits: ["Editor"]))
             ]
         ),
+        .executableTarget(
+            name: "LanguageServer",
+            dependencies: [
+                "Core",
+                .target(name: "EditorEngine", condition: .when(traits: ["Editor"]))
+            ]
+        ),
         .testTarget(
             name: "CLITests",
             dependencies: [
@@ -147,6 +158,10 @@ var targets: [Target] = [
             resources: [
                 .copy("Fixtures")
             ]
+        ),
+        .testTarget(
+            name: "LanguageServerTests",
+            dependencies: ["LanguageServer"]
         ),
     ]
 
