@@ -167,6 +167,13 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **Dependencies:** VSC-1 (Integration Architecture Decision)
 - **Description:** Implement JSON-RPC 2.0 interface for editor integration. Includes Swift 6 compilation validation, editor.indexProject method, Sendable fixes, and RPC protocol documentation. Builds successfully, all 521 tests pass.
 
+### VSC-2A — Language Server Implementation **[P1]** ✓ 2026-01-15
+- **PRD:** [VSC-2A_Language_Server_Implementation.md](./VSC-2A_Language_Server_Implementation.md)
+- **Summary:** [VSC-2A-summary.md](./VSC-2A-summary.md)
+- **Effort:** 12 hours
+- **Dependencies:** VSC-1 (Integration Architecture Decision)
+- **Description:** Implement Swift LSP server with JSON-RPC stdio transport, lifecycle handlers, text sync, definition/hover, diagnostics, tests, and LSP documentation.
+
 ---
 
 ## Phase 12: EditorEngine API Enhancements
@@ -419,8 +426,8 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 52 items (51 complete, 1 partial)
-- **Total Effort:** 158 hours completed + 5 hours partial (EE-EXT-3 stub)
+- **Total Archived:** 53 items (52 complete, 1 partial)
+- **Total Effort:** 170 hours completed + 5 hours partial (EE-EXT-3 stub)
 - **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
@@ -440,4 +447,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2025-12-30 (EE-EXT-3-FULL archived)
+**Last Updated:** 2026-01-15 (VSC-2A archived)
