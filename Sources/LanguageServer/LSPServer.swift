@@ -1,5 +1,6 @@
 import Foundation
 #if Editor
+import Core
 import EditorEngine
 
 final class LSPServer {
@@ -112,13 +113,13 @@ final class LSPServer {
 
         let resolver = EditorResolver(workspaceRoot: resolveWorkspaceRoot(for: filePath))
         let result = resolver.resolve(link: link)
-        guard let target = result.target else {
+        guard let targetPath = resolvedPath(from: result.target) else {
             sendMessage(successResponse(id: request.id, result: Optional<Location>.none))
             return
         }
 
         let location = Location(
-            uri: fileURI(from: target.path),
+            uri: fileURI(from: targetPath),
             range: Range(
                 start: Position(line: 0, character: 0),
                 end: Position(line: 0, character: 0)
@@ -150,7 +151,7 @@ final class LSPServer {
 
         let resolver = EditorResolver(workspaceRoot: resolveWorkspaceRoot(for: filePath))
         let result = resolver.resolve(link: link)
-        let hoverText = result.target?.path ?? "Unresolved link"
+        let hoverText = resolvedPath(from: result.target) ?? "Unresolved link"
         let hover = Hover(contents: MarkupContent(kind: "plaintext", value: hoverText))
         sendMessage(successResponse(id: request.id, result: hover))
     }
@@ -165,7 +166,7 @@ final class LSPServer {
         )
         let compiler = EditorCompiler()
         let result = compiler.compile(entryFile: filePath, options: options)
-        let diagnostics = result.diagnostics.map(mapDiagnostic)
+        let diagnostics = DiagnosticMapper.mapAll(result.diagnostics).map(mapDiagnostic)
         let params = PublishDiagnosticsParams(uri: uri, diagnostics: diagnostics)
         sendNotification("textDocument/publishDiagnostics", params)
     }
@@ -193,6 +194,19 @@ final class LSPServer {
             source: "Hyperprompt",
             message: diagnostic.message
         )
+    }
+
+    private func resolvedPath(from target: ResolvedTarget) -> String? {
+        switch target {
+        case .markdownFile(let path):
+            return path
+        case .hypercodeFile(let path):
+            return path
+        case .ambiguous(let candidates):
+            return candidates.first
+        case .inlineText, .forbidden, .invalid:
+            return nil
+        }
     }
 
     private func resolveWorkspaceRoot(for filePath: String) -> String {
