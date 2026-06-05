@@ -99,6 +99,7 @@ hyperprompt root.hc --verbose --stats
 - **[LANGUAGE.md](Sources/CLI/Documentation.docc/LANGUAGE.md)** — Hypercode grammar specification and syntax rules
 - **[ARCHITECTURE.md](Sources/CLI/Documentation.docc/ARCHITECTURE.md)** — System design, module overview, data flow
 - **[ERROR_CODES.md](Sources/CLI/Documentation.docc/ERROR_CODES.md)** — Exit codes, error scenarios, and solutions
+- **[SERVER_ARTIFACT_CONTRACT.md](Sources/CLI/Documentation.docc/SERVER_ARTIFACT_CONTRACT.md)** — Linux CI artifact contract for server-side consumers
 - **[SPECS_INTEGRATION.md](Sources/CLI/Documentation.docc/SPECS_INTEGRATION.md)** — SpecificationCore integration patterns
 - **[TROUBLESHOOTING.md](Sources/CLI/Documentation.docc/TROUBLESHOOTING.md)** — Common issues and frequently asked questions
 - **[PRD_EditorEngine.md](DOCS/PRD/PRD_EditorEngine.md)** — Future EditorEngine module plan

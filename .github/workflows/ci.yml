@@ -271,6 +271,38 @@ jobs:
           }
           JSON
 
+      - name: Validate Linux binary artifact metadata
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          artifact_dir = Path("dist/hyperprompt-linux-amd64")
+          files = sorted(path.name for path in artifact_dir.iterdir())
+          expected_files = ["hyperprompt", "hyperprompt-artifact.json"]
+          if files != expected_files:
+              raise SystemExit(f"Unexpected artifact files: {files!r}")
+
+          metadata = json.loads((artifact_dir / "hyperprompt-artifact.json").read_text(encoding="utf-8"))
+          expected = {
+              "artifact_kind": "hyperprompt_linux_binary",
+              "schema_version": 1,
+              "binary": "hyperprompt",
+              "os": "linux",
+              "arch": "amd64",
+              "linkage": "static-swift-stdlib",
+              "source_repository": "0al-spec/Hyperprompt",
+          }
+          for key, value in expected.items():
+              actual = metadata.get(key)
+              if actual != value:
+                  raise SystemExit(f"{key} must be {value!r}; got {actual!r}")
+          for key in ["source_commit", "source_ref", "workflow_run_id"]:
+              value = metadata.get(key)
+              if not isinstance(value, str) or not value:
+                  raise SystemExit(f"{key} must be a non-empty string")
+          PY
+
       - name: Verify artifact in SpecSpace API base image
         run: |
           docker run --rm \
