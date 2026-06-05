@@ -37,7 +37,7 @@ jobs:
 
       # Clone repository with full git history
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -57,7 +57,7 @@ jobs:
       # Cache .build and .swiftpm for 60-80% speedup on subsequent runs
       # Cache key includes Package.resolved hash for deterministic invalidation
       - name: Cache Swift dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .build
@@ -99,7 +99,7 @@ jobs:
       # Upload test results and build artifacts on failure
       - name: Upload test results
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results-${{ github.run_id }}
           path: |
@@ -127,7 +127,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -142,7 +142,7 @@ jobs:
           swift --version | grep -q "Swift version 6.2"
 
       - name: Cache Swift dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .build
@@ -172,7 +172,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -187,7 +187,7 @@ jobs:
           swift --version | grep -q "Swift version 6.2"
 
       - name: Cache Swift dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .build
@@ -209,18 +209,84 @@ jobs:
           swift test --traits Editor
           echo "Tests completed successfully"
 
+  linux-binary-artifact:
+    name: CI - Linux Binary Artifact
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install Swift 6.2.0
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: '6.2.0'
+
+      - name: Verify Swift version
+        run: |
+          swift --version
+          swift --version | grep -q "Swift version 6.2"
+
+      - name: Cache Swift dependencies
+        uses: actions/cache@v5
+        with:
+          path: |
+            .build
+            .swiftpm
+          key: ${{ runner.os }}-spm-release-${{ hashFiles('Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-release-
+            ${{ runner.os }}-spm-
+
+      - name: Build release hyperprompt binary
+        run: swift build -c release --product hyperprompt
+
+      - name: Package Linux binary artifact
+        run: |
+          set -euo pipefail
+          binary=".build/release/hyperprompt"
+          test -x "$binary"
+          "$binary" --version
+          "$binary" --help >/dev/null
+          mkdir -p dist/hyperprompt-linux-amd64
+          install -m 0755 "$binary" dist/hyperprompt-linux-amd64/hyperprompt
+          cat > dist/hyperprompt-linux-amd64/hyperprompt-artifact.json <<JSON
+          {
+            "artifact_kind": "hyperprompt_linux_binary",
+            "schema_version": 1,
+            "binary": "hyperprompt",
+            "os": "linux",
+            "arch": "amd64",
+            "source_repository": "${GITHUB_REPOSITORY}",
+            "source_commit": "${GITHUB_SHA}",
+            "source_ref": "${GITHUB_REF_NAME}",
+            "workflow_run_id": "${GITHUB_RUN_ID}"
+          }
+          JSON
+
+      - name: Upload Linux binary artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: hyperprompt-linux-amd64
+          path: dist/hyperprompt-linux-amd64
+          retention-days: 30
+          if-no-files-found: error
+
   vscode-extension-tests:
     name: CI - VS Code Extension Tests
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'npm'
@@ -263,7 +329,7 @@ jobs:
 
       - name: Upload VSIX artifact
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hyperprompt-vsix-${{ github.run_id }}
           path: Tools/VSCodeExtension/*.vsix
@@ -286,7 +352,7 @@ jobs:
           echo "✓ Secrets validation passed"
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -369,7 +435,7 @@ jobs:
 
       - name: Upload build artifacts on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: no-cache-build-failure-${{ github.run_id }}
           path: |

@@ -15,11 +15,11 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Cache Swift dependencies
         id: cache-spm
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .build
@@ -29,17 +29,15 @@ jobs:
             ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-
             ${{ runner.os }}-spm-
 
-      - name: Install Swift
+      - name: Install Swift 6.2.0
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: '6.2.0'
+
+      - name: Verify Swift version
         run: |
-          # Check if swift is already available
-          if ! command -v swift &> /dev/null; then
-            echo "Installing Swift..."
-            cd /tmp
-            curl -L -o swift.tar.gz "https://download.swift.org/development/ubuntu2004/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04.tar.gz"
-            tar zxf swift.tar.gz
-            sudo cp -r swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04/usr/* /usr/
-          fi
           swift --version
+          swift --version | grep -q "Swift version 6.2"
 
       - name: Build
         run: |
@@ -69,11 +67,11 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Cache Swift dependencies
         id: cache-spm
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .build
@@ -83,17 +81,15 @@ jobs:
             ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-
             ${{ runner.os }}-spm-
 
-      - name: Install Swift
+      - name: Install Swift 6.2.0
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: '6.2.0'
+
+      - name: Verify Swift version
         run: |
-          # Check if swift is already available
-          if ! command -v swift &> /dev/null; then
-            echo "Installing Swift..."
-            cd /tmp
-            curl -L -o swift.tar.gz "https://download.swift.org/development/ubuntu2004/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04.tar.gz"
-            tar zxf swift.tar.gz
-            sudo cp -r swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04/usr/* /usr/
-          fi
           swift --version
+          swift --version | grep -q "Swift version 6.2"
 
       - name: Build (Editor trait)
         run: |
