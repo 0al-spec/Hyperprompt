@@ -16,6 +16,9 @@ on:
 permissions:
   contents: read
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   build:
     name: CI - Build and Test
@@ -242,7 +245,7 @@ jobs:
             ${{ runner.os }}-spm-
 
       - name: Build release hyperprompt binary
-        run: swift build -c release --product hyperprompt
+        run: swift build -c release --product hyperprompt --static-swift-stdlib
 
       - name: Package Linux binary artifact
         run: |
@@ -260,12 +263,20 @@ jobs:
             "binary": "hyperprompt",
             "os": "linux",
             "arch": "amd64",
+            "linkage": "static-swift-stdlib",
             "source_repository": "${GITHUB_REPOSITORY}",
             "source_commit": "${GITHUB_SHA}",
             "source_ref": "${GITHUB_REF_NAME}",
             "workflow_run_id": "${GITHUB_RUN_ID}"
           }
           JSON
+
+      - name: Verify artifact in SpecSpace API base image
+        run: |
+          docker run --rm \
+            --volume "$PWD/dist/hyperprompt-linux-amd64:/hp:ro" \
+            python:3.11-slim \
+            /hp/hyperprompt --version
 
       - name: Upload Linux binary artifact
         uses: actions/upload-artifact@v7
