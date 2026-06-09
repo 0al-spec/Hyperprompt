@@ -16,9 +16,9 @@ Provide a **thin workflow wrapper** around task execution. This command:
 > **CRITICAL VALIDATION REQUIREMENT**
 >
 > - **Swift must be installed before starting EXECUTE.** If it's missing, run INSTALL_SWIFT first: **[`PRIMITIVES/INSTALL_SWIFT.md`](./PRIMITIVES/INSTALL_SWIFT.md)**
-> - After code changes, validation MUST start with the Git LFS-backed cache restore command and then run tests (which also build):
+> - After code changes, validation may restore a local build cache first, then MUST run tests (which also build):
 >   ```bash
->   ./.github/scripts/restore-build-cache.sh
+>   ./.github/scripts/restore-build-cache.sh || true
 >   swift test 2>&1
 >   ```
 > - Do NOT commit code that doesn't compile or has failing tests
@@ -148,7 +148,7 @@ If `--interactive` mode:
 
 **Purpose:** Verify implementation meets requirements
 
-**CRITICAL:** Every EXECUTE cycle MUST restore the Git LFS-backed build cache and run `swift test` (which performs the build) before committing!
+**CRITICAL:** Every EXECUTE cycle MUST run `swift test` (which performs the build) before committing. Restoring a local build cache is optional and must not depend on Git LFS.
 
 1. **OPTIONAL: Restore build cache for faster compilation:**
    ```bash
@@ -167,14 +167,16 @@ If `--interactive` mode:
    - After successful build, create cache: `./.github/scripts/create-build-cache.sh`
 
    **Notes:**
-   - Cache is stored in `.build-cache/` (tracked via Git LFS)
+   - Cache is stored in `.build-cache/` and ignored by Git
    - Safe to skip if cache not available — build will work normally
    - Update cache after changing `Package.swift`: `./.github/scripts/update-build-cache.sh`
 
-2. **MANDATORY: Use cache-backed validation instead of bare `swift build`:**
+2. **MANDATORY: Run test-backed validation instead of bare `swift build`:**
    ```bash
+   # Optional speedup; safe to skip on cache miss
+   ./.github/scripts/restore-build-cache.sh || true
+
    # REQUIRED - Must pass before commit
-   ./.github/scripts/restore-build-cache.sh
    swift test 2>&1
    ```
 

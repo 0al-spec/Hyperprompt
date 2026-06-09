@@ -24,7 +24,7 @@ NC='\033[0m' # No Color
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 CACHE_NAME="${1:-swift-build-cache-${OS}-${ARCH}}"
-CACHE_DIR="${BUILD_CACHE_DIR:-caches}"
+CACHE_DIR="${BUILD_CACHE_DIR:-.build-cache}"
 BUILD_DIR=".build"
 
 echo -e "${GREEN}Creating build cache...${NC}"
@@ -62,3 +62,6 @@ echo "  2. Run: tar -xzf ${CACHE_DIR}/${CACHE_NAME}.tar.gz"
 echo "  3. Run: swift build (will use cached dependencies)"
 echo ""
 echo "Expected speedup: 82s → 5-10s (8-16x faster)"
+echo ""
+echo "Note: ${CACHE_DIR} is ignored by Git. Upload caches to actions/cache,"
+echo "external object storage, or a shared drive instead of committing them."

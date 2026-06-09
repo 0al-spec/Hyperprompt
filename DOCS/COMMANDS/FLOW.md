@@ -24,8 +24,8 @@ FLOW is the top-level orchestrator; each step is a dedicated command with its ow
 └──────┬───────┘  Required: Swift compiler for build/test
        ↓
 ┌──────────────┐
-│INSTALL_GITLFS│  Install Git LFS (optional, for build cache)
-└──────┬───────┘  Optional: Large file storage for caches
+│LOCAL_CACHE   │  Optional local or CI build cache
+└──────┬───────┘  Optional: faster builds without repository LFS
        ↓
 ┌──────────────┐
 │   EXECUTE    │  Pre-flight → [YOU WORK] → Post-flight
@@ -68,16 +68,16 @@ Install Swift compiler and toolchain required for building and testing Hyperprom
 
 ---
 
-### 4. INSTALL_GITLFS
+### 4. LOCAL_CACHE
 
-See `DOCS/COMMANDS/PRIMITIVES/GITLFS.md` for details.
+See `QUICKSTART_BUILD.md` for details.
 
-Install Git LFS (Large File Storage) for handling large binary files like build caches. **Optional but recommended** for development environments.
+Create or restore a local `.build-cache/` archive for faster builds. **Optional** for development environments.
 
 **Skip if:**
-- Git LFS already installed (`git lfs version` works)
-- Not using build cache sharing
-- LFS server unavailable
+- You do not need a local build cache
+- CI `actions/cache` is sufficient
+- You prefer a clean build for validation
 
 ---
 
