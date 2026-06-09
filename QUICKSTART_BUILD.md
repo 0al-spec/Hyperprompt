@@ -112,7 +112,7 @@ swift build
 git clone https://github.com/0al-spec/Hyperprompt
 cd Hyperprompt
 
-# 2. Restore cache (if shared via network/Git LFS)
+# 2. Restore cache (if shared via network, object storage, or local artifact)
 ./.github/scripts/restore-build-cache.sh
 
 # 3. Build instantly! ⚡
@@ -182,9 +182,9 @@ aws s3 cp s3://mybucket/hyperprompt-caches/swift-build-cache-linux-x86_64.tar.gz
 ./.github/scripts/restore-build-cache.sh
 ```
 
-### Option 3: Git LFS (Recommended)
+### Option 3: GitHub Actions Cache
 
-See `Sources/CLI/Documentation.docc/BUILD_PERFORMANCE.md` for detailed Git LFS setup instructions.
+Use `.github/workflows/build-with-cache.yml` for CI builds. This avoids Git LFS bandwidth and stores cache entries in GitHub Actions cache instead of the repository.
 
 ---
 
@@ -246,7 +246,7 @@ ln -s ~/.hyperprompt-cache .build-cache
 
 ### For Teams
 
-1. Store cache in shared location (network drive, S3, Git LFS)
+1. Store cache in shared location (network drive, S3/R2/GCS, Releases artifact, or Packages)
 2. Update cache when merging dependency updates to main
 3. Document cache location in team wiki
 
