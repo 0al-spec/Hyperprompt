@@ -57,20 +57,19 @@
    tar -czf swift-build-cache.tar.gz .build/
    ```
 
-2. **Store in Git LFS**
+2. **Store outside the repository**
    ```bash
-   git lfs install
-   git lfs track "*.tar.gz"
-   echo "swift-build-cache.tar.gz" >> .gitattributes
-   git add .gitattributes swift-build-cache.tar.gz
-   git commit -m "Add pre-built dependencies cache"
+   mkdir -p .build-cache
+   tar -czf .build-cache/swift-build-cache-linux-x86_64.tar.gz .build/
+   # Upload the archive to actions/cache, S3/R2/GCS, Releases, Packages,
+   # or a shared network drive. Do not commit it or track it with Git LFS.
    ```
 
 3. **Restore on fresh clone**
    ```bash
    # In CI/CD or fresh environment
-   git lfs pull
-   tar -xzf swift-build-cache.tar.gz
+   # Download the matching archive from the shared location first.
+   tar -xzf .build-cache/swift-build-cache-linux-x86_64.tar.gz
    swift build  # Will use cached dependencies
    ```
 
@@ -84,7 +83,7 @@
 - ❌ Large file size (~100-150 MB compressed)
 - ❌ Platform-specific (need separate caches for macOS/Linux/Windows)
 - ❌ Needs update when dependencies change
-- ❌ Git LFS storage costs (if using GitHub)
+- ❌ Storage and bandwidth costs if using a remote object store
 
 **Best For:** CI/CD pipelines, team development
 
@@ -255,7 +254,7 @@ import struct Crypto.SHA256
 
 ### For CI/CD Pipelines
 
-**Use Strategy 1 + Strategy 2: Git LFS Cache + CI Cache**
+**Use Strategy 2: GitHub Actions cache**
 
 ```yaml
 # .github/workflows/build.yml
@@ -269,21 +268,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          lfs: true
 
       - name: Cache SPM dependencies
         uses: actions/cache@v3
         with:
           path: .build
           key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
-
-      - name: Restore pre-built cache (if cache miss)
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          if [ -f swift-build-cache.tar.gz ]; then
-            tar -xzf swift-build-cache.tar.gz
-          fi
 
       - name: Build
         run: swift build
@@ -294,7 +284,7 @@ jobs:
 
 **Expected Build Time:**
 - Cache hit: **5-10 seconds** ⚡
-- Cache miss with LFS: **15-20 seconds** ⚡
+- Cache miss: **82 seconds**
 - Full clean build: **82 seconds**
 
 ---
@@ -330,86 +320,38 @@ jobs:
 
 ---
 
-## Git LFS Implementation Guide
+## External Cache Implementation Guide
 
-### Step 1: Install Git LFS
-
-```bash
-# Linux
-curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
-sudo apt-get install git-lfs
-
-# macOS
-brew install git-lfs
-
-# Initialize
-git lfs install
-```
-
-### Step 2: Configure LFS for Build Cache
+### Step 1: Create a local cache archive
 
 ```bash
-# Track build cache archives
-git lfs track "*.tar.gz"
-git lfs track "swift-build-cache-*.tar.gz"
-
-# Add to .gitignore (don't track .build directly)
-echo ".build/" >> .gitignore
-
-# Commit .gitattributes
-git add .gitattributes .gitignore
-git commit -m "Configure Git LFS for build cache"
-```
-
-### Step 3: Create Platform-Specific Caches
-
-```bash
-# Linux x86_64
 swift build
-tar -czf swift-build-cache-linux-x86_64.tar.gz .build/
-git add swift-build-cache-linux-x86_64.tar.gz
-git commit -m "Add Linux x86_64 build cache"
-
-# macOS (if applicable)
-swift build
-tar -czf swift-build-cache-macos.tar.gz .build/
-git add swift-build-cache-macos.tar.gz
-git commit -m "Add macOS build cache"
+./.github/scripts/create-build-cache.sh
 ```
 
-### Step 4: Automate Cache Restoration
-
-Create `.github/scripts/restore-build-cache.sh`:
+### Step 2: Upload the archive outside Git
 
 ```bash
-#!/bin/bash
-set -e
-
-OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-ARCH=$(uname -m)
-CACHE_FILE="swift-build-cache-${OS}-${ARCH}.tar.gz"
-
-if [ -f "$CACHE_FILE" ]; then
-    echo "Restoring build cache from $CACHE_FILE..."
-    tar -xzf "$CACHE_FILE"
-    echo "Build cache restored!"
-else
-    echo "No build cache found for $OS-$ARCH"
-fi
+# Examples:
+aws s3 cp .build-cache/swift-build-cache-linux-x86_64.tar.gz s3://mybucket/hyperprompt-caches/
+gh release upload cache-seed .build-cache/swift-build-cache-linux-x86_64.tar.gz
 ```
 
-Usage:
+### Step 3: Restore in a fresh environment
+
 ```bash
-chmod +x .github/scripts/restore-build-cache.sh
+# Download the matching platform archive into .build-cache/ first.
 ./.github/scripts/restore-build-cache.sh
 swift build
 ```
+
+The repository intentionally ignores `.build-cache/` and `caches/*.tar.gz`, so these archives cannot accidentally consume Git LFS bandwidth.
 
 ---
 
 ## Storage Cost Analysis
 
-### Git LFS Storage
+### External Cache Storage
 
 | Platform | Files | Compressed Size | Uncompressed Size |
 |----------|-------|----------------|-------------------|
@@ -417,13 +359,9 @@ swift build
 | macOS Intel | 1 cache | ~130 MB | ~500 MB |
 | macOS ARM64 | 1 cache | ~125 MB | ~490 MB |
 
-**Total:** ~375 MB compressed in LFS
+**Total:** ~375 MB compressed outside Git
 
-**GitHub LFS Pricing:**
-- Free tier: 1 GB storage, 1 GB/month bandwidth
-- Paid: $5/month per 50 GB storage + 50 GB bandwidth
-
-**Recommendation:** Use LFS for ≤2 platforms (stays within free tier)
+**Recommendation:** Use GitHub Actions cache for CI. For team sharing, use object storage or Releases/Packages with explicit retention and access controls.
 
 ---
 
@@ -472,8 +410,8 @@ fi
 - Save cache locally in `~/.swiftpm-cache/`
 
 ### Small Team (2-5 developers)
-**Use:** Git LFS cache (Strategy 1)
-- Share pre-built cache via Git LFS
+**Use:** External cache archive (Strategy 1)
+- Share pre-built cache via object storage, Releases, Packages, or a network share
 - Update cache monthly or on dependency changes
 
 ### CI/CD Pipeline
@@ -490,11 +428,9 @@ fi
 
 ## Implementation Checklist
 
-- [ ] Install Git LFS locally
-- [ ] Configure `.gitattributes` to track `*.tar.gz`
-- [ ] Create initial build cache: `swift build && tar -czf swift-build-cache.tar.gz .build/`
-- [ ] Add cache to Git LFS: `git lfs track swift-build-cache.tar.gz`
-- [ ] Commit and push: `git add .gitattributes swift-build-cache.tar.gz && git commit && git push`
+- [ ] Create initial build cache: `swift build && ./.github/scripts/create-build-cache.sh`
+- [ ] Confirm `.build-cache/` and `caches/*.tar.gz` are ignored by Git
+- [ ] Upload cache archive to external storage or rely on GitHub Actions cache
 - [ ] Test cache restoration on fresh clone
 - [ ] Update CI/CD workflow to use cache
 - [ ] Document cache update procedure for team
@@ -559,27 +495,27 @@ import CommonCrypto
 
 ## Conclusion
 
-**Fastest Solution:** Git LFS cache (Strategy 1)
+**Fastest Local Solution:** External cache archive (Strategy 1)
 - **Implementation time:** 30 minutes
 - **Build time improvement:** 82s → 5-10s (8-16x faster)
-- **Cost:** Free (within GitHub LFS limits)
+- **Cost:** Depends on chosen storage; no Git LFS bandwidth
 
 **Quick Win:** CI cache (Strategy 2)
 - **Implementation time:** 10 minutes
 - **Build time improvement:** 50-70% on subsequent builds
 - **Cost:** Free
 
-**Best Long-term:** Combine both strategies
+**Best Long-term:** Combine CI cache with external team cache
 - **Implementation time:** 1 hour
 - **Build time improvement:** 82s → 5-10s consistently
-- **Cost:** Minimal (LFS storage)
+- **Cost:** Controlled by external storage retention and access policy
 
 ---
 
 ## Next Steps
 
 1. **Immediate:** Add CI cache to GitHub Actions workflow
-2. **Short-term:** Create Git LFS cache for Linux x86_64
+2. **Short-term:** Create external cache archive for Linux x86_64
 3. **Future:** Consider Docker image with pre-built dependencies for releases
 
 Would you like me to implement any of these strategies?
