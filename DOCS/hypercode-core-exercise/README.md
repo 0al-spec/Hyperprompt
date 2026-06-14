@@ -13,7 +13,8 @@ sheet values.
 
 ## Run
 
-Use the Hypercode CLI from the Hypercode repository:
+Run these commands from the Hyperprompt repository root, using a `hypercode`
+CLI binary built from the Hypercode repository and available on `PATH`:
 
 ```bash
 hypercode validate DOCS/hypercode-core-exercise/compile-config.hc \
