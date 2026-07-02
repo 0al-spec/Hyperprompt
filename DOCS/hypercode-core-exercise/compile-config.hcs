@@ -1,0 +1,68 @@
+HyperpromptConfig:
+  command: "hyperprompt"
+  version: "0.1.0"
+
+Input:
+  path: "Sources/CLI/Documentation.docc/examples/hello.hc"
+
+Output:
+  path: "/tmp/hyperprompt-output.md"
+
+Manifest:
+  enabled: true
+  path: "/tmp/hyperprompt-output.md.manifest.json"
+
+Resolver:
+  mode: "strict"
+  root: "."
+
+Diagnostics:
+  verbose: false
+
+Statistics:
+  enabled: false
+
+Editor:
+  enabled: false
+  rpc: false
+
+@profile[ci]:
+  Output:
+    path: "/tmp/hyperprompt-ci.md"
+  Manifest:
+    path: "/tmp/hyperprompt-ci.md.manifest.json"
+  Diagnostics:
+    verbose: true
+  Statistics:
+    enabled: true
+
+@profile[editor]:
+  Output:
+    path: "/tmp/hyperprompt-editor-preview.md"
+  Manifest:
+    enabled: false
+  Editor:
+    enabled: true
+    rpc: true
+
+@contract:
+  HyperpromptConfig:
+    command: string
+    version: string
+  Input:
+    path: string
+  Output:
+    path: string
+  Manifest:
+    enabled: bool
+    path[?]: string
+  Resolver:
+    mode: string
+    root: string
+  Diagnostics:
+    verbose: bool
+  Statistics:
+    enabled: bool
+  Editor:
+    enabled: bool
+    rpc: bool
