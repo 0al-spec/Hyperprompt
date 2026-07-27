@@ -10,11 +10,12 @@ struct CompilationProvenance {
     let dependencies: [ManifestDependency]
 }
 
-/// Collects physical source and include provenance from a fully resolved AST.
+/// Collects physical source and include provenance from a fully resolved AST
+/// and the immutable source snapshot used to build it.
 ///
-/// Collection happens after resolution on every invocation, including parsed
-/// program cache hits. This keeps the manifest scoped to the current build
-/// rather than inheriting process-wide cache state.
+/// The collector never re-reads source bytes from disk. This guarantees that
+/// manifest hashes describe the exact inputs represented by the emitted AST,
+/// even if a source changes while compilation is still in progress.
 struct CompilationProvenanceCollector {
     private let fileSystem: FileSystem
     private let fileLoader: FileLoader
@@ -24,9 +25,12 @@ struct CompilationProvenanceCollector {
         self.fileLoader = FileLoader(fileSystem: fileSystem)
     }
 
-    func collect(program: Program, inputPath: String, rootPath: String) throws
-        -> CompilationProvenance
-    {
+    func collect(
+        program: Program,
+        inputPath: String,
+        rootPath: String,
+        sourceContents: [String: String]
+    ) throws -> CompilationProvenance {
         let canonicalRoot = try fileSystem.canonicalizePath(rootPath)
         let canonicalInput = try fileSystem.canonicalizePath(inputPath)
         let rootSource = try relativePath(for: canonicalInput, under: canonicalRoot)
@@ -40,12 +44,17 @@ struct CompilationProvenanceCollector {
                 return
             }
 
-            let loaded = try fileLoader.load(path: canonicalPath)
+            guard let sourceContent = sourceContents[canonicalPath] else {
+                throw provenanceError(
+                    "Compilation snapshot is missing source bytes: \(canonicalPath)"
+                )
+            }
+            let normalizedContent = fileLoader.normalizeLineEndings(sourceContent)
             sourcesByPath[relative] = ManifestEntry(
                 path: relative,
-                sha256: loaded.hash,
-                size: loaded.content.utf8.count,
-                type: loaded.metadata.type
+                sha256: ContentHasher.sha256Hex(normalizedContent),
+                size: normalizedContent.utf8.count,
+                type: try fileLoader.detectFileType(canonicalPath)
             )
         }
 

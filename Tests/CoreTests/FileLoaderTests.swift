@@ -344,7 +344,7 @@ final class FileLoaderTests: XCTestCase {
         XCTAssertEqual(result.metadata.path, "/src/app.hc")
     }
 
-    func testManifestEntrySizeBeforeNormalization() throws {
+    func testManifestEntrySizeMatchesNormalizedHashBytes() throws {
         // Given: File with CRLF (2 bytes per line ending)
         let content = "Line 1\r\nLine 2\r\n"
         fileSystem.addFile(at: "/test/crlf.md", content: content)
@@ -352,10 +352,10 @@ final class FileLoaderTests: XCTestCase {
         // When: Load file
         let result = try loader.load(path: "/test/crlf.md")
 
-        // Then: Size reflects original content (16 bytes: 6+2+6+2)
-        XCTAssertEqual(result.metadata.size, 16)
-        // But content is normalized to LF (14 bytes: 6+1+6+1)
+        // Then: Size and hash describe the same LF-normalized bytes.
+        XCTAssertEqual(result.metadata.size, 14)
         XCTAssertEqual(result.content.utf8.count, 14)
+        XCTAssertEqual(result.metadata.sha256, loader.computeHash(result.content))
     }
 
     // MARK: - Large File Tests

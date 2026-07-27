@@ -826,6 +826,150 @@ final class CompilerDriverTests: XCTestCase {
         )
     }
 
+    func testParsedProgramCacheInvalidatesWhenEmbeddedMarkdownChanges() throws {
+        let project = tempURL("cache-markdown-mutation-project")
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        try "\"Specification\"\n    \"body.md\"\n".write(
+            to: project.appendingPathComponent("root.hc"),
+            atomically: true,
+            encoding: .utf8
+        )
+        let body = project.appendingPathComponent("body.md")
+        try "# Original\n".write(to: body, atomically: true, encoding: .utf8)
+
+        let driver = CompilerDriver()
+        let args = CompilerArguments(
+            input: project.appendingPathComponent("root.hc").path,
+            output: tempURL("cache-markdown-mutation.md").path,
+            manifest: tempURL("cache-markdown-mutation.manifest.json").path,
+            root: project.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+
+        let first = try driver.compile(args)
+        try "# Updated\n".write(to: body, atomically: true, encoding: .utf8)
+        let second = try driver.compile(args)
+        let manifest = try JSONDecoder().decode(
+            Manifest.self,
+            from: Data(second.manifestJSON.utf8)
+        )
+        let bodyEntry = try XCTUnwrap(manifest.sources.first { $0.path == "body.md" })
+
+        XCTAssertTrue(first.markdown.contains("Original"))
+        XCTAssertFalse(second.markdown.contains("Original"))
+        XCTAssertTrue(second.markdown.contains("Updated"))
+        XCTAssertEqual(bodyEntry.sha256, ContentHasher.sha256Hex("# Updated\n"))
+        XCTAssertEqual(second.sourceMap.outputSha256, ContentHasher.sha256Hex(second.markdown))
+    }
+
+    func testParsedProgramCacheInvalidatesNestedMarkdownTransitively() throws {
+        let project = tempURL("cache-nested-markdown-mutation-project")
+        let modules = project.appendingPathComponent("modules")
+        try FileManager.default.createDirectory(at: modules, withIntermediateDirectories: true)
+        try "\"Specification\"\n    \"modules/core.hc\"\n".write(
+            to: project.appendingPathComponent("root.hc"),
+            atomically: true,
+            encoding: .utf8
+        )
+        try "\"Core\"\n    \"modules/body.md\"\n".write(
+            to: modules.appendingPathComponent("core.hc"),
+            atomically: true,
+            encoding: .utf8
+        )
+        let body = modules.appendingPathComponent("body.md")
+        try "# Original\n".write(to: body, atomically: true, encoding: .utf8)
+
+        let driver = CompilerDriver()
+        let args = CompilerArguments(
+            input: project.appendingPathComponent("root.hc").path,
+            output: tempURL("cache-nested-markdown-mutation.md").path,
+            manifest: tempURL("cache-nested-markdown-mutation.manifest.json").path,
+            root: project.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+
+        _ = try driver.compile(args)
+        try "# Updated\n".write(to: body, atomically: true, encoding: .utf8)
+        let second = try driver.compile(args)
+
+        XCTAssertFalse(second.markdown.contains("Original"))
+        XCTAssertTrue(second.markdown.contains("Updated"))
+        XCTAssertNoThrow(try second.sourceMap.validate(for: second.markdown))
+    }
+
+    func testParsedProgramCacheInvalidatesWhenNestedHypercodeChanges() throws {
+        let project = tempURL("cache-nested-hypercode-mutation-project")
+        let modules = project.appendingPathComponent("modules")
+        try FileManager.default.createDirectory(at: modules, withIntermediateDirectories: true)
+        try "\"Specification\"\n    \"modules/core.hc\"\n".write(
+            to: project.appendingPathComponent("root.hc"),
+            atomically: true,
+            encoding: .utf8
+        )
+        let core = modules.appendingPathComponent("core.hc")
+        try "\"Original Core\"\n".write(to: core, atomically: true, encoding: .utf8)
+
+        let driver = CompilerDriver()
+        let args = CompilerArguments(
+            input: project.appendingPathComponent("root.hc").path,
+            output: tempURL("cache-nested-hypercode-mutation.md").path,
+            manifest: tempURL("cache-nested-hypercode-mutation.manifest.json").path,
+            root: project.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+
+        _ = try driver.compile(args)
+        try "\"Updated Core\"\n".write(to: core, atomically: true, encoding: .utf8)
+        let second = try driver.compile(args)
+
+        XCTAssertFalse(second.markdown.contains("Original Core"))
+        XCTAssertTrue(second.markdown.contains("Updated Core"))
+    }
+
+    func testParsedProgramCacheFailsClosedWhenEmbeddedMarkdownIsDeleted() throws {
+        let project = tempURL("cache-deleted-markdown-project")
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        try "\"Specification\"\n    \"body.md\"\n".write(
+            to: project.appendingPathComponent("root.hc"),
+            atomically: true,
+            encoding: .utf8
+        )
+        let body = project.appendingPathComponent("body.md")
+        try "# Body\n".write(to: body, atomically: true, encoding: .utf8)
+
+        let driver = CompilerDriver()
+        let args = CompilerArguments(
+            input: project.appendingPathComponent("root.hc").path,
+            output: tempURL("cache-deleted-markdown.md").path,
+            manifest: tempURL("cache-deleted-markdown.manifest.json").path,
+            root: project.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+
+        _ = try driver.compile(args)
+        try FileManager.default.removeItem(at: body)
+
+        XCTAssertThrowsError(try driver.compile(args)) { error in
+            guard let compilerError = error as? CompilerError else {
+                return XCTFail("Expected CompilerError, got \(error)")
+            }
+            XCTAssertEqual(compilerError.category, .resolution)
+            XCTAssertTrue(compilerError.message.contains("File not found"))
+        }
+    }
+
     func testManifestIsDirectoryIndependentAndNormalizesLineEndings() throws {
         func makeProject(named name: String, body: String) throws -> URL {
             let project = tempURL(name)
@@ -907,5 +1051,302 @@ final class CompilerDriverTests: XCTestCase {
             XCTAssertEqual(compilerError.category, .resolution)
             XCTAssertTrue(compilerError.message.contains("outside"))
         }
+    }
+
+    func testLenientCompilationIsNotReusedByStrictCompilation() throws {
+        let project = tempURL("cache-mode-project")
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        try "\"Specification\"\n    \"missing.md\"\n".write(
+            to: project.appendingPathComponent("root.hc"),
+            atomically: true,
+            encoding: .utf8
+        )
+        let driver = CompilerDriver()
+
+        let lenient = CompilerArguments(
+            input: project.appendingPathComponent("root.hc").path,
+            output: tempURL("cache-mode-lenient.md").path,
+            manifest: tempURL("cache-mode-lenient.manifest.json").path,
+            root: project.path,
+            mode: .lenient,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+        _ = try driver.compile(lenient)
+
+        let strict = CompilerArguments(
+            input: lenient.input,
+            output: tempURL("cache-mode-strict.md").path,
+            manifest: tempURL("cache-mode-strict.manifest.json").path,
+            root: project.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+        XCTAssertThrowsError(try driver.compile(strict))
+    }
+
+    func testLenientCompilationSeesNewlyCreatedReference() throws {
+        let project = tempURL("cache-negative-dependency-project")
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        try "\"Specification\"\n    \"body.md\"\n".write(
+            to: project.appendingPathComponent("root.hc"),
+            atomically: true,
+            encoding: .utf8
+        )
+        let driver = CompilerDriver()
+        let args = CompilerArguments(
+            input: project.appendingPathComponent("root.hc").path,
+            output: tempURL("cache-negative-dependency.md").path,
+            manifest: tempURL("cache-negative-dependency.manifest.json").path,
+            root: project.path,
+            mode: .lenient,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+
+        let first = try driver.compile(args)
+        try "# Created\n".write(
+            to: project.appendingPathComponent("body.md"),
+            atomically: true,
+            encoding: .utf8
+        )
+        let second = try driver.compile(args)
+
+        XCTAssertTrue(first.markdown.contains("body.md"))
+        XCTAssertTrue(second.markdown.contains("Created"))
+        XCTAssertFalse(second.markdown.contains("## body.md"))
+    }
+
+    func testArtifactDestinationsMustBeCanonicallyDistinct() throws {
+        let root = tempURL("collision-root.hc")
+        try "\"Specification\"\n".write(to: root, atomically: true, encoding: .utf8)
+        let shared = tempURL("collision-output")
+        let args = CompilerArguments(
+            input: root.path,
+            output: shared.path,
+            manifest: tempURL("collision.manifest.json").path,
+            sourceMap: shared.path,
+            root: tempDir.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+
+        XCTAssertThrowsError(try CompilerDriver().compile(args)) { error in
+            guard let compilerError = error as? CompilerError else {
+                return XCTFail("Expected CompilerError, got \(error)")
+            }
+            XCTAssertEqual(compilerError.category, .io)
+            XCTAssertTrue(compilerError.message.contains("distinct"))
+        }
+    }
+
+    func testArtifactDestinationCannotOverwriteCompilationSource() throws {
+        let project = tempURL("source-collision-project")
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        try "\"Specification\"\n    \"body.md\"\n".write(
+            to: project.appendingPathComponent("root.hc"),
+            atomically: true,
+            encoding: .utf8
+        )
+        let body = project.appendingPathComponent("body.md")
+        try "# Body\n".write(to: body, atomically: true, encoding: .utf8)
+        let args = CompilerArguments(
+            input: project.appendingPathComponent("root.hc").path,
+            output: body.path,
+            manifest: tempURL("source-collision.manifest.json").path,
+            root: project.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+
+        XCTAssertThrowsError(try CompilerDriver().compile(args)) { error in
+            guard let compilerError = error as? CompilerError else {
+                return XCTFail("Expected CompilerError, got \(error)")
+            }
+            XCTAssertEqual(compilerError.category, .io)
+            XCTAssertTrue(compilerError.message.contains("compilation source"))
+        }
+    }
+
+    func testManifestAndMarkdownUseOneImmutableSourceSnapshot() throws {
+        let project = tempURL("immutable-snapshot-project")
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        let root = project.appendingPathComponent("root.hc")
+        let body = project.appendingPathComponent("body.md")
+        try "\"Specification\"\n    \"body.md\"\n".write(
+            to: root,
+            atomically: true,
+            encoding: .utf8
+        )
+        try "# Disk\n".write(to: body, atomically: true, encoding: .utf8)
+
+        let fileSystem = SequencedReadFileSystem()
+        fileSystem.setReadSequence(
+            for: body.path,
+            contents: ["# Snapshot\n", "# Later\n"]
+        )
+        let result = try CompilerDriver(fileSystem: fileSystem).compile(
+            CompilerArguments(
+                input: root.path,
+                output: tempURL("immutable-snapshot.md").path,
+                manifest: tempURL("immutable-snapshot.manifest.json").path,
+                root: project.path,
+                mode: .strict,
+                verbose: false,
+                stats: false,
+                dryRun: true
+            )
+        )
+        let manifest = try JSONDecoder().decode(
+            Manifest.self,
+            from: Data(result.manifestJSON.utf8)
+        )
+        let bodyEntry = try XCTUnwrap(manifest.sources.first { $0.path == "body.md" })
+
+        XCTAssertTrue(result.markdown.contains("Snapshot"))
+        XCTAssertEqual(bodyEntry.sha256, ContentHasher.sha256Hex("# Snapshot\n"))
+        XCTAssertEqual(fileSystem.readCount(for: body.path), 1)
+    }
+
+    func testConflictingRepeatedSourceReadsFailClosed() throws {
+        let project = tempURL("conflicting-snapshot-project")
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        let root = project.appendingPathComponent("root.hc")
+        let body = project.appendingPathComponent("body.md")
+        try "\"Specification\"\n    \"body.md\"\n    \"body.md\"\n".write(
+            to: root,
+            atomically: true,
+            encoding: .utf8
+        )
+        try "# Disk\n".write(to: body, atomically: true, encoding: .utf8)
+
+        let fileSystem = SequencedReadFileSystem()
+        fileSystem.setReadSequence(
+            for: body.path,
+            contents: ["# First\n", "# Second\n"]
+        )
+        let args = CompilerArguments(
+            input: root.path,
+            output: tempURL("conflicting-snapshot.md").path,
+            manifest: tempURL("conflicting-snapshot.manifest.json").path,
+            root: project.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+
+        XCTAssertThrowsError(
+            try CompilerDriver(fileSystem: fileSystem).compile(args)
+        ) { error in
+            guard let compilerError = error as? CompilerError else {
+                return XCTFail("Expected CompilerError, got \(error)")
+            }
+            XCTAssertEqual(compilerError.category, .resolution)
+            XCTAssertTrue(compilerError.message.contains("changed during compilation"))
+        }
+    }
+
+    func testMarkdownIsNotPublishedWhenSourceMapWriteFails() throws {
+        let project = tempURL("publication-order-project")
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        let root = project.appendingPathComponent("root.hc")
+        try "\"Specification\"\n".write(to: root, atomically: true, encoding: .utf8)
+        let output = tempURL("publication-order.md")
+        let manifest = tempURL("publication-order.manifest.json")
+        let sourceMap = tempURL("publication-order.map.json")
+        let fileSystem = SequencedReadFileSystem()
+        fileSystem.failingWritePath = sourceMap.path
+        let args = CompilerArguments(
+            input: root.path,
+            output: output.path,
+            manifest: manifest.path,
+            sourceMap: sourceMap.path,
+            root: project.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: false
+        )
+
+        XCTAssertThrowsError(try CompilerDriver(fileSystem: fileSystem).compile(args))
+        XCTAssertEqual(fileSystem.writePaths, [manifest.path, sourceMap.path])
+        XCTAssertFalse(FileManager.default.fileExists(atPath: output.path))
+    }
+}
+
+private final class SequencedReadFileSystem: FileSystem {
+    private let base = LocalFileSystem()
+    private var readSequences: [String: [String]] = [:]
+    private var readCounts: [String: Int] = [:]
+    var failingWritePath: String?
+    private(set) var writePaths: [String] = []
+
+    func setReadSequence(for path: String, contents: [String]) {
+        readSequences[canonical(path)] = contents
+    }
+
+    func readCount(for path: String) -> Int {
+        readCounts[canonical(path), default: 0]
+    }
+
+    func readFile(at path: String) throws -> String {
+        let key = canonical(path)
+        let count = readCounts[key, default: 0]
+        readCounts[key] = count + 1
+        if let sequence = readSequences[key], count < sequence.count {
+            return sequence[count]
+        }
+        return try base.readFile(at: path)
+    }
+
+    func fileExists(at path: String) -> Bool {
+        base.fileExists(at: path)
+    }
+
+    func canonicalizePath(_ path: String) throws -> String {
+        try base.canonicalizePath(path)
+    }
+
+    func currentDirectory() -> String {
+        base.currentDirectory()
+    }
+
+    func writeFile(at path: String, content: String) throws {
+        writePaths.append(path)
+        if let failingWritePath,
+           canonical(path) == canonical(failingWritePath)
+        {
+            throw NSError(
+                domain: "SequencedReadFileSystem",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "Injected write failure"]
+            )
+        }
+        try base.writeFile(at: path, content: content)
+    }
+
+    func listDirectory(at path: String) throws -> [String] {
+        try base.listDirectory(at: path)
+    }
+
+    func isDirectory(at path: String) -> Bool {
+        base.isDirectory(at: path)
+    }
+
+    func fileAttributes(at path: String) -> FileAttributes? {
+        base.fileAttributes(at: path)
+    }
+
+    private func canonical(_ path: String) -> String {
+        (try? base.canonicalizePath(path)) ?? path
     }
 }

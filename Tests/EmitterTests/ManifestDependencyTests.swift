@@ -40,6 +40,7 @@ final class ManifestDependencyTests: XCTestCase {
         let manifest = try JSONDecoder().decode(Manifest.self, from: Data(legacy.utf8))
 
         XCTAssertEqual(manifest.dependencies, [])
+        XCTAssertEqual(manifest.schemaVersion, 0)
     }
 
     func testGeneratorDeduplicatesDependencies() {

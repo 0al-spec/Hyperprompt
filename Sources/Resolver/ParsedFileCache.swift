@@ -1,4 +1,5 @@
 import Foundation
+import Core
 import Parser
 
 /// In-memory cache for parsed Hypercode programs with dependency tracking.
@@ -7,6 +8,9 @@ public final class ParsedFileCache {
         public let checksum: String
         public let program: Program
         public let dependencies: Set<String>
+        public let sourceContents: [String: String]
+        public let resolutionRoot: String?
+        public let resolutionMode: ResolutionMode?
     }
 
     private var entries: [String: Entry] = [:]
@@ -24,6 +28,11 @@ public final class ParsedFileCache {
 
     public func dependencies(for path: String) -> Set<String> {
         entries[path]?.dependencies ?? []
+    }
+
+    /// Exact source bytes captured while producing a cached resolved AST.
+    public func sourceContents(for path: String) -> [String: String] {
+        entries[path]?.sourceContents ?? [:]
     }
 
     public func dependents(for path: String) -> Set<String> {
@@ -105,11 +114,45 @@ public final class ParsedFileCache {
         return entry.program
     }
 
+    /// Return a resolved program only when every embedded source still matches
+    /// the files from which the cached AST was built.
+    ///
+    /// A root `.hc` checksum alone is insufficient because resolved programs
+    /// embed Markdown content and nested Hypercode ASTs. Reusing such a program
+    /// after one of those inputs changes would produce stale Markdown while a
+    /// newly collected manifest describes the current files.
+    public func cachedResolvedProgram(
+        for path: String,
+        checksum: String,
+        rootPath: String,
+        mode: ResolutionMode,
+        fileSystem: FileSystem
+    ) -> Program? {
+        guard let program = cachedProgram(for: path, checksum: checksum),
+              let entry = entries[path],
+              resolvedInputsAreCurrent(
+                  entry,
+                  cachedPath: path,
+                  rootPath: rootPath,
+                  mode: mode,
+                  fileSystem: fileSystem
+              )
+        else {
+            invalidate(path: path)
+            return nil
+        }
+
+        return program
+    }
+
     public func store(
         path: String,
         checksum: String,
         program: Program,
-        dependencies: Set<String>
+        dependencies: Set<String>,
+        sourceContents: [String: String] = [:],
+        resolutionRoot: String? = nil,
+        resolutionMode: ResolutionMode? = nil
     ) {
         if let existing = entries[path] {
             removeDependents(for: path, dependencies: existing.dependencies)
@@ -118,7 +161,10 @@ public final class ParsedFileCache {
         entries[path] = Entry(
             checksum: checksum,
             program: program,
-            dependencies: dependencies
+            dependencies: dependencies,
+            sourceContents: sourceContents,
+            resolutionRoot: resolutionRoot,
+            resolutionMode: resolutionMode
         )
 
         for dependency in dependencies {
@@ -193,5 +239,45 @@ public final class ParsedFileCache {
             accessOrder.removeFirst()
             removeEntry(path: evicted)
         }
+    }
+
+    private func resolvedInputsAreCurrent(
+        _ entry: Entry,
+        cachedPath: String,
+        rootPath: String,
+        mode: ResolutionMode,
+        fileSystem: FileSystem
+    ) -> Bool {
+        guard let canonicalRoot = try? fileSystem.canonicalizePath(rootPath) else {
+            return false
+        }
+
+        guard entry.resolutionRoot == canonicalRoot,
+              entry.resolutionMode == mode,
+              entry.sourceContents[cachedPath] != nil
+        else {
+            return false
+        }
+
+        let rootComponents = URL(fileURLWithPath: canonicalRoot)
+            .standardized
+            .pathComponents
+        for (sourcePath, cachedContent) in entry.sourceContents {
+            guard let canonicalSource = try? fileSystem.canonicalizePath(sourcePath) else {
+                return false
+            }
+            let sourceComponents = URL(fileURLWithPath: canonicalSource)
+                .standardized
+                .pathComponents
+            guard sourceComponents.starts(with: rootComponents),
+                  sourceComponents.count > rootComponents.count,
+                  let currentContent = try? fileSystem.readFile(at: canonicalSource),
+                  currentContent == cachedContent
+            else {
+                return false
+            }
+        }
+
+        return true
     }
 }

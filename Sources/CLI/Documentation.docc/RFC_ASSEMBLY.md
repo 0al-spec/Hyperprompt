@@ -43,13 +43,21 @@ SOURCE_DATE_EPOCH=1700000000 hyperprompt compile \
   --source-map build/specification.map.json
 ```
 
-The build produces three complementary artifacts:
+Run publication builds in a clean staging directory. The build produces three
+complementary artifacts:
 
 | Artifact | Purpose |
 |---|---|
 | `specification.md` | The assembled publication document |
 | `specification.manifest.json` | Normalized source hashes and direct include edges |
 | `specification.map.json` | Exact generated-line provenance |
+
+The artifact set is ready only when the compiler exits successfully. Hyperprompt
+writes requested sidecars before the Markdown document, but arbitrary output
+paths cannot be committed as one filesystem transaction. If compilation or a
+write fails, discard the staging directory; partial sidecars from a nonzero exit
+are not authoritative. Publish or move the completed directory only after exit
+status `0`.
 
 ## Manifest Contract
 
@@ -66,6 +74,7 @@ same LF-normalized UTF-8 source bytes.
     }
   ],
   "root": "root.hc",
+  "schemaVersion": 1,
   "sources": [
     {
       "path": "root.hc",
@@ -141,6 +150,9 @@ non-dry build and retain all three artifacts.
 - Commit source modules, not generated outputs, unless repository policy
   requires checked-in artifacts.
 - Compare generated Markdown and JSON byte-for-byte in CI.
+- Treat compiler exit status `0`, not file presence, as the readiness signal.
+- Build in a disposable staging directory and publish the directory only after
+  all requested artifacts validate.
 
 Local anchor and fragment validation is intentionally a separate publication
 stage. Hyperprompt's assembly map provides the provenance needed for that

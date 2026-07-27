@@ -68,6 +68,7 @@ public enum CompilationSourceMapError: Error, Equatable, CustomStringConvertible
     case outputHashMismatch
     case incompleteCoverage(expected: [Int], actual: [Int])
     case invalidSourceSpan(generatedLine: Int)
+    case invalidSourcePath(generatedLine: Int, path: String)
     case invalidGeneratedMapping(generatedLine: Int)
 
     public var description: String {
@@ -82,6 +83,8 @@ public enum CompilationSourceMapError: Error, Equatable, CustomStringConvertible
             return "Source-map coverage mismatch: expected \(expected), got \(actual)"
         case let .invalidSourceSpan(generatedLine):
             return "Invalid source span for generated line \(generatedLine)"
+        case let .invalidSourcePath(generatedLine, path):
+            return "Invalid root-relative source path at generated line \(generatedLine): \(path)"
         case let .invalidGeneratedMapping(generatedLine):
             return "Generated separator at line \(generatedLine) must have a null source"
         }
@@ -138,11 +141,14 @@ public struct CompilationSourceMap: Codable, Equatable, Sendable {
             throw CompilationSourceMapError.outputHashMismatch
         }
 
-        let lineCount = markdown.reduce(into: 0) { count, character in
+        let newlineCount = markdown.reduce(into: 0) { count, character in
             if character == "\n" {
                 count += 1
             }
         }
+        let lineCount = markdown.isEmpty
+            ? 0
+            : newlineCount + (markdown.hasSuffix("\n") ? 0 : 1)
         let expectedLines = lineCount == 0 ? [] : Array(1...lineCount)
         let actualLines = mappings.map(\.generatedLine)
         guard actualLines == expectedLines else {
@@ -171,6 +177,28 @@ public struct CompilationSourceMap: Codable, Equatable, Sendable {
                     generatedLine: mapping.generatedLine
                 )
             }
+            guard isRootRelativePOSIXPath(source.path) else {
+                throw CompilationSourceMapError.invalidSourcePath(
+                    generatedLine: mapping.generatedLine,
+                    path: source.path
+                )
+            }
+        }
+    }
+
+    private func isRootRelativePOSIXPath(_ path: String) -> Bool {
+        guard !NSString(string: path).isAbsolutePath,
+              !path.contains("\\")
+        else {
+            return false
+        }
+
+        let components = path.split(
+            separator: "/",
+            omittingEmptySubsequences: false
+        )
+        return !components.isEmpty && components.allSatisfy {
+            !$0.isEmpty && $0 != "." && $0 != ".."
         }
     }
 }

@@ -73,4 +73,51 @@ final class CompilationSourceMapTests: XCTestCase {
         )
         XCTAssertThrowsError(try wrongHash.validate(for: markdown))
     }
+
+    func testValidationCountsFinalLineWithoutTrailingLF() {
+        let markdown = "# Heading"
+        let map = CompilationSourceMap(
+            outputSha256: ContentHasher.sha256Hex(markdown),
+            mappings: [
+                CompilationSourceMapping(
+                    generatedLine: 1,
+                    kind: .hypercodeHeading,
+                    source: CompilationSourceSpan(
+                        path: "root.hc",
+                        startLine: 1,
+                        endLine: 1
+                    )
+                )
+            ]
+        )
+
+        XCTAssertNoThrow(try map.validate(for: markdown))
+    }
+
+    func testValidationRejectsNonRootRelativeSourcePaths() {
+        let markdown = "# Heading\n"
+
+        for path in ["/etc/passwd", "../outside.md", "a/../../b.md", #"a\b.md"#] {
+            let map = CompilationSourceMap(
+                outputSha256: ContentHasher.sha256Hex(markdown),
+                mappings: [
+                    CompilationSourceMapping(
+                        generatedLine: 1,
+                        kind: .markdown,
+                        source: CompilationSourceSpan(
+                            path: path,
+                            startLine: 1,
+                            endLine: 1
+                        )
+                    )
+                ]
+            )
+
+            XCTAssertThrowsError(try map.validate(for: markdown), "path: \(path)") {
+                guard case CompilationSourceMapError.invalidSourcePath = $0 else {
+                    return XCTFail("Expected invalidSourcePath for \(path), got \($0)")
+                }
+            }
+        }
+    }
 }

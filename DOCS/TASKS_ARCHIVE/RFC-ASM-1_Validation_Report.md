@@ -11,8 +11,13 @@
 - Setext collapse retains an inclusive two-line source span.
 - Manifest provenance includes every resolved `.hc` and `.md` source and each
   direct include edge.
+- Manifest hashes and emitted Markdown derive from one immutable resolver
+  snapshot, including cache hits and repeated-source drift detection.
+- Strict and lenient resolution contexts cannot contaminate one another.
 - Manifest and source-map paths are root-relative and fail closed for sources
   outside `--root`.
+- Artifact destinations are canonically distinct and cannot overwrite an input
+  source.
 - `--source-map` emits a schema-versioned, output-hash-bound artifact with
   complete one-based generated-line coverage.
 - EditorEngine adapts the compiler result without re-emitting the AST.
@@ -23,8 +28,8 @@
 
 | Command | Result |
 |---|---|
-| `swift test` | PASS — 478 tests executed, 13 pre-existing skips, 0 failures |
-| `swift test --traits Editor` | PASS — full Editor-trait suite, 0 failures |
+| `swift test` | PASS — 493 tests executed, 13 pre-existing skips, 0 failures |
+| `swift test --traits Editor` | PASS — 638 tests executed, 16 pre-existing skips, 0 failures |
 | Focused `RFCAssemblyFixtureTests` | PASS — 4 tests, 0 failures |
 | Focused Editor/source-map regression tests | PASS — 4 tests, 0 failures |
 | DocC generation for `CLI` | PASS — archive generated; 3 pre-existing warnings |
@@ -63,6 +68,9 @@ change is included in this task. The package remains declared for Swift 6.2.
 ## Known Out-of-Scope Follow-ups
 
 - Validate explicit stable anchors, duplicate anchors, and local fragments.
+- Add a transactional staged artifact bundle with a content-addressed ready
+  marker. Until then, only exit status `0` makes a clean staging directory
+  authoritative.
 - Decide whether nested `.hc` includes should be transparent rather than
   producing a visible filename heading.
 - Replace the pinned `SpecificationCore` compatibility workaround with an

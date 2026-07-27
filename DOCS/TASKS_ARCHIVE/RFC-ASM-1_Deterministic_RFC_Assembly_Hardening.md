@@ -80,6 +80,7 @@ constructing it from an empty builder.
   and no leading `./`.
 - Reject a source that cannot be represented below `--root`.
 - Sort sources by path.
+- Emit `schemaVersion: 1`; decode pre-versioned manifests as legacy schema `0`.
 - Preserve deterministic JSON key ordering and exactly one trailing LF.
 
 ### FR-4: Direct include graph
@@ -309,9 +310,9 @@ git diff --check
 | Partial CommonMark implementation | Limit the scanner to ordinary fences with 0–3 spaces and document container fences as a follow-up |
 | Source-map drift | Produce output and mappings in the same traversal |
 | Machine-local paths | Normalize after canonical containment checks and test two checkout roots |
-| Stale cached AST | Collect provenance from the resolved AST on every compilation |
-| Manifest schema compatibility | Default missing `dependencies` to an empty array when decoding |
-| Large per-line source maps | Keep emission opt-in; range compression can be a later compatible schema version |
+| Stale cached AST | Bind cache entries to strict resolution context and exact immutable source snapshots |
+| Manifest schema compatibility | Version new manifests; decode missing `dependencies` and schema version as legacy defaults |
+| Large per-line source maps | Keep JSON persistence opt-in, expose the exact map programmatically, and consider range compression in a later compatible schema |
 
 ## 10. Success metrics
 

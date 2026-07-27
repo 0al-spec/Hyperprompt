@@ -43,10 +43,25 @@ public struct MarkdownEmitter {
     private let config: EmitterConfig
     private let headingAdjuster: HeadingAdjuster
 
+    #if Editor
+    private let legacySourceMapBuilder: SourceMapBuilder?
+    #endif
+
+    #if Editor
+    public init(
+        config: EmitterConfig = EmitterConfig(),
+        sourceMapBuilder: SourceMapBuilder? = nil
+    ) {
+        self.config = config
+        self.headingAdjuster = HeadingAdjuster()
+        self.legacySourceMapBuilder = sourceMapBuilder
+    }
+    #else
     public init(config: EmitterConfig = EmitterConfig()) {
         self.config = config
         self.headingAdjuster = HeadingAdjuster()
     }
+    #endif
 
     /// Emit Markdown while preserving the historical string-only API.
     public func emit(_ root: Node) -> String {
@@ -64,7 +79,7 @@ public struct MarkdownEmitter {
                 count += 1
             }
         }
-        assert(
+        precondition(
             builder.mappings.count == lineCount,
             "Emitter mappings must cover every generated Markdown line"
         )
@@ -72,6 +87,23 @@ public struct MarkdownEmitter {
             outputSha256: ContentHasher.sha256Hex(markdown),
             mappings: builder.mappings
         )
+
+        #if Editor
+        if let legacySourceMapBuilder {
+            for mapping in sourceMap.mappings {
+                guard let source = mapping.source else {
+                    continue
+                }
+                legacySourceMapBuilder.addMapping(
+                    outputLine: mapping.generatedLine - 1,
+                    sourceLocation: SourceLocation(
+                        filePath: source.path,
+                        line: source.startLine
+                    )
+                )
+            }
+        }
+        #endif
 
         return EmissionResult(markdown: markdown, sourceMap: sourceMap)
     }
@@ -158,12 +190,14 @@ public struct MarkdownEmitter {
                 offset: headingOffset
             )
             let lines = emittedLines(from: adjustment.markdown)
-            assert(
+            precondition(
                 lines.count == adjustment.lineOrigins.count,
                 "Heading adjustment line origins must cover every emitted line"
             )
 
-            for (line, origin) in zip(lines, adjustment.lineOrigins) {
+            for index in lines.indices {
+                let line = lines[index]
+                let origin = adjustment.lineOrigins[index]
                 output.appendLine(
                     line,
                     kind: .markdown,
@@ -226,7 +260,12 @@ private struct MappedLineBuilder {
         )
     }
 
-    func buildMarkdown() -> String {
+    mutating func buildMarkdown() -> String {
+        while mappings.last?.kind == .generatedSeparator {
+            mappings.removeLast()
+            lines.removeLast()
+        }
+
         guard !lines.isEmpty else {
             return ""
         }

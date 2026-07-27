@@ -31,6 +31,7 @@ public struct ManifestDependency: Codable, Equatable, Hashable, Sendable {
 ///     }
 ///   ],
 ///   "root": "root.hc",
+///   "schemaVersion": 1,
 ///   "sources": [
 ///     {
 ///       "path": "root.hc",
@@ -59,6 +60,9 @@ public struct Manifest: Codable {
     /// - Uses forward slashes and has no leading `./`
     /// - Example: `"root.hc"` or `"drafts/specification.hc"`
     public let root: String
+
+    /// Version of the manifest artifact contract.
+    public let schemaVersion: Int
 
     /// Array of source file metadata entries.
     ///
@@ -92,6 +96,7 @@ public struct Manifest: Codable {
         root: String,
         sources: [ManifestEntry],
         dependencies: [ManifestDependency] = [],
+        schemaVersion: Int = 1,
         timestamp: String,
         version: String
     ) {
@@ -99,6 +104,7 @@ public struct Manifest: Codable {
             ($0.from, $0.to) < ($1.from, $1.to)
         }
         self.root = root
+        self.schemaVersion = schemaVersion
         self.sources = sources.sorted { $0.path < $1.path }  // Ensure deterministic order
         self.timestamp = timestamp
         self.version = version
@@ -107,6 +113,7 @@ public struct Manifest: Codable {
     private enum CodingKeys: String, CodingKey {
         case dependencies
         case root
+        case schemaVersion
         case sources
         case timestamp
         case version
@@ -122,6 +129,10 @@ public struct Manifest: Codable {
                 [ManifestDependency].self,
                 forKey: .dependencies
             ) ?? [],
+            schemaVersion: try container.decodeIfPresent(
+                Int.self,
+                forKey: .schemaVersion
+            ) ?? 0,
             timestamp: try container.decode(String.self, forKey: .timestamp),
             version: try container.decode(String.self, forKey: .version)
         )

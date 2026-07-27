@@ -46,6 +46,50 @@ public struct CompilationResult {
         self.statistics = statistics
         self.resolvedAST = resolvedAST
     }
+
+    /// Source-compatible initializer for clients that do not yet consume the
+    /// exact compiler source map.
+    @available(*, deprecated, message: "Use init(markdown:manifestJSON:sourceMap:sourceMapJSON:statistics:resolvedAST:)")
+    public init(
+        markdown: String,
+        manifestJSON: String,
+        statistics: CompilationStats? = nil,
+        resolvedAST: Node? = nil
+    ) {
+        let newlineCount = markdown.reduce(into: 0) { count, character in
+            if character == "\n" {
+                count += 1
+            }
+        }
+        let lineCount = markdown.isEmpty
+            ? 0
+            : newlineCount + (markdown.hasSuffix("\n") ? 0 : 1)
+        let mappings: [CompilationSourceMapping]
+        if lineCount == 0 {
+            mappings = []
+        } else {
+            mappings = (1...lineCount).map { line in
+                CompilationSourceMapping(
+                    generatedLine: line,
+                    kind: .generatedSeparator,
+                    source: nil
+                )
+            }
+        }
+        let sourceMap = CompilationSourceMap(
+            outputSha256: ContentHasher.sha256Hex(markdown),
+            mappings: mappings
+        )
+
+        self.init(
+            markdown: markdown,
+            manifestJSON: manifestJSON,
+            sourceMap: sourceMap,
+            sourceMapJSON: (try? sourceMap.toJSON()) ?? "",
+            statistics: statistics,
+            resolvedAST: resolvedAST
+        )
+    }
 }
 
 /// Orchestrates the complete Hypercode compilation pipeline.
@@ -177,18 +221,26 @@ public final class CompilerDriver {
         )
 
         let resolvedProgram: Program
-        if let cachedProgram = parsedFileCache.cachedProgram(
+        let compilationSourceContents: [String: String]
+        if args.mode == .strict,
+           let cachedProgram = parsedFileCache.cachedResolvedProgram(
             for: canonicalInputPath,
-            checksum: inputChecksum
+            checksum: inputChecksum,
+            rootPath: validatedPaths.rootPath,
+            mode: .strict,
+            fileSystem: fileSystem
         ) {
             if args.verbose {
                 logVerbose("  [CACHE] Reusing cached AST for \(validatedPaths.inputPath)")
             }
             resolvedProgram = cachedProgram
+            compilationSourceContents = parsedFileCache.sourceContents(
+                for: canonicalInputPath
+            )
         } else {
             let program = try parseInputFile(
                 content: inputContent,
-                path: validatedPaths.inputPath,
+                path: canonicalInputPath,
                 verbose: args.verbose
             )
 
@@ -202,12 +254,30 @@ public final class CompilerDriver {
             )
 
             resolvedProgram = resolution.program
-            parsedFileCache.store(
-                path: canonicalInputPath,
-                checksum: inputChecksum,
-                program: resolvedProgram,
-                dependencies: resolution.dependencies
-            )
+            var sourceContents = resolution.sourceContents
+            if let resolvedRootContent = sourceContents[canonicalInputPath],
+               resolvedRootContent != inputContent
+            {
+                throw ConcreteCompilerError.resolutionError(
+                    message: "Root source changed during compilation: \(canonicalInputPath)",
+                    location: nil
+                )
+            }
+            sourceContents[canonicalInputPath] = inputContent
+            compilationSourceContents = sourceContents
+            if args.mode == .strict {
+                parsedFileCache.store(
+                    path: canonicalInputPath,
+                    checksum: inputChecksum,
+                    program: resolvedProgram,
+                    dependencies: resolution.dependencies,
+                    sourceContents: sourceContents,
+                    resolutionRoot: try fileSystem.canonicalizePath(
+                        validatedPaths.rootPath
+                    ),
+                    resolutionMode: .strict
+                )
+            }
         }
 
         if args.verbose {
@@ -229,7 +299,12 @@ public final class CompilerDriver {
         let provenance = try CompilationProvenanceCollector(fileSystem: fileSystem).collect(
             program: resolvedProgram,
             inputPath: validatedPaths.inputPath,
-            rootPath: validatedPaths.rootPath
+            rootPath: validatedPaths.rootPath,
+            sourceContents: compilationSourceContents
+        )
+        try validateArtifactDestinationsDoNotOverwriteSources(
+            validatedPaths,
+            provenance: provenance
         )
 
         // Phase 4: Emit Markdown
@@ -394,13 +469,40 @@ public final class CompilerDriver {
         let rootPath = args.root
         let outputPath = args.output
         let manifestPath = args.manifest
+        let sourceMapPath = args.sourceMap
+
+        let canonicalInput = try fileSystem.canonicalizePath(inputPath)
+        let artifactDestinations: [(name: String, path: String)] = [
+            ("output", outputPath),
+            ("manifest", manifestPath),
+        ] + (sourceMapPath.map { [("source map", $0)] } ?? [])
+        var destinationsByCanonicalPath: [String: String] = [:]
+        for destination in artifactDestinations {
+            let canonicalDestination = try fileSystem.canonicalizePath(destination.path)
+            if canonicalDestination == canonicalInput {
+                throw ConcreteCompilerError.ioError(
+                    message: "\(destination.name.capitalized) path would overwrite input: "
+                        + destination.path,
+                    location: nil
+                )
+            }
+            if let existing = destinationsByCanonicalPath[canonicalDestination] {
+                throw ConcreteCompilerError.ioError(
+                    message: "Artifact destinations must be distinct: "
+                        + "\(existing) and \(destination.name) resolve to "
+                        + canonicalDestination,
+                    location: nil
+                )
+            }
+            destinationsByCanonicalPath[canonicalDestination] = destination.name
+        }
 
         return ValidatedPaths(
             inputPath: inputPath,
             rootPath: rootPath,
             outputPath: outputPath,
             manifestPath: manifestPath,
-            sourceMapPath: args.sourceMap
+            sourceMapPath: sourceMapPath
         )
     }
 
@@ -453,7 +555,11 @@ public final class CompilerDriver {
         verbose: Bool,
         statsCollector: StatsCollector?,
         currentFilePath: String
-    ) throws -> (program: Program, dependencies: Set<String>) {
+    ) throws -> (
+        program: Program,
+        dependencies: Set<String>,
+        sourceContents: [String: String]
+    ) {
         let resolutionMode: ResolutionMode = mode == .strict ? .strict : .lenient
 
         let dependencyTracker = DependencyTracker(fileSystem: fileSystem)
@@ -482,7 +588,11 @@ public final class CompilerDriver {
             )
         }
 
-        return (Program(root: mutableRoot, sourceFile: program.sourceFile), resolver.dependencies)
+        return (
+            Program(root: mutableRoot, sourceFile: program.sourceFile),
+            resolver.dependencies,
+            resolver.sourceContents
+        )
     }
 
     /// Emit Markdown from resolved AST.
@@ -536,7 +646,7 @@ public final class CompilerDriver {
         }
     }
 
-    /// Write output files atomically.
+    /// Write each output artifact using the file-system implementation.
     private func writeOutputFiles(
         markdown: String,
         manifestJSON: String,
@@ -546,17 +656,8 @@ public final class CompilerDriver {
         sourceMapPath: String?,
         verbose: Bool
     ) throws {
-        // Write Markdown output
-        do {
-            try fileSystem.writeFile(at: outputPath, content: markdown)
-        } catch {
-            throw ConcreteCompilerError.ioError(
-                message: "Failed to write output file: \(outputPath)",
-                location: nil
-            )
-        }
-
-        // Write manifest JSON
+        // Publish metadata first. The Markdown document is written last and
+        // becomes visible only after all requested sidecars were written.
         do {
             try fileSystem.writeFile(at: manifestPath, content: manifestJSON)
         } catch {
@@ -575,6 +676,15 @@ public final class CompilerDriver {
                     location: nil
                 )
             }
+        }
+
+        do {
+            try fileSystem.writeFile(at: outputPath, content: markdown)
+        } catch {
+            throw ConcreteCompilerError.ioError(
+                message: "Failed to write output file: \(outputPath)",
+                location: nil
+            )
         }
     }
 
@@ -643,6 +753,35 @@ public final class CompilerDriver {
 
     private func canonicalPath(_ path: String) -> String {
         (try? fileSystem.canonicalizePath(path)) ?? path
+    }
+
+    private func validateArtifactDestinationsDoNotOverwriteSources(
+        _ paths: ValidatedPaths,
+        provenance: CompilationProvenance
+    ) throws {
+        let canonicalRoot = try fileSystem.canonicalizePath(paths.rootPath)
+        let sourcePaths = try Set(provenance.sources.map { source in
+            try fileSystem.canonicalizePath(
+                URL(fileURLWithPath: canonicalRoot)
+                    .appendingPathComponent(source.path)
+                    .path
+            )
+        })
+        let destinations: [(name: String, path: String)] = [
+            ("Output", paths.outputPath),
+            ("Manifest", paths.manifestPath),
+        ] + (paths.sourceMapPath.map { [("Source map", $0)] } ?? [])
+
+        for destination in destinations {
+            let canonicalDestination = try fileSystem.canonicalizePath(destination.path)
+            guard !sourcePaths.contains(canonicalDestination) else {
+                throw ConcreteCompilerError.ioError(
+                    message: "\(destination.name) path would overwrite compilation source: "
+                        + destination.path,
+                    location: nil
+                )
+            }
+        }
     }
 
     /// Log message to stderr when verbose mode enabled.

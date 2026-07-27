@@ -128,6 +128,7 @@ in this artifact.
     }
   ],
   "root": "root.hc",
+  "schemaVersion": 1,
   "sources": [
     {
       "path": "root.hc",

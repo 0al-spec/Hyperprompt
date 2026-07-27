@@ -289,6 +289,7 @@ See [SPECS_INTEGRATION.md](Sources/CLI/Documentation.docc/SPECS_INTEGRATION.md) 
 
 The generated `manifest.json` contains:
 - The root `.hc` source, expressed relative to `--root`
+- Manifest artifact schema version
 - Every normalized `.hc` and `.md` input with SHA-256, byte size, and type
 - Sorted direct include edges
 - Compiler version and deterministic build timestamp
