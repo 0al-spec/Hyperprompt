@@ -2,6 +2,7 @@ import XCTest
 import Foundation
 @testable import CompilerDriver
 @testable import Core
+@testable import Emitter
 
 /// End-to-end integration tests for CompilerDriver
 ///
@@ -711,5 +712,200 @@ final class CompilerDriverTests: XCTestCase {
             location: nil
         )
         XCTAssertEqual(internalError.category, .internal)
+    }
+
+    // MARK: - Compilation Provenance
+
+    func testManifestContainsAllSourcesAndDirectIncludeEdges() throws {
+        let project = tempURL("provenance-project")
+        let modules = project.appendingPathComponent("modules")
+        try FileManager.default.createDirectory(at: modules, withIntermediateDirectories: true)
+
+        try """
+        "Abstract Specification"
+            "intro.md"
+            "modules/core.hc"
+        """.write(to: project.appendingPathComponent("root.hc"), atomically: true, encoding: .utf8)
+        try "# Introduction\n".write(
+            to: project.appendingPathComponent("intro.md"),
+            atomically: true,
+            encoding: .utf8
+        )
+        try """
+        "Core"
+            "modules/requirements.md"
+        """.write(
+            to: modules.appendingPathComponent("core.hc"),
+            atomically: true,
+            encoding: .utf8
+        )
+        try "# Requirements\n".write(
+            to: modules.appendingPathComponent("requirements.md"),
+            atomically: true,
+            encoding: .utf8
+        )
+
+        let output = tempURL("provenance.md")
+        let driver = CompilerDriver()
+        let args = CompilerArguments(
+            input: project.appendingPathComponent("root.hc").path,
+            output: output.path,
+            manifest: tempURL("provenance.manifest.json").path,
+            root: project.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+
+        let result = try driver.compile(args)
+        let manifest = try JSONDecoder().decode(
+            Manifest.self,
+            from: Data(result.manifestJSON.utf8)
+        )
+
+        XCTAssertEqual(manifest.root, "root.hc")
+        XCTAssertEqual(
+            manifest.sources.map(\.path),
+            [
+                "intro.md",
+                "modules/core.hc",
+                "modules/requirements.md",
+                "root.hc",
+            ]
+        )
+        XCTAssertEqual(
+            manifest.dependencies,
+            [
+                ManifestDependency(from: "modules/core.hc", to: "modules/requirements.md"),
+                ManifestDependency(from: "root.hc", to: "intro.md"),
+                ManifestDependency(from: "root.hc", to: "modules/core.hc"),
+            ]
+        )
+        XCTAssertFalse(result.manifestJSON.contains(project.path))
+        XCTAssertTrue(manifest.sources.allSatisfy { $0.sha256.count == 64 })
+    }
+
+    func testManifestRemainsCompleteOnParsedProgramCacheHit() throws {
+        let project = tempURL("cache-provenance-project")
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        try "\"Specification\"\n    \"body.md\"\n".write(
+            to: project.appendingPathComponent("root.hc"),
+            atomically: true,
+            encoding: .utf8
+        )
+        try "# Body\n".write(
+            to: project.appendingPathComponent("body.md"),
+            atomically: true,
+            encoding: .utf8
+        )
+
+        let driver = CompilerDriver()
+        let args = CompilerArguments(
+            input: project.appendingPathComponent("root.hc").path,
+            output: tempURL("cache-provenance.md").path,
+            manifest: tempURL("cache-provenance.manifest.json").path,
+            root: project.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+
+        _ = try driver.compile(args)
+        let second = try driver.compile(args)
+        let manifest = try JSONDecoder().decode(
+            Manifest.self,
+            from: Data(second.manifestJSON.utf8)
+        )
+
+        XCTAssertEqual(manifest.sources.map(\.path), ["body.md", "root.hc"])
+        XCTAssertEqual(
+            manifest.dependencies,
+            [ManifestDependency(from: "root.hc", to: "body.md")]
+        )
+    }
+
+    func testManifestIsDirectoryIndependentAndNormalizesLineEndings() throws {
+        func makeProject(named name: String, body: String) throws -> URL {
+            let project = tempURL(name)
+            try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+            let root = project.appendingPathComponent("root.hc")
+            try "\"Specification\"\n    \"body.md\"\n".write(
+                to: root,
+                atomically: true,
+                encoding: .utf8
+            )
+            try body.write(
+                to: project.appendingPathComponent("body.md"),
+                atomically: true,
+                encoding: .utf8
+            )
+            try FileManager.default.setAttributes(
+                [.modificationDate: Date(timeIntervalSince1970: 1_700_000_000)],
+                ofItemAtPath: root.path
+            )
+            return project
+        }
+
+        let firstProject = try makeProject(named: "checkout-a", body: "# Body\nLine\n")
+        let secondProject = try makeProject(named: "checkout-b", body: "# Body\r\nLine\r\n")
+
+        func compileManifest(project: URL, suffix: String) throws -> String {
+            let args = CompilerArguments(
+                input: project.appendingPathComponent("root.hc").path,
+                output: tempURL("\(suffix).md").path,
+                manifest: tempURL("\(suffix).manifest.json").path,
+                root: project.path,
+                mode: .strict,
+                verbose: false,
+                stats: false,
+                dryRun: true
+            )
+            return try CompilerDriver().compile(args).manifestJSON
+        }
+
+        let first = try compileManifest(project: firstProject, suffix: "checkout-a")
+        let second = try compileManifest(project: secondProject, suffix: "checkout-b")
+
+        XCTAssertEqual(first, second)
+        let manifest = try JSONDecoder().decode(Manifest.self, from: Data(first.utf8))
+        let body = try XCTUnwrap(manifest.sources.first { $0.path == "body.md" })
+        XCTAssertEqual(body.size, "# Body\nLine\n".utf8.count)
+    }
+
+    func testSymlinkedSourceOutsideRootFailsClosed() throws {
+        let project = tempURL("symlink-project")
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        try "\"Specification\"\n    \"escape.md\"\n".write(
+            to: project.appendingPathComponent("root.hc"),
+            atomically: true,
+            encoding: .utf8
+        )
+        let outside = tempURL("outside.md")
+        try "# Outside\n".write(to: outside, atomically: true, encoding: .utf8)
+        try FileManager.default.createSymbolicLink(
+            at: project.appendingPathComponent("escape.md"),
+            withDestinationURL: outside
+        )
+
+        let args = CompilerArguments(
+            input: project.appendingPathComponent("root.hc").path,
+            output: tempURL("symlink.md").path,
+            manifest: tempURL("symlink.manifest.json").path,
+            root: project.path,
+            mode: .strict,
+            verbose: false,
+            stats: false,
+            dryRun: true
+        )
+
+        XCTAssertThrowsError(try CompilerDriver().compile(args)) { error in
+            guard let compilerError = error as? CompilerError else {
+                return XCTFail("Expected CompilerError, got \(error)")
+            }
+            XCTAssertEqual(compilerError.category, .resolution)
+            XCTAssertTrue(compilerError.message.contains("outside"))
+        }
     }
 }

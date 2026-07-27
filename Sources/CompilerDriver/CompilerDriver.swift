@@ -214,6 +214,12 @@ public final class CompilerDriver {
             logVerbose("")
         }
 
+        let provenance = try CompilationProvenanceCollector(fileSystem: fileSystem).collect(
+            program: resolvedProgram,
+            inputPath: validatedPaths.inputPath,
+            rootPath: validatedPaths.rootPath
+        )
+
         // Phase 4: Emit Markdown
         if args.verbose {
             logVerbose("[PHASE 4] Emit phase - generating Markdown")
@@ -236,7 +242,8 @@ public final class CompilerDriver {
         }
 
         let manifestJSON = try generateManifest(
-            rootPath: validatedPaths.inputPath,
+            provenance: provenance,
+            timestampSourcePath: validatedPaths.inputPath,
             verbose: args.verbose
         )
 
@@ -441,24 +448,32 @@ public final class CompilerDriver {
 
     /// Generate manifest JSON.
     private func generateManifest(
-        rootPath: String,
+        provenance: CompilationProvenance,
+        timestampSourcePath: String,
         verbose: Bool,
         timestampProvider: DeterministicTimestampProvider = DeterministicTimestampProvider()
     ) throws -> String {
         let generator = ManifestGenerator()
-        let builder = ManifestBuilder()  // Empty for now - will be populated in future
+        let builder = ManifestBuilder()
+        for source in provenance.sources {
+            builder.add(entry: source)
+        }
         let manifest = generator.generate(
             builder: builder,
+            dependencies: provenance.dependencies,
             version: version,
-            root: rootPath,
-            timestamp: timestampProvider.resolveDate(for: rootPath)
+            root: provenance.rootSource,
+            timestamp: timestampProvider.resolveDate(for: timestampSourcePath)
         )
 
         do {
             let json = try generator.toJSON(manifest: manifest)
 
             if verbose {
-                logVerbose("  [MANIFEST] Generated JSON (stub - no entries yet)")
+                logVerbose(
+                    "  [MANIFEST] Recorded \(provenance.sources.count) sources "
+                        + "and \(provenance.dependencies.count) include edges"
+                )
             }
 
             return json
