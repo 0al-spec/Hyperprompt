@@ -318,5 +318,8 @@ git diff --check
 - Zero fenced-example mutations in the abstract corpus.
 - 100% generated-line coverage in source maps.
 - 100% compilation inputs represented in the manifest.
+
+---
+**Archived:** 2026-07-27
 - Three byte-identical output artifacts across directory-independent test runs.
 - No regression in the default or Editor-trait suites.

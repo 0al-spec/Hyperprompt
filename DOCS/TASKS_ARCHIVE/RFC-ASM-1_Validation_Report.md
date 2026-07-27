@@ -67,3 +67,6 @@ change is included in this task. The package remains declared for Swift 6.2.
   producing a visible filename heading.
 - Replace the pinned `SpecificationCore` compatibility workaround with an
   upstream release that supports newer Swift toolchains.
+
+---
+**Archived:** 2026-07-27
