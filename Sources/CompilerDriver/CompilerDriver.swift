@@ -28,13 +28,7 @@ public struct CompilationResult {
     /// Compilation statistics (if enabled)
     public let statistics: CompilationStats?
 
-    /// Resolved AST root node (optional, for EditorEngine source map generation)
-    ///
-    /// NOTE: This field is primarily used by EditorEngine for improved source map generation.
-    /// Regular CLI compilation doesn't need the AST after emission.
-    ///
-    /// TODO: EE-EXT-3-FULL - Replace AST-based source map generation with proper Emitter integration.
-    /// See DOCS/INPROGRESS/EE-EXT-3-FULL_Complete_Source_Map_Implementation.md for full implementation plan.
+    /// Resolved AST root retained for programmatic compiler clients.
     public let resolvedAST: Node?
 
     public init(

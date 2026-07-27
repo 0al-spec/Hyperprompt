@@ -1,6 +1,6 @@
 # RFC-ASM-1 — Deterministic RFC Assembly Hardening
 
-**Status:** Planned  
+**Status:** Completed  
 **Priority:** P1  
 **Estimated effort:** 12 hours  
 **Dependencies:** None  
@@ -275,18 +275,18 @@ adapter semantics.
 
 ## 7. Acceptance criteria
 
-- [ ] Fenced code examples are unchanged except for LF normalization.
-- [ ] Four-space-indented code is not transformed as a heading.
-- [ ] Production manifests contain all normalized sources and direct edges.
-- [ ] Manifest and source-map artifacts contain no absolute paths.
-- [ ] `--source-map` writes a versioned, output-bound, fully covering map.
-- [ ] EditorEngine no longer re-emits Markdown to build its map.
-- [ ] Abstract RFC fixtures pass without protocol-specific content.
-- [ ] Repeated builds in different directories are byte-identical under fixed
+- [x] Fenced code examples are unchanged except for LF normalization.
+- [x] Four-space-indented code is not transformed as a heading.
+- [x] Production manifests contain all normalized sources and direct edges.
+- [x] Manifest and source-map artifacts contain no absolute paths.
+- [x] `--source-map` writes a versioned, output-bound, fully covering map.
+- [x] EditorEngine no longer re-emits Markdown to build its map.
+- [x] Abstract RFC fixtures pass without protocol-specific content.
+- [x] Repeated builds in different directories are byte-identical under fixed
       `SOURCE_DATE_EPOCH`.
-- [ ] `swift test` passes.
-- [ ] `swift test --traits Editor` passes.
-- [ ] `git diff --check` passes.
+- [x] `swift test` passes.
+- [x] `swift test --traits Editor` passes.
+- [x] `git diff --check` passes.
 
 ## 8. Validation commands
 

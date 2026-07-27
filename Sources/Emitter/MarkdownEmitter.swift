@@ -64,10 +64,13 @@ public struct MarkdownEmitter {
                 count += 1
             }
         }
-        let mappings = Array(builder.mappings.prefix(lineCount))
+        assert(
+            builder.mappings.count == lineCount,
+            "Emitter mappings must cover every generated Markdown line"
+        )
         let sourceMap = CompilationSourceMap(
             outputSha256: ContentHasher.sha256Hex(markdown),
-            mappings: mappings
+            mappings: builder.mappings
         )
 
         return EmissionResult(markdown: markdown, sourceMap: sourceMap)

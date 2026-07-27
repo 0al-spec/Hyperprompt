@@ -34,9 +34,9 @@ public struct ManifestEntry: Codable {
     /// - Example: `"a1b2c3d4e5f6789..."`
     public let sha256: String
 
-    /// File size in bytes (original, pre-normalization).
+    /// File size in bytes after LF normalization.
     ///
-    /// - Size of raw file content before line ending normalization
+    /// - Size of the normalized UTF-8 content used to compute `sha256`
     /// - Used for statistics and capacity planning
     /// - Always >= 0 (empty files have size 0)
     public let size: Int

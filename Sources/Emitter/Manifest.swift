@@ -24,10 +24,16 @@ public struct ManifestDependency: Codable, Equatable, Hashable, Sendable {
 /// Example JSON structure:
 /// ```json
 /// {
-///   "root": "/path/to/root",
+///   "dependencies": [
+///     {
+///       "from": "root.hc",
+///       "to": "sections/introduction.md"
+///     }
+///   ],
+///   "root": "root.hc",
 ///   "sources": [
 ///     {
-///       "path": "input.hc",
+///       "path": "root.hc",
 ///       "sha256": "abc123...",
 ///       "size": 1024,
 ///       "type": "hypercode"
@@ -47,11 +53,11 @@ public struct Manifest: Codable {
     /// Sorted direct include edges discovered during this compilation.
     public let dependencies: [ManifestDependency]
 
-    /// Compilation root directory path.
+    /// Root Hypercode source path.
     ///
-    /// - Absolute or relative path to the root directory
-    /// - All source file paths are relative to this root
-    /// - Example: `"/home/user/project"` or `"./docs"`
+    /// - Relative to the compilation `--root`
+    /// - Uses forward slashes and has no leading `./`
+    /// - Example: `"root.hc"` or `"drafts/specification.hc"`
     public let root: String
 
     /// Array of source file metadata entries.

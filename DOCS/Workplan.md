@@ -59,13 +59,13 @@ Parallelizable tasks to start while EditorEngine work continues:
 ### RFC-ASM-1: Deterministic RFC Assembly Hardening **[P1]**
 **Dependencies:** None
 **Estimated:** 12 hours
-**Status:** 🚧 **INPROGRESS**
+**Status:** ✅ Completed on 2026-07-27
 
-- [ ] **[P0]** Preserve fenced code blocks while adjusting embedded Markdown headings
-- [ ] **[P0]** Populate deterministic compilation provenance for all resolved `.hc` and `.md` sources
-- [ ] **[P0]** Emit a deterministic CLI source-map artifact for compiled Markdown
-- [ ] **[P1]** Add abstract multi-document RFC fixtures covering nested modules and negative cases
-- [ ] **[P1]** Document the reproducible assembly workflow and validate it through the CLI
+- [x] **[P0]** Preserve fenced code blocks while adjusting embedded Markdown headings
+- [x] **[P0]** Populate deterministic compilation provenance for all resolved `.hc` and `.md` sources
+- [x] **[P0]** Emit a deterministic CLI source-map artifact for compiled Markdown
+- [x] **[P1]** Add abstract multi-document RFC fixtures covering nested modules and negative cases
+- [x] **[P1]** Document the reproducible assembly workflow and validate it through the CLI
 
 **Acceptance Criteria:** Hyperprompt can assemble an abstract modular RFC without mutating fenced examples, emits non-empty deterministic provenance and source-map artifacts with root-relative paths, fails closed for invalid inputs, and passes default and Editor-trait test suites.
 

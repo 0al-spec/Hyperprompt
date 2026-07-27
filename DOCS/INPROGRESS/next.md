@@ -4,7 +4,8 @@
 **Phase:** Publication Compiler Hardening
 **Effort:** 12 hours
 **Dependencies:** None
-**Status:** Planned
+**Status:** Completed
+**Progress:** 4/4 = 100%
 
 ## Description
 
@@ -12,10 +13,10 @@ Harden Hyperprompt as a deterministic assembler for large modular Markdown speci
 
 ## Execution Checklist
 
-- [ ] Preserve fenced Markdown and expose line origins
-- [ ] Populate deterministic source and dependency provenance
-- [ ] Emit exact single-pass CLI source maps
-- [ ] Add abstract RFC fixtures, documentation, and validation report
+- [x] Preserve fenced Markdown and expose line origins
+- [x] Populate deterministic source and dependency provenance
+- [x] Emit exact single-pass CLI source maps
+- [x] Add abstract RFC fixtures, documentation, and validation report
 
 ## PRD
 
