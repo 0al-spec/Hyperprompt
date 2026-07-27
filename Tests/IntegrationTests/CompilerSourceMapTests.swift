@@ -119,6 +119,32 @@ final class CompilerSourceMapTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: sourceMap.path))
     }
 
+    func testProgrammaticJSONRemainsAvailableWhenSidecarIsDisabled() throws {
+        let project = try makeProject(
+            at: tempDirectory.appendingPathComponent("programmatic-json")
+        )
+        let result = try CompilerDriver().compile(
+            CompilerArguments(
+                input: project.appendingPathComponent("root.hc").path,
+                output: tempDirectory.appendingPathComponent("programmatic.md").path,
+                manifest: tempDirectory
+                    .appendingPathComponent("programmatic.manifest.json")
+                    .path,
+                root: project.path,
+                mode: .strict,
+                verbose: false,
+                stats: false,
+                dryRun: true
+            )
+        )
+
+        let decoded = try JSONDecoder().decode(
+            CompilationSourceMap.self,
+            from: Data(result.sourceMapJSON.utf8)
+        )
+        XCTAssertEqual(decoded, result.sourceMap)
+    }
+
     func testSourceMapAndMarkdownAreIndependentOfCheckoutDirectory() throws {
         let firstProject = try makeProject(
             at: tempDirectory.appendingPathComponent("checkout-a")

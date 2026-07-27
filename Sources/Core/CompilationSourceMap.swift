@@ -105,9 +105,14 @@ public struct CompilationSourceMap: Codable, Equatable, Sendable {
         lineBase: Int = 1
     ) {
         self.lineBase = lineBase
-        self.mappings = mappings.sorted { lhs, rhs in
-            lhs.generatedLine < rhs.generatedLine
+        let alreadySorted = mappings.indices.dropFirst().allSatisfy { index in
+            mappings[index - 1].generatedLine <= mappings[index].generatedLine
         }
+        self.mappings = alreadySorted
+            ? mappings
+            : mappings.sorted { lhs, rhs in
+                lhs.generatedLine < rhs.generatedLine
+            }
         self.outputSha256 = outputSha256
         self.schemaVersion = schemaVersion
     }
@@ -141,24 +146,31 @@ public struct CompilationSourceMap: Codable, Equatable, Sendable {
             throw CompilationSourceMapError.outputHashMismatch
         }
 
-        let newlineCount = markdown.reduce(into: 0) { count, character in
-            if character == "\n" {
+        let newlineCount = markdown.utf8.reduce(into: 0) { count, byte in
+            if byte == 0x0A {
                 count += 1
             }
         }
         let lineCount = markdown.isEmpty
             ? 0
             : newlineCount + (markdown.hasSuffix("\n") ? 0 : 1)
-        let expectedLines = lineCount == 0 ? [] : Array(1...lineCount)
-        let actualLines = mappings.map(\.generatedLine)
-        guard actualLines == expectedLines else {
+        guard mappings.count == lineCount else {
             throw CompilationSourceMapError.incompleteCoverage(
-                expected: expectedLines,
-                actual: actualLines
+                expected: lineCount == 0 ? [] : Array(1...lineCount),
+                actual: mappings.map(\.generatedLine)
             )
         }
 
-        for mapping in mappings {
+        var validatedSourcePaths = Set<String>()
+        validatedSourcePaths.reserveCapacity(16)
+        for (index, mapping) in mappings.enumerated() {
+            guard mapping.generatedLine == index + 1 else {
+                throw CompilationSourceMapError.incompleteCoverage(
+                    expected: lineCount == 0 ? [] : Array(1...lineCount),
+                    actual: mappings.map(\.generatedLine)
+                )
+            }
+
             if mapping.kind == .generatedSeparator {
                 guard mapping.source == nil else {
                     throw CompilationSourceMapError.invalidGeneratedMapping(
@@ -177,11 +189,13 @@ public struct CompilationSourceMap: Codable, Equatable, Sendable {
                     generatedLine: mapping.generatedLine
                 )
             }
-            guard isRootRelativePOSIXPath(source.path) else {
-                throw CompilationSourceMapError.invalidSourcePath(
-                    generatedLine: mapping.generatedLine,
-                    path: source.path
-                )
+            if validatedSourcePaths.insert(source.path).inserted {
+                guard isRootRelativePOSIXPath(source.path) else {
+                    throw CompilationSourceMapError.invalidSourcePath(
+                        generatedLine: mapping.generatedLine,
+                        path: source.path
+                    )
+                }
             }
         }
     }

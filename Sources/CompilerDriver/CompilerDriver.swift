@@ -23,7 +23,14 @@ public struct CompilationResult {
     public let sourceMap: CompilationSourceMap
 
     /// Deterministically encoded source-map JSON.
-    public let sourceMapJSON: String
+    ///
+    /// CLI compilations that do not request `--source-map` avoid the encoding
+    /// cost. Programmatic clients retain the same API and encode on access.
+    public var sourceMapJSON: String {
+        serializedSourceMapJSON ?? ((try? sourceMap.toJSON()) ?? "")
+    }
+
+    private let serializedSourceMapJSON: String?
 
     /// Compilation statistics (if enabled)
     public let statistics: CompilationStats?
@@ -35,14 +42,14 @@ public struct CompilationResult {
         markdown: String,
         manifestJSON: String,
         sourceMap: CompilationSourceMap,
-        sourceMapJSON: String,
+        sourceMapJSON: String? = nil,
         statistics: CompilationStats? = nil,
         resolvedAST: Node? = nil
     ) {
         self.markdown = markdown
         self.manifestJSON = manifestJSON
         self.sourceMap = sourceMap
-        self.sourceMapJSON = sourceMapJSON
+        self.serializedSourceMapJSON = sourceMapJSON
         self.statistics = statistics
         self.resolvedAST = resolvedAST
     }
@@ -329,14 +336,18 @@ public final class CompilerDriver {
                 location: nil
             )
         }
-        let sourceMapJSON: String
-        do {
-            sourceMapJSON = try sourceMap.toJSON()
-        } catch {
-            throw ConcreteCompilerError.internalError(
-                message: "Failed to serialize source map to JSON: \(error)",
-                location: nil
-            )
+        let sourceMapJSON: String?
+        if validatedPaths.sourceMapPath != nil {
+            do {
+                sourceMapJSON = try sourceMap.toJSON()
+            } catch {
+                throw ConcreteCompilerError.internalError(
+                    message: "Failed to serialize source map to JSON: \(error)",
+                    location: nil
+                )
+            }
+        } else {
+            sourceMapJSON = nil
         }
 
         if args.verbose {
@@ -369,7 +380,10 @@ public final class CompilerDriver {
                 logVerbose("  [~] Would write: \(validatedPaths.outputPath) (\(markdown.utf8.count) bytes)")
                 logVerbose("  [~] Would write: \(validatedPaths.manifestPath) (\(manifestJSON.utf8.count) bytes)")
                 if let sourceMapPath = validatedPaths.sourceMapPath {
-                    logVerbose("  [~] Would write: \(sourceMapPath) (\(sourceMapJSON.utf8.count) bytes)")
+                    logVerbose(
+                        "  [~] Would write: \(sourceMapPath) "
+                            + "(\(sourceMapJSON?.utf8.count ?? 0) bytes)"
+                    )
                 }
                 logVerbose("")
             }
@@ -399,9 +413,7 @@ public final class CompilerDriver {
         }
 
         // Calculate statistics if enabled
-        let sourceMapBytes = validatedPaths.sourceMapPath == nil
-            ? 0
-            : sourceMapJSON.utf8.count
+        let sourceMapBytes = sourceMapJSON?.utf8.count ?? 0
         statsCollector.recordOutputBytes(
             markdown.utf8.count + manifestJSON.utf8.count + sourceMapBytes
         )
@@ -650,7 +662,7 @@ public final class CompilerDriver {
     private func writeOutputFiles(
         markdown: String,
         manifestJSON: String,
-        sourceMapJSON: String,
+        sourceMapJSON: String?,
         outputPath: String,
         manifestPath: String,
         sourceMapPath: String?,
@@ -668,6 +680,12 @@ public final class CompilerDriver {
         }
 
         if let sourceMapPath {
+            guard let sourceMapJSON else {
+                throw ConcreteCompilerError.internalError(
+                    message: "Requested source-map JSON was not serialized",
+                    location: nil
+                )
+            }
             do {
                 try fileSystem.writeFile(at: sourceMapPath, content: sourceMapJSON)
             } catch {
@@ -698,47 +716,63 @@ public final class CompilerDriver {
         let rootComponents = URL(fileURLWithPath: canonicalRoot)
             .standardized
             .pathComponents
+        // A Markdown include can produce thousands of mappings for one file.
+        // Canonicalize each source identity once per compilation.
+        var normalizedPaths: [String: String] = [:]
+        normalizedPaths.reserveCapacity(16)
+        var normalizedMappings: [CompilationSourceMapping] = []
+        normalizedMappings.reserveCapacity(sourceMap.mappings.count)
 
-        let normalizedMappings = try sourceMap.mappings.map { mapping in
+        for mapping in sourceMap.mappings {
             guard let source = mapping.source else {
-                return mapping
+                normalizedMappings.append(mapping)
+                continue
             }
 
-            let candidate: String
-            if NSString(string: source.path).isAbsolutePath {
-                candidate = source.path
+            let relativePath: String
+            if let cachedPath = normalizedPaths[source.path] {
+                relativePath = cachedPath
             } else {
-                let rooted = URL(fileURLWithPath: canonicalRoot)
-                    .appendingPathComponent(source.path)
-                    .path
-                candidate = fileSystem.fileExists(at: rooted)
-                    ? rooted
-                    : source.path
+                let candidate: String
+                if NSString(string: source.path).isAbsolutePath {
+                    candidate = source.path
+                } else {
+                    let rooted = URL(fileURLWithPath: canonicalRoot)
+                        .appendingPathComponent(source.path)
+                        .path
+                    candidate = fileSystem.fileExists(at: rooted)
+                        ? rooted
+                        : source.path
+                }
+
+                let canonicalSource = try fileSystem.canonicalizePath(candidate)
+                let sourceComponents = URL(fileURLWithPath: canonicalSource)
+                    .standardized
+                    .pathComponents
+                guard sourceComponents.starts(with: rootComponents),
+                      sourceComponents.count > rootComponents.count
+                else {
+                    throw ConcreteCompilerError.resolutionError(
+                        message: "Source-map input is outside --root: \(canonicalSource)",
+                        location: nil
+                    )
+                }
+
+                relativePath = sourceComponents
+                    .dropFirst(rootComponents.count)
+                    .joined(separator: "/")
+                normalizedPaths[source.path] = relativePath
             }
 
-            let canonicalSource = try fileSystem.canonicalizePath(candidate)
-            let sourceComponents = URL(fileURLWithPath: canonicalSource)
-                .standardized
-                .pathComponents
-            guard sourceComponents.starts(with: rootComponents),
-                  sourceComponents.count > rootComponents.count
-            else {
-                throw ConcreteCompilerError.resolutionError(
-                    message: "Source-map input is outside --root: \(canonicalSource)",
-                    location: nil
-                )
-            }
-
-            let relativePath = sourceComponents
-                .dropFirst(rootComponents.count)
-                .joined(separator: "/")
-            return CompilationSourceMapping(
-                generatedLine: mapping.generatedLine,
-                kind: mapping.kind,
-                source: CompilationSourceSpan(
-                    path: relativePath,
-                    startLine: source.startLine,
-                    endLine: source.endLine
+            normalizedMappings.append(
+                CompilationSourceMapping(
+                    generatedLine: mapping.generatedLine,
+                    kind: mapping.kind,
+                    source: CompilationSourceSpan(
+                        path: relativePath,
+                        startLine: source.startLine,
+                        endLine: source.endLine
+                    )
                 )
             )
         }

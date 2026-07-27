@@ -1176,6 +1176,47 @@ final class CompilerDriverTests: XCTestCase {
         }
     }
 
+    func testSourceMapNormalizesEachUniqueSourcePathOnce() throws {
+        let project = tempURL("source-map-path-memoization-project")
+        try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
+        let root = project.appendingPathComponent("root.hc")
+        let body = project.appendingPathComponent("body.md")
+        try "\"Specification\"\n    \"body.md\"\n".write(
+            to: root,
+            atomically: true,
+            encoding: .utf8
+        )
+        let bodyContent = (1...2_000)
+            .map { "Line \($0)" }
+            .joined(separator: "\n") + "\n"
+        try bodyContent.write(to: body, atomically: true, encoding: .utf8)
+
+        let fileSystem = SequencedReadFileSystem()
+        let result = try CompilerDriver(fileSystem: fileSystem).compile(
+            CompilerArguments(
+                input: root.path,
+                output: tempURL("source-map-path-memoization.md").path,
+                manifest: tempURL("source-map-path-memoization.manifest.json").path,
+                sourceMap: tempURL("source-map-path-memoization.map.json").path,
+                root: project.path,
+                mode: .strict,
+                verbose: false,
+                stats: false,
+                dryRun: true
+            )
+        )
+
+        XCTAssertEqual(
+            result.sourceMap.mappings.filter { $0.source?.path == "body.md" }.count,
+            2_000
+        )
+        XCTAssertLessThan(
+            fileSystem.canonicalizeCount(for: body.path),
+            20,
+            "A source path must be canonicalized per compilation, not per generated line"
+        )
+    }
+
     func testManifestAndMarkdownUseOneImmutableSourceSnapshot() throws {
         let project = tempURL("immutable-snapshot-project")
         try FileManager.default.createDirectory(at: project, withIntermediateDirectories: true)
@@ -1287,6 +1328,7 @@ private final class SequencedReadFileSystem: FileSystem {
     private let base = LocalFileSystem()
     private var readSequences: [String: [String]] = [:]
     private var readCounts: [String: Int] = [:]
+    private var canonicalizeCounts: [String: Int] = [:]
     var failingWritePath: String?
     private(set) var writePaths: [String] = []
 
@@ -1296,6 +1338,10 @@ private final class SequencedReadFileSystem: FileSystem {
 
     func readCount(for path: String) -> Int {
         readCounts[canonical(path), default: 0]
+    }
+
+    func canonicalizeCount(for path: String) -> Int {
+        canonicalizeCounts[canonical(path), default: 0]
     }
 
     func readFile(at path: String) throws -> String {
@@ -1313,7 +1359,9 @@ private final class SequencedReadFileSystem: FileSystem {
     }
 
     func canonicalizePath(_ path: String) throws -> String {
-        try base.canonicalizePath(path)
+        let canonicalPath = try base.canonicalizePath(path)
+        canonicalizeCounts[canonicalPath, default: 0] += 1
+        return canonicalPath
     }
 
     func currentDirectory() -> String {
