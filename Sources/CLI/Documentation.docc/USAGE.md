@@ -56,7 +56,7 @@ Options take values and can be specified in short (`-`) or long (`--`) form.
 ### `--output` / `-o`
 
 **Type:** File path
-**Default:** `out.md`
+**Default:** Input path with `.hc` replaced by `.md`
 **Description:** Path where compiled Markdown will be written
 
 **Syntax:**
@@ -88,7 +88,7 @@ hyperprompt root.hc --output "my output.md"
 ### `--manifest` / `-m`
 
 **Type:** File path
-**Default:** `manifest.json`
+**Default:** `<output>.manifest.json`
 **Description:** Path where compilation manifest JSON will be written
 
 **Syntax:**
@@ -110,38 +110,57 @@ hyperprompt root.hc -m ./build/manifest.json
 
 **Manifest Contents:**
 The manifest file contains:
-- List of all referenced files
-- Compilation statistics (line count, node count, max depth)
-- Dependency graph for circular reference detection
-- Compiler version and metadata
+- Every normalized `.hc` and `.md` source with SHA-256, byte size, and type
+- Sorted direct include edges
+- Root source path relative to `--root`
+- Compiler version and deterministic build timestamp
+
+Statistics requested with `--stats` are printed separately and are not stored
+in this artifact.
 
 **Example manifest:**
 ```json
 {
-  "version": "0.1.0",
-  "timestamp": "2025-12-12T20:38:35Z",
-  "statistics": {
-    "lines": 42,
-    "nodes": 15,
-    "maxDepth": 3,
-    "totalReferences": 8
-  },
-  "files": [
-    "root.hc",
-    "sections/intro.md",
-    "sections/details.hc"
+  "dependencies": [
+    {
+      "from": "root.hc",
+      "to": "sections/intro.md"
+    }
   ],
-  "dependencies": {
-    "root.hc": ["sections/intro.md", "sections/details.hc"],
-    "sections/details.hc": ["subsections/more.md"]
-  }
+  "root": "root.hc",
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "path": "root.hc",
+      "sha256": "<64 lowercase hex characters>",
+      "size": 42,
+      "type": "hypercode"
+    }
+  ],
+  "timestamp": "2025-12-12T20:38:35Z",
+  "version": "0.1.0"
 }
 ```
+
+### `--source-map`
+
+**Type:** File path  
+**Default:** Disabled  
+**Description:** Optional versioned JSON mapping every generated Markdown line
+to its `.hc` node or inclusive `.md` source span
+
+```bash
+hyperprompt root.hc --source-map build/root.map.json
+```
+
+The artifact uses one-based line numbers, root-relative paths, a null source
+for compiler-generated separators, and `outputSha256` to bind mappings to the
+exact Markdown bytes.
 
 ### `--root` / `-r`
 
 **Type:** Directory path
-**Default:** `.` (current directory)
+**Default:** Parent directory of the input file
 **Description:** Root directory for resolving file references
 
 **Syntax:**
@@ -329,7 +348,8 @@ hyperprompt input.hc --dry-run
 
 **Behavior:**
 - Performs full compilation pipeline
-- Skips writing `--output` and `--manifest` files
+- Builds and validates Markdown, manifest, and source map in memory
+- Skips writing `--output`, `--manifest`, and `--source-map` files
 - Useful for validation before actual compilation
 - Exit codes indicate success/failure normally
 
@@ -368,17 +388,20 @@ hyperprompt -h
 OVERVIEW: Compile Hypercode to Markdown with manifest generation
 
 USAGE: hyperprompt <input> [--output <output>] [--manifest <manifest>]
-                          [--root <root>] [--lenient] [--verbose]
+                          [--source-map <source-map>] [--root <root>]
+                          [--lenient] [--verbose]
                           [--stats] [--dry-run] [--version] [--help]
 
 ARGUMENTS:
   <input>                 Path to root .hc file to compile
 
 OPTIONS:
-  -o, --output <output>   Output Markdown file (default: out.md)
+  -o, --output <output>   Output Markdown file (default: <input>.md)
   -m, --manifest <manifest>
-                          Output manifest JSON file (default: manifest.json)
-  -r, --root <root>       Root directory for file resolution (default: .)
+                          Output manifest JSON file (default: <output>.manifest.json)
+  --source-map <source-map>
+                          Output source-map JSON file
+  -r, --root <root>       Root directory for file resolution (default: input parent)
 
 FLAGS:
   --lenient               Treat missing references as inline text
@@ -415,7 +438,7 @@ hyperprompt version 0.1.0
 ```bash
 # Compile with defaults
 hyperprompt root.hc
-# Creates: out.md, manifest.json
+# Creates: root.md, root.md.manifest.json
 ```
 
 ### Specified Output Filenames
@@ -424,6 +447,16 @@ hyperprompt root.hc
 hyperprompt root.hc --output compiled.md --manifest meta.json
 # Short form
 hyperprompt root.hc -o compiled.md -m meta.json
+```
+
+### Specification Output with Source Map
+
+```bash
+hyperprompt compile root.hc \
+  --root . \
+  --output build/specification.md \
+  --manifest build/specification.manifest.json \
+  --source-map build/specification.map.json
 ```
 
 ### Project-Specific Root Directory
@@ -527,7 +560,7 @@ hyperprompt root.hc -o file.md -m manifest.json -r ./project
 hyperprompt root.hc --lenient --verbose --stats
 
 # All options
-hyperprompt root.hc -o out.md -m meta.json -r . --verbose --stats --dry-run
+hyperprompt root.hc -o out.md -m meta.json --source-map out.map.json -r . --verbose --stats --dry-run
 ```
 
 ### Invalid Combinations
@@ -562,9 +595,10 @@ hyperprompt root.hc -o file1.md -o file2.md
 
 - [README.md](../README.md) — Quick start and overview
 - [LANGUAGE.md](LANGUAGE.md) — Hypercode syntax specification
+- [RFC_ASSEMBLY.md](RFC_ASSEMBLY.md) — Modular specification assembly
 - [ERROR_CODES.md](ERROR_CODES.md) — Detailed error descriptions
 - [TROUBLESHOOTING.md](TROUBLESHOOTING.md) — Solutions to common problems
 
 ---
 
-**Last Updated:** December 12, 2025
+**Last Updated:** July 27, 2026

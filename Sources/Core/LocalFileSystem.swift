@@ -42,7 +42,7 @@ public struct LocalFileSystem: FileSystem {
     /// - Throws: CompilerError with category `.io` if path cannot be resolved
     public func canonicalizePath(_ path: String) throws -> String {
         let url = URL(fileURLWithPath: path)
-        let standardized = url.standardized
+        let standardized = url.standardized.resolvingSymlinksInPath()
         return standardized.path
     }
 

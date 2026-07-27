@@ -68,6 +68,21 @@ final class ArgumentParsingTests: XCTestCase {
         XCTAssertNil(command.manifest)
     }
 
+    // MARK: - Source Map Option Tests
+
+    func testSourceMapOptionIsRecognized() throws {
+        let command = try Hyperprompt.parseAsRoot([
+            "input.hc",
+            "--source-map", "output.map.json",
+        ]) as! CompileCommand
+        XCTAssertEqual(command.sourceMap, "output.map.json")
+    }
+
+    func testSourceMapOptionDefaultIsNil() throws {
+        let command = try Hyperprompt.parseAsRoot(["input.hc"]) as! CompileCommand
+        XCTAssertNil(command.sourceMap)
+    }
+
     // MARK: - Root Option Tests
 
     func testRootOptionShortForm() throws {
@@ -318,6 +333,7 @@ final class ArgumentParsingTests: XCTestCase {
         XCTAssertFalse(args.verbose)
         XCTAssertFalse(args.stats)
         XCTAssertFalse(args.dryRun)
+        XCTAssertFalse(args.collectSourceMap)
     }
 
     // MARK: - Edge Cases Tests

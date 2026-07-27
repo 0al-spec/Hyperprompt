@@ -54,6 +54,9 @@ public struct ReferenceResolver {
     /// Direct dependencies discovered while resolving the current file.
     private var recordedDependencies: Set<String> = []
 
+    /// Exact source bytes used to build the resolved AST.
+    private var recordedSourceContents: [String: String] = [:]
+
     /// Initialize a new reference resolver.
     ///
     /// - Parameters:
@@ -82,6 +85,11 @@ public struct ReferenceResolver {
     /// Direct hypercode file dependencies recorded during resolution.
     public var dependencies: Set<String> {
         recordedDependencies
+    }
+
+    /// Immutable compilation snapshot keyed by canonical source path.
+    public var sourceContents: [String: String] {
+        recordedSourceContents
     }
 
     // MARK: - Main Resolution API
@@ -341,7 +349,7 @@ public struct ReferenceResolver {
     ///   - path: The file path
     ///   - node: The source node for error location
     /// - Returns: Result with `.markdownFile` or error
-    private func resolveMarkdown(_ path: String, node: Node) -> Result<
+    private mutating func resolveMarkdown(_ path: String, node: Node) -> Result<
         ResolutionKind, ResolutionError
     > {
         let fullPath = constructFullPath(path)
@@ -358,8 +366,12 @@ public struct ReferenceResolver {
             // Note: Content loading is placeholder for B3: FileLoader integration
             do {
                 let content = try fileSystem.readFile(at: fullPath)
+                let canonicalFullPath = canonicalPath(fullPath)
+                guard recordSourceContent(content, at: canonicalFullPath) else {
+                    return .failure(sourceChangedDuringCompilation(path: canonicalFullPath))
+                }
                 statsCollector?.recordMarkdownFile(
-                    path: canonicalPath(fullPath),
+                    path: canonicalFullPath,
                     bytes: content.utf8.count
                 )
                 return .success(.markdownFile(path: path, content: content))
@@ -478,10 +490,21 @@ public struct ReferenceResolver {
                 bytes: content.utf8.count
             )
 
-            if let cachedProgram = parsedFileCache?.cachedProgram(
+            if mode == .strict,
+               let cachedProgram = parsedFileCache?.cachedResolvedProgram(
                 for: canonicalFullPath,
-                checksum: checksum
+                checksum: checksum,
+                rootPath: rootPath,
+                mode: mode,
+                fileSystem: fileSystem
             ) {
+                if let cachedSources = parsedFileCache?.sourceContents(for: canonicalFullPath) {
+                    guard mergeSourceContents(cachedSources) else {
+                        return .failure(
+                            sourceChangedDuringCompilation(path: canonicalFullPath)
+                        )
+                    }
+                }
                 return .success(cachedProgram.root)
             }
 
@@ -512,12 +535,31 @@ public struct ReferenceResolver {
             switch childResolver.resolveTree(root: program.root) {
             case .success:
                 dependencyTracker = childResolver.dependencyTracker
-                parsedFileCache?.store(
-                    path: canonicalFullPath,
-                    checksum: checksum,
-                    program: program,
-                    dependencies: childResolver.dependencies
-                )
+                var sourceContents = childResolver.sourceContents
+                if let childContent = sourceContents[canonicalFullPath],
+                   childContent != content
+                {
+                    return .failure(
+                        sourceChangedDuringCompilation(path: canonicalFullPath)
+                    )
+                }
+                sourceContents[canonicalFullPath] = content
+                guard mergeSourceContents(sourceContents) else {
+                    return .failure(
+                        sourceChangedDuringCompilation(path: canonicalFullPath)
+                    )
+                }
+                if mode == .strict {
+                    parsedFileCache?.store(
+                        path: canonicalFullPath,
+                        checksum: checksum,
+                        program: program,
+                        dependencies: childResolver.dependencies,
+                        sourceContents: sourceContents,
+                        resolutionRoot: canonicalPath(rootPath),
+                        resolutionMode: mode
+                    )
+                }
                 return .success(program.root)
             case .failure(let error):
                 dependencyTracker = childResolver.dependencyTracker
@@ -599,6 +641,33 @@ public struct ReferenceResolver {
             location: node.location,
             children: clonedChildren,
             resolution: clonedResolution
+        )
+    }
+
+    private mutating func recordSourceContent(_ content: String, at path: String) -> Bool {
+        if let existing = recordedSourceContents[path] {
+            return existing == content
+        }
+        recordedSourceContents[path] = content
+        return true
+    }
+
+    private mutating func mergeSourceContents(_ contents: [String: String]) -> Bool {
+        for (path, content) in contents {
+            if let existing = recordedSourceContents[path],
+               existing != content
+            {
+                return false
+            }
+        }
+        recordedSourceContents.merge(contents) { existing, _ in existing }
+        return true
+    }
+
+    private func sourceChangedDuringCompilation(path: String) -> ResolutionError {
+        ResolutionError(
+            message: "Source changed during compilation: \(path)",
+            location: nil
         )
     }
 

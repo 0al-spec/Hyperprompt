@@ -10,6 +10,14 @@ public struct CompilerArguments {
     /// Path to output manifest JSON file
     public let manifest: String
 
+    /// Optional path to a versioned compilation source-map JSON file
+    public let sourceMap: String?
+
+    /// Collect an exact in-memory source map without writing a sidecar.
+    ///
+    /// A non-nil `sourceMap` path also enables collection automatically.
+    public let collectSourceMap: Bool
+
     /// Root directory for resolving file references
     public let root: String
 
@@ -39,6 +47,8 @@ public struct CompilerArguments {
     ///   - input: Path to root .hc file to compile
     ///   - output: Path to output Markdown file
     ///   - manifest: Path to output manifest JSON file
+    ///   - sourceMap: Optional path to output source-map JSON file
+    ///   - collectSourceMap: Collect an in-memory map without a sidecar
     ///   - root: Root directory for resolving file references
     ///   - mode: Compilation mode (strict or lenient)
     ///   - verbose: Enable verbose logging
@@ -48,6 +58,8 @@ public struct CompilerArguments {
         input: String,
         output: String,
         manifest: String,
+        sourceMap: String? = nil,
+        collectSourceMap: Bool = false,
         root: String,
         mode: CompilationMode,
         verbose: Bool,
@@ -57,6 +69,8 @@ public struct CompilerArguments {
         self.input = input
         self.output = output
         self.manifest = manifest
+        self.sourceMap = sourceMap
+        self.collectSourceMap = collectSourceMap
         self.root = root
         self.mode = mode
         self.verbose = verbose

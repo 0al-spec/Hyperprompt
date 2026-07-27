@@ -1,6 +1,20 @@
 import Foundation
 import Core
 
+/// One direct include edge in a compilation.
+///
+/// Both paths are normalized relative to the compilation root. The edge is a
+/// physical assembly dependency, not a semantic or normative dependency.
+public struct ManifestDependency: Codable, Equatable, Hashable, Sendable {
+    public let from: String
+    public let to: String
+
+    public init(from: String, to: String) {
+        self.from = from
+        self.to = to
+    }
+}
+
 /// Top-level manifest structure for compilation provenance.
 ///
 /// The Manifest represents the complete record of a compilation session,
@@ -10,10 +24,17 @@ import Core
 /// Example JSON structure:
 /// ```json
 /// {
-///   "root": "/path/to/root",
+///   "dependencies": [
+///     {
+///       "from": "root.hc",
+///       "to": "sections/introduction.md"
+///     }
+///   ],
+///   "root": "root.hc",
+///   "schemaVersion": 1,
 ///   "sources": [
 ///     {
-///       "path": "input.hc",
+///       "path": "root.hc",
 ///       "sha256": "abc123...",
 ///       "size": 1024,
 ///       "type": "hypercode"
@@ -30,12 +51,18 @@ import Core
 /// - Sources array sorted by path
 /// - Valid JSON parseable by standard parsers
 public struct Manifest: Codable {
-    /// Compilation root directory path.
+    /// Sorted direct include edges discovered during this compilation.
+    public let dependencies: [ManifestDependency]
+
+    /// Root Hypercode source path.
     ///
-    /// - Absolute or relative path to the root directory
-    /// - All source file paths are relative to this root
-    /// - Example: `"/home/user/project"` or `"./docs"`
+    /// - Relative to the compilation `--root`
+    /// - Uses forward slashes and has no leading `./`
+    /// - Example: `"root.hc"` or `"drafts/specification.hc"`
     public let root: String
+
+    /// Version of the manifest artifact contract.
+    public let schemaVersion: Int
 
     /// Array of source file metadata entries.
     ///
@@ -65,10 +92,49 @@ public struct Manifest: Codable {
     ///   - sources: Array of manifest entries (will be sorted by path)
     ///   - timestamp: ISO 8601 timestamp string
     ///   - version: Compiler version string
-    public init(root: String, sources: [ManifestEntry], timestamp: String, version: String) {
+    public init(
+        root: String,
+        sources: [ManifestEntry],
+        dependencies: [ManifestDependency] = [],
+        schemaVersion: Int = 1,
+        timestamp: String,
+        version: String
+    ) {
+        self.dependencies = Array(Set(dependencies)).sorted {
+            ($0.from, $0.to) < ($1.from, $1.to)
+        }
         self.root = root
+        self.schemaVersion = schemaVersion
         self.sources = sources.sorted { $0.path < $1.path }  // Ensure deterministic order
         self.timestamp = timestamp
         self.version = version
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case dependencies
+        case root
+        case schemaVersion
+        case sources
+        case timestamp
+        case version
+    }
+
+    /// Decode manifests created before dependency edges were introduced.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(
+            root: try container.decode(String.self, forKey: .root),
+            sources: try container.decode([ManifestEntry].self, forKey: .sources),
+            dependencies: try container.decodeIfPresent(
+                [ManifestDependency].self,
+                forKey: .dependencies
+            ) ?? [],
+            schemaVersion: try container.decodeIfPresent(
+                Int.self,
+                forKey: .schemaVersion
+            ) ?? 0,
+            timestamp: try container.decode(String.self, forKey: .timestamp),
+            version: try container.decode(String.self, forKey: .version)
+        )
     }
 }

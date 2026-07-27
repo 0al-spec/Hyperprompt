@@ -19,23 +19,60 @@ public struct CompilationResult {
     /// Manifest JSON content
     public let manifestJSON: String
 
+    /// Exact generated-line provenance when source-map collection was requested.
+    public let sourceMap: CompilationSourceMap?
+
+    /// Deterministically encoded source-map JSON when collection was requested.
+    ///
+    /// CLI compilations request collection with `--source-map`. Programmatic
+    /// clients set `CompilerArguments.collectSourceMap` and encode lazily here.
+    public var sourceMapJSON: String? {
+        guard let sourceMap else {
+            return nil
+        }
+        return serializedSourceMapJSON ?? (try? sourceMap.toJSON())
+    }
+
+    private let serializedSourceMapJSON: String?
+
     /// Compilation statistics (if enabled)
     public let statistics: CompilationStats?
 
-    /// Resolved AST root node (optional, for EditorEngine source map generation)
-    ///
-    /// NOTE: This field is primarily used by EditorEngine for improved source map generation.
-    /// Regular CLI compilation doesn't need the AST after emission.
-    ///
-    /// TODO: EE-EXT-3-FULL - Replace AST-based source map generation with proper Emitter integration.
-    /// See DOCS/INPROGRESS/EE-EXT-3-FULL_Complete_Source_Map_Implementation.md for full implementation plan.
+    /// Resolved AST root retained for programmatic compiler clients.
     public let resolvedAST: Node?
 
-    public init(markdown: String, manifestJSON: String, statistics: CompilationStats? = nil, resolvedAST: Node? = nil) {
+    public init(
+        markdown: String,
+        manifestJSON: String,
+        sourceMap: CompilationSourceMap? = nil,
+        sourceMapJSON: String? = nil,
+        statistics: CompilationStats? = nil,
+        resolvedAST: Node? = nil
+    ) {
         self.markdown = markdown
         self.manifestJSON = manifestJSON
+        self.sourceMap = sourceMap
+        self.serializedSourceMapJSON = sourceMapJSON
         self.statistics = statistics
         self.resolvedAST = resolvedAST
+    }
+
+    /// Source-compatible initializer for clients that do not request an exact
+    /// compiler source map.
+    @available(*, deprecated, message: "Use init(markdown:manifestJSON:sourceMap:sourceMapJSON:statistics:resolvedAST:)")
+    public init(
+        markdown: String,
+        manifestJSON: String,
+        statistics: CompilationStats? = nil,
+        resolvedAST: Node? = nil
+    ) {
+        self.init(
+            markdown: markdown,
+            manifestJSON: manifestJSON,
+            sourceMap: nil,
+            statistics: statistics,
+            resolvedAST: resolvedAST
+        )
     }
 }
 
@@ -140,6 +177,9 @@ public final class CompilerDriver {
             logVerbose("  [✓] Root directory: \(validatedPaths.rootPath)")
             logVerbose("  [✓] Output file: \(validatedPaths.outputPath)")
             logVerbose("  [✓] Manifest file: \(validatedPaths.manifestPath)")
+            if let sourceMapPath = validatedPaths.sourceMapPath {
+                logVerbose("  [✓] Source-map file: \(sourceMapPath)")
+            }
             logVerbose("")
         }
 
@@ -165,18 +205,26 @@ public final class CompilerDriver {
         )
 
         let resolvedProgram: Program
-        if let cachedProgram = parsedFileCache.cachedProgram(
+        let compilationSourceContents: [String: String]
+        if args.mode == .strict,
+           let cachedProgram = parsedFileCache.cachedResolvedProgram(
             for: canonicalInputPath,
-            checksum: inputChecksum
+            checksum: inputChecksum,
+            rootPath: validatedPaths.rootPath,
+            mode: .strict,
+            fileSystem: fileSystem
         ) {
             if args.verbose {
                 logVerbose("  [CACHE] Reusing cached AST for \(validatedPaths.inputPath)")
             }
             resolvedProgram = cachedProgram
+            compilationSourceContents = parsedFileCache.sourceContents(
+                for: canonicalInputPath
+            )
         } else {
             let program = try parseInputFile(
                 content: inputContent,
-                path: validatedPaths.inputPath,
+                path: canonicalInputPath,
                 verbose: args.verbose
             )
 
@@ -190,12 +238,30 @@ public final class CompilerDriver {
             )
 
             resolvedProgram = resolution.program
-            parsedFileCache.store(
-                path: canonicalInputPath,
-                checksum: inputChecksum,
-                program: resolvedProgram,
-                dependencies: resolution.dependencies
-            )
+            var sourceContents = resolution.sourceContents
+            if let resolvedRootContent = sourceContents[canonicalInputPath],
+               resolvedRootContent != inputContent
+            {
+                throw ConcreteCompilerError.resolutionError(
+                    message: "Root source changed during compilation: \(canonicalInputPath)",
+                    location: nil
+                )
+            }
+            sourceContents[canonicalInputPath] = inputContent
+            compilationSourceContents = sourceContents
+            if args.mode == .strict {
+                parsedFileCache.store(
+                    path: canonicalInputPath,
+                    checksum: inputChecksum,
+                    program: resolvedProgram,
+                    dependencies: resolution.dependencies,
+                    sourceContents: sourceContents,
+                    resolutionRoot: try fileSystem.canonicalizePath(
+                        validatedPaths.rootPath
+                    ),
+                    resolutionMode: .strict
+                )
+            }
         }
 
         if args.verbose {
@@ -214,15 +280,67 @@ public final class CompilerDriver {
             logVerbose("")
         }
 
+        let provenance = try CompilationProvenanceCollector(fileSystem: fileSystem).collect(
+            program: resolvedProgram,
+            inputPath: validatedPaths.inputPath,
+            rootPath: validatedPaths.rootPath,
+            sourceContents: compilationSourceContents
+        )
+        try validateArtifactDestinationsDoNotOverwriteSources(
+            validatedPaths,
+            provenance: provenance
+        )
+
         // Phase 4: Emit Markdown
         if args.verbose {
             logVerbose("[PHASE 4] Emit phase - generating Markdown")
         }
 
-        let markdown = try emitMarkdown(
+        let shouldCollectSourceMap = validatedPaths.sourceMapPath != nil
+            || args.collectSourceMap
+        let emission = try emitMarkdown(
             program: resolvedProgram,
+            collectSourceMap: shouldCollectSourceMap,
             verbose: args.verbose
         )
+        let markdown = emission.markdown
+        let sourceMap: CompilationSourceMap?
+        if let emittedSourceMap = emission.sourceMap {
+            let normalizedSourceMap = try normalizeSourceMap(
+                emittedSourceMap,
+                rootPath: validatedPaths.rootPath
+            )
+            do {
+                try normalizedSourceMap.validate(for: markdown)
+            } catch {
+                throw ConcreteCompilerError.internalError(
+                    message: "Generated source map failed validation: \(error)",
+                    location: nil
+                )
+            }
+            sourceMap = normalizedSourceMap
+        } else {
+            sourceMap = nil
+        }
+        let sourceMapJSON: String?
+        if validatedPaths.sourceMapPath != nil {
+            guard let sourceMap else {
+                throw ConcreteCompilerError.internalError(
+                    message: "Requested source map was not collected",
+                    location: nil
+                )
+            }
+            do {
+                sourceMapJSON = try sourceMap.toJSON()
+            } catch {
+                throw ConcreteCompilerError.internalError(
+                    message: "Failed to serialize source map to JSON: \(error)",
+                    location: nil
+                )
+            }
+        } else {
+            sourceMapJSON = nil
+        }
 
         if args.verbose {
             logVerbose("  [✓] Generated successfully")
@@ -236,7 +354,8 @@ public final class CompilerDriver {
         }
 
         let manifestJSON = try generateManifest(
-            rootPath: validatedPaths.inputPath,
+            provenance: provenance,
+            timestampSourcePath: validatedPaths.inputPath,
             verbose: args.verbose
         )
 
@@ -252,6 +371,12 @@ public final class CompilerDriver {
                 logVerbose("[DRY RUN] Skipping file writes")
                 logVerbose("  [~] Would write: \(validatedPaths.outputPath) (\(markdown.utf8.count) bytes)")
                 logVerbose("  [~] Would write: \(validatedPaths.manifestPath) (\(manifestJSON.utf8.count) bytes)")
+                if let sourceMapPath = validatedPaths.sourceMapPath {
+                    logVerbose(
+                        "  [~] Would write: \(sourceMapPath) "
+                            + "(\(sourceMapJSON?.utf8.count ?? 0) bytes)"
+                    )
+                }
                 logVerbose("")
             }
         } else {
@@ -262,20 +387,28 @@ public final class CompilerDriver {
             try writeOutputFiles(
                 markdown: markdown,
                 manifestJSON: manifestJSON,
+                sourceMapJSON: sourceMapJSON,
                 outputPath: validatedPaths.outputPath,
                 manifestPath: validatedPaths.manifestPath,
+                sourceMapPath: validatedPaths.sourceMapPath,
                 verbose: args.verbose
             )
 
             if args.verbose {
                 logVerbose("  [✓] Output written: \(validatedPaths.outputPath)")
                 logVerbose("  [✓] Manifest written: \(validatedPaths.manifestPath)")
+                if let sourceMapPath = validatedPaths.sourceMapPath {
+                    logVerbose("  [✓] Source map written: \(sourceMapPath)")
+                }
                 logVerbose("")
             }
         }
 
         // Calculate statistics if enabled
-        statsCollector.recordOutputBytes(markdown.utf8.count + manifestJSON.utf8.count)
+        let sourceMapBytes = sourceMapJSON?.utf8.count ?? 0
+        statsCollector.recordOutputBytes(
+            markdown.utf8.count + manifestJSON.utf8.count + sourceMapBytes
+        )
         statsCollector.updateMaxDepth(resolvedProgram.maxDepth)
 
         let stats = statsCollector.finish()
@@ -291,6 +424,8 @@ public final class CompilerDriver {
         return CompilationResult(
             markdown: markdown,
             manifestJSON: manifestJSON,
+            sourceMap: sourceMap,
+            sourceMapJSON: sourceMapJSON,
             statistics: stats,
             resolvedAST: resolvedProgram.root
         )
@@ -304,6 +439,7 @@ public final class CompilerDriver {
         let rootPath: String
         let outputPath: String
         let manifestPath: String
+        let sourceMapPath: String?
     }
 
     /// Validate and canonicalize all paths.
@@ -337,12 +473,40 @@ public final class CompilerDriver {
         let rootPath = args.root
         let outputPath = args.output
         let manifestPath = args.manifest
+        let sourceMapPath = args.sourceMap
+
+        let canonicalInput = try fileSystem.canonicalizePath(inputPath)
+        let artifactDestinations: [(name: String, path: String)] = [
+            ("output", outputPath),
+            ("manifest", manifestPath),
+        ] + (sourceMapPath.map { [("source map", $0)] } ?? [])
+        var destinationsByCanonicalPath: [String: String] = [:]
+        for destination in artifactDestinations {
+            let canonicalDestination = try fileSystem.canonicalizePath(destination.path)
+            if canonicalDestination == canonicalInput {
+                throw ConcreteCompilerError.ioError(
+                    message: "\(destination.name.capitalized) path would overwrite input: "
+                        + destination.path,
+                    location: nil
+                )
+            }
+            if let existing = destinationsByCanonicalPath[canonicalDestination] {
+                throw ConcreteCompilerError.ioError(
+                    message: "Artifact destinations must be distinct: "
+                        + "\(existing) and \(destination.name) resolve to "
+                        + canonicalDestination,
+                    location: nil
+                )
+            }
+            destinationsByCanonicalPath[canonicalDestination] = destination.name
+        }
 
         return ValidatedPaths(
             inputPath: inputPath,
             rootPath: rootPath,
             outputPath: outputPath,
-            manifestPath: manifestPath
+            manifestPath: manifestPath,
+            sourceMapPath: sourceMapPath
         )
     }
 
@@ -395,7 +559,11 @@ public final class CompilerDriver {
         verbose: Bool,
         statsCollector: StatsCollector?,
         currentFilePath: String
-    ) throws -> (program: Program, dependencies: Set<String>) {
+    ) throws -> (
+        program: Program,
+        dependencies: Set<String>,
+        sourceContents: [String: String]
+    ) {
         let resolutionMode: ResolutionMode = mode == .strict ? .strict : .lenient
 
         let dependencyTracker = DependencyTracker(fileSystem: fileSystem)
@@ -424,41 +592,63 @@ public final class CompilerDriver {
             )
         }
 
-        return (Program(root: mutableRoot, sourceFile: program.sourceFile), resolver.dependencies)
+        return (
+            Program(root: mutableRoot, sourceFile: program.sourceFile),
+            resolver.dependencies,
+            resolver.sourceContents
+        )
     }
 
     /// Emit Markdown from resolved AST.
-    private func emitMarkdown(program: Program, verbose: Bool) throws -> String {
+    private func emitMarkdown(
+        program: Program,
+        collectSourceMap: Bool,
+        verbose: Bool
+    ) throws -> (markdown: String, sourceMap: CompilationSourceMap?) {
         let emitter = MarkdownEmitter(config: EmitterConfig())
-        let markdown = emitter.emit(program.root)
+        let emission: (markdown: String, sourceMap: CompilationSourceMap?)
+        if collectSourceMap {
+            let mappedEmission = emitter.emitWithSourceMap(program.root)
+            emission = (mappedEmission.markdown, mappedEmission.sourceMap)
+        } else {
+            emission = (emitter.emit(program.root), nil)
+        }
 
         if verbose {
             logVerbose("  [EMITTER] Generated Markdown output")
         }
 
-        return markdown
+        return emission
     }
 
     /// Generate manifest JSON.
     private func generateManifest(
-        rootPath: String,
+        provenance: CompilationProvenance,
+        timestampSourcePath: String,
         verbose: Bool,
         timestampProvider: DeterministicTimestampProvider = DeterministicTimestampProvider()
     ) throws -> String {
         let generator = ManifestGenerator()
-        let builder = ManifestBuilder()  // Empty for now - will be populated in future
+        let builder = ManifestBuilder()
+        for source in provenance.sources {
+            builder.add(entry: source)
+        }
         let manifest = generator.generate(
             builder: builder,
+            dependencies: provenance.dependencies,
             version: version,
-            root: rootPath,
-            timestamp: timestampProvider.resolveDate(for: rootPath)
+            root: provenance.rootSource,
+            timestamp: timestampProvider.resolveDate(for: timestampSourcePath)
         )
 
         do {
             let json = try generator.toJSON(manifest: manifest)
 
             if verbose {
-                logVerbose("  [MANIFEST] Generated JSON (stub - no entries yet)")
+                logVerbose(
+                    "  [MANIFEST] Recorded \(provenance.sources.count) sources "
+                        + "and \(provenance.dependencies.count) include edges"
+                )
             }
 
             return json
@@ -470,25 +660,18 @@ public final class CompilerDriver {
         }
     }
 
-    /// Write output files atomically.
+    /// Write each output artifact using the file-system implementation.
     private func writeOutputFiles(
         markdown: String,
         manifestJSON: String,
+        sourceMapJSON: String?,
         outputPath: String,
         manifestPath: String,
+        sourceMapPath: String?,
         verbose: Bool
     ) throws {
-        // Write Markdown output
-        do {
-            try fileSystem.writeFile(at: outputPath, content: markdown)
-        } catch {
-            throw ConcreteCompilerError.ioError(
-                message: "Failed to write output file: \(outputPath)",
-                location: nil
-            )
-        }
-
-        // Write manifest JSON
+        // Publish metadata first. The Markdown document is written last and
+        // becomes visible only after all requested sidecars were written.
         do {
             try fileSystem.writeFile(at: manifestPath, content: manifestJSON)
         } catch {
@@ -497,12 +680,144 @@ public final class CompilerDriver {
                 location: nil
             )
         }
+
+        if let sourceMapPath {
+            guard let sourceMapJSON else {
+                throw ConcreteCompilerError.internalError(
+                    message: "Requested source-map JSON was not serialized",
+                    location: nil
+                )
+            }
+            do {
+                try fileSystem.writeFile(at: sourceMapPath, content: sourceMapJSON)
+            } catch {
+                throw ConcreteCompilerError.ioError(
+                    message: "Failed to write source map file: \(sourceMapPath)",
+                    location: nil
+                )
+            }
+        }
+
+        do {
+            try fileSystem.writeFile(at: outputPath, content: markdown)
+        } catch {
+            throw ConcreteCompilerError.ioError(
+                message: "Failed to write output file: \(outputPath)",
+                location: nil
+            )
+        }
     }
 
     // MARK: - Utility Methods
 
+    private func normalizeSourceMap(
+        _ sourceMap: CompilationSourceMap,
+        rootPath: String
+    ) throws -> CompilationSourceMap {
+        let canonicalRoot = try fileSystem.canonicalizePath(rootPath)
+        let rootComponents = URL(fileURLWithPath: canonicalRoot)
+            .standardized
+            .pathComponents
+        // A Markdown include can produce thousands of mappings for one file.
+        // Canonicalize each source identity once per compilation.
+        var normalizedPaths: [String: String] = [:]
+        normalizedPaths.reserveCapacity(16)
+        var normalizedMappings: [CompilationSourceMapping] = []
+        normalizedMappings.reserveCapacity(sourceMap.mappings.count)
+
+        for mapping in sourceMap.mappings {
+            guard let source = mapping.source else {
+                normalizedMappings.append(mapping)
+                continue
+            }
+
+            let relativePath: String
+            if let cachedPath = normalizedPaths[source.path] {
+                relativePath = cachedPath
+            } else {
+                let candidate: String
+                if NSString(string: source.path).isAbsolutePath {
+                    candidate = source.path
+                } else {
+                    let rooted = URL(fileURLWithPath: canonicalRoot)
+                        .appendingPathComponent(source.path)
+                        .path
+                    candidate = fileSystem.fileExists(at: rooted)
+                        ? rooted
+                        : source.path
+                }
+
+                let canonicalSource = try fileSystem.canonicalizePath(candidate)
+                let sourceComponents = URL(fileURLWithPath: canonicalSource)
+                    .standardized
+                    .pathComponents
+                guard sourceComponents.starts(with: rootComponents),
+                      sourceComponents.count > rootComponents.count
+                else {
+                    throw ConcreteCompilerError.resolutionError(
+                        message: "Source-map input is outside --root: \(canonicalSource)",
+                        location: nil
+                    )
+                }
+
+                relativePath = sourceComponents
+                    .dropFirst(rootComponents.count)
+                    .joined(separator: "/")
+                normalizedPaths[source.path] = relativePath
+            }
+
+            normalizedMappings.append(
+                CompilationSourceMapping(
+                    generatedLine: mapping.generatedLine,
+                    kind: mapping.kind,
+                    source: CompilationSourceSpan(
+                        path: relativePath,
+                        startLine: source.startLine,
+                        endLine: source.endLine
+                    )
+                )
+            )
+        }
+
+        return CompilationSourceMap(
+            outputSha256: sourceMap.outputSha256,
+            mappings: normalizedMappings,
+            schemaVersion: sourceMap.schemaVersion,
+            lineBase: sourceMap.lineBase
+        )
+    }
+
     private func canonicalPath(_ path: String) -> String {
         (try? fileSystem.canonicalizePath(path)) ?? path
+    }
+
+    private func validateArtifactDestinationsDoNotOverwriteSources(
+        _ paths: ValidatedPaths,
+        provenance: CompilationProvenance
+    ) throws {
+        let canonicalRoot = try fileSystem.canonicalizePath(paths.rootPath)
+        let sourcePaths = try Set(provenance.sources.map { source in
+            try fileSystem.canonicalizePath(
+                URL(fileURLWithPath: canonicalRoot)
+                    .appendingPathComponent(source.path)
+                    .path
+            )
+        })
+        let destinations: [(name: String, path: String)] = [
+            ("Output", paths.outputPath),
+            ("Manifest", paths.manifestPath),
+        ] + (paths.sourceMapPath.map { [("Source map", $0)] } ?? [])
+
+        for destination in destinations {
+            let canonicalDestination = try fileSystem.canonicalizePath(destination.path)
+            guard !sourcePaths.contains(canonicalDestination) else {
+                throw ConcreteCompilerError.ioError(
+                    message: "\(destination.name) path would overwrite compilation source: "
+                        + destination.path,
+                    location: nil
+                )
+            }
+        }
     }
 
     /// Log message to stderr when verbose mode enabled.

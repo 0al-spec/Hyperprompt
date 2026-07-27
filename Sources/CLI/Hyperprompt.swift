@@ -49,16 +49,20 @@ struct CompileCommand: ParsableCommand {
 
     // MARK: - Optional Arguments
 
-    /// Output Markdown file path (optional, default: out.md)
-    @Option(name: .shortAndLong, help: "Output Markdown file (default: out.md)")
+    /// Output Markdown file path (optional, default: input path with .md extension)
+    @Option(name: .shortAndLong, help: "Output Markdown file (default: <input>.md)")
     var output: String?
 
-    /// Output manifest JSON file path (optional, default: manifest.json)
-    @Option(name: .shortAndLong, help: "Output manifest JSON file (default: manifest.json)")
+    /// Output manifest JSON file path (optional, default: <output>.manifest.json)
+    @Option(name: .shortAndLong, help: "Output manifest JSON file (default: <output>.manifest.json)")
     var manifest: String?
 
-    /// Root directory for resolving file references (optional, default: current directory)
-    @Option(name: .shortAndLong, help: "Root directory for file resolution (default: .)")
+    /// Optional output path for exact generated-line provenance.
+    @Option(help: "Output source-map JSON file")
+    var sourceMap: String?
+
+    /// Root directory for resolving file references (optional, default: input parent)
+    @Option(name: .shortAndLong, help: "Root directory for file resolution (default: input parent)")
     var root: String?
 
     // MARK: - Mode Flags (Mutually Exclusive)
@@ -101,6 +105,7 @@ struct CompileCommand: ParsableCommand {
             input: input,
             output: outputPath,
             manifest: manifestPath,
+            sourceMap: sourceMap,
             root: rootPath,
             mode: lenient ? .lenient : .strict,
             verbose: verbose,
@@ -119,6 +124,9 @@ struct CompileCommand: ParsableCommand {
                 print("✓ Compilation successful")
                 print("  Output: \(outputPath)")
                 print("  Manifest: \(manifestPath)")
+                if let sourceMap {
+                    print("  Source map: \(sourceMap)")
+                }
             }
 
             // Exit with success code

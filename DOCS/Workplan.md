@@ -54,6 +54,68 @@ Parallelizable tasks to start while EditorEngine work continues:
 
 ---
 
+## Publication Compiler Hardening
+
+### RFC-ASM-1: Deterministic RFC Assembly Hardening **[P1]**
+**Dependencies:** None
+**Estimated:** 12 hours
+**Status:** ✅ Completed on 2026-07-27
+
+- [x] **[P0]** Preserve fenced code blocks while adjusting embedded Markdown headings
+- [x] **[P0]** Populate deterministic compilation provenance for all resolved `.hc` and `.md` sources
+- [x] **[P0]** Emit a deterministic CLI source-map artifact for compiled Markdown
+- [x] **[P1]** Add abstract multi-document RFC fixtures covering nested modules and negative cases
+- [x] **[P1]** Document the reproducible assembly workflow and validate it through the CLI
+
+**Acceptance Criteria:** Hyperprompt can assemble an abstract modular RFC without mutating fenced examples, emits non-empty deterministic provenance and source-map artifacts with root-relative paths, fails closed for invalid inputs, and passes default and Editor-trait test suites.
+
+---
+
+### RFC-ASM-2: Stable Anchors and Local Fragment Validation **[P1]**
+**Dependencies:** RFC-ASM-1
+**Estimated:** 8 hours
+**Status:** ⏸️ **PENDING**
+
+- [ ] **[P0]** Define deterministic heading-to-anchor generation for assembled Markdown
+- [ ] **[P0]** Validate local fragment references against the final assembled document
+- [ ] **[P0]** Reject duplicate or ambiguous generated anchors with actionable diagnostics
+- [ ] **[P1]** Preserve source-map provenance for headings and fragment references
+- [ ] **[P1]** Add positive and negative fixtures for cross-module links, duplicate headings, and Unicode headings
+
+**Acceptance Criteria:** Every local fragment in an assembled RFC resolves to exactly one stable anchor in the final document, failures identify both referring and defining sources, and repeated builds produce identical anchors and source maps.
+
+---
+
+### RFC-ASM-3: Transactional Artifact Bundle and Ready Marker **[P2]**
+**Dependencies:** RFC-ASM-1
+**Estimated:** 8 hours
+**Status:** ⏸️ **PENDING**
+
+- [ ] **[P0]** Stage Markdown, manifest, and source map under one compilation-specific temporary destination
+- [ ] **[P0]** Publish a machine-readable ready marker only after every artifact is durably written
+- [ ] **[P0]** Ensure failed publication cannot make a mixed-generation bundle authoritative
+- [ ] **[P1]** Define cleanup and recovery behavior for interrupted compilations
+- [ ] **[P1]** Add fault-injection tests for failures at every publication step
+
+**Acceptance Criteria:** Consumers can select a complete artifact generation through one ready marker, and no interrupted or failed compilation can expose a mixed or partially authoritative bundle.
+
+---
+
+### RFC-ASM-4: Transparent Nested Hypercode Includes **[P2]**
+**Dependencies:** RFC-ASM-1
+**Estimated:** 10 hours
+**Status:** ⏸️ **PENDING**
+
+- [ ] **[P0]** Define normative nested `.hc` include semantics independent of caller location
+- [ ] **[P0]** Preserve canonical source identity and provenance through arbitrary include depth
+- [ ] **[P0]** Detect include cycles and repeated-source conflicts with a complete diagnostic chain
+- [ ] **[P1]** Keep strict and lenient resolution behavior explicit and cache-safe
+- [ ] **[P1]** Add fixtures for nested directories, cycles, aliases, and source changes during compilation
+
+**Acceptance Criteria:** Nested Hypercode modules behave identically whether compiled directly or through another module, with deterministic output, complete provenance, and fail-closed cycle and drift handling.
+
+---
+
 ## EditorEngine Code Review Fixes
 
 **Source:** [REVIEW_EditorEngine_Implementation.md](INPROGRESS/REVIEW_EditorEngine_Implementation.md)

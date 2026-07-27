@@ -9,7 +9,9 @@ A Swift-based compiler for the Hypercode language that transforms nested documen
 - **Recursive Compilation:** .hc files compiled recursively with automatic depth adjustment
 - **Circular Dependency Detection:** Prevent infinite loops in nested references
 - **Declarative Validation:** Grammar validated via composable specifications (SpecificationCore)
-- **Deterministic Output:** Byte-for-byte identical across platforms
+- **Deterministic Output:** Root-relative provenance and byte-stable artifacts
+- **Fence-Safe Assembly:** Markdown examples remain literal while headings are nested
+- **Exact Source Maps:** Optional generated-line mappings back to `.hc` and `.md` sources
 - **Strict and Lenient Modes:** Choose between strict error handling and lenient missing-file tolerance
 - **Comprehensive Statistics:** Optional compilation metrics and detailed manifest generation
 
@@ -73,6 +75,15 @@ hyperprompt root.hc --output compiled.md
 hyperprompt root.hc --output out.md --manifest manifest.json
 ```
 
+#### Reproducible Specification Assembly
+```bash
+SOURCE_DATE_EPOCH=1700000000 hyperprompt compile root.hc \
+  --root . \
+  --output build/specification.md \
+  --manifest build/specification.manifest.json \
+  --source-map build/specification.map.json
+```
+
 #### Lenient Mode (Missing Files Treated as Text)
 ```bash
 hyperprompt root.hc --lenient
@@ -96,6 +107,7 @@ hyperprompt root.hc --verbose --stats
 ## Documentation
 
 - **[USAGE.md](Sources/CLI/Documentation.docc/USAGE.md)** — Complete CLI reference with all flags and options
+- **[RFC_ASSEMBLY.md](Sources/CLI/Documentation.docc/RFC_ASSEMBLY.md)** — Reproducible modular specification workflow
 - **[LANGUAGE.md](Sources/CLI/Documentation.docc/LANGUAGE.md)** — Hypercode grammar specification and syntax rules
 - **[ARCHITECTURE.md](Sources/CLI/Documentation.docc/ARCHITECTURE.md)** — System design, module overview, data flow
 - **[ERROR_CODES.md](Sources/CLI/Documentation.docc/ERROR_CODES.md)** — Exit codes, error scenarios, and solutions
@@ -190,9 +202,10 @@ hyperprompt <input-file> [OPTIONS]
 ### Options
 | Option | Short | Description | Default |
 |--------|-------|-------------|---------|
-| `--output FILE` | `-o` | Output Markdown file | `out.md` |
-| `--manifest FILE` | `-m` | Output manifest JSON | `manifest.json` |
-| `--root DIR` | `-r` | Root directory for file resolution | `.` |
+| `--output FILE` | `-o` | Output Markdown file | `<input>.md` |
+| `--manifest FILE` | `-m` | Output manifest JSON | `<output>.manifest.json` |
+| `--source-map FILE` | — | Optional exact line-provenance JSON | Disabled |
+| `--root DIR` | `-r` | Root directory for file resolution | Input parent |
 | `--lenient` | — | Treat missing files as inline text | — |
 | `--verbose` | `-v` | Enable verbose logging | — |
 | `--stats` | — | Collect compilation statistics | — |
@@ -216,7 +229,7 @@ hyperprompt --version
 
 Compile with all options:
 ```bash
-hyperprompt root.hc -o output.md -m meta.json -r ./project -v --stats
+hyperprompt root.hc -o output.md -m meta.json --source-map output.map.json -r ./project -v --stats
 ```
 
 ## Error Codes
@@ -275,10 +288,14 @@ See [SPECS_INTEGRATION.md](Sources/CLI/Documentation.docc/SPECS_INTEGRATION.md) 
 ### Manifest Format
 
 The generated `manifest.json` contains:
-- List of all referenced files
-- Compilation statistics (lines, nodes, depth)
-- Dependency graph for circular reference detection
-- Version and metadata
+- The root `.hc` source, expressed relative to `--root`
+- Manifest artifact schema version
+- Every normalized `.hc` and `.md` input with SHA-256, byte size, and type
+- Sorted direct include edges
+- Compiler version and deterministic build timestamp
+
+Runtime statistics are printed separately by `--stats`; they are not part of
+the manifest.
 
 ## Troubleshooting
 

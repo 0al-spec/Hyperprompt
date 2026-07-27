@@ -23,6 +23,19 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ---
 
+## Publication Compiler Hardening
+
+### RFC-ASM-1 — Deterministic RFC Assembly Hardening **[P1]** ✓ 2026-07-27
+- **PRD:** [RFC-ASM-1_Deterministic_RFC_Assembly_Hardening.md](./RFC-ASM-1_Deterministic_RFC_Assembly_Hardening.md)
+- **Summary:** [RFC-ASM-1-summary.md](./RFC-ASM-1-summary.md)
+- **Validation:** [RFC-ASM-1_Validation_Report.md](./RFC-ASM-1_Validation_Report.md)
+- **Review:** [REVIEW_RFC-ASM-1_Deterministic_RFC_Assembly_Hardening.md](./REVIEW_RFC-ASM-1_Deterministic_RFC_Assembly_Hardening.md)
+- **Effort:** 12 hours
+- **Dependencies:** None
+- **Description:** Harden deterministic modular specification assembly with fence-safe Markdown, complete provenance, exact source maps, abstract fixtures, and Editor parity.
+
+---
+
 ## Phase 4: Reference Resolution
 
 ### B2 — Dependency Tracker **[P1]** ✓ 2025-12-21
@@ -426,9 +439,9 @@ This directory contains completed task PRDs and summaries, organized by phase.
 
 ## Statistics
 
-- **Total Archived:** 53 items (52 complete, 1 partial)
-- **Total Effort:** 170 hours completed + 5 hours partial (EE-EXT-3 stub)
-- **Phases Represented:** 10 (Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
+- **Total Archived:** 54 items (53 complete, 1 partial)
+- **Total Effort:** 182 hours completed + 5 hours partial (EE-EXT-3 stub)
+- **Phases Represented:** 11 (Publication Compiler Hardening, Phase 4, Phase 6, Phase 8, Phase 9, Phase 10, Phase 11, Phase 12, Phase 13, Phase 14, Phase 15)
 
 ---
 
@@ -447,4 +460,4 @@ git commit -m "Restore task {TASK_ID}"
 
 ---
 
-**Last Updated:** 2026-01-15 (VSC-2A archived)
+**Last Updated:** 2026-07-27 (RFC-ASM-1 archived)

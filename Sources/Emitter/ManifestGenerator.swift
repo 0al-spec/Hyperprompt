@@ -47,6 +47,7 @@ public struct ManifestGenerator {
     /// The returned manifest has entries sorted by path for determinism.
     public func generate(
         builder: ManifestBuilder,
+        dependencies: [ManifestDependency] = [],
         version: String,
         root: String,
         timestamp: Date? = nil
@@ -57,6 +58,7 @@ public struct ManifestGenerator {
         return Manifest(
             root: root,
             sources: entries,  // Manifest.init will sort them
+            dependencies: dependencies,
             timestamp: timestampString,
             version: version
         )

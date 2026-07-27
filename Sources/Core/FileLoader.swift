@@ -88,9 +88,6 @@ public class FileLoader {
         // Read raw file content
         let rawContent = try fileSystem.readFile(at: path)
 
-        // Get original size (before normalization)
-        let originalSize = rawContent.utf8.count
-
         // Normalize line endings (CRLF/CR → LF)
         let normalizedContent = normalizeLineEndings(rawContent)
 
@@ -101,7 +98,7 @@ public class FileLoader {
         let metadata = ManifestEntry(
             path: path,
             sha256: hash,
-            size: originalSize,
+            size: normalizedContent.utf8.count,
             type: fileType
         )
 

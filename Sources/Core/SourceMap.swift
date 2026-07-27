@@ -15,6 +15,42 @@ public struct SourceMap: Sendable, Codable {
         self.mappings = mappings
     }
 
+    /// Adapt the compiler's exact one-based map to the legacy editor API.
+    ///
+    /// Generated lines are intentionally omitted because the legacy map has no
+    /// nullable-location representation. Source ranges collapse to their first
+    /// line, and root-relative artifact paths become absolute editor paths.
+    public init(compilationSourceMap: CompilationSourceMap, rootPath: String) {
+        let absoluteRoot = URL(fileURLWithPath: rootPath).standardized.path
+        var legacyMappings: [Int: SourceLocation] = [:]
+
+        for mapping in compilationSourceMap.mappings {
+            guard mapping.generatedLine >= 1,
+                  let source = mapping.source,
+                  source.startLine >= 1
+            else {
+                continue
+            }
+
+            let sourcePath: String
+            if NSString(string: source.path).isAbsolutePath {
+                sourcePath = source.path
+            } else {
+                sourcePath = URL(fileURLWithPath: absoluteRoot)
+                    .appendingPathComponent(source.path)
+                    .standardized
+                    .path
+            }
+
+            legacyMappings[mapping.generatedLine - 1] = SourceLocation(
+                filePath: sourcePath,
+                line: source.startLine
+            )
+        }
+
+        self.mappings = legacyMappings
+    }
+
     /// Lookup source location for given output line.
     ///
     /// - Parameter outputLine: 0-indexed line number in compiled output

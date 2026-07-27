@@ -46,6 +46,7 @@ Start with the core language concepts and build toward full compiler usage:
 
 - <doc:LANGUAGE> - Learn the syntax, indentation rules, and node structure
 - <doc:USAGE> - See how Hypercode compiles into Markdown and manifests
+- <doc:RFC_ASSEMBLY> - Assemble a reproducible modular specification
 
 ## Getting Started
 
@@ -78,6 +79,7 @@ The compiler outputs Markdown and a manifest file in the output folder (unless d
 ### Compilation & Output
 
 - <doc:USAGE>
+- <doc:RFC_ASSEMBLY>
 - <doc:RPC_PROTOCOL>
 
 ### Architecture

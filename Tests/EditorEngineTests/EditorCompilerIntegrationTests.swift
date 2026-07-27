@@ -31,6 +31,7 @@ final class EditorCompilerIntegrationTests: XCTestCase {
             input: inputPath,
             output: outputPath,
             manifest: manifestPath,
+            collectSourceMap: true,
             root: rootPath,
             mode: .strict,
             verbose: false,
@@ -55,6 +56,14 @@ final class EditorCompilerIntegrationTests: XCTestCase {
 
         XCTAssertEqual(editorResult.output, cliResult.markdown)
         XCTAssertEqual(editorResult.manifest, cliResult.manifestJSON)
+        let compilationSourceMap = try XCTUnwrap(cliResult.sourceMap)
+        XCTAssertEqual(
+            editorResult.sourceMap?.allMappings,
+            SourceMap(
+                compilationSourceMap: compilationSourceMap,
+                rootPath: rootPath
+            ).allMappings
+        )
         XCTAssertTrue(editorResult.diagnostics.isEmpty)
     }
 

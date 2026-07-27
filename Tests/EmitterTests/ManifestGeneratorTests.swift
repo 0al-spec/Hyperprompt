@@ -32,6 +32,7 @@ final class ManifestGeneratorTests: XCTestCase {
 
         // Then: Manifest should have empty sources
         XCTAssertEqual(manifest.root, "/test/root")
+        XCTAssertEqual(manifest.schemaVersion, 1)
         XCTAssertEqual(manifest.version, "0.1.0")
         XCTAssertEqual(manifest.sources.count, 0)
         // Verify timestamp format (actual value will be "2024-12-09T13:30:45Z" for this Unix timestamp)
@@ -199,13 +200,15 @@ final class ManifestGeneratorTests: XCTestCase {
         let json = try generator.toJSON(manifest: manifest)
 
         // Then: Keys should appear in alphabetical order
-        // Top-level: root, sources, timestamp, version
+        // Top-level: root, schemaVersion, sources, timestamp, version
         let rootIndex = json.range(of: "\"root\"")!.lowerBound
+        let schemaVersionIndex = json.range(of: "\"schemaVersion\"")!.lowerBound
         let sourcesIndex = json.range(of: "\"sources\"")!.lowerBound
         let timestampIndex = json.range(of: "\"timestamp\"")!.lowerBound
         let versionIndex = json.range(of: "\"version\"")!.lowerBound
 
-        XCTAssertTrue(rootIndex < sourcesIndex)
+        XCTAssertTrue(rootIndex < schemaVersionIndex)
+        XCTAssertTrue(schemaVersionIndex < sourcesIndex)
         XCTAssertTrue(sourcesIndex < timestampIndex)
         XCTAssertTrue(timestampIndex < versionIndex)
 
