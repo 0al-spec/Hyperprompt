@@ -29,6 +29,7 @@ This directory contains completed task PRDs and summaries, organized by phase.
 - **PRD:** [RFC-ASM-1_Deterministic_RFC_Assembly_Hardening.md](./RFC-ASM-1_Deterministic_RFC_Assembly_Hardening.md)
 - **Summary:** [RFC-ASM-1-summary.md](./RFC-ASM-1-summary.md)
 - **Validation:** [RFC-ASM-1_Validation_Report.md](./RFC-ASM-1_Validation_Report.md)
+- **Review:** [REVIEW_RFC-ASM-1_Deterministic_RFC_Assembly_Hardening.md](./REVIEW_RFC-ASM-1_Deterministic_RFC_Assembly_Hardening.md)
 - **Effort:** 12 hours
 - **Dependencies:** None
 - **Description:** Harden deterministic modular specification assembly with fence-safe Markdown, complete provenance, exact source maps, abstract fixtures, and Editor parity.

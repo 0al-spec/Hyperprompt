@@ -3,6 +3,7 @@
 **Branch:** `codex/rfc-asm-1-deterministic-rfc-assembly`  
 **Reviewed range:** `origin/main...f4a8651`  
 **Date:** 2026-07-27  
+**Archived:** 2026-07-27  
 **Verdict:** Approve with non-blocking follow-up
 
 ## Scope reviewed
@@ -82,4 +83,3 @@ multi-artifact publication protocol is intentionally deferred.
 
 The highest-value next slice for ASP publication is RFC-ASM-2 because it makes
 cross-module RFC links verifiable without adding protocol-specific behavior.
-
