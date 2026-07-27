@@ -19,15 +19,18 @@ public struct CompilationResult {
     /// Manifest JSON content
     public let manifestJSON: String
 
-    /// Exact generated-line provenance in the compiler's versioned model.
-    public let sourceMap: CompilationSourceMap
+    /// Exact generated-line provenance when source-map collection was requested.
+    public let sourceMap: CompilationSourceMap?
 
-    /// Deterministically encoded source-map JSON.
+    /// Deterministically encoded source-map JSON when collection was requested.
     ///
-    /// CLI compilations that do not request `--source-map` avoid the encoding
-    /// cost. Programmatic clients retain the same API and encode on access.
-    public var sourceMapJSON: String {
-        serializedSourceMapJSON ?? ((try? sourceMap.toJSON()) ?? "")
+    /// CLI compilations request collection with `--source-map`. Programmatic
+    /// clients set `CompilerArguments.collectSourceMap` and encode lazily here.
+    public var sourceMapJSON: String? {
+        guard let sourceMap else {
+            return nil
+        }
+        return serializedSourceMapJSON ?? (try? sourceMap.toJSON())
     }
 
     private let serializedSourceMapJSON: String?
@@ -41,7 +44,7 @@ public struct CompilationResult {
     public init(
         markdown: String,
         manifestJSON: String,
-        sourceMap: CompilationSourceMap,
+        sourceMap: CompilationSourceMap? = nil,
         sourceMapJSON: String? = nil,
         statistics: CompilationStats? = nil,
         resolvedAST: Node? = nil
@@ -54,8 +57,8 @@ public struct CompilationResult {
         self.resolvedAST = resolvedAST
     }
 
-    /// Source-compatible initializer for clients that do not yet consume the
-    /// exact compiler source map.
+    /// Source-compatible initializer for clients that do not request an exact
+    /// compiler source map.
     @available(*, deprecated, message: "Use init(markdown:manifestJSON:sourceMap:sourceMapJSON:statistics:resolvedAST:)")
     public init(
         markdown: String,
@@ -63,36 +66,10 @@ public struct CompilationResult {
         statistics: CompilationStats? = nil,
         resolvedAST: Node? = nil
     ) {
-        let newlineCount = markdown.reduce(into: 0) { count, character in
-            if character == "\n" {
-                count += 1
-            }
-        }
-        let lineCount = markdown.isEmpty
-            ? 0
-            : newlineCount + (markdown.hasSuffix("\n") ? 0 : 1)
-        let mappings: [CompilationSourceMapping]
-        if lineCount == 0 {
-            mappings = []
-        } else {
-            mappings = (1...lineCount).map { line in
-                CompilationSourceMapping(
-                    generatedLine: line,
-                    kind: .generatedSeparator,
-                    source: nil
-                )
-            }
-        }
-        let sourceMap = CompilationSourceMap(
-            outputSha256: ContentHasher.sha256Hex(markdown),
-            mappings: mappings
-        )
-
         self.init(
             markdown: markdown,
             manifestJSON: manifestJSON,
-            sourceMap: sourceMap,
-            sourceMapJSON: (try? sourceMap.toJSON()) ?? "",
+            sourceMap: nil,
             statistics: statistics,
             resolvedAST: resolvedAST
         )
@@ -319,25 +296,40 @@ public final class CompilerDriver {
             logVerbose("[PHASE 4] Emit phase - generating Markdown")
         }
 
+        let shouldCollectSourceMap = validatedPaths.sourceMapPath != nil
+            || args.collectSourceMap
         let emission = try emitMarkdown(
             program: resolvedProgram,
+            collectSourceMap: shouldCollectSourceMap,
             verbose: args.verbose
         )
         let markdown = emission.markdown
-        let sourceMap = try normalizeSourceMap(
-            emission.sourceMap,
-            rootPath: validatedPaths.rootPath
-        )
-        do {
-            try sourceMap.validate(for: markdown)
-        } catch {
-            throw ConcreteCompilerError.internalError(
-                message: "Generated source map failed validation: \(error)",
-                location: nil
+        let sourceMap: CompilationSourceMap?
+        if let emittedSourceMap = emission.sourceMap {
+            let normalizedSourceMap = try normalizeSourceMap(
+                emittedSourceMap,
+                rootPath: validatedPaths.rootPath
             )
+            do {
+                try normalizedSourceMap.validate(for: markdown)
+            } catch {
+                throw ConcreteCompilerError.internalError(
+                    message: "Generated source map failed validation: \(error)",
+                    location: nil
+                )
+            }
+            sourceMap = normalizedSourceMap
+        } else {
+            sourceMap = nil
         }
         let sourceMapJSON: String?
         if validatedPaths.sourceMapPath != nil {
+            guard let sourceMap else {
+                throw ConcreteCompilerError.internalError(
+                    message: "Requested source map was not collected",
+                    location: nil
+                )
+            }
             do {
                 sourceMapJSON = try sourceMap.toJSON()
             } catch {
@@ -608,9 +600,19 @@ public final class CompilerDriver {
     }
 
     /// Emit Markdown from resolved AST.
-    private func emitMarkdown(program: Program, verbose: Bool) throws -> EmissionResult {
+    private func emitMarkdown(
+        program: Program,
+        collectSourceMap: Bool,
+        verbose: Bool
+    ) throws -> (markdown: String, sourceMap: CompilationSourceMap?) {
         let emitter = MarkdownEmitter(config: EmitterConfig())
-        let emission = emitter.emitWithSourceMap(program.root)
+        let emission: (markdown: String, sourceMap: CompilationSourceMap?)
+        if collectSourceMap {
+            let mappedEmission = emitter.emitWithSourceMap(program.root)
+            emission = (mappedEmission.markdown, mappedEmission.sourceMap)
+        } else {
+            emission = (emitter.emit(program.root), nil)
+        }
 
         if verbose {
             logVerbose("  [EMITTER] Generated Markdown output")

@@ -32,6 +32,7 @@ public struct EditorCompiler {
             input: entryFile,
             output: outputPath,
             manifest: manifestPath,
+            collectSourceMap: true,
             root: rootPath,
             mode: options.mode,
             verbose: false,
@@ -44,9 +45,15 @@ public struct EditorCompiler {
 
         do {
             let result = try driver.compile(args)
+            guard let compilationSourceMap = result.sourceMap else {
+                throw ConcreteCompilerError.internalError(
+                    message: "Editor compilation did not produce a source map",
+                    location: nil
+                )
+            }
 
             let sourceMap = SourceMap(
-                compilationSourceMap: result.sourceMap,
+                compilationSourceMap: compilationSourceMap,
                 rootPath: rootPath
             )
 

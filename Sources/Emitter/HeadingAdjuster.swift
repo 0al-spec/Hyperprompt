@@ -82,7 +82,11 @@ public struct HeadingAdjuster {
     ///
     /// - Note: Headings that would exceed H6 are converted to bold text (`**...**`).
     public func adjustHeadings(in content: String, offset: Int) -> String {
-        adjustHeadingsWithOrigins(in: content, offset: offset).markdown
+        adjustHeadings(
+            in: content,
+            offset: offset,
+            collectOrigins: false
+        ).markdown
     }
 
     /// Adjust headings and report the inclusive source span for each output line.
@@ -92,6 +96,18 @@ public struct HeadingAdjuster {
     /// three leading spaces; container-aware fences are left to a future full
     /// Markdown block parser.
     public func adjustHeadingsWithOrigins(in content: String, offset: Int) -> HeadingAdjustment {
+        adjustHeadings(
+            in: content,
+            offset: offset,
+            collectOrigins: true
+        )
+    }
+
+    private func adjustHeadings(
+        in content: String,
+        offset: Int,
+        collectOrigins: Bool
+    ) -> HeadingAdjustment {
         // Handle empty input
         guard !content.isEmpty else {
             return HeadingAdjustment(markdown: "", lineOrigins: [])
@@ -118,7 +134,11 @@ public struct HeadingAdjuster {
 
             if let fence = activeFence {
                 result.append(line)
-                origins.append(SourceLineSpan(startLine: sourceLine, endLine: sourceLine))
+                if collectOrigins {
+                    origins.append(
+                        SourceLineSpan(startLine: sourceLine, endLine: sourceLine)
+                    )
+                }
                 if isClosingFence(line, for: fence) {
                     activeFence = nil
                 }
@@ -128,7 +148,11 @@ public struct HeadingAdjuster {
 
             if let fence = parseOpeningFence(line) {
                 result.append(line)
-                origins.append(SourceLineSpan(startLine: sourceLine, endLine: sourceLine))
+                if collectOrigins {
+                    origins.append(
+                        SourceLineSpan(startLine: sourceLine, endLine: sourceLine)
+                    )
+                }
                 activeFence = fence
                 i += 1
                 continue
@@ -138,7 +162,11 @@ public struct HeadingAdjuster {
             if isATXHeading(line) {
                 let transformed = transformATXHeading(line, offset: safeOffset)
                 result.append(transformed)
-                origins.append(SourceLineSpan(startLine: sourceLine, endLine: sourceLine))
+                if collectOrigins {
+                    origins.append(
+                        SourceLineSpan(startLine: sourceLine, endLine: sourceLine)
+                    )
+                }
                 i += 1
                 continue
             }
@@ -153,7 +181,14 @@ public struct HeadingAdjuster {
                         offset: safeOffset
                     )
                     result.append(transformed)
-                    origins.append(SourceLineSpan(startLine: sourceLine, endLine: sourceLine + 1))
+                    if collectOrigins {
+                        origins.append(
+                            SourceLineSpan(
+                                startLine: sourceLine,
+                                endLine: sourceLine + 1
+                            )
+                        )
+                    }
                     // Skip the underline line
                     i += 2
                     continue
@@ -162,7 +197,11 @@ public struct HeadingAdjuster {
 
             // Pass through unchanged
             result.append(line)
-            origins.append(SourceLineSpan(startLine: sourceLine, endLine: sourceLine))
+            if collectOrigins {
+                origins.append(
+                    SourceLineSpan(startLine: sourceLine, endLine: sourceLine)
+                )
+            }
             i += 1
         }
 
@@ -170,7 +209,9 @@ public struct HeadingAdjuster {
         // historical API normalizes all of them to exactly one trailing LF.
         while result.last == "" {
             result.removeLast()
-            origins.removeLast()
+            if collectOrigins {
+                origins.removeLast()
+            }
         }
 
         let output = result.isEmpty ? "" : result.joined(separator: "\n") + "\n"

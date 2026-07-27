@@ -93,6 +93,12 @@ a symbolic link.
 
 ## Source-Map Contract
 
+Source-map collection is opt-in. The CLI enables it with `--source-map`;
+programmatic compiler clients set `CompilerArguments.collectSourceMap` when
+they need `CompilationResult.sourceMap` without writing a sidecar. Ordinary
+compilations leave both `sourceMap` and `sourceMapJSON` unset and avoid
+per-generated-line provenance allocation.
+
 The source map is schema-versioned, one-based, sorted by generated line, and
 bound to the exact output bytes:
 

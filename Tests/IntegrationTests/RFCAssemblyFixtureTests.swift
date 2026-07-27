@@ -38,6 +38,8 @@ final class RFCAssemblyFixtureTests: XCTestCase {
             sourceMap: sourceMapPath,
             dryRun: false
         )
+        let compilationSourceMap = try XCTUnwrap(result.sourceMap)
+        let sourceMapJSON = try XCTUnwrap(result.sourceMapJSON)
 
         let expectedMarkdown = try String(
             contentsOf: fixtureDirectory.appendingPathComponent("expected.md"),
@@ -54,7 +56,7 @@ final class RFCAssemblyFixtureTests: XCTestCase {
         )
         XCTAssertEqual(
             try String(contentsOf: sourceMapPath, encoding: .utf8),
-            result.sourceMapJSON
+            sourceMapJSON
         )
 
         let manifest = try JSONDecoder().decode(
@@ -109,12 +111,12 @@ final class RFCAssemblyFixtureTests: XCTestCase {
         )
 
         XCTAssertEqual(
-            result.sourceMap,
+            compilationSourceMap,
             expectedSourceMap()
         )
-        XCTAssertNoThrow(try result.sourceMap.validate(for: result.markdown))
+        XCTAssertNoThrow(try compilationSourceMap.validate(for: result.markdown))
         XCTAssertFalse(result.manifestJSON.contains(fixtureDirectory.path))
-        XCTAssertFalse(result.sourceMapJSON.contains(fixtureDirectory.path))
+        XCTAssertFalse(sourceMapJSON.contains(fixtureDirectory.path))
     }
 
     func testAbstractRFCFixtureDryRunWritesNothing() throws {
@@ -129,8 +131,9 @@ final class RFCAssemblyFixtureTests: XCTestCase {
             sourceMap: sourceMap,
             dryRun: true
         )
+        let compilationSourceMap = try XCTUnwrap(result.sourceMap)
 
-        XCTAssertNoThrow(try result.sourceMap.validate(for: result.markdown))
+        XCTAssertNoThrow(try compilationSourceMap.validate(for: result.markdown))
         XCTAssertFalse(FileManager.default.fileExists(atPath: output.path))
         XCTAssertFalse(FileManager.default.fileExists(atPath: manifest.path))
         XCTAssertFalse(FileManager.default.fileExists(atPath: sourceMap.path))
@@ -185,9 +188,13 @@ final class RFCAssemblyFixtureTests: XCTestCase {
         XCTAssertEqual(first.manifestJSON, second.manifestJSON)
         XCTAssertEqual(first.sourceMapJSON, second.sourceMapJSON)
         XCTAssertFalse(first.manifestJSON.contains(firstCheckout.path))
-        XCTAssertFalse(first.sourceMapJSON.contains(firstCheckout.path))
+        XCTAssertFalse(
+            try XCTUnwrap(first.sourceMapJSON).contains(firstCheckout.path)
+        )
         XCTAssertFalse(second.manifestJSON.contains(secondCheckout.path))
-        XCTAssertFalse(second.sourceMapJSON.contains(secondCheckout.path))
+        XCTAssertFalse(
+            try XCTUnwrap(second.sourceMapJSON).contains(secondCheckout.path)
+        )
     }
 
     private func compile(

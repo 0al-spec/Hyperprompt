@@ -20,6 +20,8 @@
   source.
 - `--source-map` emits a schema-versioned, output-hash-bound artifact with
   complete one-based generated-line coverage.
+- Ordinary compilation skips source-map collection and uses the string-only
+  emitter while preserving byte-identical Markdown.
 - EditorEngine adapts the compiler result without re-emitting the AST.
 - Positive and negative abstract modular-specification fixtures exercise the
   intended RFC assembly workflow.
@@ -31,7 +33,8 @@
 | `swift test` | PASS — 493 tests executed, 13 pre-existing skips, 0 failures |
 | `swift test --traits Editor` | PASS — 638 tests executed, 16 pre-existing skips, 0 failures |
 | Focused `RFCAssemblyFixtureTests` | PASS — 4 tests, 0 failures |
-| Focused Editor/source-map regression tests | PASS — 4 tests, 0 failures |
+| Focused Editor/source-map regression tests | PASS — 17 tests, 0 failures |
+| Focused `PerformanceTests` | PASS — 5 tests, 0 failures; large-corpus median 130.68 ms locally |
 | DocC generation for `CLI` | PASS — archive generated; 3 pre-existing warnings |
 | `git diff --check` | PASS |
 

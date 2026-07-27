@@ -65,7 +65,9 @@ public struct MarkdownEmitter {
 
     /// Emit Markdown while preserving the historical string-only API.
     public func emit(_ root: Node) -> String {
-        emitWithSourceMap(root).markdown
+        var builder = MarkdownStringBuilder()
+        emitNodeWithoutSourceMap(root, parentDepth: -1, output: &builder)
+        return builder.buildMarkdown()
     }
 
     /// Emit Markdown and a complete one-based source map in one traversal.
@@ -109,6 +111,51 @@ public struct MarkdownEmitter {
     }
 
     // MARK: - Tree traversal
+
+    private func emitNodeWithoutSourceMap(
+        _ node: Node,
+        parentDepth: Int,
+        output: inout MarkdownStringBuilder
+    ) {
+        let effectiveDepth = parentDepth + 1
+        assert(
+            effectiveDepth <= 10,
+            "Depth exceeds maximum of 10 (resolver should prevent this)"
+        )
+
+        let headingLevel = effectiveDepth + 1
+        let isMarkdownInclude: Bool
+        if case .markdownFile = node.resolution {
+            isMarkdownInclude = true
+        } else {
+            isMarkdownInclude = false
+        }
+
+        if !isMarkdownInclude {
+            let heading = generateHeading(text: node.literal, level: headingLevel)
+            if !heading.isEmpty {
+                output.appendLine(heading)
+            }
+        }
+
+        let headingOffset = isMarkdownInclude ? effectiveDepth : headingLevel
+        embedContentWithoutSourceMap(
+            for: node,
+            headingOffset: headingOffset,
+            output: &output
+        )
+
+        for (index, child) in node.children.enumerated() {
+            if index > 0 && config.insertBlankLines {
+                output.appendLine("")
+            }
+            emitNodeWithoutSourceMap(
+                child,
+                parentDepth: effectiveDepth,
+                output: &output
+            )
+        }
+    }
 
     private func emitNode(
         _ node: Node,
@@ -170,6 +217,34 @@ public struct MarkdownEmitter {
     }
 
     // MARK: - Content embedding
+
+    private func embedContentWithoutSourceMap(
+        for node: Node,
+        headingOffset: Int,
+        output: inout MarkdownStringBuilder
+    ) {
+        guard let resolution = node.resolution else {
+            return
+        }
+
+        switch resolution {
+        case .inlineText, .hypercodeFile:
+            break
+
+        case let .markdownFile(_, content):
+            output.append(
+                headingAdjuster.adjustHeadings(
+                    in: content,
+                    offset: headingOffset
+                )
+            )
+
+        case let .forbidden(fileExtension):
+            output.appendLine(
+                "<!-- Error: Forbidden extension .\(fileExtension) -->"
+            )
+        }
+    }
 
     private func embedContent(
         for node: Node,
@@ -238,6 +313,42 @@ public struct MarkdownEmitter {
             lines.removeLast()
         }
         return lines
+    }
+}
+
+private struct MarkdownStringBuilder {
+    private var fragments: [String] = []
+
+    mutating func append(_ fragment: String) {
+        guard !fragment.isEmpty else {
+            return
+        }
+        fragments.append(fragment)
+    }
+
+    mutating func appendLine(_ line: String) {
+        fragments.append(line)
+        fragments.append("\n")
+    }
+
+    func buildMarkdown() -> String {
+        let result = fragments.joined()
+        guard !result.isEmpty else {
+            return ""
+        }
+
+        var end = result.endIndex
+        while end > result.startIndex {
+            let previous = result.index(before: end)
+            guard result[previous] == "\n" else {
+                break
+            }
+            end = previous
+        }
+        guard end > result.startIndex else {
+            return ""
+        }
+        return String(result[..<end]) + "\n"
     }
 }
 

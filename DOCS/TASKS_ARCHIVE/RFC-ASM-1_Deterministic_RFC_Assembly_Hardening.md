@@ -312,7 +312,7 @@ git diff --check
 | Machine-local paths | Normalize after canonical containment checks and test two checkout roots |
 | Stale cached AST | Bind cache entries to strict resolution context and exact immutable source snapshots |
 | Manifest schema compatibility | Version new manifests; decode missing `dependencies` and schema version as legacy defaults |
-| Large per-line source maps | Keep JSON persistence opt-in, expose the exact map programmatically, and consider range compression in a later compatible schema |
+| Large per-line source maps | Keep collection and JSON persistence opt-in; programmatic clients request the exact map with `collectSourceMap`, and range compression remains a later compatible schema option |
 
 ## 10. Success metrics
 

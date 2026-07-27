@@ -333,6 +333,7 @@ final class ArgumentParsingTests: XCTestCase {
         XCTAssertFalse(args.verbose)
         XCTAssertFalse(args.stats)
         XCTAssertFalse(args.dryRun)
+        XCTAssertFalse(args.collectSourceMap)
     }
 
     // MARK: - Edge Cases Tests

@@ -38,15 +38,17 @@ final class CompilerSourceMapTests: XCTestCase {
                 dryRun: false
             )
         )
+        let compilationSourceMap = try XCTUnwrap(result.sourceMap)
+        let sourceMapJSON = try XCTUnwrap(result.sourceMapJSON)
 
         XCTAssertEqual(
             try String(contentsOf: sourceMap, encoding: .utf8),
-            result.sourceMapJSON
+            sourceMapJSON
         )
-        XCTAssertNoThrow(try result.sourceMap.validate(for: result.markdown))
-        XCTAssertFalse(result.sourceMapJSON.contains(project.path))
+        XCTAssertNoThrow(try compilationSourceMap.validate(for: result.markdown))
+        XCTAssertFalse(sourceMapJSON.contains(project.path))
         XCTAssertEqual(
-            result.sourceMap.mappings,
+            compilationSourceMap.mappings,
             [
                 CompilationSourceMapping(
                     generatedLine: 1,
@@ -112,14 +114,15 @@ final class CompilerSourceMapTests: XCTestCase {
                 dryRun: true
             )
         )
+        let compilationSourceMap = try XCTUnwrap(result.sourceMap)
 
-        XCTAssertNoThrow(try result.sourceMap.validate(for: result.markdown))
+        XCTAssertNoThrow(try compilationSourceMap.validate(for: result.markdown))
         XCTAssertFalse(FileManager.default.fileExists(atPath: output.path))
         XCTAssertFalse(FileManager.default.fileExists(atPath: manifest.path))
         XCTAssertFalse(FileManager.default.fileExists(atPath: sourceMap.path))
     }
 
-    func testProgrammaticJSONRemainsAvailableWhenSidecarIsDisabled() throws {
+    func testProgrammaticJSONIsAvailableWhenCollectionIsEnabledWithoutSidecar() throws {
         let project = try makeProject(
             at: tempDirectory.appendingPathComponent("programmatic-json")
         )
@@ -130,6 +133,51 @@ final class CompilerSourceMapTests: XCTestCase {
                 manifest: tempDirectory
                     .appendingPathComponent("programmatic.manifest.json")
                     .path,
+                collectSourceMap: true,
+                root: project.path,
+                mode: .strict,
+                verbose: false,
+                stats: false,
+                dryRun: true
+            )
+        )
+        let compilationSourceMap = try XCTUnwrap(result.sourceMap)
+        let sourceMapJSON = try XCTUnwrap(result.sourceMapJSON)
+
+        let decoded = try JSONDecoder().decode(
+            CompilationSourceMap.self,
+            from: Data(sourceMapJSON.utf8)
+        )
+        XCTAssertEqual(decoded, compilationSourceMap)
+    }
+
+    func testDefaultFastPathSkipsMapAndMatchesMappedMarkdown() throws {
+        let project = try makeProject(
+            at: tempDirectory.appendingPathComponent("fast-path")
+        )
+        let driver = CompilerDriver()
+        let fast = try driver.compile(
+            CompilerArguments(
+                input: project.appendingPathComponent("root.hc").path,
+                output: tempDirectory.appendingPathComponent("fast.md").path,
+                manifest: tempDirectory
+                    .appendingPathComponent("fast.manifest.json")
+                    .path,
+                root: project.path,
+                mode: .strict,
+                verbose: false,
+                stats: false,
+                dryRun: true
+            )
+        )
+        let mapped = try driver.compile(
+            CompilerArguments(
+                input: project.appendingPathComponent("root.hc").path,
+                output: tempDirectory.appendingPathComponent("mapped.md").path,
+                manifest: tempDirectory
+                    .appendingPathComponent("mapped.manifest.json")
+                    .path,
+                collectSourceMap: true,
                 root: project.path,
                 mode: .strict,
                 verbose: false,
@@ -138,11 +186,11 @@ final class CompilerSourceMapTests: XCTestCase {
             )
         )
 
-        let decoded = try JSONDecoder().decode(
-            CompilationSourceMap.self,
-            from: Data(result.sourceMapJSON.utf8)
-        )
-        XCTAssertEqual(decoded, result.sourceMap)
+        XCTAssertNil(fast.sourceMap)
+        XCTAssertNil(fast.sourceMapJSON)
+        XCTAssertEqual(fast.markdown, mapped.markdown)
+        XCTAssertNotNil(mapped.sourceMap)
+        XCTAssertNotNil(mapped.sourceMapJSON)
     }
 
     func testSourceMapAndMarkdownAreIndependentOfCheckoutDirectory() throws {

@@ -842,6 +842,7 @@ final class CompilerDriverTests: XCTestCase {
             input: project.appendingPathComponent("root.hc").path,
             output: tempURL("cache-markdown-mutation.md").path,
             manifest: tempURL("cache-markdown-mutation.manifest.json").path,
+            collectSourceMap: true,
             root: project.path,
             mode: .strict,
             verbose: false,
@@ -862,7 +863,10 @@ final class CompilerDriverTests: XCTestCase {
         XCTAssertFalse(second.markdown.contains("Original"))
         XCTAssertTrue(second.markdown.contains("Updated"))
         XCTAssertEqual(bodyEntry.sha256, ContentHasher.sha256Hex("# Updated\n"))
-        XCTAssertEqual(second.sourceMap.outputSha256, ContentHasher.sha256Hex(second.markdown))
+        XCTAssertEqual(
+            try XCTUnwrap(second.sourceMap).outputSha256,
+            ContentHasher.sha256Hex(second.markdown)
+        )
     }
 
     func testParsedProgramCacheInvalidatesNestedMarkdownTransitively() throws {
@@ -887,6 +891,7 @@ final class CompilerDriverTests: XCTestCase {
             input: project.appendingPathComponent("root.hc").path,
             output: tempURL("cache-nested-markdown-mutation.md").path,
             manifest: tempURL("cache-nested-markdown-mutation.manifest.json").path,
+            collectSourceMap: true,
             root: project.path,
             mode: .strict,
             verbose: false,
@@ -900,7 +905,9 @@ final class CompilerDriverTests: XCTestCase {
 
         XCTAssertFalse(second.markdown.contains("Original"))
         XCTAssertTrue(second.markdown.contains("Updated"))
-        XCTAssertNoThrow(try second.sourceMap.validate(for: second.markdown))
+        XCTAssertNoThrow(
+            try XCTUnwrap(second.sourceMap).validate(for: second.markdown)
+        )
     }
 
     func testParsedProgramCacheInvalidatesWhenNestedHypercodeChanges() throws {
@@ -1205,9 +1212,12 @@ final class CompilerDriverTests: XCTestCase {
                 dryRun: true
             )
         )
+        let compilationSourceMap = try XCTUnwrap(result.sourceMap)
 
         XCTAssertEqual(
-            result.sourceMap.mappings.filter { $0.source?.path == "body.md" }.count,
+            compilationSourceMap.mappings.filter {
+                $0.source?.path == "body.md"
+            }.count,
             2_000
         )
         XCTAssertLessThan(
