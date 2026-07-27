@@ -1,8 +1,6 @@
 #if Editor
 import CompilerDriver
 import Core
-import Emitter  // For MarkdownEmitter and EmitterConfig
-import Parser  // For Node type
 
 /// EditorCompiler — Editor-facing wrapper around CompilerDriver.
 public struct EditorCompiler {
@@ -47,22 +45,10 @@ public struct EditorCompiler {
         do {
             let result = try driver.compile(args)
 
-            // Build source map by re-emitting with SourceMapBuilder
-            // This allows precise line tracking through Emitter integration.
-            // Note: Re-emission is a small performance cost acceptable for Editor mode.
-            let sourceMap: SourceMap?
-            if let resolvedAST = result.resolvedAST {
-                let sourceMapBuilder = SourceMapBuilder()
-                let emitterConfig = EmitterConfig(
-                    insertBlankLines: true,
-                    useFilenameAsHeading: false
-                )
-                let emitter = MarkdownEmitter(config: emitterConfig, sourceMapBuilder: sourceMapBuilder)
-                _ = emitter.emit(resolvedAST)  // Re-emit to build source map
-                sourceMap = sourceMapBuilder.build()
-            } else {
-                sourceMap = nil
-            }
+            let sourceMap = SourceMap(
+                compilationSourceMap: result.sourceMap,
+                rootPath: rootPath
+            )
 
             return CompileResult(
                 output: result.markdown,

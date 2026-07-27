@@ -19,6 +19,12 @@ public struct CompilationResult {
     /// Manifest JSON content
     public let manifestJSON: String
 
+    /// Exact generated-line provenance in the compiler's versioned model.
+    public let sourceMap: CompilationSourceMap
+
+    /// Deterministically encoded source-map JSON.
+    public let sourceMapJSON: String
+
     /// Compilation statistics (if enabled)
     public let statistics: CompilationStats?
 
@@ -31,9 +37,18 @@ public struct CompilationResult {
     /// See DOCS/INPROGRESS/EE-EXT-3-FULL_Complete_Source_Map_Implementation.md for full implementation plan.
     public let resolvedAST: Node?
 
-    public init(markdown: String, manifestJSON: String, statistics: CompilationStats? = nil, resolvedAST: Node? = nil) {
+    public init(
+        markdown: String,
+        manifestJSON: String,
+        sourceMap: CompilationSourceMap,
+        sourceMapJSON: String,
+        statistics: CompilationStats? = nil,
+        resolvedAST: Node? = nil
+    ) {
         self.markdown = markdown
         self.manifestJSON = manifestJSON
+        self.sourceMap = sourceMap
+        self.sourceMapJSON = sourceMapJSON
         self.statistics = statistics
         self.resolvedAST = resolvedAST
     }
@@ -140,6 +155,9 @@ public final class CompilerDriver {
             logVerbose("  [✓] Root directory: \(validatedPaths.rootPath)")
             logVerbose("  [✓] Output file: \(validatedPaths.outputPath)")
             logVerbose("  [✓] Manifest file: \(validatedPaths.manifestPath)")
+            if let sourceMapPath = validatedPaths.sourceMapPath {
+                logVerbose("  [✓] Source-map file: \(sourceMapPath)")
+            }
             logVerbose("")
         }
 
@@ -225,10 +243,32 @@ public final class CompilerDriver {
             logVerbose("[PHASE 4] Emit phase - generating Markdown")
         }
 
-        let markdown = try emitMarkdown(
+        let emission = try emitMarkdown(
             program: resolvedProgram,
             verbose: args.verbose
         )
+        let markdown = emission.markdown
+        let sourceMap = try normalizeSourceMap(
+            emission.sourceMap,
+            rootPath: validatedPaths.rootPath
+        )
+        do {
+            try sourceMap.validate(for: markdown)
+        } catch {
+            throw ConcreteCompilerError.internalError(
+                message: "Generated source map failed validation: \(error)",
+                location: nil
+            )
+        }
+        let sourceMapJSON: String
+        do {
+            sourceMapJSON = try sourceMap.toJSON()
+        } catch {
+            throw ConcreteCompilerError.internalError(
+                message: "Failed to serialize source map to JSON: \(error)",
+                location: nil
+            )
+        }
 
         if args.verbose {
             logVerbose("  [✓] Generated successfully")
@@ -259,6 +299,9 @@ public final class CompilerDriver {
                 logVerbose("[DRY RUN] Skipping file writes")
                 logVerbose("  [~] Would write: \(validatedPaths.outputPath) (\(markdown.utf8.count) bytes)")
                 logVerbose("  [~] Would write: \(validatedPaths.manifestPath) (\(manifestJSON.utf8.count) bytes)")
+                if let sourceMapPath = validatedPaths.sourceMapPath {
+                    logVerbose("  [~] Would write: \(sourceMapPath) (\(sourceMapJSON.utf8.count) bytes)")
+                }
                 logVerbose("")
             }
         } else {
@@ -269,20 +312,30 @@ public final class CompilerDriver {
             try writeOutputFiles(
                 markdown: markdown,
                 manifestJSON: manifestJSON,
+                sourceMapJSON: sourceMapJSON,
                 outputPath: validatedPaths.outputPath,
                 manifestPath: validatedPaths.manifestPath,
+                sourceMapPath: validatedPaths.sourceMapPath,
                 verbose: args.verbose
             )
 
             if args.verbose {
                 logVerbose("  [✓] Output written: \(validatedPaths.outputPath)")
                 logVerbose("  [✓] Manifest written: \(validatedPaths.manifestPath)")
+                if let sourceMapPath = validatedPaths.sourceMapPath {
+                    logVerbose("  [✓] Source map written: \(sourceMapPath)")
+                }
                 logVerbose("")
             }
         }
 
         // Calculate statistics if enabled
-        statsCollector.recordOutputBytes(markdown.utf8.count + manifestJSON.utf8.count)
+        let sourceMapBytes = validatedPaths.sourceMapPath == nil
+            ? 0
+            : sourceMapJSON.utf8.count
+        statsCollector.recordOutputBytes(
+            markdown.utf8.count + manifestJSON.utf8.count + sourceMapBytes
+        )
         statsCollector.updateMaxDepth(resolvedProgram.maxDepth)
 
         let stats = statsCollector.finish()
@@ -298,6 +351,8 @@ public final class CompilerDriver {
         return CompilationResult(
             markdown: markdown,
             manifestJSON: manifestJSON,
+            sourceMap: sourceMap,
+            sourceMapJSON: sourceMapJSON,
             statistics: stats,
             resolvedAST: resolvedProgram.root
         )
@@ -311,6 +366,7 @@ public final class CompilerDriver {
         let rootPath: String
         let outputPath: String
         let manifestPath: String
+        let sourceMapPath: String?
     }
 
     /// Validate and canonicalize all paths.
@@ -349,7 +405,8 @@ public final class CompilerDriver {
             inputPath: inputPath,
             rootPath: rootPath,
             outputPath: outputPath,
-            manifestPath: manifestPath
+            manifestPath: manifestPath,
+            sourceMapPath: args.sourceMap
         )
     }
 
@@ -435,15 +492,15 @@ public final class CompilerDriver {
     }
 
     /// Emit Markdown from resolved AST.
-    private func emitMarkdown(program: Program, verbose: Bool) throws -> String {
+    private func emitMarkdown(program: Program, verbose: Bool) throws -> EmissionResult {
         let emitter = MarkdownEmitter(config: EmitterConfig())
-        let markdown = emitter.emit(program.root)
+        let emission = emitter.emitWithSourceMap(program.root)
 
         if verbose {
             logVerbose("  [EMITTER] Generated Markdown output")
         }
 
-        return markdown
+        return emission
     }
 
     /// Generate manifest JSON.
@@ -489,8 +546,10 @@ public final class CompilerDriver {
     private func writeOutputFiles(
         markdown: String,
         manifestJSON: String,
+        sourceMapJSON: String,
         outputPath: String,
         manifestPath: String,
+        sourceMapPath: String?,
         verbose: Bool
     ) throws {
         // Write Markdown output
@@ -512,9 +571,81 @@ public final class CompilerDriver {
                 location: nil
             )
         }
+
+        if let sourceMapPath {
+            do {
+                try fileSystem.writeFile(at: sourceMapPath, content: sourceMapJSON)
+            } catch {
+                throw ConcreteCompilerError.ioError(
+                    message: "Failed to write source map file: \(sourceMapPath)",
+                    location: nil
+                )
+            }
+        }
     }
 
     // MARK: - Utility Methods
+
+    private func normalizeSourceMap(
+        _ sourceMap: CompilationSourceMap,
+        rootPath: String
+    ) throws -> CompilationSourceMap {
+        let canonicalRoot = try fileSystem.canonicalizePath(rootPath)
+        let rootComponents = URL(fileURLWithPath: canonicalRoot)
+            .standardized
+            .pathComponents
+
+        let normalizedMappings = try sourceMap.mappings.map { mapping in
+            guard let source = mapping.source else {
+                return mapping
+            }
+
+            let candidate: String
+            if NSString(string: source.path).isAbsolutePath {
+                candidate = source.path
+            } else {
+                let rooted = URL(fileURLWithPath: canonicalRoot)
+                    .appendingPathComponent(source.path)
+                    .path
+                candidate = fileSystem.fileExists(at: rooted)
+                    ? rooted
+                    : source.path
+            }
+
+            let canonicalSource = try fileSystem.canonicalizePath(candidate)
+            let sourceComponents = URL(fileURLWithPath: canonicalSource)
+                .standardized
+                .pathComponents
+            guard sourceComponents.starts(with: rootComponents),
+                  sourceComponents.count > rootComponents.count
+            else {
+                throw ConcreteCompilerError.resolutionError(
+                    message: "Source-map input is outside --root: \(canonicalSource)",
+                    location: nil
+                )
+            }
+
+            let relativePath = sourceComponents
+                .dropFirst(rootComponents.count)
+                .joined(separator: "/")
+            return CompilationSourceMapping(
+                generatedLine: mapping.generatedLine,
+                kind: mapping.kind,
+                source: CompilationSourceSpan(
+                    path: relativePath,
+                    startLine: source.startLine,
+                    endLine: source.endLine
+                )
+            )
+        }
+
+        return CompilationSourceMap(
+            outputSha256: sourceMap.outputSha256,
+            mappings: normalizedMappings,
+            schemaVersion: sourceMap.schemaVersion,
+            lineBase: sourceMap.lineBase
+        )
+    }
 
     private func canonicalPath(_ path: String) -> String {
         (try? fileSystem.canonicalizePath(path)) ?? path

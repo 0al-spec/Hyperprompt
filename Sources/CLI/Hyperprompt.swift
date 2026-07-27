@@ -57,6 +57,10 @@ struct CompileCommand: ParsableCommand {
     @Option(name: .shortAndLong, help: "Output manifest JSON file (default: manifest.json)")
     var manifest: String?
 
+    /// Optional output path for exact generated-line provenance.
+    @Option(help: "Output source-map JSON file")
+    var sourceMap: String?
+
     /// Root directory for resolving file references (optional, default: current directory)
     @Option(name: .shortAndLong, help: "Root directory for file resolution (default: .)")
     var root: String?
@@ -101,6 +105,7 @@ struct CompileCommand: ParsableCommand {
             input: input,
             output: outputPath,
             manifest: manifestPath,
+            sourceMap: sourceMap,
             root: rootPath,
             mode: lenient ? .lenient : .strict,
             verbose: verbose,
@@ -119,6 +124,9 @@ struct CompileCommand: ParsableCommand {
                 print("✓ Compilation successful")
                 print("  Output: \(outputPath)")
                 print("  Manifest: \(manifestPath)")
+                if let sourceMap {
+                    print("  Source map: \(sourceMap)")
+                }
             }
 
             // Exit with success code

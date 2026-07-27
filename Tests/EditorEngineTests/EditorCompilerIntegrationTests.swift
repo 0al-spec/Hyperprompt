@@ -55,6 +55,13 @@ final class EditorCompilerIntegrationTests: XCTestCase {
 
         XCTAssertEqual(editorResult.output, cliResult.markdown)
         XCTAssertEqual(editorResult.manifest, cliResult.manifestJSON)
+        XCTAssertEqual(
+            editorResult.sourceMap?.allMappings,
+            SourceMap(
+                compilationSourceMap: cliResult.sourceMap,
+                rootPath: rootPath
+            ).allMappings
+        )
         XCTAssertTrue(editorResult.diagnostics.isEmpty)
     }
 

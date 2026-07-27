@@ -99,6 +99,43 @@ final class EditorCompilerTests: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: output.path))
         XCTAssertTrue(FileManager.default.fileExists(atPath: manifest.path))
     }
+
+    func testSourceMapUsesCompilerMappingsWithoutGeneratedSeparators() throws {
+        let tempDir = try makeTempDir()
+        let input = tempDir.appendingPathComponent("main.hc")
+        let body = tempDir.appendingPathComponent("body.md")
+        try [
+            "\"Specification\"",
+            "    \"body.md\"",
+            "    \"Appendix\"",
+            "",
+        ].joined(separator: "\n").write(
+            to: input,
+            atomically: true,
+            encoding: .utf8
+        )
+        try "# Body\n".write(to: body, atomically: true, encoding: .utf8)
+
+        let result = EditorCompiler().compile(
+            entryFile: input.path,
+            options: CompileOptions(workspaceRoot: tempDir.path)
+        )
+        let sourceMap = try XCTUnwrap(result.sourceMap)
+
+        XCTAssertEqual(
+            sourceMap.lookup(outputLine: 0),
+            SourceLocation(filePath: input.path, line: 1)
+        )
+        XCTAssertEqual(
+            sourceMap.lookup(outputLine: 1),
+            SourceLocation(filePath: body.path, line: 1)
+        )
+        XCTAssertNil(sourceMap.lookup(outputLine: 2))
+        XCTAssertEqual(
+            sourceMap.lookup(outputLine: 3),
+            SourceLocation(filePath: input.path, line: 3)
+        )
+    }
 }
 
 private func makeTempDir() throws -> URL {
