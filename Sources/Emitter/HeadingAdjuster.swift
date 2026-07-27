@@ -7,11 +7,39 @@
 
 import Foundation
 
+/// Inclusive source-line span that produced one adjusted Markdown output line.
+///
+/// Most Markdown lines map one-to-one. Setext headings are the notable
+/// exception: the heading text and underline are collapsed into one ATX line.
+public struct SourceLineSpan: Equatable, Codable, Sendable {
+    public let startLine: Int
+    public let endLine: Int
+
+    public init(startLine: Int, endLine: Int) {
+        precondition(startLine >= 1, "Source line numbers are 1-based")
+        precondition(endLine >= startLine, "Source line span must not be inverted")
+        self.startLine = startLine
+        self.endLine = endLine
+    }
+}
+
+/// Markdown produced by heading adjustment together with exact line origins.
+public struct HeadingAdjustment: Equatable, Sendable {
+    public let markdown: String
+    public let lineOrigins: [SourceLineSpan]
+
+    public init(markdown: String, lineOrigins: [SourceLineSpan]) {
+        self.markdown = markdown
+        self.lineOrigins = lineOrigins
+    }
+}
+
 /// Transforms Markdown content by adjusting heading levels based on nesting depth.
 ///
 /// This component handles:
 /// - ATX-style headings (# prefix)
 /// - Setext-style headings (= or - underline)
+/// - CommonMark-style backtick and tilde fenced code blocks
 /// - Overflow handling (levels > 6 converted to bold)
 /// - Line ending normalization (CRLF/CR → LF)
 ///
@@ -27,6 +55,13 @@ public struct HeadingAdjuster {
 
     /// Maximum Markdown heading level (H1-H6)
     private static let maxHeadingLevel = 6
+    private static let maximumBlockIndent = 3
+
+    /// Fence state tracked while scanning Markdown block lines.
+    private struct ActiveFence {
+        let marker: Character
+        let length: Int
+    }
 
     // MARK: - Initialization
 
@@ -47,9 +82,19 @@ public struct HeadingAdjuster {
     ///
     /// - Note: Headings that would exceed H6 are converted to bold text (`**...**`).
     public func adjustHeadings(in content: String, offset: Int) -> String {
+        adjustHeadingsWithOrigins(in: content, offset: offset).markdown
+    }
+
+    /// Adjust headings and report the inclusive source span for each output line.
+    ///
+    /// Fenced code blocks are copied verbatim after LF normalization. This
+    /// method deliberately implements ordinary CommonMark fences with zero to
+    /// three leading spaces; container-aware fences are left to a future full
+    /// Markdown block parser.
+    public func adjustHeadingsWithOrigins(in content: String, offset: Int) -> HeadingAdjustment {
         // Handle empty input
         guard !content.isEmpty else {
-            return ""
+            return HeadingAdjustment(markdown: "", lineOrigins: [])
         }
 
         // Ensure non-negative offset
@@ -61,17 +106,39 @@ public struct HeadingAdjuster {
         // Split into lines
         let lines = normalized.components(separatedBy: "\n")
 
-        // Process lines
+        // Process lines while preserving the exact source span of each emitted line.
         var result: [String] = []
+        var origins: [SourceLineSpan] = []
+        var activeFence: ActiveFence?
         var i = 0
 
         while i < lines.count {
             let line = lines[i]
+            let sourceLine = i + 1
+
+            if let fence = activeFence {
+                result.append(line)
+                origins.append(SourceLineSpan(startLine: sourceLine, endLine: sourceLine))
+                if isClosingFence(line, for: fence) {
+                    activeFence = nil
+                }
+                i += 1
+                continue
+            }
+
+            if let fence = parseOpeningFence(line) {
+                result.append(line)
+                origins.append(SourceLineSpan(startLine: sourceLine, endLine: sourceLine))
+                activeFence = fence
+                i += 1
+                continue
+            }
 
             // Check for ATX heading
             if isATXHeading(line) {
                 let transformed = transformATXHeading(line, offset: safeOffset)
                 result.append(transformed)
+                origins.append(SourceLineSpan(startLine: sourceLine, endLine: sourceLine))
                 i += 1
                 continue
             }
@@ -86,6 +153,7 @@ public struct HeadingAdjuster {
                         offset: safeOffset
                     )
                     result.append(transformed)
+                    origins.append(SourceLineSpan(startLine: sourceLine, endLine: sourceLine + 1))
                     // Skip the underline line
                     i += 2
                     continue
@@ -94,12 +162,19 @@ public struct HeadingAdjuster {
 
             // Pass through unchanged
             result.append(line)
+            origins.append(SourceLineSpan(startLine: sourceLine, endLine: sourceLine))
             i += 1
         }
 
-        // Join lines and ensure single trailing LF
-        let output = result.joined(separator: "\n")
-        return ensureSingleTrailingNewline(output)
+        // Empty components at EOF represent trailing newline characters. The
+        // historical API normalizes all of them to exactly one trailing LF.
+        while result.last == "" {
+            result.removeLast()
+            origins.removeLast()
+        }
+
+        let output = result.isEmpty ? "" : result.joined(separator: "\n") + "\n"
+        return HeadingAdjustment(markdown: output, lineOrigins: origins)
     }
 
     // MARK: - Line Ending Normalization
@@ -143,7 +218,9 @@ public struct HeadingAdjuster {
     /// - Parameter line: The line to check.
     /// - Returns: `true` if the line is a valid ATX heading.
     internal func isATXHeading(_ line: String) -> Bool {
-        let trimmed = line.trimmingLeadingWhitespace()
+        guard let trimmed = strippingMarkdownBlockIndent(from: line) else {
+            return false
+        }
 
         // Must start with at least one #
         guard trimmed.hasPrefix("#") else {
@@ -175,7 +252,9 @@ public struct HeadingAdjuster {
     /// - Parameter line: The ATX heading line.
     /// - Returns: The heading level (1-6).
     internal func extractATXLevel(_ line: String) -> Int {
-        let trimmed = line.trimmingLeadingWhitespace()
+        guard let trimmed = strippingMarkdownBlockIndent(from: line) else {
+            return 0
+        }
         return countLeadingHashes(trimmed)
     }
 
@@ -186,7 +265,9 @@ public struct HeadingAdjuster {
     /// - Parameter line: The ATX heading line.
     /// - Returns: The heading text content.
     internal func extractATXText(_ line: String) -> String {
-        let trimmed = line.trimmingLeadingWhitespace()
+        guard let trimmed = strippingMarkdownBlockIndent(from: line) else {
+            return line
+        }
         let hashCount = countLeadingHashes(trimmed)
 
         // Get content after hashes
@@ -275,7 +356,10 @@ public struct HeadingAdjuster {
     /// - Parameter line: The line to check for underline pattern.
     /// - Returns: `1` for `=` underlines (H1), `2` for `-` underlines (H2), or `nil` if not a valid underline.
     internal func parseSetextUnderline(_ line: String) -> Int? {
-        let trimmed = line.trimmingCharacters(in: .whitespaces)
+        guard let content = strippingMarkdownBlockIndent(from: line) else {
+            return nil
+        }
+        let trimmed = content.trimmingCharacters(in: .whitespaces)
 
         // Must not be empty
         guard !trimmed.isEmpty else {
@@ -333,19 +417,73 @@ public struct HeadingAdjuster {
         }
         return "**\(trimmed)**"
     }
-}
 
-// MARK: - String Extensions
+    // MARK: - Markdown Block State
 
-extension String {
-    /// Removes leading whitespace characters from the string.
-    ///
-    /// - Returns: String with leading whitespace removed.
-    fileprivate func trimmingLeadingWhitespace() -> String {
-        var result = self
-        while let first = result.first, first.isWhitespace {
-            result.removeFirst()
+    /// Remove at most three leading spaces. Tabs or four spaces establish an
+    /// indented code block and therefore make the line ineligible for headings
+    /// and ordinary fences.
+    private func strippingMarkdownBlockIndent(from line: String) -> String? {
+        var index = line.startIndex
+        var spaces = 0
+
+        while index < line.endIndex {
+            let character = line[index]
+            if character == " " {
+                spaces += 1
+                if spaces > Self.maximumBlockIndent {
+                    return nil
+                }
+                index = line.index(after: index)
+                continue
+            }
+            if character == "\t" {
+                return nil
+            }
+            break
         }
-        return result
+
+        return String(line[index...])
+    }
+
+    /// Parse an ordinary CommonMark opening fence.
+    ///
+    /// Block-quote/list container prefixes are intentionally not interpreted;
+    /// supporting those requires a complete container-aware Markdown parser.
+    private func parseOpeningFence(_ line: String) -> ActiveFence? {
+        guard let content = strippingMarkdownBlockIndent(from: line),
+              let marker = content.first,
+              marker == "`" || marker == "~"
+        else {
+            return nil
+        }
+
+        let markerCount = content.prefix { $0 == marker }.count
+        guard markerCount >= 3 else {
+            return nil
+        }
+
+        let remainder = content.dropFirst(markerCount)
+        if marker == "`" && remainder.contains("`") {
+            return nil
+        }
+
+        return ActiveFence(marker: marker, length: markerCount)
+    }
+
+    /// Determine whether a line closes the currently active fence.
+    private func isClosingFence(_ line: String, for fence: ActiveFence) -> Bool {
+        guard let content = strippingMarkdownBlockIndent(from: line),
+              content.first == fence.marker
+        else {
+            return false
+        }
+
+        let markerCount = content.prefix { $0 == fence.marker }.count
+        guard markerCount >= fence.length else {
+            return false
+        }
+
+        return content.dropFirst(markerCount).allSatisfy { $0 == " " || $0 == "\t" }
     }
 }
