@@ -120,10 +120,10 @@ public final class CompilerDriver {
     ///
     /// - Parameters:
     ///   - fileSystem: File system abstraction (default: LocalFileSystem)
-    ///   - version: Compiler version string (default: "0.1.0")
+    ///   - version: Compiler version string (defaults to the current release)
     public init(
         fileSystem: FileSystem = LocalFileSystem(),
-        version: String = "0.1.0",
+        version: String = HyperpromptVersion.current,
         parsedFileCache: ParsedFileCache = ParsedFileCache()
     ) {
         self.fileSystem = fileSystem

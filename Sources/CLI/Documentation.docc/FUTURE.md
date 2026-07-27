@@ -506,4 +506,4 @@ By v1.0, Hyperprompt will be considered successful if:
 
 **Last Updated:** December 12, 2025
 
-**Current Version:** v0.1.0 (Released 2025-12-12)
+**Current Version:** v0.2.0 (Released 2026-07-28)

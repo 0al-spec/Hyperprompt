@@ -222,7 +222,7 @@ final class ArgumentParsingTests: XCTestCase {
     func testVersionFlagIsRecognized() throws {
         // Version flag causes early exit, tested separately if needed
         let versionString = Hyperprompt.configuration.version
-        XCTAssertEqual(versionString, "0.1.0")
+        XCTAssertEqual(versionString, HyperpromptVersion.current)
     }
 
     // MARK: - CompilerArguments Struct Tests
@@ -379,7 +379,7 @@ final class ArgumentParsingTests: XCTestCase {
 
     func testCommandConfiguration() throws {
         XCTAssertEqual(Hyperprompt.configuration.commandName, "hyperprompt")
-        XCTAssertEqual(Hyperprompt.configuration.version, "0.1.0")
+        XCTAssertEqual(Hyperprompt.configuration.version, HyperpromptVersion.current)
         XCTAssertTrue(Hyperprompt.configuration.abstract.contains("Compile"))
     }
 }

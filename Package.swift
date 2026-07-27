@@ -49,7 +49,7 @@ var targets: [Target] = [
         // Resolver module
         .target(
             name: "Resolver",
-            dependencies: ["Core", "Parser"]
+            dependencies: ["Core", "Parser", "Statistics"]
         ),
         .testTarget(
             name: "ResolverTests",

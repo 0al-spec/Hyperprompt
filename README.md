@@ -1,4 +1,4 @@
-# Hyperprompt Compiler v0.1
+# Hyperprompt Compiler v0.2
 
 A Swift-based compiler for the Hypercode language that transforms nested document structures into Markdown with comprehensive manifest generation and specification-driven validation.
 
@@ -19,12 +19,15 @@ A Swift-based compiler for the Hypercode language that transforms nested documen
 
 ### Installation
 
-**Prerequisites:** Swift 5.9 or later (recommended: Swift 6.2+)
+Prebuilt binaries are available from the
+[`v0.2.0` GitHub Release](https://github.com/0al-spec/Hyperprompt/releases/tag/v0.2.0).
+
+**Building from source requires Swift 6.2 or later.**
 
 #### macOS
 
 ```bash
-git clone https://github.com/0al-spec/Hyperprompt.git
+git clone --branch v0.2.0 --depth 1 https://github.com/0al-spec/Hyperprompt.git
 cd Hyperprompt
 swift build -c release
 ./.build/release/hyperprompt --version
@@ -33,7 +36,7 @@ swift build -c release
 #### Linux (Ubuntu 20.04+)
 
 ```bash
-git clone https://github.com/0al-spec/Hyperprompt.git
+git clone --branch v0.2.0 --depth 1 https://github.com/0al-spec/Hyperprompt.git
 cd Hyperprompt
 swift build -c release
 ./.build/release/hyperprompt --version
@@ -129,8 +132,8 @@ See `Sources/CLI/Documentation.docc/examples/` for runnable example .hc files:
 
 | Component | Requirement |
 |-----------|-------------|
-| **Swift Version** | 5.9+ (6.0+ recommended) |
-| **macOS** | 11.0 or later (x86_64, arm64) |
+| **Swift Version** | 6.2+ |
+| **macOS** | 12.0 or later (arm64 release binary; source builds follow Swift support) |
 | **Ubuntu** | 20.04, 22.04, 24.04 LTS |
 | **Disk Space** | ~100 MB (build artifacts) |
 | **Memory** | 512 MB minimum, 2 GB recommended |
@@ -185,7 +188,7 @@ Hyperprompt/
 │   ├── Emitter/                # Markdown emitter
 │   ├── Statistics/             # Compilation metrics
 │   ├── HypercodeGrammar/        # Grammar specifications
-│   └── EditorEngine/            # Future optional editor-facing engine (planned)
+│   └── EditorEngine/            # Optional editor-facing engine (`Editor` trait)
 ├── Tests/                       # Test suites
 ├── Sources/CLI/Documentation.docc/examples/ # Example .hc files
 ├── Sources/CLI/Documentation.docc/          # User documentation
@@ -360,8 +363,9 @@ MIT License — See LICENSE file for details.
 
 | Version | Date | Status | Notes |
 |---------|------|--------|-------|
-| 0.1.0 | 2025-12-12 | Current | Initial release with core features |
+| 0.2.0 | 2026-07-28 | Current | Reproducible RFC assembly and editor tooling |
+| 0.1.0 | 2025-12-16 | Historical | Initial compiler baseline |
 
 ---
 
-**Last Updated:** December 12, 2025
+**Last Updated:** July 28, 2026

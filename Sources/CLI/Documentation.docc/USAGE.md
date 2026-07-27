@@ -138,7 +138,7 @@ in this artifact.
     }
   ],
   "timestamp": "2025-12-12T20:38:35Z",
-  "version": "0.1.0"
+  "version": "0.2.0"
 }
 ```
 
@@ -424,7 +424,7 @@ hyperprompt --version
 
 **Output:**
 ```
-hyperprompt version 0.1.0
+0.2.0
 ```
 
 **Exit code:** Always 0 (success)

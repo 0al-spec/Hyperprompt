@@ -610,9 +610,9 @@ iconv -f UTF-8 -t UTF-8 out.md > out-fixed.md
    Actual: Error message and exit code 3
 
    Environment:
-   - Swift 6.0.3
+   - Swift 6.2.0
    - Ubuntu 22.04
-   - Hyperprompt v0.1.0
+   - Hyperprompt v0.2.0
    ```
 
 ### Common Debugging Steps
