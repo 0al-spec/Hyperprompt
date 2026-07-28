@@ -8,9 +8,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-
 jobs:
   build-without-editor-trait:
     name: Cached Build - Default traits
@@ -33,7 +30,7 @@ jobs:
             ${{ runner.os }}-spm-
 
       - name: Install Swift 6.2.0
-        uses: swift-actions/setup-swift@v2
+        uses: SwiftyLab/setup-swift@v1
         with:
           swift-version: '6.2.0'
 
@@ -85,7 +82,7 @@ jobs:
             ${{ runner.os }}-spm-
 
       - name: Install Swift 6.2.0
-        uses: swift-actions/setup-swift@v2
+        uses: SwiftyLab/setup-swift@v1
         with:
           swift-version: '6.2.0'
 

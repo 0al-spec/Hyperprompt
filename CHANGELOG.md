@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_No unreleased changes yet._
+### Changed
+
+- Updated GitHub Actions to Node.js 24-backed releases and replaced the
+  temporary runtime force flag with an enforced workflow action policy.
 
 ## [0.2.0] - 2026-07-28
 

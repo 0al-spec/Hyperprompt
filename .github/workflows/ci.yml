@@ -16,9 +16,6 @@ on:
 permissions:
   contents: read
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-
 jobs:
   build:
     name: CI - Build and Test
@@ -47,10 +44,13 @@ jobs:
       - name: Validate release metadata
         run: python3 .github/scripts/check-release-metadata.py
 
+      - name: Validate workflow action runtimes
+        run: python3 .github/scripts/check-workflow-actions.py
+
       # Install Swift 6.2.0 toolchain
       # Version pinned per CI-01 audit findings
       - name: Install Swift 6.2.0
-        uses: swift-actions/setup-swift@v2
+        uses: SwiftyLab/setup-swift@v1
         with:
           swift-version: '6.2.0'
 
@@ -138,7 +138,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Swift 6.2.0
-        uses: swift-actions/setup-swift@v2
+        uses: SwiftyLab/setup-swift@v1
         with:
           swift-version: '6.2.0'
 
@@ -183,7 +183,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Swift 6.2.0
-        uses: swift-actions/setup-swift@v2
+        uses: SwiftyLab/setup-swift@v1
         with:
           swift-version: '6.2.0'
 
@@ -227,7 +227,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Swift 6.2.0
-        uses: swift-actions/setup-swift@v2
+        uses: SwiftyLab/setup-swift@v1
         with:
           swift-version: '6.2.0'
 
@@ -418,7 +418,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Swift 6.2.0
-        uses: swift-actions/setup-swift@v2
+        uses: SwiftyLab/setup-swift@v1
         with:
           swift-version: '6.2.0'
 
