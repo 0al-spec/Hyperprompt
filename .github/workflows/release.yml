@@ -1,0 +1,239 @@
+name: Release
+
+on:
+  pull_request:
+    paths:
+      - ".github/scripts/check-release-metadata.py"
+      - ".github/workflows/release.yml"
+      - "Package.resolved"
+      - "Package.swift"
+      - "Sources/Core/HyperpromptVersion.swift"
+      - "Sources/CLI/Documentation.docc/RELEASES/**"
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate release source
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout release source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Validate release metadata
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/check-release-metadata.py
+
+      - name: Validate annotated SemVer tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          set -euo pipefail
+          version="$(python3 .github/scripts/check-release-metadata.py --print-version)"
+          test "$GITHUB_REF_NAME" = "v${version}"
+          test "$(git cat-file -t "$GITHUB_REF_NAME")" = "tag"
+          test "$(git rev-list -n 1 "$GITHUB_REF_NAME")" = "$GITHUB_SHA"
+
+  build:
+    name: Build ${{ matrix.asset_platform }}
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            asset_platform: linux-amd64
+            expected_os: Linux
+            expected_arch: x86_64
+            artifact_os: linux
+            static_swift_stdlib: "true"
+          - runner: macos-15
+            asset_platform: macos-arm64
+            expected_os: Darwin
+            expected_arch: arm64
+            artifact_os: macos
+            static_swift_stdlib: "false"
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - name: Checkout release source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install Swift 6.2.0
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.2.0"
+
+      - name: Verify runner and Swift toolchain
+        env:
+          EXPECTED_OS: ${{ matrix.expected_os }}
+          EXPECTED_ARCH: ${{ matrix.expected_arch }}
+        run: |
+          set -euo pipefail
+          test "$(uname -s)" = "$EXPECTED_OS"
+          test "$(uname -m)" = "$EXPECTED_ARCH"
+          swift --version
+          swift --version | grep -q "Swift version 6.2"
+
+      - name: Build release binary
+        env:
+          STATIC_SWIFT_STDLIB: ${{ matrix.static_swift_stdlib }}
+        run: |
+          set -euo pipefail
+          args=(-c release --product hyperprompt)
+          if test "$STATIC_SWIFT_STDLIB" = "true"; then
+            args+=(--static-swift-stdlib)
+          fi
+          swift build "${args[@]}"
+
+      - name: Package release archive
+        env:
+          ASSET_PLATFORM: ${{ matrix.asset_platform }}
+          EXPECTED_OS: ${{ matrix.expected_os }}
+          EXPECTED_ARCH: ${{ matrix.expected_arch }}
+          ARTIFACT_OS: ${{ matrix.artifact_os }}
+          STATIC_SWIFT_STDLIB: ${{ matrix.static_swift_stdlib }}
+        run: |
+          set -euo pipefail
+          version="$(python3 .github/scripts/check-release-metadata.py --print-version)"
+          binary=".build/release/hyperprompt"
+          archive_root="hyperprompt-${version}-${ASSET_PLATFORM}"
+          package_dir="dist/${archive_root}"
+
+          test -x "$binary"
+          test "$("$binary" --version)" = "$version"
+          "$binary" --help >/dev/null
+
+          mkdir -p "$package_dir"
+          install -m 0755 "$binary" "$package_dir/hyperprompt"
+          install -m 0644 README.md LICENSE "$package_dir/"
+
+          export RELEASE_VERSION="$version"
+          export RELEASE_PACKAGE_DIR="$package_dir"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          linkage = (
+              "static-swift-stdlib"
+              if os.environ["STATIC_SWIFT_STDLIB"] == "true"
+              else "platform-default"
+          )
+          metadata = {
+              "artifact_kind": "hyperprompt_release_binary",
+              "schema_version": 1,
+              "binary": "hyperprompt",
+              "compiler_version": os.environ["RELEASE_VERSION"],
+              "os": os.environ["ARTIFACT_OS"],
+              "arch": os.environ["EXPECTED_ARCH"],
+              "linkage": linkage,
+              "source_repository": os.environ["GITHUB_REPOSITORY"],
+              "source_commit": os.environ["GITHUB_SHA"],
+              "source_tag": os.environ["GITHUB_REF_NAME"],
+              "workflow_run_id": os.environ["GITHUB_RUN_ID"],
+          }
+          output = Path(os.environ["RELEASE_PACKAGE_DIR"]) / "hyperprompt-artifact.json"
+          output.write_text(
+              json.dumps(metadata, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+          tar -C dist -czf "dist/${archive_root}.tar.gz" "$archive_root"
+
+      - name: Validate release archive
+        env:
+          ASSET_PLATFORM: ${{ matrix.asset_platform }}
+        run: |
+          set -euo pipefail
+          version="$(python3 .github/scripts/check-release-metadata.py --print-version)"
+          archive="dist/hyperprompt-${version}-${ASSET_PLATFORM}.tar.gz"
+          test -s "$archive"
+          tar -tzf "$archive"
+
+      - name: Upload release archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-${{ matrix.asset_platform }}
+          path: dist/hyperprompt-*.tar.gz
+          retention-days: 30
+          if-no-files-found: error
+
+  publish:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout release source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download release archives
+        uses: actions/download-artifact@v6
+        with:
+          pattern: release-*
+          path: dist
+          merge-multiple: true
+
+      - name: Validate release assets and create checksums
+        run: |
+          set -euo pipefail
+          version="$(python3 .github/scripts/check-release-metadata.py --print-version)"
+          expected=(
+            "dist/hyperprompt-${version}-linux-amd64.tar.gz"
+            "dist/hyperprompt-${version}-macos-arm64.tar.gz"
+          )
+          for archive in "${expected[@]}"; do
+            test -s "$archive"
+            tar -tzf "$archive"
+          done
+          test "$(find dist -maxdepth 1 -name '*.tar.gz' -type f | wc -l | tr -d ' ')" = "2"
+          (
+            cd dist
+            sha256sum \
+              "hyperprompt-${version}-linux-amd64.tar.gz" \
+              "hyperprompt-${version}-macos-arm64.tar.gz" \
+              > SHA256SUMS
+          )
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="$(python3 .github/scripts/check-release-metadata.py --print-version)"
+          notes="Sources/CLI/Documentation.docc/RELEASES/v${version}/RELEASE_NOTES_v${version}.md"
+          if gh release view "$GITHUB_REF_NAME" --json tagName >/dev/null 2>&1; then
+            echo "Release $GITHUB_REF_NAME already exists" >&2
+            exit 1
+          fi
+          gh release create "$GITHUB_REF_NAME" \
+            "dist/hyperprompt-${version}-linux-amd64.tar.gz" \
+            "dist/hyperprompt-${version}-macos-arm64.tar.gz" \
+            "dist/SHA256SUMS" \
+            --verify-tag \
+            --title "Hyperprompt Compiler v${version}" \
+            --notes-file "$notes" \
+            --latest

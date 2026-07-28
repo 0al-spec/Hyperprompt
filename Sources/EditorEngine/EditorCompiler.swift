@@ -11,7 +11,10 @@ public struct EditorCompiler {
     /// - Parameters:
     ///   - fileSystem: File system implementation (use MockFileSystem in tests)
     ///   - version: Compiler version string
-    public init(fileSystem: FileSystem = LocalFileSystem(), version: String = "0.1.0") {
+    public init(
+        fileSystem: FileSystem = LocalFileSystem(),
+        version: String = HyperpromptVersion.current
+    ) {
         self.fileSystem = fileSystem
         self.version = version
     }

@@ -84,7 +84,7 @@ same LF-normalized UTF-8 source bytes.
     }
   ],
   "timestamp": "2023-11-14T22:13:20Z",
-  "version": "0.1.0"
+  "version": "0.2.0"
 }
 ```
 

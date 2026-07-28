@@ -2,7 +2,7 @@ name: CI
 
 # CI workflow for Hyperprompt Swift compiler
 # Triggers on PR, push to main, and manual dispatch
-# Runs on Linux (ubuntu-latest) with Swift 6.0.3
+# Runs on Linux (ubuntu-latest) with Swift 6.2.0
 
 on:
   pull_request:
@@ -23,7 +23,7 @@ jobs:
   build:
     name: CI - Build and Test
     # Linux-only CI job (macOS/Windows deferred to future tasks)
-    # Uses Swift 6.0.3 (compatible with Package.swift minimum 5.9)
+    # Uses the Swift 6.2.0 toolchain required by Package.swift
     # Caches dependencies based on Package.resolved hash
     runs-on: ubuntu-latest
 
@@ -44,7 +44,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Install Swift 6.0.3 toolchain
+      - name: Validate release metadata
+        run: python3 .github/scripts/check-release-metadata.py
+
+      # Install Swift 6.2.0 toolchain
       # Version pinned per CI-01 audit findings
       - name: Install Swift 6.2.0
         uses: swift-actions/setup-swift@v2
@@ -252,7 +255,9 @@ jobs:
           set -euo pipefail
           binary=".build/release/hyperprompt"
           test -x "$binary"
-          "$binary" --version
+          compiler_version="$("$binary" --version)"
+          expected_version="$(python3 .github/scripts/check-release-metadata.py --print-version)"
+          test "$compiler_version" = "$expected_version"
           "$binary" --help >/dev/null
           mkdir -p dist/hyperprompt-linux-amd64
           install -m 0755 "$binary" dist/hyperprompt-linux-amd64/hyperprompt
@@ -261,6 +266,7 @@ jobs:
             "artifact_kind": "hyperprompt_linux_binary",
             "schema_version": 1,
             "binary": "hyperprompt",
+            "compiler_version": "${compiler_version}",
             "os": "linux",
             "arch": "amd64",
             "linkage": "static-swift-stdlib",
@@ -275,6 +281,7 @@ jobs:
         run: |
           python3 - <<'PY'
           import json
+          import re
           from pathlib import Path
 
           artifact_dir = Path("dist/hyperprompt-linux-amd64")
@@ -284,10 +291,21 @@ jobs:
               raise SystemExit(f"Unexpected artifact files: {files!r}")
 
           metadata = json.loads((artifact_dir / "hyperprompt-artifact.json").read_text(encoding="utf-8"))
+          version_source = Path("Sources/Core/HyperpromptVersion.swift").read_text(
+              encoding="utf-8"
+          )
+          version_match = re.search(
+              r'public static let current = "([^"]+)"',
+              version_source,
+          )
+          if version_match is None:
+              raise SystemExit("HyperpromptVersion.current is missing")
+
           expected = {
               "artifact_kind": "hyperprompt_linux_binary",
               "schema_version": 1,
               "binary": "hyperprompt",
+              "compiler_version": version_match.group(1),
               "os": "linux",
               "arch": "amd64",
               "linkage": "static-swift-stdlib",

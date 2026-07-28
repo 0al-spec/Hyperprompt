@@ -5,6 +5,69 @@ All notable changes to the Hyperprompt Compiler project will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+_No unreleased changes yet._
+
+## [0.2.0] - 2026-07-28
+
+### Added
+
+- **Reproducible RFC assembly** with fence-safe composition, deterministic
+  manifests, optional exact generated-line source maps, and
+  `SOURCE_DATE_EPOCH` support.
+- **EditorEngine** as an opt-in Swift package trait, including project indexing,
+  link resolution, diagnostics mapping, glob filtering, and editor-oriented
+  compilation APIs.
+- **Language Server** executable with JSON-RPC framing and core LSP document and
+  navigation support.
+- **VS Code extension preview** with compilation, diagnostics, navigation,
+  live preview, settings, engine discovery, and RPC integration.
+- **Incremental parsed-file caching** and dependency-aware invalidation in the
+  resolver/compiler pipeline.
+- **Statistics reporting** and expanded medium/large performance fixtures.
+- **Portable Linux binary artifact contract** for server-side consumers.
+- **Automated tagged releases** that build Linux `amd64` and macOS `arm64`
+  archives, generate SHA-256 checksums, and publish GitHub Release assets.
+- **DocC publication** and expanded architecture, RPC, editor, performance, and
+  RFC assembly documentation.
+
+### Changed
+
+- Raised the Swift tools and supported development baseline to Swift 6.2.
+- Moved compilation orchestration into a reusable `CompilerDriver` module.
+- Made source-map collection opt-in for CLI/server compilation paths that do
+  not consume provenance.
+- Centralized the product version in `HyperpromptVersion.current`.
+- Expanded CI to cover default and Editor traits, no-cache builds, the VS Code
+  extension, Linux binary artifacts, documentation, and bounded performance
+  regression checks.
+
+### Fixed
+
+- Preserved Markdown fenced examples during hierarchical assembly.
+- Prevented included Markdown filenames from becoming synthetic headings.
+- Hardened workspace-root validation, path joining, byte-offset handling, glob
+  matching, regex failure handling, and NUL-containing ignore patterns.
+- Corrected source-map provenance across nested and multi-file compilation.
+- Removed a source-map performance regression and made collection lazy.
+- Improved signal handling and LSP resolution error behavior.
+
+### Security
+
+- Editor and resolver paths fail closed when inputs escape the configured
+  workspace root.
+- Invalid ignore patterns and unsupported path forms are rejected rather than
+  silently broadened.
+- Release artifacts retain exact source commit and repository provenance.
+
+### Compatibility
+
+- The command-line compile workflow remains source-compatible with v0.1.0.
+- Swift package consumers now require a Swift 6.2-capable toolchain.
+- The VS Code extension remains a preview artifact and is not yet a Marketplace
+  release.
+
 ## [0.1.0] - 2025-12-16
 
 ### Added
@@ -76,44 +139,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **No Code Execution**: Compiler does not execute user code
 - **Deterministic Hashing**: SHA256 for file integrity verification
 
-## [Unreleased]
-
-### Added
-
-- VS Code extension RPC client with stdio JSON-RPC transport, process lifecycle handling, and basic tests
-
-### Changed
-
-- VS Code extension commands now bootstrap RPC requests to the CLI for indexing
-- Performance CI regression check now enforces stress-test thresholds
-- Performance test log output clarifies local vs CI targets
-
-### Planned for v0.1.1
-
-- Statistics reporter module completion (D4)
-- DMG package for macOS distribution
-- Performance profiling with Instruments/Valgrind
-- Memory leak detection with sanitizers
-- Expanded test corpus (V15+, I11+)
-
-### Planned for v0.2.0
-
-- Incremental compilation support
-- Watch mode for iterative development
-- Language Server Protocol (LSP) implementation
-- Syntax highlighting for editors
-- Interactive TUI mode
-- Parallel file loading optimization
-- Streaming output emitter
-
----
-
 ## Release Notes
 
-For detailed release notes, see [DOCS/RELEASES/v0.1.0/RELEASE_NOTES_v0.1.0.md](DOCS/RELEASES/v0.1.0/RELEASE_NOTES_v0.1.0.md)
+For detailed release notes, see
+[`Sources/CLI/Documentation.docc/RELEASES/v0.2.0/RELEASE_NOTES_v0.2.0.md`](Sources/CLI/Documentation.docc/RELEASES/v0.2.0/RELEASE_NOTES_v0.2.0.md).
 
 ## Version History
 
+- [0.2.0] - 2026-07-28 - Reproducible assembly and editor tooling
 - [0.1.0] - 2025-12-16 - Initial public release
 
 ## Links
