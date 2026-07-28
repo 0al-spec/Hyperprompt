@@ -9,7 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOWS = ROOT / ".github" / "workflows"
-USES = re.compile(r"^\s*uses:\s*([^@\s]+)@v([0-9]+)\s*$")
+USES_LINE = re.compile(r"^\s*(?:-\s*)?uses:\s*(.*?)\s*$")
+VERSIONED_ACTION = re.compile(r"^([^@\s]+)@v([0-9]+)$")
 
 MINIMUM_MAJORS = {
     "SwiftyLab/setup-swift": 1,
@@ -24,12 +25,12 @@ MINIMUM_MAJORS = {
 }
 
 
-def main() -> int:
+def validate(workflows: Path) -> tuple[list[str], int]:
     failures: list[str] = []
     action_count = 0
 
-    for path in sorted(WORKFLOWS.glob("*.y*ml")):
-        relative = path.relative_to(ROOT)
+    for path in sorted(workflows.glob("*.y*ml")):
+        relative = path.relative_to(workflows.parent.parent)
         text = path.read_text(encoding="utf-8")
         if "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24" in text:
             failures.append(f"{relative}: remove the temporary Node.js 24 force flag")
@@ -39,11 +40,19 @@ def main() -> int:
             )
 
         for line_number, line in enumerate(text.splitlines(), start=1):
-            match = USES.match(line)
-            if match is None:
+            uses_match = USES_LINE.match(line)
+            if uses_match is None:
                 continue
             action_count += 1
-            action, major_text = match.groups()
+            reference = uses_match.group(1)
+            version_match = VERSIONED_ACTION.fullmatch(reference)
+            if version_match is None:
+                failures.append(
+                    f"{relative}:{line_number}: action reference {reference!r} "
+                    "must use the reviewed <owner>/<action>@v<major> form"
+                )
+                continue
+            action, major_text = version_match.groups()
             minimum = MINIMUM_MAJORS.get(action)
             if minimum is None:
                 failures.append(
@@ -57,6 +66,11 @@ def main() -> int:
                     f"@v{minimum} or newer"
                 )
 
+    return failures, action_count
+
+
+def main() -> int:
+    failures, action_count = validate(WORKFLOWS)
     if failures:
         raise SystemExit("\n".join(failures))
     print(f"Workflow actions are Node.js 24-ready ({action_count} references)")

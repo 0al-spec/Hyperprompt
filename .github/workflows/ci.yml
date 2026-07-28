@@ -45,7 +45,11 @@ jobs:
         run: python3 .github/scripts/check-release-metadata.py
 
       - name: Validate workflow action runtimes
-        run: python3 .github/scripts/check-workflow-actions.py
+        run: |
+          python3 .github/scripts/check-workflow-actions.py
+          python3 -m unittest discover \
+            -s .github/scripts/tests \
+            -p 'test_*.py'
 
       # Install Swift 6.2.0 toolchain
       # Version pinned per CI-01 audit findings
