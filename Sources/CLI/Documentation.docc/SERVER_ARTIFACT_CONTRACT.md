@@ -39,6 +39,7 @@ Required fields:
   "artifact_kind": "hyperprompt_linux_binary",
   "schema_version": 1,
   "binary": "hyperprompt",
+  "compiler_version": "<stable SemVer>",
   "os": "linux",
   "arch": "amd64",
   "linkage": "static-swift-stdlib",
@@ -54,6 +55,7 @@ Field meanings:
 - `artifact_kind`: stable discriminator for this artifact family.
 - `schema_version`: integer metadata schema version.
 - `binary`: executable file name inside the artifact.
+- `compiler_version`: stable SemVer reported by the packaged compiler binary.
 - `os`: target operating system.
 - `arch`: target architecture.
 - `linkage`: Swift runtime linkage policy; server consumers expect
@@ -146,11 +148,13 @@ Before bundling the artifact, consumers should verify:
 2. `schema_version == 1`.
 3. `artifact_kind == "hyperprompt_linux_binary"`.
 4. `binary == "hyperprompt"`.
-5. `os == "linux"`.
-6. `arch == "amd64"`.
-7. `linkage == "static-swift-stdlib"`.
-8. `source_repository == "0al-spec/Hyperprompt"`.
-9. `source_commit`, `source_ref`, and `workflow_run_id` are present.
-10. `hyperprompt --version` exits `0` in the consumer base image.
+5. `compiler_version` is stable SemVer.
+6. `os == "linux"`.
+7. `arch == "amd64"`.
+8. `linkage == "static-swift-stdlib"`.
+9. `source_repository == "0al-spec/Hyperprompt"`.
+10. `source_commit`, `source_ref`, and `workflow_run_id` are present.
+11. `hyperprompt --version` exits `0` in the consumer base image and exactly
+    matches `compiler_version`.
 
 SpecSpace performs this validation before building its API image.

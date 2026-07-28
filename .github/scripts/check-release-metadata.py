@@ -53,6 +53,15 @@ def validate(version: str) -> None:
     )
     require(notes, f"# Hyperprompt Compiler v{version}")
     require(notes, f"**Tag:** `v{version}`")
+    artifact_contract = (
+        ROOT
+        / "Sources"
+        / "CLI"
+        / "Documentation.docc"
+        / "SERVER_ARTIFACT_CONTRACT.md"
+    )
+    require(artifact_contract, '"compiler_version": "<stable SemVer>"')
+    require(artifact_contract, "matches `compiler_version`")
 
     source_expectations = {
         ROOT / "Sources" / "CLI" / "Hyperprompt.swift": (
