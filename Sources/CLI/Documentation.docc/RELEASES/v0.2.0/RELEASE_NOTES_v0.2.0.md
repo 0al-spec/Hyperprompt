@@ -129,6 +129,10 @@ use their own versioned schema and are emitted only when requested.
 
 ### Prebuilt binaries
 
+An annotated `v0.2.0` tag triggers reproducible builds on GitHub-hosted Linux
+`amd64` and macOS `arm64` runners. GitHub Actions verifies the binary version
+against the tag and publishes both archives with a shared checksum file.
+
 Release assets:
 
 - `hyperprompt-0.2.0-macos-arm64.tar.gz`

@@ -27,6 +27,8 @@ _No unreleased changes yet._
   resolver/compiler pipeline.
 - **Statistics reporting** and expanded medium/large performance fixtures.
 - **Portable Linux binary artifact contract** for server-side consumers.
+- **Automated tagged releases** that build Linux `amd64` and macOS `arm64`
+  archives, generate SHA-256 checksums, and publish GitHub Release assets.
 - **DocC publication** and expanded architecture, RPC, editor, performance, and
   RFC assembly documentation.
 
