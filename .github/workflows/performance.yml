@@ -15,7 +15,7 @@ permissions:
 jobs:
   performance:
     name: Performance Benchmarks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
@@ -24,22 +24,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Swift
-        run: |
-          # Download Swift development snapshot (verified)
-          cd /tmp
-          curl -L -o swift.tar.gz "https://download.swift.org/development/ubuntu2004/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a/swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04.tar.gz"
-          tar zxf swift.tar.gz
+      - name: Install Swift 6.4.2
+        uses: SwiftyLab/setup-swift@v1
+        with:
+          swift-version: '6.4.2'
+          check-latest: true
 
-          # Install to /opt/swift instead of /usr to avoid conflicts
-          sudo mkdir -p /opt/swift
-          sudo mv swift-DEVELOPMENT-SNAPSHOT-2025-08-27-a-ubuntu20.04 /opt/swift/current
-
-          # Add to PATH
-          echo "/opt/swift/current/usr/bin" >> $GITHUB_PATH
-
-          # Verify installation
-          /opt/swift/current/usr/bin/swift --version
+      - name: Verify Swift version
+        run: swift --version | grep -q "Swift version 6.4.2"
 
       - name: Cache Swift build
         uses: actions/cache@v5
@@ -47,10 +39,9 @@ jobs:
           path: |
             .build
             .swiftpm
-          key: ${{ runner.os }}-swift-build-perf-${{ hashFiles('Package.swift', 'Package.resolved') }}
+          key: ${{ runner.os }}-ubuntu24-swift642-build-perf-${{ hashFiles('Package.swift', 'Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-swift-build-perf-
-            ${{ runner.os }}-swift-build-
+            ${{ runner.os }}-ubuntu24-swift642-build-perf-
 
       - name: Resolve dependencies
         run: |
@@ -60,6 +51,7 @@ jobs:
         env:
           RUN_PERFORMANCE_TESTS: "1"
         run: |
+          set -o pipefail
           swift test -c release --filter PerformanceTests 2>&1 | tee performance-results.txt
 
       - name: Extract performance metrics

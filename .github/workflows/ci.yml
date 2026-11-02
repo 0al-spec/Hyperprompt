@@ -2,7 +2,7 @@ name: CI
 
 # CI workflow for Hyperprompt Swift compiler
 # Triggers on PR, push to main, and manual dispatch
-# Runs on Linux (ubuntu-latest) with Swift 6.2.0
+# Runs on Ubuntu 24.04 with Swift 6.4.2
 
 on:
   pull_request:
@@ -20,9 +20,9 @@ jobs:
   build:
     name: CI - Build and Test
     # Linux-only CI job (macOS/Windows deferred to future tasks)
-    # Uses the Swift 6.2.0 toolchain required by Package.swift
+    # Uses Swift 6.4.2, compatible with the Package.swift minimum.
     # Caches dependencies based on Package.resolved hash
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       # Validate secrets configuration (fail fast on missing required secrets)
@@ -51,18 +51,19 @@ jobs:
             -s .github/scripts/tests \
             -p 'test_*.py'
 
-      # Install Swift 6.2.0 toolchain
+      # Install Swift 6.4.2 toolchain
       # Version pinned per CI-01 audit findings
-      - name: Install Swift 6.2.0
+      - name: Install Swift 6.4.2
         uses: SwiftyLab/setup-swift@v1
         with:
-          swift-version: '6.2.0'
+          swift-version: '6.4.2'
+          check-latest: true
 
       # Verify Swift installation
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "Swift version 6.2"
+          swift --version | grep -q "Swift version 6.4.2"
 
       # Cache .build and .swiftpm for 60-80% speedup on subsequent runs
       # Cache key includes Package.resolved hash for deterministic invalidation
@@ -72,9 +73,9 @@ jobs:
           path: |
             .build
             .swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
+          key: ${{ runner.os }}-ubuntu24-swift642-spm-${{ hashFiles('Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-spm-
+            ${{ runner.os }}-ubuntu24-swift642-spm-
 
       # Resolve Swift Package Manager dependencies
       - name: Resolve dependencies
@@ -133,7 +134,7 @@ jobs:
   build-without-editor-trait:
     name: CI - Build without Editor trait
     # Validate that default builds exclude EditorEngine when no traits are enabled.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -141,15 +142,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Swift 6.2.0
+      - name: Install Swift 6.4.2
         uses: SwiftyLab/setup-swift@v1
         with:
-          swift-version: '6.2.0'
+          swift-version: '6.4.2'
+          check-latest: true
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "Swift version 6.2"
+          swift --version | grep -q "Swift version 6.4.2"
 
       - name: Cache Swift dependencies
         uses: actions/cache@v5
@@ -157,9 +159,9 @@ jobs:
           path: |
             .build
             .swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
+          key: ${{ runner.os }}-ubuntu24-swift642-spm-${{ hashFiles('Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-spm-
+            ${{ runner.os }}-ubuntu24-swift642-spm-
 
       - name: Resolve dependencies
         run: |
@@ -178,7 +180,7 @@ jobs:
 
   build-with-editor-trait:
     name: CI - Build with Editor trait
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -186,15 +188,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Swift 6.2.0
+      - name: Install Swift 6.4.2
         uses: SwiftyLab/setup-swift@v1
         with:
-          swift-version: '6.2.0'
+          swift-version: '6.4.2'
+          check-latest: true
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "Swift version 6.2"
+          swift --version | grep -q "Swift version 6.4.2"
 
       - name: Cache Swift dependencies
         uses: actions/cache@v5
@@ -202,10 +205,10 @@ jobs:
           path: |
             .build
             .swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-editor
+          key: ${{ runner.os }}-ubuntu24-swift642-spm-${{ hashFiles('Package.resolved') }}-editor
           restore-keys: |
-            ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-
-            ${{ runner.os }}-spm-
+            ${{ runner.os }}-ubuntu24-swift642-spm-${{ hashFiles('Package.resolved') }}-
+            ${{ runner.os }}-ubuntu24-swift642-spm-
 
       - name: Resolve dependencies
         run: |
@@ -221,7 +224,7 @@ jobs:
 
   linux-binary-artifact:
     name: CI - Linux Binary Artifact
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build
 
     steps:
@@ -230,15 +233,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Swift 6.2.0
+      - name: Install Swift 6.4.2
         uses: SwiftyLab/setup-swift@v1
         with:
-          swift-version: '6.2.0'
+          swift-version: '6.4.2'
+          check-latest: true
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "Swift version 6.2"
+          swift --version | grep -q "Swift version 6.4.2"
 
       - name: Cache Swift dependencies
         uses: actions/cache@v5
@@ -246,10 +250,10 @@ jobs:
           path: |
             .build
             .swiftpm
-          key: ${{ runner.os }}-spm-release-${{ hashFiles('Package.resolved') }}
+          key: ${{ runner.os }}-ubuntu24-swift642-spm-release-${{ hashFiles('Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-spm-release-
-            ${{ runner.os }}-spm-
+            ${{ runner.os }}-ubuntu24-swift642-spm-release-
+            ${{ runner.os }}-ubuntu24-swift642-spm-
 
       - name: Build release hyperprompt binary
         run: swift build -c release --product hyperprompt --static-swift-stdlib
@@ -342,7 +346,7 @@ jobs:
 
   vscode-extension-tests:
     name: CI - VS Code Extension Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -406,7 +410,7 @@ jobs:
     # This ensures reproducible builds and catches cache-related issues.
     # Only runs on pull requests when code, tests, or configuration changes.
     # Complements the cached build job to ensure both scenarios work.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.event_name == 'pull_request'
 
     steps:
@@ -421,15 +425,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Swift 6.2.0
+      - name: Install Swift 6.4.2
         uses: SwiftyLab/setup-swift@v1
         with:
-          swift-version: '6.2.0'
+          swift-version: '6.4.2'
+          check-latest: true
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "Swift version 6.2"
+          swift --version | grep -q "Swift version 6.4.2"
 
       # IMPORTANT: NO cache step - intentionally build from scratch
       # This validates that Package.resolved is complete and reproducible

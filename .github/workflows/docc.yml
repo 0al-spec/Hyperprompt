@@ -26,15 +26,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install Swift 6.2.0
+      - name: Install Swift 6.4.2
         uses: SwiftyLab/setup-swift@v1
         with:
-          swift-version: '6.2.0'
+          swift-version: '6.4.2'
+          check-latest: true
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "Swift version 6.2"
+          swift --version | grep -q "Swift version 6.4.2"
 
       - name: Build Documentation
         run: |

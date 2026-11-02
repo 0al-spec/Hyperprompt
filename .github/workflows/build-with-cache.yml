@@ -11,7 +11,7 @@ on:
 jobs:
   build-without-editor-trait:
     name: Cached Build - Default traits
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -24,20 +24,21 @@ jobs:
           path: |
             .build
             ~/.cache/org.swift.swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-${{ hashFiles('Package.swift') }}
+          key: ${{ runner.os }}-ubuntu24-swift642-spm-${{ hashFiles('Package.resolved') }}-${{ hashFiles('Package.swift') }}
           restore-keys: |
-            ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-
-            ${{ runner.os }}-spm-
+            ${{ runner.os }}-ubuntu24-swift642-spm-${{ hashFiles('Package.resolved') }}-
+            ${{ runner.os }}-ubuntu24-swift642-spm-
 
-      - name: Install Swift 6.2.0
+      - name: Install Swift 6.4.2
         uses: SwiftyLab/setup-swift@v1
         with:
-          swift-version: '6.2.0'
+          swift-version: '6.4.2'
+          check-latest: true
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "Swift version 6.2"
+          swift --version | grep -q "Swift version 6.4.2"
 
       - name: Build
         run: |
@@ -63,7 +64,7 @@ jobs:
 
   build-with-editor-trait:
     name: Cached Build - Editor trait
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -76,20 +77,21 @@ jobs:
           path: |
             .build
             ~/.cache/org.swift.swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-${{ hashFiles('Package.swift') }}-editor
+          key: ${{ runner.os }}-ubuntu24-swift642-spm-${{ hashFiles('Package.resolved') }}-${{ hashFiles('Package.swift') }}-editor
           restore-keys: |
-            ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}-
-            ${{ runner.os }}-spm-
+            ${{ runner.os }}-ubuntu24-swift642-spm-${{ hashFiles('Package.resolved') }}-
+            ${{ runner.os }}-ubuntu24-swift642-spm-
 
-      - name: Install Swift 6.2.0
+      - name: Install Swift 6.4.2
         uses: SwiftyLab/setup-swift@v1
         with:
-          swift-version: '6.2.0'
+          swift-version: '6.4.2'
+          check-latest: true
 
       - name: Verify Swift version
         run: |
           swift --version
-          swift --version | grep -q "Swift version 6.2"
+          swift --version | grep -q "Swift version 6.4.2"
 
       - name: Build (Editor trait)
         run: |
