@@ -217,7 +217,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/SoundBlaster/SpecificationCore",
-            from: "1.0.0"
+            from: "1.1.0"
         ),
         .package(
             url: "https://github.com/apple/swift-docc-plugin",
